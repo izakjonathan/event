@@ -1,0 +1,8 @@
+{
+  "name": "Event Planner Calculator",
+  "short_name": "Events",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#efe9dc",
+  "theme_color": "#244cdd"
+}
