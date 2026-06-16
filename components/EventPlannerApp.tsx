@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+
+type EventStatus = 'idea' | 'quoted' | 'confirmed' | 'cancelled' | 'completed';
 
 type EventMeta = {
   name: string;
@@ -10,6 +12,7 @@ type EventMeta = {
   time: string;
   terms: string;
   notes: string;
+  status: EventStatus;
 };
 
 type TicketTier = {
@@ -34,11 +37,53 @@ type MoneyLine = {
   notes: string;
 };
 
+type StaffLine = {
+  id: string;
+  role: string;
+  people: number;
+  hours: number;
+  hourlyWage: number;
+  extraPercent: number;
+  notes: string;
+};
+
+type BarPlan = {
+  enabled: boolean;
+  useTicketGuests: boolean;
+  customGuests: number;
+  spendPerGuest: number;
+  costPercent: number;
+  notes: string;
+};
+
+type Scenario = {
+  id: string;
+  name: string;
+  ticketsSold: number;
+  averageTicketPrice: number;
+  barSpendPerGuest: number;
+  extraExpenses: number;
+  notes: string;
+};
+
+type TermsPlan = {
+  enabled: boolean;
+  organizerTicketShare: number;
+  organizerBarProfitShare: number;
+  flatVenueHire: number;
+  minimumVenueGuarantee: number;
+  notes: string;
+};
+
 type PlannerEvent = {
   id: string;
   meta: EventMeta;
   tickets: TicketTier[];
   lines: MoneyLine[];
+  staff: StaffLine[];
+  bar: BarPlan;
+  scenarios: Scenario[];
+  termsPlan: TermsPlan;
   updatedAt: string;
 };
 
@@ -51,21 +96,54 @@ type DbEventRow = {
   updated_at: string;
 };
 
-const STORAGE_KEY = 'event-planner-calculator-v1';
-const OWNER_KEY = 'event-planner-owner-key-v1';
+const STORAGE_KEY = 'event-planner-calculator-v2';
+const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
+const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
+const DEFAULT_WORKSPACE = 'main-workspace';
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
+const pct = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 1 });
 const money = (value: number) => `${fmt.format(Math.round(value || 0))} DKK`;
 const uid = () => (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
 const numberOrZero = (value: string) => {
-  const normalised = value.replace(',', '.');
-  const parsed = Number(normalised);
+  const parsed = Number(value.replace(',', '.'));
   return Number.isFinite(parsed) ? parsed : 0;
 };
+const safeSlug = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || DEFAULT_WORKSPACE;
 
-function emptyEvent(): PlannerEvent {
-  const now = new Date().toISOString();
+function defaultBarPlan(): BarPlan {
   return {
+    enabled: true,
+    useTicketGuests: true,
+    customGuests: 100,
+    spendPerGuest: 200,
+    costPercent: 30,
+    notes: 'Example: every ticket holder spends 200 DKK at the bar.'
+  };
+}
+
+function defaultTermsPlan(): TermsPlan {
+  return {
+    enabled: true,
+    organizerTicketShare: 100,
+    organizerBarProfitShare: 0,
+    flatVenueHire: 0,
+    minimumVenueGuarantee: 0,
+    notes: 'Adjust this for door split, bar split, venue hire or guarantee deals.'
+  };
+}
+
+function defaultScenarios(ticketSold = 100, ticketPrice = 150, barSpend = 200, expenses = 8000): Scenario[] {
+  return [
+    { id: uid(), name: 'Low', ticketsSold: Math.round(ticketSold * 0.6), averageTicketPrice: ticketPrice, barSpendPerGuest: Math.round(barSpend * 0.75), extraExpenses: expenses, notes: '' },
+    { id: uid(), name: 'Expected', ticketsSold: ticketSold, averageTicketPrice: ticketPrice, barSpendPerGuest: barSpend, extraExpenses: expenses, notes: '' },
+    { id: uid(), name: 'Best', ticketsSold: Math.round(ticketSold * 1.3), averageTicketPrice: ticketPrice, barSpendPerGuest: Math.round(barSpend * 1.25), extraExpenses: expenses, notes: '' }
+  ];
+}
+
+function emptyEvent(template: TemplateKey = 'blank'): PlannerEvent {
+  const now = new Date().toISOString();
+  const base: PlannerEvent = {
     id: uid(),
     updatedAt: now,
     meta: {
@@ -74,25 +152,106 @@ function emptyEvent(): PlannerEvent {
       location: '',
       time: '',
       terms: '',
-      notes: ''
+      notes: '',
+      status: 'idea'
     },
     tickets: [
       { id: uid(), name: 'Standard ticket', price: 150, sold: 100, capacity: 120, notes: '' }
     ],
-    lines: [
-      { id: uid(), kind: 'income', name: 'Bar spend per ticket holder', amount: 200, quantity: 1, mode: 'perTicketHolder', notes: 'Example: every ticket holder spends 200 DKK at the bar.' },
-      { id: uid(), kind: 'expense', name: 'Staff', amount: 165, quantity: 20, mode: 'fixed', notes: 'Hourly wage × hours.' },
-      { id: uid(), kind: 'expense', name: 'Venue / production', amount: 5000, quantity: 1, mode: 'fixed', notes: '' }
-    ]
+    lines: [],
+    staff: [
+      { id: uid(), role: 'Bartender', people: 2, hours: 7, hourlyWage: 165, extraPercent: 12.5, notes: '' }
+    ],
+    bar: defaultBarPlan(),
+    scenarios: defaultScenarios(),
+    termsPlan: defaultTermsPlan()
   };
+  return applyTemplate(base, template);
 }
 
-function getOwnerKey() {
-  if (typeof window === 'undefined') return '';
-  const existing = localStorage.getItem(OWNER_KEY);
-  if (existing) return existing;
-  const next = uid();
-  localStorage.setItem(OWNER_KEY, next);
+function hydrateEvent(raw: Partial<PlannerEvent>): PlannerEvent {
+  const fallback = emptyEvent();
+  const sold = raw.tickets?.reduce((sum, ticket) => sum + (ticket.sold || 0), 0) || 100;
+  const avgTicket = sold && raw.tickets?.length ? raw.tickets.reduce((sum, ticket) => sum + (ticket.sold || 0) * (ticket.price || 0), 0) / sold : 150;
+  const event: PlannerEvent = {
+    ...fallback,
+    ...raw,
+    meta: { ...fallback.meta, ...(raw.meta || {}) },
+    tickets: raw.tickets?.length ? raw.tickets : fallback.tickets,
+    lines: raw.lines || fallback.lines,
+    staff: raw.staff?.length ? raw.staff : fallback.staff,
+    bar: { ...fallback.bar, ...(raw.bar || {}) },
+    termsPlan: { ...fallback.termsPlan, ...(raw.termsPlan || {}) },
+    scenarios: raw.scenarios?.length ? raw.scenarios : defaultScenarios(sold, Math.round(avgTicket), raw.bar?.spendPerGuest || 200, 8000)
+  };
+  return event;
+}
+
+type TemplateKey = 'blank' | 'concert' | 'quiz' | 'privateParty' | 'djNight' | 'football' | 'corporate';
+
+const templates: { key: TemplateKey; label: string; description: string }[] = [
+  { key: 'blank', label: 'Blank', description: 'Simple event with one ticket and staff row.' },
+  { key: 'concert', label: 'Concert', description: 'Tickets, artist fee, sound and security.' },
+  { key: 'quiz', label: 'Quiz night', description: 'Low ticket price, host fee and bar focus.' },
+  { key: 'privateParty', label: 'Private party', description: 'Flat hire, staff and minimum bar spend.' },
+  { key: 'djNight', label: 'DJ night', description: 'Door tickets, DJ, security and late staffing.' },
+  { key: 'football', label: 'Football screening', description: 'Free or cheap entry, high bar estimate.' },
+  { key: 'corporate', label: 'Corporate event', description: 'Package income, staffing and production.' }
+];
+
+function applyTemplate(event: PlannerEvent, template: TemplateKey): PlannerEvent {
+  if (template === 'blank') return event;
+  const makeLine = (kind: LineKind, name: string, amount: number, quantity = 1, mode: LineMode = 'fixed', notes = ''): MoneyLine => ({ id: uid(), kind, name, amount, quantity, mode, notes });
+  const makeStaff = (role: string, people: number, hours: number, hourlyWage = 165, extraPercent = 12.5): StaffLine => ({ id: uid(), role, people, hours, hourlyWage, extraPercent, notes: '' });
+  const next = { ...event, lines: [] as MoneyLine[], staff: [] as StaffLine[], tickets: [...event.tickets], bar: { ...event.bar }, termsPlan: { ...event.termsPlan } };
+  if (template === 'concert') {
+    next.meta.name = 'Concert forecast';
+    next.tickets = [{ id: uid(), name: 'Presale', price: 120, sold: 80, capacity: 120, notes: '' }, { id: uid(), name: 'Door', price: 150, sold: 30, capacity: 60, notes: '' }];
+    next.lines = [makeLine('expense', 'Artist fee', 6000), makeLine('expense', 'Sound / tech', 2500), makeLine('expense', 'Marketing', 1200), makeLine('expense', 'Security', 1800)];
+    next.staff = [makeStaff('Bartender', 3, 8), makeStaff('Runner / floor', 1, 6)];
+    next.bar.spendPerGuest = 180;
+  }
+  if (template === 'quiz') {
+    next.meta.name = 'Quiz night forecast';
+    next.tickets = [{ id: uid(), name: 'Quiz ticket', price: 50, sold: 70, capacity: 90, notes: '' }];
+    next.lines = [makeLine('expense', 'Quiz host', 1500), makeLine('expense', 'Prizes', 700), makeLine('income', 'Table package', 250, 4, 'fixed')];
+    next.staff = [makeStaff('Bartender', 2, 6)];
+    next.bar.spendPerGuest = 220;
+  }
+  if (template === 'privateParty') {
+    next.meta.name = 'Private party forecast';
+    next.tickets = [{ id: uid(), name: 'Guest estimate', price: 0, sold: 80, capacity: 100, notes: 'Use sold as guest count.' }];
+    next.lines = [makeLine('income', 'Venue hire', 7500), makeLine('expense', 'Cleaning', 900), makeLine('expense', 'Extra setup', 1200)];
+    next.staff = [makeStaff('Bartender', 2, 7), makeStaff('Manager / host', 1, 5, 190)];
+    next.bar.spendPerGuest = 250;
+    next.termsPlan.flatVenueHire = 0;
+  }
+  if (template === 'djNight') {
+    next.meta.name = 'DJ night forecast';
+    next.tickets = [{ id: uid(), name: 'Door', price: 80, sold: 120, capacity: 160, notes: '' }];
+    next.lines = [makeLine('expense', 'DJ fee', 3500), makeLine('expense', 'Security', 2400), makeLine('expense', 'Marketing', 1500)];
+    next.staff = [makeStaff('Bartender', 4, 8), makeStaff('Door', 1, 7, 180)];
+    next.bar.spendPerGuest = 230;
+  }
+  if (template === 'football') {
+    next.meta.name = 'Football screening forecast';
+    next.tickets = [{ id: uid(), name: 'Reservation / ticket', price: 30, sold: 100, capacity: 110, notes: '' }];
+    next.lines = [makeLine('expense', 'Sport subscription / setup', 900), makeLine('expense', 'Extra screens / cable', 500)];
+    next.staff = [makeStaff('Bartender', 3, 6)];
+    next.bar.spendPerGuest = 260;
+  }
+  if (template === 'corporate') {
+    next.meta.name = 'Corporate event forecast';
+    next.tickets = [{ id: uid(), name: 'Guests', price: 0, sold: 60, capacity: 80, notes: 'Use sold as guest count.' }];
+    next.lines = [makeLine('income', 'Event package', 450, 60, 'fixed'), makeLine('expense', 'Catering / snacks', 90, 60, 'fixed'), makeLine('expense', 'Production', 3500)];
+    next.staff = [makeStaff('Bartender', 2, 6), makeStaff('Host', 1, 5, 190)];
+    next.bar.spendPerGuest = 120;
+    next.bar.costPercent = 35;
+  }
+  const totalSold = next.tickets.reduce((sum, ticket) => sum + ticket.sold, 0);
+  const avgTicket = totalSold ? next.tickets.reduce((sum, ticket) => sum + ticket.sold * ticket.price, 0) / totalSold : 150;
+  const expectedExpenses = next.lines.filter((line) => line.kind === 'expense').reduce((sum, line) => sum + line.amount * line.quantity, 0) + next.staff.reduce((sum, line) => sum + staffTotal(line), 0);
+  next.scenarios = defaultScenarios(totalSold, Math.round(avgTicket), next.bar.spendPerGuest, expectedExpenses);
   return next;
 }
 
@@ -102,25 +261,61 @@ function lineTotal(line: MoneyLine, ticketRevenue: number, totalSold: number) {
   return line.amount * line.quantity;
 }
 
+function staffTotal(line: StaffLine) {
+  return line.people * line.hours * line.hourlyWage * (1 + line.extraPercent / 100);
+}
+
+function getWorkspaceKey() {
+  if (typeof window === 'undefined') return DEFAULT_WORKSPACE;
+  const url = new URL(window.location.href);
+  const fromUrl = url.searchParams.get('workspace');
+  if (fromUrl) {
+    const slug = safeSlug(fromUrl);
+    localStorage.setItem(WORKSPACE_STORAGE_KEY, slug);
+    return slug;
+  }
+  const stored = localStorage.getItem(WORKSPACE_STORAGE_KEY);
+  if (stored) return stored;
+  localStorage.setItem(WORKSPACE_STORAGE_KEY, DEFAULT_WORKSPACE);
+  return DEFAULT_WORKSPACE;
+}
+
 export default function EventPlannerApp() {
   const [events, setEvents] = useState<PlannerEvent[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [status, setStatus] = useState('Local draft');
+  const [workspace, setWorkspace] = useState(DEFAULT_WORKSPACE);
   const [syncEnabled, setSyncEnabled] = useState(false);
   const [showEvents, setShowEvents] = useState(false);
   const [showMeta, setShowMeta] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showWorkspace, setShowWorkspace] = useState(false);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    forecast: true,
+    scenarios: true,
+    tickets: true,
+    bar: true,
+    staff: true,
+    income: true,
+    expenses: true,
+    terms: true,
+    notes: false,
+    export: false
+  });
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    const key = getWorkspaceKey();
+    setWorkspace(key);
     const starter = emptyEvent();
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(`${STORAGE_KEY}:${key}`) || localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
     if (raw) {
       try {
-        const parsed = JSON.parse(raw) as PlannerEvent[];
+        const parsed = JSON.parse(raw) as Partial<PlannerEvent>[];
         if (Array.isArray(parsed) && parsed.length) {
-          setEvents(parsed);
-          setActiveId(parsed[0].id);
+          const hydrated = parsed.map(hydrateEvent);
+          setEvents(hydrated);
+          setActiveId(hydrated[0].id);
           return;
         }
       } catch {}
@@ -129,40 +324,46 @@ export default function EventPlannerApp() {
     setActiveId(starter.id);
   }, []);
 
-  useEffect(() => {
+  async function loadFromSupabase(workspaceKey = workspace) {
     const client = getSupabaseClient();
-    if (!client) return;
+    if (!client) {
+      setStatus('Saved locally');
+      return;
+    }
     setSyncEnabled(true);
-    const ownerKey = getOwnerKey();
-    client
+    setStatus('Loading...');
+    const { data, error } = await client
       .from('event_plans')
       .select('*')
-      .eq('owner_key', ownerKey)
-      .order('updated_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (error) {
-          setStatus('Supabase not connected');
-          return;
-        }
-        const remote = ((data || []) as DbEventRow[]).map((row) => row.payload).filter(Boolean);
-        if (remote.length) {
-          setEvents(remote);
-          setActiveId(remote[0].id);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
-          setStatus('Synced');
-        }
-      });
+      .eq('owner_key', workspaceKey)
+      .order('updated_at', { ascending: false });
+    if (error) {
+      setStatus('Supabase error');
+      return;
+    }
+    const remote = ((data || []) as DbEventRow[]).map((row) => hydrateEvent(row.payload)).filter(Boolean);
+    if (remote.length) {
+      setEvents(remote);
+      setActiveId(remote[0].id);
+      localStorage.setItem(`${STORAGE_KEY}:${workspaceKey}`, JSON.stringify(remote));
+    }
+    setStatus('Synced');
+  }
+
+  useEffect(() => {
+    const key = getWorkspaceKey();
+    void loadFromSupabase(key);
   }, []);
 
   useEffect(() => {
     if (!events.length) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    localStorage.setItem(`${STORAGE_KEY}:${workspace}`, JSON.stringify(events));
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => void saveToSupabase(events), 650);
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
-  }, [events]);
+  }, [events, workspace]);
 
   async function saveToSupabase(nextEvents: PlannerEvent[]) {
     const client = getSupabaseClient();
@@ -170,11 +371,11 @@ export default function EventPlannerApp() {
       setStatus('Saved locally');
       return;
     }
-    const ownerKey = getOwnerKey();
+    setSyncEnabled(true);
     setStatus('Saving...');
     const rows = nextEvents.map((event) => ({
       id: event.id,
-      owner_key: ownerKey,
+      owner_key: workspace,
       name: event.meta.name || 'Untitled event',
       event_date: event.meta.date || null,
       payload: event,
@@ -184,33 +385,19 @@ export default function EventPlannerApp() {
     setStatus(error ? 'Local saved / Supabase error' : 'Synced');
   }
 
+  async function deleteRemote(eventId: string) {
+    const client = getSupabaseClient();
+    if (!client) return;
+    await client.from('event_plans').delete().eq('id', eventId).eq('owner_key', workspace);
+  }
+
   const active = events.find((event) => event.id === activeId) || events[0];
 
-  const totals = useMemo(() => {
-    if (!active) {
-      return { totalSold: 0, capacity: 0, ticketRevenue: 0, income: 0, expenses: 0, profit: 0, perGuest: 0 };
-    }
-    const totalSold = active.tickets.reduce((sum, ticket) => sum + ticket.sold, 0);
-    const capacity = active.tickets.reduce((sum, ticket) => sum + ticket.capacity, 0);
-    const ticketRevenue = active.tickets.reduce((sum, ticket) => sum + ticket.sold * ticket.price, 0);
-    const incomeLines = active.lines.filter((line) => line.kind === 'income').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
-    const expenseLines = active.lines.filter((line) => line.kind === 'expense').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
-    const income = ticketRevenue + incomeLines;
-    const profit = income - expenseLines;
-    return {
-      totalSold,
-      capacity,
-      ticketRevenue,
-      income,
-      expenses: expenseLines,
-      profit,
-      perGuest: totalSold ? profit / totalSold : 0
-    };
-  }, [active]);
+  const totals = useMemo(() => calculateTotals(active), [active]);
 
   function patchActive(patch: Partial<PlannerEvent>) {
     if (!active) return;
-    setEvents((current) => current.map((event) => event.id === active.id ? { ...event, ...patch, updatedAt: new Date().toISOString() } : event));
+    setEvents((current) => current.map((event) => event.id === active.id ? hydrateEvent({ ...event, ...patch, updatedAt: new Date().toISOString() }) : event));
   }
 
   function patchMeta(key: keyof EventMeta, value: string) {
@@ -225,9 +412,17 @@ export default function EventPlannerApp() {
     patchActive({ lines: active.lines.map((line) => line.id === id ? { ...line, ...patch } : line) });
   }
 
-  function createNewEvent() {
-    const next = emptyEvent();
-    next.meta.name = `Event ${events.length + 1}`;
+  function patchStaff(id: string, patch: Partial<StaffLine>) {
+    patchActive({ staff: active.staff.map((line) => line.id === id ? { ...line, ...patch } : line) });
+  }
+
+  function patchScenario(id: string, patch: Partial<Scenario>) {
+    patchActive({ scenarios: active.scenarios.map((scenario) => scenario.id === id ? { ...scenario, ...patch } : scenario) });
+  }
+
+  function createNewEvent(template: TemplateKey = 'blank') {
+    const next = emptyEvent(template);
+    next.meta.name = template === 'blank' ? `Event ${events.length + 1}` : next.meta.name;
     setEvents((current) => [next, ...current]);
     setActiveId(next.id);
     setShowEvents(false);
@@ -236,20 +431,23 @@ export default function EventPlannerApp() {
 
   function duplicateEvent() {
     if (!active) return;
-    const copy: PlannerEvent = {
+    const copy: PlannerEvent = hydrateEvent({
       ...active,
       id: uid(),
       updatedAt: new Date().toISOString(),
       meta: { ...active.meta, name: `${active.meta.name || 'Event'} copy` },
       tickets: active.tickets.map((ticket) => ({ ...ticket, id: uid() })),
-      lines: active.lines.map((line) => ({ ...line, id: uid() }))
-    };
+      lines: active.lines.map((line) => ({ ...line, id: uid() })),
+      staff: active.staff.map((line) => ({ ...line, id: uid() })),
+      scenarios: active.scenarios.map((scenario) => ({ ...scenario, id: uid() }))
+    });
     setEvents((current) => [copy, ...current]);
     setActiveId(copy.id);
   }
 
   function deleteActiveEvent() {
     if (!active) return;
+    void deleteRemote(active.id);
     const remaining = events.filter((event) => event.id !== active.id);
     if (!remaining.length) {
       const fresh = emptyEvent();
@@ -261,27 +459,44 @@ export default function EventPlannerApp() {
     setActiveId(remaining[0].id);
   }
 
+  function toggleSection(section: string) {
+    setOpenSections((current) => ({ ...current, [section]: !current[section] }));
+  }
+
+  function setWorkspaceAndReload(nextWorkspace: string) {
+    const slug = safeSlug(nextWorkspace);
+    localStorage.setItem(WORKSPACE_STORAGE_KEY, slug);
+    const url = new URL(window.location.href);
+    url.searchParams.set('workspace', slug);
+    window.location.href = url.toString();
+  }
+
   if (!active) return <main className="min-h-dvh bg-[var(--paper)]" />;
+
+  const workspaceLink = typeof window === 'undefined' ? '' : `${window.location.origin}${window.location.pathname}?workspace=${workspace}`;
 
   return (
     <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-3">
-        <header className="grid grid-cols-2 gap-2 md:grid-cols-[1fr_auto_auto]">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
+        <header className="grid grid-cols-2 gap-2 md:grid-cols-[1fr_auto_auto_auto]">
           <button onClick={() => setShowEvents(true)} className="passport-button min-h-12 rounded-full px-4 text-left text-xs uppercase tracking-[.16em]">
             Events<br /><strong className="text-base normal-case tracking-normal">{active.meta.name || 'Untitled'}</strong>
           </button>
           <button onClick={() => setShowMeta(true)} className="passport-button min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em]">
-            Details<br /><strong className="text-base normal-case tracking-normal">Edit event</strong>
+            Details<br /><strong className="text-base normal-case tracking-normal">{statusLabel(active.meta.status)}</strong>
+          </button>
+          <button onClick={() => setShowWorkspace(true)} className="passport-button min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em]">
+            Workspace<br /><strong className="text-base normal-case tracking-normal">{workspace}</strong>
           </button>
           <button onClick={() => setShowHelp(true)} className="passport-button col-span-2 min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em] md:col-span-1">
             {syncEnabled ? 'Supabase' : 'Storage'}<br /><strong className="text-base normal-case tracking-normal">{status}</strong>
           </button>
         </header>
 
-        <section className="passport-card rounded-passport p-3 md:p-4">
+        <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')}>
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[.18em] opacity-70">Event forecast</p>
+              <p className="text-xs uppercase tracking-[.18em] opacity-70">{statusLabel(active.meta.status)} · {workspace}</p>
               <h1 className="text-3xl font-black leading-none tracking-[-.04em] md:text-5xl">{active.meta.name || 'Untitled event'}</h1>
               <p className="mt-2 text-sm opacity-75">{[active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · ') || 'Add date, time and location'}</p>
             </div>
@@ -289,23 +504,53 @@ export default function EventPlannerApp() {
               Profit<br /><strong className="text-lg tracking-normal">{money(totals.profit)}</strong>
             </div>
           </div>
-
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
             <Stat label="Tickets sold" value={`${fmt.format(totals.totalSold)}${totals.capacity ? ` / ${fmt.format(totals.capacity)}` : ''}`} />
             <Stat label="Ticket revenue" value={money(totals.ticketRevenue)} />
+            <Stat label="Bar profit" value={money(totals.barProfit)} />
             <Stat label="Total income" value={money(totals.income)} />
-            <Stat label="Expenses" value={money(totals.expenses)} />
           </div>
           <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+            <Stat label="Expenses" value={money(totals.expenses)} />
             <Stat label="Profit per guest" value={money(totals.perGuest)} />
-            <Stat label="Break-even guests" value={totals.totalSold ? fmt.format(Math.ceil(totals.expenses / Math.max(totals.income / totals.totalSold, 1))) : '0'} />
-            <Stat label="Margin" value={`${totals.income ? Math.round((totals.profit / totals.income) * 100) : 0}%`} />
-            <Stat label="Fill rate" value={`${totals.capacity ? Math.round((totals.totalSold / totals.capacity) * 100) : 0}%`} />
+            <Stat label="Break-even guests" value={fmt.format(totals.breakEvenGuests)} />
+            <Stat label="Margin / fill" value={`${totals.margin}% / ${totals.fillRate}%`} />
           </div>
-        </section>
+          <div className="mt-3 grid gap-2 md:grid-cols-3">
+            <MiniPanel title="Break-even helper" lines={[`Need ${fmt.format(totals.breakEvenGuests)} guests at current average revenue.`, `Need ticket price of ${money(totals.breakEvenTicketPrice)} without bar revenue.`, `Need average bar spend of ${money(totals.breakEvenBarSpend)} per guest with current ticket setup.`]} />
+            <MiniPanel title="Organizer" lines={[`Organizer net: ${money(totals.organizerNet)}`, `Venue net: ${money(totals.venueNet)}`, `Terms: ${active.termsPlan.enabled ? 'on' : 'off'}`]} />
+            <MiniPanel title="Bar" lines={[`Revenue: ${money(totals.barRevenue)}`, `Stock cost: ${money(totals.barCost)}`, `Avg spend: ${money(active.bar.spendPerGuest)}`]} />
+          </div>
+        </Collapsible>
 
-        <section className="passport-card rounded-passport p-3 md:p-4">
-          <SectionTop title="Tickets" subtitle="Change price or sold amount to test scenarios." action="Add ticket" onAction={() => patchActive({ tickets: [...active.tickets, { id: uid(), name: 'Ticket tier', price: 0, sold: 0, capacity: 0, notes: '' }] })} />
+        <Collapsible title="Scenario mode" subtitle="Low / expected / best-case planning" open={openSections.scenarios} onToggle={() => toggleSection('scenarios')}>
+          <div className="grid gap-3">
+            {active.scenarios.map((scenario) => {
+              const row = scenarioResult(scenario, active.bar.costPercent);
+              return (
+                <div key={scenario.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                  <div className="grid gap-2 md:grid-cols-[1.1fr_.7fr_.8fr_.8fr_.8fr_auto] md:items-end">
+                    <Field label="Scenario" value={scenario.name} onChange={(value) => patchScenario(scenario.id, { name: value })} />
+                    <StepperField label="Tickets" value={scenario.ticketsSold} onChange={(value) => patchScenario(scenario.id, { ticketsSold: value })} />
+                    <NumberField label="Avg ticket" value={scenario.averageTicketPrice} onChange={(value) => patchScenario(scenario.id, { averageTicketPrice: value })} />
+                    <NumberField label="Bar spend" value={scenario.barSpendPerGuest} onChange={(value) => patchScenario(scenario.id, { barSpendPerGuest: value })} />
+                    <NumberField label="Expenses" value={scenario.extraExpenses} onChange={(value) => patchScenario(scenario.id, { extraExpenses: value })} />
+                    <button onClick={() => patchActive({ scenarios: active.scenarios.filter((item) => item.id !== scenario.id) })} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
+                    <Stat label="Ticket revenue" value={money(row.ticketRevenue)} />
+                    <Stat label="Bar profit" value={money(row.barProfit)} />
+                    <Stat label="Profit" value={money(row.profit)} />
+                    <Stat label="Per guest" value={money(row.perGuest)} />
+                  </div>
+                </div>
+              );
+            })}
+            <button onClick={() => patchActive({ scenarios: [...active.scenarios, { id: uid(), name: 'New scenario', ticketsSold: totals.totalSold, averageTicketPrice: totals.averageTicketPrice, barSpendPerGuest: active.bar.spendPerGuest, extraExpenses: totals.expenses, notes: '' }] })} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Add scenario</button>
+          </div>
+        </Collapsible>
+
+        <Collapsible title="Tickets" subtitle="Change price or sold amount to test revenue." open={openSections.tickets} onToggle={() => toggleSection('tickets')} action="Add ticket" onAction={() => patchActive({ tickets: [...active.tickets, { id: uid(), name: 'Ticket tier', price: 0, sold: 0, capacity: 0, notes: '' }] })}>
           <div className="grid gap-3">
             {active.tickets.map((ticket) => {
               const total = ticket.price * ticket.sold;
@@ -329,35 +574,125 @@ export default function EventPlannerApp() {
               );
             })}
           </div>
-        </section>
+        </Collapsible>
 
-        <section className="passport-card rounded-passport p-3 md:p-4">
-          <SectionTop title="Income" subtitle="Add bar spend, sponsorships, cloakroom, grants or other income." action="Add income" onAction={() => patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'New income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] })} />
-          <MoneyLines kind="income" lines={active.lines.filter((line) => line.kind === 'income')} ticketRevenue={totals.ticketRevenue} totalSold={totals.totalSold} patchLine={patchLine} removeLine={(id) => patchActive({ lines: active.lines.filter((line) => line.id !== id) })} />
-        </section>
+        <Collapsible title="Bar calculator" subtitle="Estimate bar revenue, stock cost and bar profit." open={openSections.bar} onToggle={() => toggleSection('bar')}>
+          <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
+                Include bar calculator
+                <input type="checkbox" checked={active.bar.enabled} onChange={(event) => patchActive({ bar: { ...active.bar, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
+              </label>
+              <div className="grid gap-2">
+                <label className="flex items-center justify-between gap-3 text-sm font-bold">
+                  Guests = tickets sold
+                  <input type="checkbox" checked={active.bar.useTicketGuests} onChange={(event) => patchActive({ bar: { ...active.bar, useTicketGuests: event.target.checked } })} className="h-6 w-6 accent-black" />
+                </label>
+                {!active.bar.useTicketGuests && <StepperField label="Custom guests" value={active.bar.customGuests} onChange={(value) => patchActive({ bar: { ...active.bar, customGuests: value } })} />}
+                <NumberField label="Average spend per guest" value={active.bar.spendPerGuest} onChange={(value) => patchActive({ bar: { ...active.bar, spendPerGuest: value } })} />
+                <NumberField label="Stock cost %" value={active.bar.costPercent} onChange={(value) => patchActive({ bar: { ...active.bar, costPercent: value } })} />
+                <AreaField label="Bar notes" value={active.bar.notes} onChange={(value) => patchActive({ bar: { ...active.bar, notes: value } })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Stat label="Bar guests" value={fmt.format(totals.barGuests)} />
+              <Stat label="Gross bar" value={money(totals.barRevenue)} />
+              <Stat label="Stock cost" value={money(totals.barCost)} />
+              <Stat label="Bar profit" value={money(totals.barProfit)} />
+            </div>
+          </div>
+        </Collapsible>
 
-        <section className="passport-card rounded-passport p-3 md:p-4">
-          <SectionTop title="Expenses" subtitle="Add staff, artist fees, venue, stock, marketing, security and production." action="Add expense" onAction={() => patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: 'New expense', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] })} />
-          <MoneyLines kind="expense" lines={active.lines.filter((line) => line.kind === 'expense')} ticketRevenue={totals.ticketRevenue} totalSold={totals.totalSold} patchLine={patchLine} removeLine={(id) => patchActive({ lines: active.lines.filter((line) => line.id !== id) })} />
-        </section>
+        <Collapsible title="Staff cost calculator" subtitle="Auto-calculate wage cost including extra percentage." open={openSections.staff} onToggle={() => toggleSection('staff')} action="Add staff" onAction={() => patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] })}>
+          <div className="grid gap-3">
+            {active.staff.map((line) => (
+              <div key={line.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                <div className="grid gap-2 md:grid-cols-[1.2fr_.6fr_.6fr_.8fr_.7fr_auto] md:items-end">
+                  <Field label="Role" value={line.role} onChange={(value) => patchStaff(line.id, { role: value })} />
+                  <StepperField label="People" value={line.people} onChange={(value) => patchStaff(line.id, { people: value })} />
+                  <NumberField label="Hours" value={line.hours} onChange={(value) => patchStaff(line.id, { hours: value })} />
+                  <NumberField label="Hourly wage" value={line.hourlyWage} onChange={(value) => patchStaff(line.id, { hourlyWage: value })} />
+                  <NumberField label="Extra %" value={line.extraPercent} onChange={(value) => patchStaff(line.id, { extraPercent: value })} />
+                  <button onClick={() => patchActive({ staff: active.staff.filter((item) => item.id !== line.id) })} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+                </div>
+                <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto] md:items-center">
+                  <Field label="Notes" value={line.notes} onChange={(value) => patchStaff(line.id, { notes: value })} />
+                  <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
+                    <div className="text-xs uppercase tracking-[.14em] opacity-70">Staff cost</div>
+                    <div className="text-2xl font-black tracking-[-.04em]">{money(staffTotal(line))}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Stat label="Total staff cost" value={money(totals.staffCost)} />
+          </div>
+        </Collapsible>
 
-        <section className="passport-card rounded-passport p-3 md:p-4">
-          <SectionTop title="Planning notes" subtitle="Terms, assumptions and event notes." />
+        <Collapsible title="Income" subtitle="Add sponsorships, cloakroom, grants or other income." open={openSections.income} onToggle={() => toggleSection('income')} action="Add income" onAction={() => patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'New income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] })}>
+          <MoneyLines lines={active.lines.filter((line) => line.kind === 'income')} ticketRevenue={totals.ticketRevenue} totalSold={totals.totalSold} patchLine={patchLine} removeLine={(id) => patchActive({ lines: active.lines.filter((line) => line.id !== id) })} />
+        </Collapsible>
+
+        <Collapsible title="Expenses" subtitle="Add artist fees, venue, stock, marketing, security and production." open={openSections.expenses} onToggle={() => toggleSection('expenses')} action="Add expense" onAction={() => patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: 'New expense', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] })}>
+          <MoneyLines lines={active.lines.filter((line) => line.kind === 'expense')} ticketRevenue={totals.ticketRevenue} totalSold={totals.totalSold} patchLine={patchLine} removeLine={(id) => patchActive({ lines: active.lines.filter((line) => line.id !== id) })} />
+        </Collapsible>
+
+        <Collapsible title="Venue terms / profit split" subtitle="Calculate organizer and venue outcome." open={openSections.terms} onToggle={() => toggleSection('terms')}>
+          <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
+                Use terms calculator
+                <input type="checkbox" checked={active.termsPlan.enabled} onChange={(event) => patchActive({ termsPlan: { ...active.termsPlan, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
+              </label>
+              <div className="grid gap-2">
+                <NumberField label="Organizer ticket share %" value={active.termsPlan.organizerTicketShare} onChange={(value) => patchActive({ termsPlan: { ...active.termsPlan, organizerTicketShare: value } })} />
+                <NumberField label="Organizer bar profit share %" value={active.termsPlan.organizerBarProfitShare} onChange={(value) => patchActive({ termsPlan: { ...active.termsPlan, organizerBarProfitShare: value } })} />
+                <NumberField label="Flat venue hire" value={active.termsPlan.flatVenueHire} onChange={(value) => patchActive({ termsPlan: { ...active.termsPlan, flatVenueHire: value } })} />
+                <NumberField label="Minimum venue guarantee" value={active.termsPlan.minimumVenueGuarantee} onChange={(value) => patchActive({ termsPlan: { ...active.termsPlan, minimumVenueGuarantee: value } })} />
+                <AreaField label="Terms notes" value={active.termsPlan.notes} onChange={(value) => patchActive({ termsPlan: { ...active.termsPlan, notes: value } })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Stat label="Organizer net" value={money(totals.organizerNet)} />
+              <Stat label="Venue net" value={money(totals.venueNet)} />
+              <Stat label="Flat hire" value={money(active.termsPlan.flatVenueHire)} />
+              <Stat label="Guarantee top-up" value={money(totals.guaranteeTopUp)} />
+            </div>
+          </div>
+        </Collapsible>
+
+        <Collapsible title="Planning notes" subtitle="Terms, assumptions and event notes." open={openSections.notes} onToggle={() => toggleSection('notes')}>
           <div className="grid gap-2 md:grid-cols-2">
             <AreaField label="Terms / deal" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
             <AreaField label="Notes" value={active.meta.notes} onChange={(value) => patchMeta('notes', value)} placeholder="Operational notes, risk, staffing plan, supplier notes..." />
           </div>
-        </section>
+        </Collapsible>
+
+        <Collapsible title="Export summary" subtitle="Copy text or download CSV." open={openSections.export} onToggle={() => toggleSection('export')}>
+          <div className="grid gap-2 md:grid-cols-2">
+            <button onClick={() => void navigator.clipboard.writeText(buildTextSummary(active, totals, workspaceLink)).then(() => setStatus('Summary copied'))} className="passport-button min-h-12 rounded-soft px-3 font-bold">Copy event summary</button>
+            <button onClick={() => downloadCsv(active, totals)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Download CSV</button>
+          </div>
+          <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-soft border-[1.5px] border-[var(--ink)] p-3 text-xs leading-relaxed">{buildTextSummary(active, totals, workspaceLink)}</pre>
+        </Collapsible>
       </div>
 
       {showEvents && (
         <Modal title="Events" onClose={() => setShowEvents(false)}>
-          <div className="grid gap-2">
-            <button onClick={createNewEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Create new event</button>
+          <div className="grid gap-3">
+            <div className="grid gap-2 rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <p className="text-xs font-bold uppercase tracking-[.16em] opacity-70">Create from template</p>
+              <div className="grid gap-2 md:grid-cols-2">
+                {templates.map((template) => (
+                  <button key={template.key} onClick={() => createNewEvent(template.key)} className="passport-button rounded-soft p-3 text-left">
+                    <strong>{template.label}</strong><br /><span className="text-sm opacity-70">{template.description}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             {events.map((event) => (
               <button key={event.id} onClick={() => { setActiveId(event.id); setShowEvents(false); }} className={`passport-button rounded-soft p-3 text-left ${event.id === active.id ? 'bg-[var(--ink-soft)]' : ''}`}>
                 <div className="font-black">{event.meta.name || 'Untitled event'}</div>
-                <div className="text-sm opacity-75">{[event.meta.date, event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
+                <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[event.meta.date, event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
               </button>
             ))}
             <div className="grid grid-cols-2 gap-2">
@@ -372,6 +707,16 @@ export default function EventPlannerApp() {
         <Modal title="Event details" onClose={() => setShowMeta(false)}>
           <div className="grid gap-2">
             <Field label="Name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
+            <label className="grid gap-1">
+              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
+              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
+                <option value="idea">Idea</option>
+                <option value="quoted">Quoted</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="completed">Completed</option>
+              </select>
+            </label>
             <div className="grid grid-cols-2 gap-2">
               <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
               <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
@@ -383,17 +728,78 @@ export default function EventPlannerApp() {
         </Modal>
       )}
 
+      {showWorkspace && (
+        <Modal title="Shared workspace" onClose={() => setShowWorkspace(false)}>
+          <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
+        </Modal>
+      )}
+
       {showHelp && (
         <Modal title="Setup notes" onClose={() => setShowHelp(false)}>
           <div className="space-y-3 text-sm leading-relaxed">
-            <p>This works immediately with local browser saving. Add Supabase env variables on Vercel and run the included SQL schema to enable cloud persistence.</p>
+            <p>This version uses a shared workspace key instead of a private device key. Open the same workspace link on another phone or computer to edit the same events.</p>
             <p><strong>Line modes:</strong> Fixed = amount × quantity. Per ticket holder = amount × tickets sold × quantity. Percentage = amount as % of ticket revenue × quantity.</p>
-            <p><strong>Example:</strong> “all ticket holders use 200 DKK in the bar” should be an income line with amount 200 and mode “Per ticket holder”.</p>
+            <p><strong>Example:</strong> “all ticket holders use 200 DKK in the bar” can now be handled in the Bar calculator section.</p>
+            <p><strong>Supabase:</strong> Keep using the same <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> on Vercel. The existing <code>event_plans</code> table still works.</p>
           </div>
         </Modal>
       )}
     </main>
   );
+}
+
+function calculateTotals(active?: PlannerEvent) {
+  if (!active) {
+    return { totalSold: 0, capacity: 0, ticketRevenue: 0, averageTicketPrice: 0, lineIncome: 0, lineExpenses: 0, staffCost: 0, barGuests: 0, barRevenue: 0, barCost: 0, barProfit: 0, income: 0, expenses: 0, profit: 0, perGuest: 0, breakEvenGuests: 0, breakEvenTicketPrice: 0, breakEvenBarSpend: 0, margin: 0, fillRate: 0, organizerNet: 0, venueNet: 0, guaranteeTopUp: 0 };
+  }
+  const totalSold = active.tickets.reduce((sum, ticket) => sum + ticket.sold, 0);
+  const capacity = active.tickets.reduce((sum, ticket) => sum + ticket.capacity, 0);
+  const ticketRevenue = active.tickets.reduce((sum, ticket) => sum + ticket.sold * ticket.price, 0);
+  const averageTicketPrice = totalSold ? ticketRevenue / totalSold : 0;
+  const lineIncome = active.lines.filter((line) => line.kind === 'income').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
+  const lineExpenses = active.lines.filter((line) => line.kind === 'expense').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
+  const staffCost = active.staff.reduce((sum, line) => sum + staffTotal(line), 0);
+  const barGuests = active.bar.enabled ? (active.bar.useTicketGuests ? totalSold : active.bar.customGuests) : 0;
+  const barRevenue = active.bar.enabled ? barGuests * active.bar.spendPerGuest : 0;
+  const barCost = barRevenue * (active.bar.costPercent / 100);
+  const barProfit = barRevenue - barCost;
+  const income = ticketRevenue + lineIncome + barRevenue;
+  const expenses = lineExpenses + staffCost + barCost;
+  const profit = income - expenses;
+  const perGuest = totalSold ? profit / totalSold : 0;
+  const avgRevenuePerGuest = totalSold ? income / totalSold : averageTicketPrice + active.bar.spendPerGuest * (1 - active.bar.costPercent / 100);
+  const breakEvenGuests = avgRevenuePerGuest > 0 ? Math.ceil(expenses / avgRevenuePerGuest) : 0;
+  const breakEvenTicketPrice = totalSold ? Math.ceil(expenses / totalSold) : 0;
+  const breakEvenBarSpend = totalSold ? Math.max(0, (expenses - ticketRevenue - lineIncome) / totalSold / Math.max(1 - active.bar.costPercent / 100, 0.01)) : 0;
+  const margin = income ? Math.round((profit / income) * 100) : 0;
+  const fillRate = capacity ? Math.round((totalSold / capacity) * 100) : 0;
+  let organizerNet = profit;
+  let venueNet = 0;
+  let guaranteeTopUp = 0;
+  if (active.termsPlan.enabled) {
+    const ticketToOrganizer = ticketRevenue * (active.termsPlan.organizerTicketShare / 100);
+    const ticketToVenue = ticketRevenue - ticketToOrganizer;
+    const barProfitToOrganizer = barProfit * (active.termsPlan.organizerBarProfitShare / 100);
+    const barProfitToVenue = barProfit - barProfitToOrganizer;
+    const venueBeforeGuarantee = ticketToVenue + barProfitToVenue + active.termsPlan.flatVenueHire;
+    guaranteeTopUp = Math.max(0, active.termsPlan.minimumVenueGuarantee - venueBeforeGuarantee);
+    venueNet = venueBeforeGuarantee + guaranteeTopUp;
+    organizerNet = ticketToOrganizer + lineIncome + barProfitToOrganizer - lineExpenses - staffCost - active.termsPlan.flatVenueHire - guaranteeTopUp;
+  }
+  return { totalSold, capacity, ticketRevenue, averageTicketPrice, lineIncome, lineExpenses, staffCost, barGuests, barRevenue, barCost, barProfit, income, expenses, profit, perGuest, breakEvenGuests, breakEvenTicketPrice, breakEvenBarSpend, margin, fillRate, organizerNet, venueNet, guaranteeTopUp };
+}
+
+function scenarioResult(scenario: Scenario, barCostPercent: number) {
+  const ticketRevenue = scenario.ticketsSold * scenario.averageTicketPrice;
+  const barRevenue = scenario.ticketsSold * scenario.barSpendPerGuest;
+  const barProfit = barRevenue * (1 - barCostPercent / 100);
+  const profit = ticketRevenue + barProfit - scenario.extraExpenses;
+  const perGuest = scenario.ticketsSold ? profit / scenario.ticketsSold : 0;
+  return { ticketRevenue, barRevenue, barProfit, profit, perGuest };
+}
+
+function statusLabel(status: EventStatus) {
+  return ({ idea: 'Idea', quoted: 'Quoted', confirmed: 'Confirmed', cancelled: 'Cancelled', completed: 'Completed' } as Record<EventStatus, string>)[status] || 'Idea';
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -405,15 +811,29 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SectionTop({ title, subtitle, action, onAction }: { title: string; subtitle?: string; action?: string; onAction?: () => void }) {
+function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <div className="mb-3 flex items-center justify-between gap-3">
-      <div>
-        <h2 className="text-2xl font-black leading-none tracking-[-.04em]">{title}</h2>
-        {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
+    <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+      <h3 className="font-black tracking-[-.03em]">{title}</h3>
+      <div className="mt-2 space-y-1 text-sm opacity-75">
+        {lines.map((line) => <p key={line}>{line}</p>)}
       </div>
-      {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
     </div>
+  );
+}
+
+function Collapsible({ title, subtitle, open, onToggle, action, onAction, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; children: ReactNode }) {
+  return (
+    <section className="passport-card rounded-passport p-3 md:p-4">
+      <div className="flex items-center justify-between gap-3">
+        <button onClick={onToggle} className="min-w-0 flex-1 text-left">
+          <h2 className="text-2xl font-black leading-none tracking-[-.04em]">{title} <span className="text-base">{open ? '−' : '+'}</span></h2>
+          {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
+        </button>
+        {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
+      </div>
+      {open && <div className="mt-3">{children}</div>}
+    </section>
   );
 }
 
@@ -457,7 +877,7 @@ function StepperField({ label, value, onChange }: { label: string; value: number
   );
 }
 
-function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: { kind: LineKind; lines: MoneyLine[]; ticketRevenue: number; totalSold: number; patchLine: (id: string, patch: Partial<MoneyLine>) => void; removeLine: (id: string) => void }) {
+function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: { lines: MoneyLine[]; ticketRevenue: number; totalSold: number; patchLine: (id: string, patch: Partial<MoneyLine>) => void; removeLine: (id: string) => void }) {
   if (!lines.length) return <div className="rounded-soft border-[1.5px] border-dashed border-[var(--ink)] p-4 text-center text-sm opacity-70">No rows yet.</div>;
   return (
     <div className="grid gap-3">
@@ -493,10 +913,33 @@ function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: 
   );
 }
 
-function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
+function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWorkspace }: { workspace: string; workspaceLink: string; status: string; onReload: () => void; onChangeWorkspace: (workspace: string) => void }) {
+  const [draft, setDraft] = useState(workspace);
+  return (
+    <div className="grid gap-3 text-sm">
+      <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+        <p className="text-xs font-bold uppercase tracking-[.16em] opacity-70">Current workspace</p>
+        <p className="mt-1 text-xl font-black">{workspace}</p>
+        <p className="mt-2 opacity-75">Use this link on another device to see and edit the same events.</p>
+      </div>
+      <Field label="Share link" value={workspaceLink} onChange={() => {}} />
+      <div className="grid grid-cols-2 gap-2">
+        <button onClick={() => void navigator.clipboard.writeText(workspaceLink)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Copy link</button>
+        <button onClick={onReload} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>
+      </div>
+      <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+        <Field label="Change workspace" value={draft} onChange={setDraft} />
+        <button onClick={() => onChangeWorkspace(draft)} className="passport-button mt-2 min-h-12 w-full rounded-soft px-3 font-bold">Open workspace</button>
+      </div>
+      <p className="opacity-75">Sync status: {status}</p>
+    </div>
+  );
+}
+
+function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-[rgba(239,233,220,.78)] p-3 pt-[calc(var(--safe-top)+58px)]" onMouseDown={onClose}>
-      <div className="passport-card mx-auto max-h-[82dvh] w-full max-w-xl overflow-auto rounded-passport p-4 scrollbar-none" onMouseDown={(event) => event.stopPropagation()}>
+      <div className="passport-card mx-auto max-h-[82dvh] w-full max-w-2xl overflow-auto rounded-passport p-4 scrollbar-none" onMouseDown={(event) => event.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-3xl font-black tracking-[-.05em]">{title}</h2>
           <button onClick={onClose} className="passport-button h-11 w-11 rounded-full font-black">×</button>
@@ -505,4 +948,55 @@ function Modal({ title, children, onClose }: { title: string; children: React.Re
       </div>
     </div>
   );
+}
+
+function buildTextSummary(active: PlannerEvent, totals: ReturnType<typeof calculateTotals>, workspaceLink: string) {
+  return [
+    `${active.meta.name || 'Untitled event'} — ${statusLabel(active.meta.status)}`,
+    [active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · '),
+    '',
+    `Workspace: ${workspaceLink}`,
+    '',
+    `Tickets sold: ${fmt.format(totals.totalSold)} / ${fmt.format(totals.capacity)}`,
+    `Ticket revenue: ${money(totals.ticketRevenue)}`,
+    `Bar revenue: ${money(totals.barRevenue)}`,
+    `Bar cost: ${money(totals.barCost)}`,
+    `Bar profit: ${money(totals.barProfit)}`,
+    `Other income: ${money(totals.lineIncome)}`,
+    `Staff cost: ${money(totals.staffCost)}`,
+    `Other expenses: ${money(totals.lineExpenses)}`,
+    `Total income: ${money(totals.income)}`,
+    `Total expenses: ${money(totals.expenses)}`,
+    `Profit: ${money(totals.profit)}`,
+    `Profit per guest: ${money(totals.perGuest)}`,
+    `Break-even guests: ${fmt.format(totals.breakEvenGuests)}`,
+    '',
+    `Organizer net: ${money(totals.organizerNet)}`,
+    `Venue net: ${money(totals.venueNet)}`,
+    '',
+    active.meta.terms ? `Terms: ${active.meta.terms}` : '',
+    active.meta.notes ? `Notes: ${active.meta.notes}` : ''
+  ].filter((line) => line !== undefined).join('\n');
+}
+
+function downloadCsv(active: PlannerEvent, totals: ReturnType<typeof calculateTotals>) {
+  const rows = [
+    ['Section', 'Name', 'Amount', 'Quantity', 'Total', 'Notes'],
+    ['Summary', 'Ticket revenue', '', '', String(Math.round(totals.ticketRevenue)), ''],
+    ['Summary', 'Bar revenue', '', '', String(Math.round(totals.barRevenue)), ''],
+    ['Summary', 'Bar cost', '', '', String(Math.round(totals.barCost)), ''],
+    ['Summary', 'Staff cost', '', '', String(Math.round(totals.staffCost)), ''],
+    ['Summary', 'Profit', '', '', String(Math.round(totals.profit)), ''],
+    ...active.tickets.map((ticket) => ['Ticket', ticket.name, String(ticket.price), String(ticket.sold), String(Math.round(ticket.price * ticket.sold)), ticket.notes]),
+    ...active.staff.map((line) => ['Staff', line.role, String(line.hourlyWage), `${line.people} people × ${line.hours} hours`, String(Math.round(staffTotal(line))), line.notes]),
+    ...active.lines.map((line) => [line.kind, line.name, String(line.amount), String(line.quantity), String(Math.round(lineTotal(line, totals.ticketRevenue, totals.totalSold))), line.notes])
+  ];
+  const csv = rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${safeSlug(active.meta.name || 'event')}-summary.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }

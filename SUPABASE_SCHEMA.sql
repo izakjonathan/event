@@ -1,5 +1,6 @@
 -- Event Planner Calculator schema
 -- Run this in Supabase SQL editor before adding env vars to Vercel.
+-- v2 stores every event plan as one JSON payload row and groups shared events by owner_key/workspace.
 
 create table if not exists public.event_plans (
   id uuid primary key,
@@ -16,9 +17,9 @@ create index if not exists event_plans_updated_at_idx on public.event_plans(upda
 
 alter table public.event_plans enable row level security;
 
--- Simple anonymous app policy. The app creates a private random owner_key in localStorage
--- and only queries rows with that key. For stronger multi-user auth, replace these policies
--- with Supabase Auth user_id policies.
+-- Simple anonymous shared-workspace policy.
+-- Anyone with the same workspace link can read/edit that workspace.
+-- For stronger access control later, replace this with Supabase Auth user_id policies.
 drop policy if exists "event_plans_select_anon" on public.event_plans;
 drop policy if exists "event_plans_insert_anon" on public.event_plans;
 drop policy if exists "event_plans_update_anon" on public.event_plans;
