@@ -116,12 +116,20 @@ type UiStudioSettings = {
   typePreset: 'system' | 'rounded' | 'serif' | 'unbounded';
   headingSize: number;
   headingWeight: number;
+  headingLineHeight: number;
+  headingLetterSpacing: number;
   numberSize: number;
   numberWeight: number;
+  numberLineHeight: number;
+  numberLetterSpacing: number;
   labelSize: number;
   labelWeight: number;
+  labelLineHeight: number;
+  labelLetterSpacing: number;
   bodySize: number;
   bodyWeight: number;
+  bodyLineHeight: number;
+  bodyLetterSpacing: number;
 };
 
 const STORAGE_KEY = 'event-planner-calculator-v2';
@@ -161,12 +169,20 @@ function defaultUiStudio(): UiStudioSettings {
     typePreset: 'system',
     headingSize: 1,
     headingWeight: 900,
+    headingLineHeight: 0.92,
+    headingLetterSpacing: -0.055,
     numberSize: 1,
     numberWeight: 900,
+    numberLineHeight: 0.95,
+    numberLetterSpacing: -0.055,
     labelSize: 1,
-    labelWeight: 800,
+    labelWeight: 700,
+    labelLineHeight: 1.2,
+    labelLetterSpacing: 0.16,
     bodySize: 1,
-    bodyWeight: 400
+    bodyWeight: 400,
+    bodyLineHeight: 1.38,
+    bodyLetterSpacing: -0.01
   };
 }
 
@@ -417,12 +433,20 @@ export default function EventPlannerApp() {
     root.style.setProperty('--app-scale', String(uiStudio.fontScale));
     root.style.setProperty('--heading-size', String(uiStudio.headingSize));
     root.style.setProperty('--heading-weight', String(uiStudio.headingWeight));
+    root.style.setProperty('--heading-line-height', String(uiStudio.headingLineHeight));
+    root.style.setProperty('--heading-letter-spacing', `${uiStudio.headingLetterSpacing}em`);
     root.style.setProperty('--number-size', String(uiStudio.numberSize));
     root.style.setProperty('--number-weight', String(uiStudio.numberWeight));
+    root.style.setProperty('--number-line-height', String(uiStudio.numberLineHeight));
+    root.style.setProperty('--number-letter-spacing', `${uiStudio.numberLetterSpacing}em`);
     root.style.setProperty('--label-size', String(uiStudio.labelSize));
     root.style.setProperty('--label-weight', String(uiStudio.labelWeight));
+    root.style.setProperty('--label-line-height', String(uiStudio.labelLineHeight));
+    root.style.setProperty('--label-letter-spacing', `${uiStudio.labelLetterSpacing}em`);
     root.style.setProperty('--body-size', String(uiStudio.bodySize));
     root.style.setProperty('--body-weight', String(uiStudio.bodyWeight));
+    root.style.setProperty('--body-line-height', String(uiStudio.bodyLineHeight));
+    root.style.setProperty('--body-letter-spacing', `${uiStudio.bodyLetterSpacing}em`);
     root.style.fontSize = `${16 * uiStudio.fontScale}px`;
     localStorage.setItem(UI_STUDIO_STORAGE_KEY, JSON.stringify(uiStudio));
   }, [uiStudio]);
@@ -1071,32 +1095,48 @@ export default function EventPlannerApp() {
                   description="Section titles and main event titles"
                   size={uiStudio.headingSize}
                   weight={uiStudio.headingWeight}
+                  lineHeight={uiStudio.headingLineHeight}
+                  letterSpacing={uiStudio.headingLetterSpacing}
                   onSize={(value) => setUiStudio((current) => ({ ...current, headingSize: value }))}
                   onWeight={(value) => setUiStudio((current) => ({ ...current, headingWeight: value }))}
+                  onLineHeight={(value) => setUiStudio((current) => ({ ...current, headingLineHeight: value }))}
+                  onLetterSpacing={(value) => setUiStudio((current) => ({ ...current, headingLetterSpacing: value }))}
                 />
                 <TypeRoleControl
                   title="Numbers"
                   description="Forecast totals, prices and statistics"
                   size={uiStudio.numberSize}
                   weight={uiStudio.numberWeight}
+                  lineHeight={uiStudio.numberLineHeight}
+                  letterSpacing={uiStudio.numberLetterSpacing}
                   onSize={(value) => setUiStudio((current) => ({ ...current, numberSize: value }))}
                   onWeight={(value) => setUiStudio((current) => ({ ...current, numberWeight: value }))}
+                  onLineHeight={(value) => setUiStudio((current) => ({ ...current, numberLineHeight: value }))}
+                  onLetterSpacing={(value) => setUiStudio((current) => ({ ...current, numberLetterSpacing: value }))}
                 />
                 <TypeRoleControl
                   title="Labels"
                   description="Small uppercase labels"
                   size={uiStudio.labelSize}
                   weight={uiStudio.labelWeight}
+                  lineHeight={uiStudio.labelLineHeight}
+                  letterSpacing={uiStudio.labelLetterSpacing}
                   onSize={(value) => setUiStudio((current) => ({ ...current, labelSize: value }))}
                   onWeight={(value) => setUiStudio((current) => ({ ...current, labelWeight: value }))}
+                  onLineHeight={(value) => setUiStudio((current) => ({ ...current, labelLineHeight: value }))}
+                  onLetterSpacing={(value) => setUiStudio((current) => ({ ...current, labelLetterSpacing: value }))}
                 />
                 <TypeRoleControl
                   title="Body + buttons"
                   description="Paragraphs, inputs and button text"
                   size={uiStudio.bodySize}
                   weight={uiStudio.bodyWeight}
+                  lineHeight={uiStudio.bodyLineHeight}
+                  letterSpacing={uiStudio.bodyLetterSpacing}
                   onSize={(value) => setUiStudio((current) => ({ ...current, bodySize: value }))}
                   onWeight={(value) => setUiStudio((current) => ({ ...current, bodyWeight: value }))}
+                  onLineHeight={(value) => setUiStudio((current) => ({ ...current, bodyLineHeight: value }))}
+                  onLetterSpacing={(value) => setUiStudio((current) => ({ ...current, bodyLetterSpacing: value }))}
                 />
               </div>
 
@@ -1292,7 +1332,7 @@ function TypeScaleControl({ label, value, valueLabel, min, max, step, onChange }
   );
 }
 
-function TypeRoleControl({ title, description, size, weight, onSize, onWeight }: { title: string; description: string; size: number; weight: number; onSize: (value: number) => void; onWeight: (value: number) => void }) {
+function TypeRoleControl({ title, description, size, weight, lineHeight, letterSpacing, onSize, onWeight, onLineHeight, onLetterSpacing }: { title: string; description: string; size: number; weight: number; lineHeight: number; letterSpacing: number; onSize: (value: number) => void; onWeight: (value: number) => void; onLineHeight: (value: number) => void; onLetterSpacing: (value: number) => void }) {
   return (
     <div className="type-role-card">
       <div>
@@ -1317,6 +1357,24 @@ function TypeRoleControl({ title, description, size, weight, onSize, onWeight }:
             <button onClick={() => onWeight(Math.min(950, weight + 100))} className="passport-button rounded-soft font-black">+</button>
           </div>
         </div>
+        <TypeScaleControl
+          label={`Line height · ${lineHeight.toFixed(2)}`}
+          value={lineHeight}
+          valueLabel={lineHeight.toFixed(2)}
+          min={0.8}
+          max={1.8}
+          step={0.05}
+          onChange={onLineHeight}
+        />
+        <TypeScaleControl
+          label={`Letter spacing · ${letterSpacing.toFixed(2)}em`}
+          value={letterSpacing}
+          valueLabel={`${letterSpacing.toFixed(2)}em`}
+          min={-0.1}
+          max={0.3}
+          step={0.01}
+          onChange={onLetterSpacing}
+        />
       </div>
     </div>
   );

@@ -563,3 +563,138 @@ h1,h2,h3,h4,.ui-card-title,
     font-size:1.45rem !important;
   }
 }
+
+
+/* v16 typography reset to pre-consolidation feel, controlled by UI Studio */
+body,
+button,
+input,
+textarea,
+select,
+p,
+span,
+div{
+  font-family:var(--app-font);
+}
+
+body,
+p,
+input,
+textarea,
+select,
+button{
+  font-size:calc(1rem * var(--body-size));
+  font-weight:var(--body-weight);
+  line-height:var(--body-line-height);
+  letter-spacing:var(--body-letter-spacing);
+}
+
+/* Section titles / hero headings */
+.passport-card h1,
+.passport-card h2,
+.passport-card h3,
+.passport-card h4,
+.ui-card-title,
+.type-role-card h4,
+.forecast-info-card h3,
+.mini-panel h3{
+  font-family:var(--app-font);
+  font-size:calc(1em * var(--heading-size));
+  font-weight:var(--heading-weight) !important;
+  line-height:var(--heading-line-height) !important;
+  letter-spacing:var(--heading-letter-spacing) !important;
+}
+
+/* Old-style small field/card headings everywhere */
+.stat-card > div:first-child,
+label > span,
+.ui-label,
+.studio-label,
+.section-mini-label,
+.forecast-info-row span,
+.profit-kicker,
+.profit-sub,
+.text-\[10px\],
+.text-\[9px\],
+.text-\[8px\],
+[class*="tracking-[.16em]"],
+[class*="tracking-[.15em]"],
+[class*="tracking-[.14em]"],
+[class*="tracking-[.13em]"]{
+  font-family:var(--app-font);
+  font-size:calc(.625rem * var(--label-size)) !important;
+  font-weight:var(--label-weight) !important;
+  line-height:var(--label-line-height) !important;
+  letter-spacing:var(--label-letter-spacing) !important;
+  text-transform:uppercase;
+  opacity:.68;
+}
+
+/* Forecast stat numbers and all money/percent numbers */
+.stat-card > div:nth-child(2),
+.stat-card .money-inline,
+.stat-card .percent-inline,
+.money-number,
+.percent-number,
+.margin-fill-item strong,
+.profit-orb strong,
+.forecast-info-row strong{
+  font-family:var(--app-font);
+  font-size:calc(1.55rem * var(--number-size)) !important;
+  font-weight:var(--number-weight) !important;
+  line-height:var(--number-line-height) !important;
+  letter-spacing:var(--number-letter-spacing) !important;
+}
+
+.stat-card .money-currency,
+.stat-card .percent-light,
+.money-currency,
+.percent-light,
+.margin-fill-item span{
+  font-family:var(--app-font);
+  font-size:calc(.96rem * var(--number-size)) !important;
+  font-weight:400 !important;
+  line-height:var(--number-line-height) !important;
+  letter-spacing:calc(var(--number-letter-spacing) * .2) !important;
+  opacity:.72;
+}
+
+/* Restore old subheading proportions specifically inside forecast cards */
+.stat-card > div:first-child{
+  font-size:calc(.625rem * var(--label-size)) !important;
+  line-height:calc(1.2 * var(--label-line-height)) !important;
+  letter-spacing:var(--label-letter-spacing) !important;
+  font-weight:var(--label-weight) !important;
+}
+
+/* Inputs should remain readable even with custom fonts */
+.passport-input,
+.passport-input input,
+.passport-input textarea,
+.passport-input select{
+  font-size:calc(1rem * var(--body-size));
+  font-weight:var(--body-weight);
+  line-height:var(--body-line-height);
+  letter-spacing:var(--body-letter-spacing);
+}
+
+@media (max-width:430px){
+  .stat-card > div:nth-child(2),
+  .stat-card .money-inline,
+  .stat-card .percent-inline,
+  .money-number,
+  .percent-number,
+  .margin-fill-item strong{
+    font-size:calc(1.45rem * var(--number-size)) !important;
+  }
+  .top-nav-pill strong{
+    font-size:calc(.78rem * var(--body-size)) !important;
+    line-height:var(--body-line-height) !important;
+    letter-spacing:var(--body-letter-spacing) !important;
+  }
+  .top-nav-pill span{
+    font-size:calc(.48rem * var(--label-size)) !important;
+    line-height:var(--label-line-height) !important;
+    letter-spacing:var(--label-letter-spacing) !important;
+  }
+}
