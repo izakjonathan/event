@@ -684,9 +684,9 @@ export default function EventPlannerApp() {
 
             {openSections.forecast && (
               <>
-                <div className="forecast-main-row">
-                  <div className="min-w-0">
-                    <h2 className="forecast-event-name">{active.meta.name || 'Untitled event'}</h2>
+                <div className="forecast-main-block">
+                  <h2 className="forecast-event-name">{active.meta.name || 'Untitled event'}</h2>
+                  <div className="forecast-meta-profit-row">
                     <div className="forecast-meta-grid">
                       <div className="forecast-meta-pill">
                         <span>Date</span>
@@ -701,11 +701,11 @@ export default function EventPlannerApp() {
                         <strong>{shortText(active.meta.location) || 'Add location'}</strong>
                       </div>
                     </div>
-                  </div>
-                  <div className="profit-orb">
-                    <span className="profit-kicker">Projected profit</span>
-                    <strong><MoneyValue value={totals.profit} /></strong>
-                    <em className="profit-sub">after costs</em>
+                    <div className="profit-orb">
+                      <span className="profit-kicker">Projected profit</span>
+                      <strong><MoneyValue value={totals.profit} /></strong>
+                      <em className="profit-sub">after costs</em>
+                    </div>
                   </div>
                 </div>
 

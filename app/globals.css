@@ -1127,3 +1127,107 @@ main.no-callout{
   line-height:.9 !important;
   letter-spacing:-.035em !important;
 }
+
+
+/* v22: real profit alignment + data styling fix
+   Reason: profit card was previously in the same grid row as event name.
+   It is now inside .forecast-meta-profit-row, so it aligns with the Date/Time/Location stack. */
+.forecast-main-row{
+  display:block !important;
+}
+
+.forecast-main-block{
+  display:grid;
+  gap:.58rem;
+}
+
+.forecast-event-name{
+  max-width:none !important;
+  margin:0 !important;
+}
+
+.forecast-meta-profit-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 154px;
+  align-items:stretch;
+  gap:.62rem;
+}
+
+.forecast-meta-grid{
+  margin-top:0 !important;
+  max-width:none !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:.38rem !important;
+}
+
+.forecast-meta-pill{
+  min-height:43px !important;
+  height:43px !important;
+  padding:.34rem .52rem !important;
+  display:grid !important;
+  align-content:center !important;
+}
+
+.forecast-meta-profit-row .profit-orb{
+  width:154px !important;
+  height:calc((43px * 3) + (.38rem * 2)) !important;
+  min-height:calc((43px * 3) + (.38rem * 2)) !important;
+  max-height:calc((43px * 3) + (.38rem * 2)) !important;
+  margin-top:0 !important;
+  align-self:stretch !important;
+}
+
+/* Make helper-card right-side data match Guests / On scale. */
+.forecast-info-row strong{
+  color:var(--ink) !important;
+  opacity:1 !important;
+  font-size:calc(1.55rem * var(--number-size)) !important;
+  line-height:var(--number-line-height) !important;
+  font-weight:var(--number-weight) !important;
+  letter-spacing:var(--number-letter-spacing) !important;
+}
+
+.forecast-info-row strong .money-inline{
+  font-size:1em !important;
+  line-height:var(--number-line-height) !important;
+}
+
+.forecast-info-row strong .money-number{
+  font-size:1em !important;
+  color:var(--ink) !important;
+  opacity:1 !important;
+  font-weight:var(--number-weight) !important;
+  letter-spacing:var(--number-letter-spacing) !important;
+}
+
+.forecast-info-row strong .money-currency{
+  font-size:.62em !important;
+  color:var(--ink) !important;
+  opacity:.72 !important;
+  font-weight:400 !important;
+  letter-spacing:.02em !important;
+}
+
+@media (max-width:430px){
+  .forecast-meta-profit-row{
+    grid-template-columns:minmax(0,1fr) 142px !important;
+    gap:.62rem !important;
+  }
+
+  .forecast-meta-pill{
+    min-height:43px !important;
+    height:43px !important;
+  }
+
+  .forecast-meta-profit-row .profit-orb{
+    width:142px !important;
+    height:calc((43px * 3) + (.38rem * 2)) !important;
+    min-height:calc((43px * 3) + (.38rem * 2)) !important;
+    max-height:calc((43px * 3) + (.38rem * 2)) !important;
+  }
+
+  .forecast-info-row strong{
+    font-size:calc(1.45rem * var(--number-size)) !important;
+  }
+}
