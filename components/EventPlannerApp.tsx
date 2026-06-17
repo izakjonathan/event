@@ -645,7 +645,7 @@ export default function EventPlannerApp() {
             <Stat label="Expenses" value={money(totals.expenses)} />
             <Stat label="Profit per guest" value={money(totals.perGuest)} />
             <Stat label="Break-even guests" value={fmt.format(totals.breakEvenGuests)} />
-            <Stat label="Margin / fill" value={`${totals.margin}% / ${totals.fillRate}%`} />
+            <MarginFillCard margin={totals.margin} fillRate={totals.fillRate} />
           </div>
           <div className="mt-3 grid gap-2 md:grid-cols-3">
             <ForecastInfoCard title="Break-even helper" rows={[
@@ -1112,6 +1112,25 @@ function formatEventSchedule(meta: EventMeta) {
 
 function statusLabel(status: EventStatus) {
   return ({ idea: 'Idea', quoted: 'Quoted', confirmed: 'Confirmed', cancelled: 'Cancelled', completed: 'Completed' } as Record<EventStatus, string>)[status] || 'Idea';
+}
+
+function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number }) {
+  return (
+    <div className="stat-card margin-fill-card">
+      <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Margin / Fill</div>
+      <div className="margin-fill-values">
+        <div className="margin-fill-item">
+          <strong>{margin}</strong><span>%</span>
+          <em>Margin</em>
+        </div>
+        <div className="margin-fill-divider">/</div>
+        <div className="margin-fill-item">
+          <strong>{fillRate}</strong><span>%</span>
+          <em>Fill</em>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {

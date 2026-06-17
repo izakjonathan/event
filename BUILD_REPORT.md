@@ -1,11 +1,11 @@
-# Event Planner Calculator v10
+# Event Planner Calculator v11
 
-Built from latest working v9.
+Built from latest working v10.
 
 Changes:
-- Redesigned Event details section to stop date/time field overlap.
-- Added Start date and End date.
-- Added Start time and End time.
-- Forecast schedule line now supports date/time ranges.
-- Event library display supports the new date/time format.
-- Existing Supabase table/schema remains compatible because changes are stored in the payload.
+- Redesigned Margin / Fill card.
+- Added proper visual spacing between margin and fill values.
+- Numbers stay bold.
+- Percent signs and divider are lighter weight.
+- Added small labels under each value: Margin and Fill.
+- Existing Supabase/database compatibility unchanged.
