@@ -143,6 +143,46 @@ const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
 const pct = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 1 });
 const money = (value: number) => `${fmt.format(Math.round(value || 0))} DKK`;
 const uid = () => (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+
+function trulyBlankEvent(): PlannerEvent {
+  return {
+    id: uid(),
+    meta: {
+      name: '',
+      date: '',
+      endDate: '',
+      location: '',
+      time: '',
+      endTime: '',
+      terms: '',
+      notes: '',
+      status: 'idea'
+    },
+    tickets: [],
+    lines: [],
+    staff: [],
+    bar: {
+      enabled: false,
+      useTicketGuests: true,
+      customGuests: 0,
+      spendPerGuest: 0,
+      costPercent: 0,
+      notes: ''
+    },
+    scenarios: [],
+    termsPlan: {
+      enabled: false,
+      organizerTicketShare: 0,
+      organizerBarProfitShare: 0,
+      flatVenueHire: 0,
+      minimumVenueGuarantee: 0,
+      notes: ''
+    },
+    files: [],
+    updatedAt: new Date().toISOString()
+  };
+}
+
 const numberOrZero = (value: string) => {
   const parsed = Number(value.replace(',', '.'));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -397,7 +437,7 @@ export default function EventPlannerApp() {
   useEffect(() => {
     const key = getWorkspaceKey();
     setWorkspace(key);
-    const starter = emptyEvent();
+    const starter = trulyBlankEvent();
     const raw = localStorage.getItem(`${STORAGE_KEY}:${key}`) || localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
     if (raw) {
       try {
@@ -559,8 +599,7 @@ export default function EventPlannerApp() {
   }
 
   function createNewEvent(template: TemplateKey = 'blank') {
-    const next = emptyEvent(template);
-    next.meta.name = template === 'blank' ? `Event ${events.length + 1}` : next.meta.name;
+    const next = template === 'blank' ? trulyBlankEvent() : emptyEvent(template);
     setEvents((current) => [next, ...current]);
     setActiveId(next.id);
     setShowLibrary(false);
