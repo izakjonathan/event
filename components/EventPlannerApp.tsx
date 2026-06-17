@@ -8,8 +8,10 @@ type EventStatus = 'idea' | 'quoted' | 'confirmed' | 'cancelled' | 'completed';
 type EventMeta = {
   name: string;
   date: string;
+  endDate: string;
   location: string;
   time: string;
+  endTime: string;
   terms: string;
   notes: string;
   status: EventStatus;
@@ -197,8 +199,10 @@ function emptyEvent(template: TemplateKey = 'blank'): PlannerEvent {
     meta: {
       name: 'New event',
       date: '',
+      endDate: '',
       location: '',
       time: '',
+      endTime: '',
       terms: '',
       notes: '',
       status: 'idea'
@@ -619,7 +623,7 @@ export default function EventPlannerApp() {
                 <span className="rounded-full border border-[var(--ink)]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] opacity-75">{workspace}</span>
               </div>
               <h1 className="max-w-[12ch] text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:max-w-none md:text-6xl">{active.meta.name || 'Untitled event'}</h1>
-              <p className="mt-2 text-sm opacity-75">{[active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · ') || 'Add date, time and location'}</p>
+              <p className="mt-2 text-sm opacity-75">{formatEventSchedule(active.meta) || 'Add date, time and location'}</p>
               <div className="forecast-terms-card mt-3">
                 <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
                 <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
@@ -668,27 +672,40 @@ export default function EventPlannerApp() {
           </div>
         </Collapsible>
 
-        <Collapsible title="Event details" subtitle="Edit name, date, time, location and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
-          <div className="grid gap-3">
-            <div className="grid gap-2">
-              <Field label="Event name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
-              <div className="grid grid-cols-2 gap-2">
-                <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
-                <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
+        <Collapsible title="Event details" subtitle="Edit event info, dates, times and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
+          <div className="event-details-grid">
+            <Field label="Event name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
+
+            <div className="event-details-card">
+              <p className="section-mini-label">Dates</p>
+              <div className="event-two-col">
+                <Field label="Start date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
+                <Field label="End date" type="date" value={active.meta.endDate} onChange={(value) => patchMeta('endDate', value)} />
               </div>
-              <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
-              <label className="grid gap-1">
-                <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-                <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
-                  <option value="idea">Idea</option>
-                  <option value="quoted">Quoted</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="cancelled">Cancelled</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </label>
-              <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
             </div>
+
+            <div className="event-details-card">
+              <p className="section-mini-label">Times</p>
+              <div className="event-two-col">
+                <Field label="Start time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
+                <Field label="End time" type="time" value={active.meta.endTime} onChange={(value) => patchMeta('endTime', value)} />
+              </div>
+            </div>
+
+            <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
+
+            <label className="grid gap-1">
+              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
+              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
+                <option value="idea">Idea</option>
+                <option value="quoted">Quoted</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="completed">Completed</option>
+              </select>
+            </label>
+
+            <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
           </div>
         </Collapsible>
 
@@ -894,7 +911,7 @@ export default function EventPlannerApp() {
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="font-black text-lg tracking-[-.03em]">{event.meta.name || 'Untitled event'}</div>
-                          <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[event.meta.date, event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
+                          <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[formatEventSchedule(event.meta), event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
                         </div>
                         <span className="rounded-full border border-[var(--ink)]/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em]">Open</span>
                       </div>
@@ -1074,6 +1091,23 @@ function scenarioResult(scenario: Scenario, barCostPercent: number) {
   const profit = ticketRevenue + barProfit - scenario.extraExpenses;
   const perGuest = scenario.ticketsSold ? profit / scenario.ticketsSold : 0;
   return { ticketRevenue, barRevenue, barProfit, profit, perGuest };
+}
+
+function formatEventSchedule(meta: EventMeta) {
+  const startDate = meta.date;
+  const endDate = meta.endDate;
+  const startTime = meta.time;
+  const endTime = meta.endTime;
+
+  const datePart = startDate && endDate && endDate !== startDate
+    ? `${startDate} → ${endDate}`
+    : startDate || endDate || '';
+
+  const timePart = startTime && endTime
+    ? `${startTime}–${endTime}`
+    : startTime || endTime || '';
+
+  return [datePart, timePart].filter(Boolean).join(' · ');
 }
 
 function statusLabel(status: EventStatus) {

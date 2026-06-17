@@ -1,17 +1,11 @@
-# Event Planner Calculator v9
+# Event Planner Calculator v10
 
-Built from latest working v8.
+Built from latest working v9.
 
 Changes:
-- Added Event details section.
-- Event details lets you edit:
-  - name
-  - date
-  - time
-  - location
-  - status
-  - terms
-- Added Details quick button in Forecast.
-- Terms are now shown inside the Forecast card.
-- Event details is collapsed by default, keeping Forecast as the only open section initially.
-- Existing Supabase schema remains compatible.
+- Redesigned Event details section to stop date/time field overlap.
+- Added Start date and End date.
+- Added Start time and End time.
+- Forecast schedule line now supports date/time ranges.
+- Event library display supports the new date/time format.
+- Existing Supabase table/schema remains compatible because changes are stored in the payload.
