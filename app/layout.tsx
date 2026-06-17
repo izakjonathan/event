@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Event Planner Calculator',
-  description: 'Plan event ticket revenue, income, expenses and scenarios.'
+  title: 'Event Operations System',
+  description: 'Modular event planning, artist booking and event operations tools.'
 };
 
 export const viewport: Viewport = {

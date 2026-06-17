@@ -52,3 +52,11 @@ https://your-vercel-site.vercel.app?workspace=temple-events
 ## Important security note
 
 This is a simple shared-link setup. Anyone with the workspace link can edit that workspace. Add Supabase Auth later if you need private users, logins or permissions.
+
+
+## v27 System routes
+
+- `/` — Event system dashboard
+- `/event-planner` — Existing Event Planner Calculator module
+- `/artist-booking` — Placeholder for future public artist booking form
+- `/artists` — Placeholder for future internal artist submissions admin page

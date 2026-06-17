@@ -1,5 +1,5 @@
-import EventPlannerApp from '@/components/EventPlannerApp';
+import SystemDashboard from '@/components/SystemDashboard';
 
 export default function Page() {
-  return <EventPlannerApp />;
+  return <SystemDashboard />;
 }
