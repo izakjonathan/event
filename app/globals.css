@@ -311,3 +311,22 @@ input,textarea,select{outline:none;background:transparent}
   .top-nav-pill strong{font-size:.78rem !important}
   .top-nav-pill span{font-size:.48rem !important}
 }
+
+
+/* v9 event details + forecast terms */
+.forecast-terms-card{
+  border:1.5px solid rgb(var(--ink-rgb) / .38);
+  border-radius:18px;
+  padding:.65rem .75rem;
+  background:rgb(var(--ink-rgb) / .035);
+  max-width:34rem;
+}
+@media (max-width: 430px){
+  .quick-pill{
+    min-height:40px;
+    font-size:.78rem;
+    letter-spacing:-.04em;
+    padding-left:.25rem;
+    padding-right:.25rem;
+  }
+}

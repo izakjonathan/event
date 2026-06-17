@@ -343,6 +343,7 @@ export default function EventPlannerApp() {
   const [uiStudio, setUiStudio] = useState<UiStudioSettings>(defaultUiStudio());
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     forecast: true,
+    details: false,
     scenarios: false,
     tickets: false,
     bar: false,
@@ -619,6 +620,10 @@ export default function EventPlannerApp() {
               </div>
               <h1 className="max-w-[12ch] text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:max-w-none md:text-6xl">{active.meta.name || 'Untitled event'}</h1>
               <p className="mt-2 text-sm opacity-75">{[active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · ') || 'Add date, time and location'}</p>
+              <div className="forecast-terms-card mt-3">
+                <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
+                <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
+              </div>
             </div>
             <div className="profit-orb">
               <span className="profit-kicker">Projected profit</span>
@@ -655,10 +660,35 @@ export default function EventPlannerApp() {
               ['Avg. spend', money(active.bar.spendPerGuest)]
             ]} />
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-4 gap-2">
+            <button onClick={() => toggleSection('details')} className="quick-pill">Details</button>
             <button onClick={() => toggleSection('tickets')} className="quick-pill">Tickets</button>
             <button onClick={() => toggleSection('bar')} className="quick-pill">Bar</button>
             <button onClick={() => setShowQuickAdd(true)} className="quick-pill">Quick add</button>
+          </div>
+        </Collapsible>
+
+        <Collapsible title="Event details" subtitle="Edit name, date, time, location and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
+          <div className="grid gap-3">
+            <div className="grid gap-2">
+              <Field label="Event name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
+              <div className="grid grid-cols-2 gap-2">
+                <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
+                <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
+              </div>
+              <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
+              <label className="grid gap-1">
+                <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
+                <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
+                  <option value="idea">Idea</option>
+                  <option value="quoted">Quoted</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </label>
+              <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
+            </div>
           </div>
         </Collapsible>
 
