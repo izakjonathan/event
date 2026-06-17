@@ -24,12 +24,12 @@ You can learn more, including how to opt-out if you'd not like to participate in
  [37m[1m [22m[39m Collecting build traces ...
 
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
-┌ ○ /                                    47.8 kB         [37m[1m135 kB[22m[39m
+┌ ○ /                                    47.9 kB         [37m[1m135 kB[22m[39m
 └ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
 + First Load JS shared by all            [37m[1m87.3 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB
   ├ chunks/fd9d1056-e3d373074663785d.js  53.6 kB
-  └ other shared chunks (total)          1.96 kB
+  └ other shared chunks (total)          1.95 kB
 
 
 ○  (Static)  prerendered as static content

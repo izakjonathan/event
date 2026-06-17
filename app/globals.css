@@ -757,3 +757,110 @@ label > span,
     margin-top:-1.15rem;
   }
 }
+
+
+/* v18 top forecast/event details layout + compact inputs */
+.forecast-main-row{
+  align-items:start;
+}
+.forecast-meta-grid{
+  margin-top:.65rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.45rem;
+  max-width:25rem;
+}
+.forecast-meta-pill{
+  border:var(--line) solid rgb(var(--ink-rgb) / .28);
+  border-radius:16px;
+  padding:.48rem .6rem;
+  background:rgb(var(--ink-rgb) / .025);
+  min-width:0;
+}
+.forecast-meta-pill span{
+  display:block;
+  font-size:calc(.52rem * var(--label-size));
+  line-height:var(--label-line-height);
+  font-weight:var(--label-weight);
+  letter-spacing:var(--label-letter-spacing);
+  text-transform:uppercase;
+  opacity:.62;
+}
+.forecast-meta-pill strong{
+  display:block;
+  margin-top:.15rem;
+  font-size:calc(.86rem * var(--body-size));
+  line-height:1.15;
+  font-weight:var(--body-weight);
+  letter-spacing:var(--body-letter-spacing);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.forecast-meta-wide{
+  grid-column:1 / -1;
+}
+.event-schedule-card{
+  border:var(--line) solid var(--ink);
+  border-radius:var(--radius-md);
+  padding:.8rem;
+  background:var(--surface);
+  overflow:hidden;
+}
+.event-schedule-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.7rem;
+  min-width:0;
+}
+.event-schedule-grid > *{
+  min-width:0;
+}
+.compact-input{
+  min-height:42px !important;
+  height:42px !important;
+  display:flex;
+  align-items:center;
+  text-align:center;
+  line-height:1 !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+select.compact-input{
+  text-align-last:center;
+}
+input[type="date"].compact-input,
+input[type="time"].compact-input{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  text-align:center;
+}
+.passport-input{
+  min-width:0;
+}
+@media (max-width:430px){
+  .forecast-main-row{
+    grid-template-columns:minmax(0,1fr) 112px;
+    gap:.6rem;
+  }
+  .forecast-meta-grid{
+    grid-template-columns:1fr;
+    gap:.4rem;
+    max-width:none;
+  }
+  .forecast-main-row .profit-orb{
+    margin-top:-1.25rem;
+  }
+  .event-schedule-grid{
+    grid-template-columns:1fr;
+    gap:.75rem;
+  }
+  .compact-input{
+    min-height:40px !important;
+    height:40px !important;
+    font-size:16px !important;
+  }
+}

@@ -685,7 +685,20 @@ export default function EventPlannerApp() {
             <div className="forecast-main-row">
               <div className="min-w-0">
                 <h2 className="max-w-[12ch] text-[2.25rem] font-black leading-[.88] tracking-[-.06em] md:max-w-none md:text-5xl">{active.meta.name || 'Untitled event'}</h2>
-                <p className="mt-2 text-sm opacity-75">{formatEventSchedule(active.meta) || 'Add date, time and location'}</p>
+                <div className="forecast-meta-grid">
+                  <div className="forecast-meta-pill">
+                    <span>Date</span>
+                    <strong>{formatEventDateRange(active.meta) || 'Add date'}</strong>
+                  </div>
+                  <div className="forecast-meta-pill">
+                    <span>Time</span>
+                    <strong>{formatEventTimeRange(active.meta) || 'Add time'}</strong>
+                  </div>
+                  <div className="forecast-meta-pill forecast-meta-wide">
+                    <span>Location</span>
+                    <strong>{active.meta.location || 'Add location'}</strong>
+                  </div>
+                </div>
               </div>
               <div className="profit-orb">
                 <span className="profit-kicker">Projected profit</span>
@@ -736,21 +749,15 @@ export default function EventPlannerApp() {
           </div>
         </Collapsible>
 
-        <Collapsible title="Event details" subtitle="Edit event info, dates, times and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
+        <Collapsible title="Event details" subtitle="Edit event info, schedule, location and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
           <div className="event-details-grid">
             <Field label="Event name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
 
-            <div className="event-details-card">
-              <p className="section-mini-label">Dates</p>
-              <div className="event-two-col">
+            <div className="event-schedule-card">
+              <p className="section-mini-label">Schedule</p>
+              <div className="event-schedule-grid">
                 <Field label="Start date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
                 <Field label="End date" type="date" value={active.meta.endDate} onChange={(value) => patchMeta('endDate', value)} />
-              </div>
-            </div>
-
-            <div className="event-details-card">
-              <p className="section-mini-label">Times</p>
-              <div className="event-two-col">
                 <Field label="Start time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
                 <Field label="End time" type="time" value={active.meta.endTime} onChange={(value) => patchMeta('endTime', value)} />
               </div>
@@ -760,7 +767,7 @@ export default function EventPlannerApp() {
 
             <label className="grid gap-1">
               <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
+              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input compact-input w-full px-3">
                 <option value="idea">Idea</option>
                 <option value="quoted">Quoted</option>
                 <option value="confirmed">Confirmed</option>
@@ -1220,6 +1227,20 @@ function scenarioResult(scenario: Scenario, barCostPercent: number) {
   return { ticketRevenue, barRevenue, barProfit, profit, perGuest };
 }
 
+function formatEventDateRange(meta: EventMeta) {
+  const startDate = meta.date;
+  const endDate = meta.endDate;
+  if (startDate && endDate && endDate !== startDate) return `${startDate} → ${endDate}`;
+  return startDate || endDate || '';
+}
+
+function formatEventTimeRange(meta: EventMeta) {
+  const startTime = meta.time;
+  const endTime = meta.endTime;
+  if (startTime && endTime) return `${startTime}–${endTime}`;
+  return startTime || endTime || '';
+}
+
 function formatEventSchedule(meta: EventMeta) {
   const startDate = meta.date;
   const endDate = meta.endDate;
@@ -1417,7 +1438,7 @@ function Field({ label, value, onChange, type = 'text', placeholder }: { label: 
   return (
     <label className="grid gap-1">
       <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <input type={type} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} className="passport-input min-h-12 w-full px-3" />
+      <input type={type} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} className="passport-input compact-input w-full px-3" />
     </label>
   );
 }
@@ -1426,7 +1447,7 @@ function AreaField({ label, value, onChange, placeholder }: { label: string; val
   return (
     <label className="grid gap-1">
       <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <textarea value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} rows={4} className="passport-input w-full resize-none px-3 py-3" />
+      <textarea value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} rows={3} className="passport-input w-full resize-none px-3 py-2.5" />
     </label>
   );
 }
