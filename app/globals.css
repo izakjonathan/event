@@ -1231,3 +1231,30 @@ main.no-callout{
     font-size:calc(1.45rem * var(--number-size)) !important;
   }
 }
+
+
+/* v23 smaller Forecast title + less top spacing */
+main.no-callout{
+  padding-top:max(calc(var(--safe-top) + .35rem), .85rem) !important;
+}
+
+.forecast-title-text{
+  font-size:calc(1.35rem * var(--heading-size)) !important;
+  line-height:var(--heading-line-height) !important;
+  letter-spacing:var(--heading-letter-spacing) !important;
+}
+
+.forecast-title-row{
+  align-items:center !important;
+  margin-bottom:.2rem;
+}
+
+@media (max-width:430px){
+  main.no-callout{
+    padding-top:max(calc(var(--safe-top) + .45rem), 1.05rem) !important;
+  }
+
+  .forecast-title-text{
+    font-size:calc(1.28rem * var(--heading-size)) !important;
+  }
+}

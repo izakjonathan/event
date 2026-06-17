@@ -1,11 +1,9 @@
-# Event Planner Calculator v22
+# Event Planner Calculator v23
 
-Built from latest working v21.
+Built from latest working v22.
 
 Changes:
-- Fixed the Projected profit alignment properly.
-- Root cause fixed: the profit card was in the same grid row as the event name, so it could not align with the Date/Time/Location stack.
-- New structure places Projected profit in the same row as the three meta fields.
-- Projected profit now starts at the top of Date and ends at the bottom of Location.
-- Tickets / Avg. bar spend / Organizer net / Venue net / Revenue / Stock cost / Avg. spend data now uses the same strong data styling as Guests and Terms.
+- Made the Forecast title smaller so it feels like a card title, not the main event title.
+- Event name now has stronger visual priority over Forecast.
+- Reduced the top safe-area spacing so the top pills sit closer to the top of the iPhone screen.
 - Existing Supabase/database compatibility unchanged.
