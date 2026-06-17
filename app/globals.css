@@ -1443,3 +1443,244 @@ main.no-callout{
     min-height:235px;
   }
 }
+
+
+/* v28 artist booking module */
+.artist-public-shell{
+  background:
+    radial-gradient(circle at 20% 0%, rgb(var(--ink-rgb) / .08), transparent 34rem),
+    var(--paper);
+}
+.artist-form{
+  border-radius:30px;
+  padding:1rem;
+  display:grid;
+  gap:1rem;
+}
+.artist-form-section{
+  display:grid;
+  gap:.65rem;
+}
+.artist-form-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:.65rem;
+}
+.artist-field{
+  display:grid;
+  gap:.3rem;
+}
+.artist-field-wide{
+  grid-column:1 / -1;
+}
+.artist-field span{
+  font-size:calc(.56rem * var(--label-size, 1));
+  font-weight:var(--label-weight, 800);
+  line-height:var(--label-line-height, 1.15);
+  letter-spacing:var(--label-letter-spacing, .16em);
+  text-transform:uppercase;
+  opacity:.68;
+}
+.artist-field input,
+.artist-field textarea,
+.artist-card-head select{
+  width:100%;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .26);
+  border-radius:18px;
+  background:rgb(255 255 255 / .24);
+  color:var(--ink);
+  padding:.72rem .78rem;
+  font:inherit;
+  outline:none;
+}
+.artist-field textarea{
+  resize:vertical;
+  min-height:112px;
+}
+.artist-submit{
+  min-height:54px;
+  border:var(--line, 1.5px) solid var(--ink);
+  border-radius:999px;
+  background:var(--ink);
+  color:var(--paper);
+  font-size:calc(1rem * var(--body-size, 1));
+  font-weight:900;
+  line-height:.9;
+}
+.artist-submit:disabled{
+  opacity:.55;
+}
+.artist-message{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .22);
+  border-radius:20px;
+  padding:.75rem;
+  background:rgb(var(--ink-rgb) / .035);
+  font-weight:800;
+}
+.artist-message-error{
+  border-color:rgb(130 45 35 / .45);
+  background:rgb(130 45 35 / .08);
+}
+.artist-message-success{
+  border-color:rgb(35 110 70 / .45);
+  background:rgb(35 110 70 / .08);
+}
+.artist-admin-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+}
+.artist-filter-row{
+  display:flex;
+  gap:.4rem;
+  overflow-x:auto;
+  padding-bottom:.05rem;
+}
+.artist-filter-row button{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .25);
+  border-radius:999px;
+  background:rgb(var(--ink-rgb) / .035);
+  color:var(--ink);
+  padding:.58rem .72rem;
+  font-size:.76rem;
+  font-weight:900;
+  line-height:.9;
+  text-transform:capitalize;
+  white-space:nowrap;
+}
+.artist-filter-row button.active{
+  background:var(--ink);
+  color:var(--paper);
+}
+.artist-submission-grid{
+  display:grid;
+  gap:.85rem;
+}
+.artist-submission-card{
+  border-radius:30px;
+  padding:.65rem;
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr);
+  gap:.8rem;
+}
+.artist-image{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  border-radius:24px;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .2);
+  background:rgb(var(--ink-rgb) / .045);
+}
+.artist-image-empty{
+  display:grid;
+  place-items:center;
+  font-size:.7rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  opacity:.62;
+}
+.artist-submission-body{
+  display:grid;
+  gap:.75rem;
+  min-width:0;
+}
+.artist-card-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 150px;
+  gap:.65rem;
+  align-items:start;
+}
+.artist-card-head h2{
+  margin:0;
+  font-size:calc(2rem * var(--heading-size, 1));
+  line-height:.88;
+  font-weight:var(--heading-weight, 900);
+  letter-spacing:var(--heading-letter-spacing, -.055em);
+}
+.artist-card-head select{
+  padding:.55rem .6rem;
+  border-radius:16px;
+  text-transform:capitalize;
+  font-size:.82rem;
+  font-weight:900;
+}
+.artist-data-grid{
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  gap:.32rem .65rem;
+}
+.artist-data-grid span{
+  font-size:.58rem;
+  font-weight:900;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.58;
+}
+.artist-data-grid strong{
+  min-width:0;
+  overflow-wrap:anywhere;
+  font-size:.9rem;
+  line-height:1.08;
+  font-weight:900;
+}
+.artist-text{
+  margin:0;
+  font-size:.92rem;
+  line-height:1.35;
+  opacity:.78;
+}
+.artist-link-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+}
+.artist-link-row a{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .24);
+  border-radius:999px;
+  padding:.36rem .56rem;
+  color:var(--ink);
+  text-decoration:none;
+  font-size:.74rem;
+  line-height:1;
+  font-weight:900;
+}
+.artist-more{
+  border-top:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .16);
+  padding-top:.6rem;
+}
+.artist-more summary{
+  cursor:pointer;
+  font-weight:900;
+}
+.artist-more p{
+  margin:.45rem 0 0;
+  font-size:.86rem;
+  line-height:1.35;
+  opacity:.78;
+}
+@media (max-width:760px){
+  .artist-form-grid,
+  .artist-submission-card,
+  .artist-card-head{
+    grid-template-columns:1fr;
+  }
+  .artist-image{
+    max-height:270px;
+    aspect-ratio:16 / 10;
+  }
+}
+@media (max-width:430px){
+  .artist-form{
+    padding:.8rem;
+  }
+  .artist-field input,
+  .artist-field textarea{
+    border-radius:16px;
+    padding:.68rem .72rem;
+  }
+  .artist-submission-card{
+    padding:.55rem;
+  }
+}

@@ -24,18 +24,18 @@ const modules: ModuleCard[] = [
   },
   {
     title: 'Artist Booking',
-    label: 'Next module',
-    description: 'Public form to send to artists for submissions, availability and images.',
+    label: 'Public form',
+    description: 'Send this form link to artists for submissions, availability, images and requirements.',
     href: '/artist-booking',
-    status: 'Placeholder',
+    status: 'Live',
     items: ['Artist info', 'Availability', 'Image upload', 'Links + fee']
   },
   {
     title: 'Artist Submissions',
     label: 'Internal',
-    description: 'Review submitted artists and later connect them to event plans.',
+    description: 'Review submitted artists, update their status and prepare bookings for events.',
     href: '/artists',
-    status: 'Placeholder',
+    status: 'Live',
     items: ['Submission cards', 'Status tracking', 'Contact info', 'Booking notes']
   }
 ];

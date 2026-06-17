@@ -60,3 +60,16 @@ This is a simple shared-link setup. Anyone with the workspace link can edit that
 - `/event-planner` — Existing Event Planner Calculator module
 - `/artist-booking` — Placeholder for future public artist booking form
 - `/artists` — Placeholder for future internal artist submissions admin page
+
+
+## v28 Artist Booking setup
+
+Run the SQL in `SUPABASE_SCHEMA.sql` to add the `artist_submissions` table.
+
+Routes:
+- `/artist-booking` — public artist submission form
+- `/artists` — internal artist submissions admin/review page
+
+The app uses the existing Vercel env vars:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`

@@ -1,0 +1,230 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { getSupabaseClient } from '@/lib/supabaseClient';
+
+type ArtistFormState = {
+  artistName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  genre: string;
+  description: string;
+  imageUrl: string;
+  instagram: string;
+  spotify: string;
+  soundcloud: string;
+  youtube: string;
+  website: string;
+  availability: string;
+  preferredFee: string;
+  technicalNeeds: string;
+  hospitalityNeeds: string;
+  notes: string;
+};
+
+const emptyForm: ArtistFormState = {
+  artistName: '',
+  contactName: '',
+  email: '',
+  phone: '',
+  genre: '',
+  description: '',
+  imageUrl: '',
+  instagram: '',
+  spotify: '',
+  soundcloud: '',
+  youtube: '',
+  website: '',
+  availability: '',
+  preferredFee: '',
+  technicalNeeds: '',
+  hospitalityNeeds: '',
+  notes: ''
+};
+
+const fieldLabels: Record<keyof ArtistFormState, string> = {
+  artistName: 'Artist / act name',
+  contactName: 'Contact name',
+  email: 'Email',
+  phone: 'Phone',
+  genre: 'Genre / style',
+  description: 'Description / bio',
+  imageUrl: 'Image URL',
+  instagram: 'Instagram',
+  spotify: 'Spotify',
+  soundcloud: 'SoundCloud',
+  youtube: 'YouTube',
+  website: 'Website',
+  availability: 'Availability',
+  preferredFee: 'Preferred fee',
+  technicalNeeds: 'Technical requirements',
+  hospitalityNeeds: 'Hospitality requirements',
+  notes: 'Notes'
+};
+
+function cleanUrl(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  return `https://${trimmed}`;
+}
+
+export default function ArtistBookingForm() {
+  const [form, setForm] = useState<ArtistFormState>(emptyForm);
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  const canSubmit = useMemo(() => {
+    return form.artistName.trim().length > 1 && form.email.trim().length > 3;
+  }, [form.artistName, form.email]);
+
+  function patch<K extends keyof ArtistFormState>(key: K, value: ArtistFormState[K]) {
+    setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError('');
+
+    if (!canSubmit) {
+      setStatus('error');
+      setError('Artist name and email are required.');
+      return;
+    }
+
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      setStatus('error');
+      setError('Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.');
+      return;
+    }
+
+    setStatus('sending');
+
+    const payload = {
+      artist_name: form.artistName.trim(),
+      contact_name: form.contactName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      genre: form.genre.trim(),
+      description: form.description.trim(),
+      image_url: cleanUrl(form.imageUrl),
+      availability: form.availability.trim(),
+      preferred_fee: form.preferredFee.trim(),
+      technical_needs: form.technicalNeeds.trim(),
+      hospitality_needs: form.hospitalityNeeds.trim(),
+      notes: form.notes.trim(),
+      links: {
+        instagram: cleanUrl(form.instagram),
+        spotify: cleanUrl(form.spotify),
+        soundcloud: cleanUrl(form.soundcloud),
+        youtube: cleanUrl(form.youtube),
+        website: cleanUrl(form.website)
+      },
+      status: 'new'
+    };
+
+    const { error: insertError } = await supabase.from('artist_submissions').insert(payload);
+
+    if (insertError) {
+      setStatus('error');
+      setError(insertError.message);
+      return;
+    }
+
+    setStatus('sent');
+    setForm(emptyForm);
+  }
+
+  const input = (key: keyof ArtistFormState, type = 'text', placeholder = '') => (
+    <label className="artist-field">
+      <span>{fieldLabels[key]}</span>
+      <input
+        value={form[key]}
+        type={type}
+        placeholder={placeholder}
+        onChange={(event) => patch(key, event.target.value)}
+      />
+    </label>
+  );
+
+  const area = (key: keyof ArtistFormState, rows = 4, placeholder = '') => (
+    <label className="artist-field artist-field-wide">
+      <span>{fieldLabels[key]}</span>
+      <textarea
+        value={form[key]}
+        rows={rows}
+        placeholder={placeholder}
+        onChange={(event) => patch(key, event.target.value)}
+      />
+    </label>
+  );
+
+  return (
+    <main className="system-shell artist-public-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="system-wrap">
+        <Link href="/" className="back-pill passport-button">← Dashboard</Link>
+
+        <section className="system-hero passport-card">
+          <div>
+            <p className="system-kicker">Artist booking</p>
+            <h1>Submit your artist info</h1>
+            <p className="system-intro">
+              Send your contact details, availability, links and requirements so we can review you for future events.
+            </p>
+          </div>
+          <div className="system-status-pill">
+            <span>Form</span>
+            <strong>Open</strong>
+          </div>
+        </section>
+
+        <form onSubmit={submit} className="artist-form passport-card">
+          <div className="artist-form-section">
+            <p className="system-kicker">Main info</p>
+            <div className="artist-form-grid">
+              {input('artistName', 'text', 'Artist name')}
+              {input('contactName', 'text', 'Your name')}
+              {input('email', 'email', 'name@email.com')}
+              {input('phone', 'tel', '+45 ...')}
+              {input('genre', 'text', 'DJ, live band, singer-songwriter...')}
+              {input('preferredFee', 'text', 'Fee / price range')}
+              {area('description', 5, 'Short artist bio, sound, experience and what kind of events you fit.')}
+              {area('availability', 4, 'Dates, weekdays, months or periods you are available.')}
+            </div>
+          </div>
+
+          <div className="artist-form-section">
+            <p className="system-kicker">Image + links</p>
+            <div className="artist-form-grid">
+              {input('imageUrl', 'url', 'https://...')}
+              {input('instagram', 'text', 'instagram.com/...')}
+              {input('spotify', 'text', 'open.spotify.com/...')}
+              {input('soundcloud', 'text', 'soundcloud.com/...')}
+              {input('youtube', 'text', 'youtube.com/...')}
+              {input('website', 'text', 'your website')}
+            </div>
+          </div>
+
+          <div className="artist-form-section">
+            <p className="system-kicker">Requirements</p>
+            <div className="artist-form-grid">
+              {area('technicalNeeds', 4, 'Equipment, stage, sound, setup time, DJ gear, microphones etc.')}
+              {area('hospitalityNeeds', 4, 'Drinks, food, backstage, guestlist or other needs.')}
+              {area('notes', 4, 'Anything else we should know.')}
+            </div>
+          </div>
+
+          {status === 'error' && <div className="artist-message artist-message-error">{error}</div>}
+          {status === 'sent' && <div className="artist-message artist-message-success">Thanks — your artist info has been submitted.</div>}
+
+          <button className="artist-submit" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Submitting…' : 'Submit artist info'}
+          </button>
+        </form>
+      </div>
+    </main>
+  );
+}
