@@ -100,7 +100,7 @@ type UiStudioSettings = {
   paper: string;
   ink: string;
   fontScale: number;
-  typePreset: 'system' | 'rounded' | 'serif';
+  typePreset: 'system' | 'rounded' | 'serif' | 'unbounded';
 };
 
 const STORAGE_KEY = 'event-planner-calculator-v2';
@@ -108,7 +108,7 @@ const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
 const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
 const DEFAULT_WORKSPACE = 'main-workspace';
 const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v1';
-const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif' };
+const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif', unbounded: 'Unbounded' };
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
 const pct = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 1 });
@@ -144,6 +144,7 @@ function defaultUiStudio(): UiStudioSettings {
 function fontStackForPreset(preset: UiStudioSettings['typePreset']) {
   if (preset === 'rounded') return '"SF Pro Rounded", "Avenir Next", ui-rounded, "Nunito Sans", system-ui, sans-serif';
   if (preset === 'serif') return 'Iowan Old Style, Georgia, ui-serif, serif';
+  if (preset === 'unbounded') return 'Unbounded, -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
   return '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, system-ui, sans-serif';
 }
 
@@ -374,6 +375,8 @@ export default function EventPlannerApp() {
     root.style.setProperty('--paper', uiStudio.paper);
     root.style.setProperty('--ink', uiStudio.ink);
     root.style.setProperty('--ink-soft', rgbaFromHex(uiStudio.ink, 0.16));
+    const inkRgb = hexToRgb(uiStudio.ink);
+    root.style.setProperty('--ink-rgb', `${inkRgb.r} ${inkRgb.g} ${inkRgb.b}`);
     root.style.setProperty('--app-font', fontStackForPreset(uiStudio.typePreset));
     root.style.setProperty('--app-scale', String(uiStudio.fontScale));
     localStorage.setItem(UI_STUDIO_STORAGE_KEY, JSON.stringify(uiStudio));
@@ -532,20 +535,13 @@ export default function EventPlannerApp() {
   return (
     <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
+        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-2 gap-2">
           <button
             onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
             className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
           >
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Choose</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Event</strong>
-          </button>
-          <button
-            onClick={() => { setLibraryTab('templates'); setShowLibrary(true); }}
-            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
-          >
-            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Start</span>
-            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Template</strong>
           </button>
           <button onClick={() => setShowSettings(true)} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] uppercase leading-none tracking-[.13em] opacity-65">Manage</span>
@@ -885,6 +881,7 @@ export default function EventPlannerApp() {
                     <option value="system">System</option>
                     <option value="rounded">Rounded</option>
                     <option value="serif">Serif</option>
+                    <option value="unbounded">Unbounded</option>
                   </select>
                 </label>
                 <label className="grid gap-1">
@@ -1129,7 +1126,7 @@ function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWo
 
 function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 bg-[rgba(239,233,220,.78)] p-3 pt-[calc(var(--safe-top)+58px)]" onMouseDown={onClose}>
+    <div className="fixed inset-0 z-50 bg-[var(--paper)] p-3 pt-[calc(var(--safe-top)+58px)]" onMouseDown={onClose}>
       <div className="passport-card mx-auto max-h-[82dvh] w-full max-w-2xl overflow-auto rounded-passport p-4 scrollbar-none" onMouseDown={(event) => event.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-3xl font-black tracking-[-.05em]">{title}</h2>
