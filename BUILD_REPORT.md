@@ -1,16 +1,17 @@
-# Event Planner Calculator v14
+# Event Planner Calculator v15
 
-Built from latest working v13.
+Built from latest working v14.
 
 Changes:
-- Added UI Studio typography controls:
-  - Global scale
-  - Headings size + weight
-  - Numbers size + weight
-  - Labels size + weight
-  - Body/buttons size + weight
-- Included all main font styling roles while keeping controls consolidated.
-- Rebuilt globals.css into one consolidated design system.
-- Removed duplicated/overlapping CSS overrides from earlier builds.
-- Kept color controls for background/accent and type preset including Unbounded.
+- Restored the old forecast stat-card subheading style for:
+  - Tickets sold
+  - Ticket revenue
+  - Bar profit
+  - Total income
+  - Expenses
+  - Profit per guest
+  - Break-even guests
+- Made normal forecast stat numbers match the Margin / Fill number styling.
+- Kept Margin / Fill percent signs lightweight.
+- Kept v14 consolidated CSS and UI Studio controls.
 - Existing Supabase/database compatibility unchanged.
