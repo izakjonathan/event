@@ -114,6 +114,14 @@ type UiStudioSettings = {
   ink: string;
   fontScale: number;
   typePreset: 'system' | 'rounded' | 'serif' | 'unbounded';
+  headingSize: number;
+  headingWeight: number;
+  numberSize: number;
+  numberWeight: number;
+  labelSize: number;
+  labelWeight: number;
+  bodySize: number;
+  bodyWeight: number;
 };
 
 const STORAGE_KEY = 'event-planner-calculator-v2';
@@ -150,7 +158,15 @@ function defaultUiStudio(): UiStudioSettings {
     paper: '#efe9dc',
     ink: '#244cdd',
     fontScale: 1,
-    typePreset: 'system'
+    typePreset: 'system',
+    headingSize: 1,
+    headingWeight: 900,
+    numberSize: 1,
+    numberWeight: 900,
+    labelSize: 1,
+    labelWeight: 800,
+    bodySize: 1,
+    bodyWeight: 400
   };
 }
 
@@ -399,6 +415,14 @@ export default function EventPlannerApp() {
     root.style.setProperty('--ink-rgb', `${inkRgb.r} ${inkRgb.g} ${inkRgb.b}`);
     root.style.setProperty('--app-font', fontStackForPreset(uiStudio.typePreset));
     root.style.setProperty('--app-scale', String(uiStudio.fontScale));
+    root.style.setProperty('--heading-size', String(uiStudio.headingSize));
+    root.style.setProperty('--heading-weight', String(uiStudio.headingWeight));
+    root.style.setProperty('--number-size', String(uiStudio.numberSize));
+    root.style.setProperty('--number-weight', String(uiStudio.numberWeight));
+    root.style.setProperty('--label-size', String(uiStudio.labelSize));
+    root.style.setProperty('--label-weight', String(uiStudio.labelWeight));
+    root.style.setProperty('--body-size', String(uiStudio.bodySize));
+    root.style.setProperty('--body-weight', String(uiStudio.bodyWeight));
     root.style.fontSize = `${16 * uiStudio.fontScale}px`;
     localStorage.setItem(UI_STUDIO_STORAGE_KEY, JSON.stringify(uiStudio));
   }, [uiStudio]);
@@ -1007,19 +1031,21 @@ export default function EventPlannerApp() {
               )}
             </div>
 
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+            <div className="ui-studio-card">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">UI studio</p>
-                  <p className="text-lg font-black tracking-[-.03em]">Color + type</p>
+                  <p className="ui-label">UI studio</p>
+                  <p className="ui-card-title">Color + type</p>
                 </div>
                 <button onClick={() => setUiStudio(defaultUiStudio())} className="passport-button min-h-10 rounded-full px-3 text-sm font-bold">Reset</button>
               </div>
-              <div className="grid gap-3 md:grid-cols-2">
+
+              <div className="ui-control-grid">
                 <ColorField label="Background" value={uiStudio.paper} onChange={(value) => setUiStudio((current) => ({ ...current, paper: value }))} />
                 <ColorField label="Accent" value={uiStudio.ink} onChange={(value) => setUiStudio((current) => ({ ...current, ink: value }))} />
+
                 <label className="grid gap-1">
-                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Type preset</span>
+                  <span className="ui-label">Type preset</span>
                   <select value={uiStudio.typePreset} onChange={(event) => setUiStudio((current) => ({ ...current, typePreset: event.target.value as UiStudioSettings['typePreset'] }))} className="passport-input min-h-12 w-full px-3">
                     <option value="system">System</option>
                     <option value="rounded">Rounded</option>
@@ -1027,21 +1053,60 @@ export default function EventPlannerApp() {
                     <option value="unbounded">Unbounded</option>
                   </select>
                 </label>
-                <div className="grid gap-1">
-                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Type scale · {uiStudio.fontScale.toFixed(2)}×</span>
-                  <div className="grid grid-cols-[48px_1fr_48px] gap-2">
-                    <button onClick={() => setUiStudio((current) => ({ ...current, fontScale: Math.max(0.85, Number((current.fontScale - 0.03).toFixed(2))) }))} className="passport-button min-h-12 rounded-soft text-xl font-black">−</button>
-                    <div className="passport-input grid min-h-12 place-items-center px-3 font-black">{Math.round(uiStudio.fontScale * 100)}%</div>
-                    <button onClick={() => setUiStudio((current) => ({ ...current, fontScale: Math.min(1.25, Number((current.fontScale + 0.03).toFixed(2))) }))} className="passport-button min-h-12 rounded-soft text-xl font-black">+</button>
-                  </div>
-                </div>
+
+                <TypeScaleControl
+                  label="Global scale"
+                  value={uiStudio.fontScale}
+                  valueLabel={`${Math.round(uiStudio.fontScale * 100)}%`}
+                  min={0.85}
+                  max={1.25}
+                  step={0.03}
+                  onChange={(value) => setUiStudio((current) => ({ ...current, fontScale: value }))}
+                />
               </div>
+
+              <div className="ui-type-roles">
+                <TypeRoleControl
+                  title="Headings"
+                  description="Section titles and main event titles"
+                  size={uiStudio.headingSize}
+                  weight={uiStudio.headingWeight}
+                  onSize={(value) => setUiStudio((current) => ({ ...current, headingSize: value }))}
+                  onWeight={(value) => setUiStudio((current) => ({ ...current, headingWeight: value }))}
+                />
+                <TypeRoleControl
+                  title="Numbers"
+                  description="Forecast totals, prices and statistics"
+                  size={uiStudio.numberSize}
+                  weight={uiStudio.numberWeight}
+                  onSize={(value) => setUiStudio((current) => ({ ...current, numberSize: value }))}
+                  onWeight={(value) => setUiStudio((current) => ({ ...current, numberWeight: value }))}
+                />
+                <TypeRoleControl
+                  title="Labels"
+                  description="Small uppercase labels"
+                  size={uiStudio.labelSize}
+                  weight={uiStudio.labelWeight}
+                  onSize={(value) => setUiStudio((current) => ({ ...current, labelSize: value }))}
+                  onWeight={(value) => setUiStudio((current) => ({ ...current, labelWeight: value }))}
+                />
+                <TypeRoleControl
+                  title="Body + buttons"
+                  description="Paragraphs, inputs and button text"
+                  size={uiStudio.bodySize}
+                  weight={uiStudio.bodyWeight}
+                  onSize={(value) => setUiStudio((current) => ({ ...current, bodySize: value }))}
+                  onWeight={(value) => setUiStudio((current) => ({ ...current, bodyWeight: value }))}
+                />
+              </div>
+
               <div className="studio-preview mt-3">
                 <p className="studio-label">Preview</p>
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[.15em] opacity-65">{TYPE_PRESET_LABELS[uiStudio.typePreset]}</p>
+                    <p className="text-[10px] uppercase tracking-[.15em] opacity-65">Labels</p>
                     <p className="text-2xl font-black tracking-[-.05em]">Forecast style</p>
+                    <p className="mt-1 text-sm opacity-70">Body text preview</p>
                   </div>
                   <div className="text-right">
                     <MoneyValue value={26401} className="text-[1.7rem] font-black tracking-[-.05em]" />
@@ -1208,6 +1273,53 @@ function MoneyString({ text }: { text: string }) {
 
 function MoneyValue({ value, className = '' }: { value: number; className?: string }) {
   return <span className={`money-inline ${className}`.trim()}><span className="money-number">{fmt.format(Math.round(value || 0))}</span><span className="money-currency">DKK</span></span>;
+}
+
+function TypeScaleControl({ label, value, valueLabel, min, max, step, onChange }: { label: string; value: number; valueLabel: string; min: number; max: number; step: number; onChange: (value: number) => void }) {
+  const change = (direction: number) => {
+    const next = Number((value + direction * step).toFixed(2));
+    onChange(Math.min(max, Math.max(min, next)));
+  };
+  return (
+    <div className="grid gap-1">
+      <span className="ui-label">{label}</span>
+      <div className="ui-stepper">
+        <button onClick={() => change(-1)} className="passport-button rounded-soft font-black">−</button>
+        <div className="passport-input grid place-items-center px-3 font-black">{valueLabel}</div>
+        <button onClick={() => change(1)} className="passport-button rounded-soft font-black">+</button>
+      </div>
+    </div>
+  );
+}
+
+function TypeRoleControl({ title, description, size, weight, onSize, onWeight }: { title: string; description: string; size: number; weight: number; onSize: (value: number) => void; onWeight: (value: number) => void }) {
+  return (
+    <div className="type-role-card">
+      <div>
+        <h4>{title}</h4>
+        <p>{description}</p>
+      </div>
+      <div className="grid gap-2">
+        <TypeScaleControl
+          label={`Size · ${Math.round(size * 100)}%`}
+          value={size}
+          valueLabel={`${Math.round(size * 100)}%`}
+          min={0.75}
+          max={1.35}
+          step={0.05}
+          onChange={onSize}
+        />
+        <div className="grid gap-1">
+          <span className="ui-label">Weight · {weight}</span>
+          <div className="ui-stepper">
+            <button onClick={() => onWeight(Math.max(300, weight - 100))} className="passport-button rounded-soft font-black">−</button>
+            <div className="passport-input grid place-items-center px-3 font-black">{weight}</div>
+            <button onClick={() => onWeight(Math.min(950, weight + 100))} className="passport-button rounded-soft font-black">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {

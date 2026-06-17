@@ -1,10 +1,16 @@
-# Event Planner Calculator v13
+# Event Planner Calculator v14
 
-Built from latest working v12.
+Built from latest working v13.
 
 Changes:
-- Fixed Event details date/time fields overflowing to the right on mobile Safari.
-- Added stricter max-width/min-width rules for the Event details cards.
-- Forced native date/time inputs to stay inside their cards.
-- Kept Supabase debug box from v12.
-- Existing Supabase table/schema remains compatible.
+- Added UI Studio typography controls:
+  - Global scale
+  - Headings size + weight
+  - Numbers size + weight
+  - Labels size + weight
+  - Body/buttons size + weight
+- Included all main font styling roles while keeping controls consolidated.
+- Rebuilt globals.css into one consolidated design system.
+- Removed duplicated/overlapping CSS overrides from earlier builds.
+- Kept color controls for background/accent and type preset including Unbounded.
+- Existing Supabase/database compatibility unchanged.
