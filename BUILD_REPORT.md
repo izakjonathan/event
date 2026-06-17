@@ -1,12 +1,14 @@
-# Event Planner Calculator v19
+# Event Planner Calculator v20
 
-Built from latest working v18.
+Built from latest working v19.
 
 Changes:
-- Added more space under the Terms card in the Forecast top section.
-- Aligned Projected profit card with the top of the event name area.
-- Made the Projected profit card wider.
-- Made date, time and location pills shorter and more compact.
-- Compact date display now uses DD/MM instead of YYYY-MM-DD in the Forecast top section.
-- Top pill main text Event and Settings is now bold.
+- Improved iPhone fullscreen/safe-area spacing so top content is not cut off.
+- Forecast card is now collapsible/expandable again.
+- Event name is larger.
+- Projected profit card now aligns with the top of the Event name/meta area.
+- Projected profit card height now matches the combined height of Date, Time and Location fields.
+- Date, Time and Location values are larger.
+- Break-even helper, Organizer and Bar card data is no longer muted and uses the same stronger data style.
+- Details, Tickets, Bar and Quick add buttons are bold with tighter line-height.
 - Existing Supabase/database compatibility unchanged.

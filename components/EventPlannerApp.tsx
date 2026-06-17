@@ -677,41 +677,47 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
           <div className="forecast-top">
-            <div className="forecast-title-row">
-              <h1 className="text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:text-6xl">Forecast</h1>
+            <button onClick={() => toggleSection('forecast')} className="forecast-title-row forecast-title-button">
+              <span className="forecast-title-text">Forecast {openSections.forecast ? '−' : '+'}</span>
               <span className="forecast-status-pill">{statusLabel(active.meta.status)}</span>
-            </div>
+            </button>
 
-            <div className="forecast-main-row">
-              <div className="min-w-0">
-                <h2 className="max-w-[12ch] text-[2.25rem] font-black leading-[.88] tracking-[-.06em] md:max-w-none md:text-5xl">{active.meta.name || 'Untitled event'}</h2>
-                <div className="forecast-meta-grid">
-                  <div className="forecast-meta-pill">
-                    <span>Date</span>
-                    <strong>{formatEventDateRange(active.meta) || 'Add date'}</strong>
+            {openSections.forecast && (
+              <>
+                <div className="forecast-main-row">
+                  <div className="min-w-0">
+                    <h2 className="forecast-event-name">{active.meta.name || 'Untitled event'}</h2>
+                    <div className="forecast-meta-grid">
+                      <div className="forecast-meta-pill">
+                        <span>Date</span>
+                        <strong>{formatEventDateRange(active.meta) || 'Add date'}</strong>
+                      </div>
+                      <div className="forecast-meta-pill">
+                        <span>Time</span>
+                        <strong>{formatEventTimeRange(active.meta) || 'Add time'}</strong>
+                      </div>
+                      <div className="forecast-meta-pill forecast-meta-wide">
+                        <span>Location</span>
+                        <strong>{shortText(active.meta.location) || 'Add location'}</strong>
+                      </div>
+                    </div>
                   </div>
-                  <div className="forecast-meta-pill">
-                    <span>Time</span>
-                    <strong>{formatEventTimeRange(active.meta) || 'Add time'}</strong>
-                  </div>
-                  <div className="forecast-meta-pill forecast-meta-wide">
-                    <span>Location</span>
-                    <strong>{shortText(active.meta.location) || 'Add location'}</strong>
+                  <div className="profit-orb">
+                    <span className="profit-kicker">Projected profit</span>
+                    <strong><MoneyValue value={totals.profit} /></strong>
+                    <em className="profit-sub">after costs</em>
                   </div>
                 </div>
-              </div>
-              <div className="profit-orb">
-                <span className="profit-kicker">Projected profit</span>
-                <strong><MoneyValue value={totals.profit} /></strong>
-                <em className="profit-sub">after costs</em>
-              </div>
-            </div>
 
-            <div className="forecast-terms-card mt-1">
-              <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
-              <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
-            </div>
+                <div className="forecast-terms-card mt-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
+                  <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
+                </div>
+              </>
+            )}
           </div>
+          {openSections.forecast && (
+            <>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
             <Stat label="Tickets sold" value={`${fmt.format(totals.totalSold)}${totals.capacity ? ` / ${fmt.format(totals.capacity)}` : ''}`} />
             <Stat label="Ticket revenue" value={money(totals.ticketRevenue)} />
@@ -747,6 +753,8 @@ export default function EventPlannerApp() {
             <button onClick={() => toggleSection('bar')} className="quick-pill">Bar</button>
             <button onClick={() => setShowQuickAdd(true)} className="quick-pill">Quick add</button>
           </div>
+            </>
+          )}
         </Collapsible>
 
         <Collapsible title="Event details" subtitle="Edit event info, schedule, location and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
@@ -1441,7 +1449,7 @@ function Collapsible({ title, subtitle, open, onToggle, action, onAction, featur
           {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
         </div>
       )}
-      {open && <div className={featured && title === 'Forecast' ? '' : 'mt-3'}>{children}</div>}
+      {(open || (featured && title === 'Forecast')) && <div className={featured && title === 'Forecast' ? '' : 'mt-3'}>{children}</div>}
     </section>
   );
 }

@@ -29,7 +29,7 @@ You can learn more, including how to opt-out if you'd not like to participate in
 + First Load JS shared by all            [37m[1m87.3 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB
   ├ chunks/fd9d1056-e3d373074663785d.js  53.6 kB
-  └ other shared chunks (total)          1.95 kB
+  └ other shared chunks (total)          1.96 kB
 
 
 ○  (Static)  prerendered as static content
