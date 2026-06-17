@@ -25,13 +25,83 @@ input,textarea,select{outline:none;background:transparent}
 ::selection{background:rgba(36,76,221,.18)}
 
 .no-callout{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-.passport-card{background:var(--paper);border:1.5px solid var(--ink);color:var(--ink);box-shadow:none}
-.passport-button{background:var(--paper);border:1.5px solid var(--ink);color:var(--ink);transition:transform .12s ease, background .12s ease}
+.passport-card{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1.5px solid var(--ink);color:var(--ink);box-shadow:0 1px 0 rgba(36,76,221,.08), inset 0 0 0 1px rgba(255,255,255,.16)}
+.passport-button{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02));border:1.5px solid var(--ink);color:var(--ink);transition:transform .12s ease, background .12s ease, box-shadow .12s ease;box-shadow:0 1px 0 rgba(36,76,221,.08)}
 .passport-button:active{transform:scale(.985);background:rgba(36,76,221,.08)}
-.passport-input{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:18px}
+.passport-button-danger{background:rgba(185,50,50,.03);border:1.5px solid var(--danger);color:var(--danger);transition:transform .12s ease, background .12s ease}
+.passport-button-danger:active{transform:scale(.985);background:rgba(185,50,50,.09)}
+.passport-input{background:rgba(255,255,255,.04);border:1.5px solid var(--ink);color:var(--ink);border-radius:18px}
 .passport-input::placeholder{color:rgba(36,76,221,.42)}
 .scrollbar-none::-webkit-scrollbar{display:none}.scrollbar-none{scrollbar-width:none}
 
 @media (max-width: 430px){
   input,textarea,select{font-size:16px}
+}
+
+
+/* v4 polish */
+.compact-context{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  border:1.5px solid var(--ink);
+  border-radius:999px;
+  padding:.45rem .55rem .45rem .85rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025));
+  box-shadow:0 1px 0 rgba(36,76,221,.08), inset 0 0 0 1px rgba(255,255,255,.14);
+}
+.profit-orb{
+  width:126px;
+  min-height:126px;
+  border:1.5px solid var(--ink);
+  border-radius:34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-end;
+  padding:1rem;
+  background:radial-gradient(circle at top left,rgba(36,76,221,.10),rgba(36,76,221,.015) 54%, transparent 100%);
+  text-align:right;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:10px;
+}
+.profit-orb strong{
+  display:block;
+  margin-top:.35rem;
+  font-size:1.62rem;
+  line-height:.95;
+  letter-spacing:-.055em;
+  text-transform:none;
+}
+.stat-card{
+  min-height:92px;
+  border:1.5px solid var(--ink);
+  border-radius:22px;
+  padding:.85rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+}
+.mini-panel{
+  border:1.5px solid rgba(36,76,221,.85);
+  border-radius:22px;
+  padding:.8rem;
+  font-size:.86rem;
+  background:rgba(36,76,221,.025);
+}
+.quick-pill{
+  min-height:44px;
+  border:1.5px solid rgba(36,76,221,.9);
+  border-radius:999px;
+  background:rgba(36,76,221,.035);
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+.quick-pill:active{transform:scale(.985);background:rgba(36,76,221,.09)}
+@media (max-width: 430px){
+  .passport-card{border-width:1.35px}
+  .passport-button,.passport-input,.stat-card,.mini-panel,.compact-context,.profit-orb{border-width:1.35px}
+  .stat-card{min-height:84px;border-radius:20px;padding:.75rem}
+  .profit-orb{width:116px;min-height:116px;border-radius:30px;padding:.85rem}
+  .profit-orb strong{font-size:1.42rem}
 }

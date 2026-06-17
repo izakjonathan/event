@@ -1,23 +1,15 @@
-# Build report — Event Planner Calculator v2
+# Event Planner Calculator v4
 
-Built from the last working v1 event-planner project.
+Built from latest working v3.
 
-## Added
+Changes:
+- More polished mobile-first UI
+- Sticky compact 2-pill top bar
+- Added current-event context strip without adding extra pills
+- Refined forecast hero, profit orb, stat cards, mini panels and quick action buttons
+- Added Quick add modal for ticket / income / expense / staff rows and common event expenses
+- Kept Supabase schema compatible with existing event_plans payload storage
 
-1. Shared workspace links for multi-device editing.
-2. Event templates.
-3. Low / expected / best-case scenario mode.
-4. Staff cost calculator.
-5. Bar revenue calculator.
-6. Break-even helper.
-7. Venue terms / profit split calculator.
-8. Text summary and CSV export.
-9. Event statuses.
-10. Cleaner mobile UI using collapsible sections.
-
-## Tested
-
-- `npx tsc --noEmit` passed.
-- `npx next build --no-lint` passed.
-
-`next.config.mjs` has `outputFileTracing: false` because the local container repeatedly hung during the final build-trace step. The optimized production build completed successfully with that setting.
+Build:
+- npm install
+- npm run build: passed

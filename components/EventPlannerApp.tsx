@@ -286,10 +286,10 @@ export default function EventPlannerApp() {
   const [status, setStatus] = useState('Local draft');
   const [workspace, setWorkspace] = useState(DEFAULT_WORKSPACE);
   const [syncEnabled, setSyncEnabled] = useState(false);
-  const [showEvents, setShowEvents] = useState(false);
-  const [showMeta, setShowMeta] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
-  const [showWorkspace, setShowWorkspace] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [libraryTab, setLibraryTab] = useState<'events' | 'templates'>('events');
+  const [showSettings, setShowSettings] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     forecast: true,
     scenarios: true,
@@ -425,8 +425,7 @@ export default function EventPlannerApp() {
     next.meta.name = template === 'blank' ? `Event ${events.length + 1}` : next.meta.name;
     setEvents((current) => [next, ...current]);
     setActiveId(next.id);
-    setShowEvents(false);
-    setShowMeta(true);
+    setShowLibrary(false);
   }
 
   function duplicateEvent() {
@@ -478,30 +477,52 @@ export default function EventPlannerApp() {
   return (
     <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="grid grid-cols-2 gap-2 md:grid-cols-[1fr_auto_auto_auto]">
-          <button onClick={() => setShowEvents(true)} className="passport-button min-h-12 rounded-full px-4 text-left text-xs uppercase tracking-[.16em]">
-            Events<br /><strong className="text-base normal-case tracking-normal">{active.meta.name || 'Untitled'}</strong>
-          </button>
-          <button onClick={() => setShowMeta(true)} className="passport-button min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em]">
-            Details<br /><strong className="text-base normal-case tracking-normal">{statusLabel(active.meta.status)}</strong>
-          </button>
-          <button onClick={() => setShowWorkspace(true)} className="passport-button min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em]">
-            Workspace<br /><strong className="text-base normal-case tracking-normal">{workspace}</strong>
-          </button>
-          <button onClick={() => setShowHelp(true)} className="passport-button col-span-2 min-h-12 rounded-full px-4 text-xs uppercase tracking-[.16em] md:col-span-1">
-            {syncEnabled ? 'Supabase' : 'Storage'}<br /><strong className="text-base normal-case tracking-normal">{status}</strong>
+        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-[1fr_.62fr] gap-2">
+          <div className="passport-card rounded-full p-1 backdrop-blur">
+            <div className="grid grid-cols-2 gap-1">
+              <button
+                onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
+                className="rounded-full px-2.5 py-1.5 text-center transition active:scale-[.985]"
+              >
+                <span className="block text-[9px] font-bold uppercase tracking-[.14em] opacity-65">Choose</span>
+                <strong className="block text-sm font-black tracking-[-.03em]">Events</strong>
+              </button>
+              <button
+                onClick={() => { setLibraryTab('templates'); setShowLibrary(true); }}
+                className="rounded-full px-2.5 py-1.5 text-center transition active:scale-[.985]"
+              >
+                <span className="block text-[9px] font-bold uppercase tracking-[.14em] opacity-65">Start</span>
+                <strong className="block text-sm font-black tracking-[-.03em]">Template</strong>
+              </button>
+            </div>
+          </div>
+          <button onClick={() => setShowSettings(true)} className="passport-button min-h-[48px] rounded-full px-3 text-left backdrop-blur">
+            <span className="block text-[9px] uppercase tracking-[.15em] opacity-65">Settings</span>
+            <strong className="block truncate text-sm font-black tracking-[-.03em]">{syncEnabled ? status : 'Local'}</strong>
           </button>
         </header>
 
-        <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')}>
-          <div className="mb-3 flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[.18em] opacity-70">{statusLabel(active.meta.status)} · {workspace}</p>
-              <h1 className="text-3xl font-black leading-none tracking-[-.04em] md:text-5xl">{active.meta.name || 'Untitled event'}</h1>
+        <div className="compact-context">
+          <div className="min-w-0">
+            <p className="text-[9px] font-bold uppercase tracking-[.17em] opacity-60">Current event</p>
+            <p className="truncate text-sm font-black tracking-[-.03em]">{active.meta.name || 'Untitled event'}</p>
+          </div>
+          <span className="shrink-0 rounded-full border border-[var(--ink)]/25 px-2 py-1 text-[10px] font-bold uppercase tracking-[.12em]">{statusLabel(active.meta.status)}</span>
+        </div>
+
+        <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
+          <div className="mb-3 grid grid-cols-[1fr_auto] items-start gap-3">
+            <div className="min-w-0">
+              <div className="mb-2 flex flex-wrap gap-1.5">
+                <span className="rounded-full border border-[var(--ink)]/30 bg-[var(--ink-soft)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em]">{statusLabel(active.meta.status)}</span>
+                <span className="rounded-full border border-[var(--ink)]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] opacity-75">{workspace}</span>
+              </div>
+              <h1 className="max-w-[12ch] text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:max-w-none md:text-6xl">{active.meta.name || 'Untitled event'}</h1>
               <p className="mt-2 text-sm opacity-75">{[active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · ') || 'Add date, time and location'}</p>
             </div>
-            <div className="rounded-full border-[1.5px] border-[var(--ink)] px-3 py-2 text-right text-xs uppercase tracking-[.12em]">
-              Profit<br /><strong className="text-lg tracking-normal">{money(totals.profit)}</strong>
+            <div className="profit-orb">
+              <span>Profit</span>
+              <strong>{money(totals.profit)}</strong>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -520,6 +541,11 @@ export default function EventPlannerApp() {
             <MiniPanel title="Break-even helper" lines={[`Need ${fmt.format(totals.breakEvenGuests)} guests at current average revenue.`, `Need ticket price of ${money(totals.breakEvenTicketPrice)} without bar revenue.`, `Need average bar spend of ${money(totals.breakEvenBarSpend)} per guest with current ticket setup.`]} />
             <MiniPanel title="Organizer" lines={[`Organizer net: ${money(totals.organizerNet)}`, `Venue net: ${money(totals.venueNet)}`, `Terms: ${active.termsPlan.enabled ? 'on' : 'off'}`]} />
             <MiniPanel title="Bar" lines={[`Revenue: ${money(totals.barRevenue)}`, `Stock cost: ${money(totals.barCost)}`, `Avg spend: ${money(active.bar.spendPerGuest)}`]} />
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            <button onClick={() => toggleSection('tickets')} className="quick-pill">Tickets</button>
+            <button onClick={() => toggleSection('bar')} className="quick-pill">Bar</button>
+            <button onClick={() => setShowQuickAdd(true)} className="quick-pill">Quick add</button>
           </div>
         </Collapsible>
 
@@ -676,71 +702,131 @@ export default function EventPlannerApp() {
         </Collapsible>
       </div>
 
-      {showEvents && (
-        <Modal title="Events" onClose={() => setShowEvents(false)}>
+
+      {showLibrary && (
+        <Modal title="Event library" onClose={() => setShowLibrary(false)}>
           <div className="grid gap-3">
-            <div className="grid gap-2 rounded-soft border-[1.5px] border-[var(--ink)] p-3">
-              <p className="text-xs font-bold uppercase tracking-[.16em] opacity-70">Create from template</p>
+            <div className="passport-card rounded-full p-1">
+              <div className="grid grid-cols-2 gap-1">
+                <button onClick={() => setLibraryTab('events')} className={`rounded-full px-3 py-2 text-sm font-bold ${libraryTab === 'events' ? 'bg-[var(--ink)] text-[var(--paper)]' : ''}`}>Saved events</button>
+                <button onClick={() => setLibraryTab('templates')} className={`rounded-full px-3 py-2 text-sm font-bold ${libraryTab === 'templates' ? 'bg-[var(--ink)] text-[var(--paper)]' : ''}`}>Templates</button>
+              </div>
+            </div>
+
+            {libraryTab === 'events' ? (
+              <>
+                <div className="grid gap-2">
+                  {events.map((event) => (
+                    <button key={event.id} onClick={() => { setActiveId(event.id); setShowLibrary(false); }} className={`passport-button rounded-soft p-3 text-left ${event.id === active.id ? 'bg-[var(--ink-soft)]' : ''}`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-black text-lg tracking-[-.03em]">{event.meta.name || 'Untitled event'}</div>
+                          <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[event.meta.date, event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
+                        </div>
+                        <span className="rounded-full border border-[var(--ink)]/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em]">Open</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">Duplicate current</button>
+                  <button onClick={deleteActiveEvent} className="passport-button-danger min-h-12 rounded-soft px-3 font-bold">Delete current</button>
+                </div>
+              </>
+            ) : (
               <div className="grid gap-2 md:grid-cols-2">
                 {templates.map((template) => (
                   <button key={template.key} onClick={() => createNewEvent(template.key)} className="passport-button rounded-soft p-3 text-left">
-                    <strong>{template.label}</strong><br /><span className="text-sm opacity-70">{template.description}</span>
+                    <strong className="text-base">{template.label}</strong><br /><span className="text-sm opacity-70">{template.description}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
+
+
+      {showQuickAdd && (
+        <Modal title="Quick add" onClose={() => setShowQuickAdd(false)}>
+          <div className="grid gap-3">
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Fast rows</p>
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'Income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Income</button>
+                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: 'Expense', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Expense</button>
+                <button onClick={() => { patchActive({ tickets: [...active.tickets, { id: uid(), name: 'Ticket tier', price: 0, sold: 0, capacity: 0, notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Ticket</button>
+                <button onClick={() => { patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Staff</button>
+              </div>
+            </div>
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Common event expenses</p>
+              <div className="grid gap-2">
+                {[
+                  ['DJ fee', 3500],
+                  ['Security', 2000],
+                  ['Marketing', 1000],
+                  ['Cleaning', 800],
+                  ['Sound / tech', 2500],
+                  ['Door staff', 1500]
+                ].map(([name, amount]) => (
+                  <button key={name} onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: String(name), amount: Number(amount), quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-11 rounded-soft px-3 text-left font-bold">
+                    + {name} <span className="opacity-60">· {money(Number(amount))}</span>
                   </button>
                 ))}
               </div>
             </div>
-            {events.map((event) => (
-              <button key={event.id} onClick={() => { setActiveId(event.id); setShowEvents(false); }} className={`passport-button rounded-soft p-3 text-left ${event.id === active.id ? 'bg-[var(--ink-soft)]' : ''}`}>
-                <div className="font-black">{event.meta.name || 'Untitled event'}</div>
-                <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[event.meta.date, event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
-              </button>
-            ))}
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3">Duplicate current</button>
-              <button onClick={deleteActiveEvent} className="passport-button min-h-12 rounded-soft px-3">Delete current</button>
-            </div>
           </div>
         </Modal>
       )}
 
-      {showMeta && (
-        <Modal title="Event details" onClose={() => setShowMeta(false)}>
-          <div className="grid gap-2">
-            <Field label="Name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
-            <label className="grid gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
-                <option value="idea">Idea</option>
-                <option value="quoted">Quoted</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="completed">Completed</option>
-              </select>
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
-              <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
+      {showSettings && (
+        <Modal title="Settings" onClose={() => setShowSettings(false)}>
+          <div className="grid gap-3">
+            <div className="grid gap-2 md:grid-cols-3">
+              <button onClick={() => createNewEvent('blank')} className="passport-button min-h-12 rounded-soft px-3 font-bold">Add new event</button>
+              <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">Duplicate current</button>
+              <button onClick={() => void loadFromSupabase()} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>
             </div>
-            <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
-            <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} />
-            <button onClick={() => setShowMeta(false)} className="passport-button mt-2 min-h-12 rounded-soft px-3 font-bold">Done</button>
-          </div>
-        </Modal>
-      )}
 
-      {showWorkspace && (
-        <Modal title="Shared workspace" onClose={() => setShowWorkspace(false)}>
-          <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
-        </Modal>
-      )}
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Storage</p>
+                  <p className="text-lg font-black tracking-[-.03em]">{syncEnabled ? 'Supabase sync' : 'Local only'}</p>
+                </div>
+                <span className="rounded-full border border-[var(--ink)]/25 px-3 py-1.5 text-xs font-bold">{status}</span>
+              </div>
+              <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
+            </div>
 
-      {showHelp && (
-        <Modal title="Setup notes" onClose={() => setShowHelp(false)}>
-          <div className="space-y-3 text-sm leading-relaxed">
-            <p>This version uses a shared workspace key instead of a private device key. Open the same workspace link on another phone or computer to edit the same events.</p>
-            <p><strong>Line modes:</strong> Fixed = amount × quantity. Per ticket holder = amount × tickets sold × quantity. Percentage = amount as % of ticket revenue × quantity.</p>
-            <p><strong>Example:</strong> “all ticket holders use 200 DKK in the bar” can now be handled in the Bar calculator section.</p>
-            <p><strong>Supabase:</strong> Keep using the same <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> on Vercel. The existing <code>event_plans</code> table still works.</p>
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <p className="mb-3 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Event details</p>
+              <div className="grid gap-2">
+                <Field label="Name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
+                <label className="grid gap-1">
+                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
+                  <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
+                    <option value="idea">Idea</option>
+                    <option value="quoted">Quoted</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
+                  <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
+                </div>
+                <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
+                <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} />
+              </div>
+            </div>
+
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3 text-sm leading-relaxed">
+              <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Notes</p>
+              <p className="mt-2">Open the same workspace link on another phone or computer to edit the same events. Line modes still work the same: Fixed = amount × quantity, Per ticket holder = amount × tickets sold × quantity, Percentage = % of ticket revenue × quantity.</p>
+            </div>
           </div>
         </Modal>
       )}
@@ -822,12 +908,12 @@ function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
   );
 }
 
-function Collapsible({ title, subtitle, open, onToggle, action, onAction, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; children: ReactNode }) {
+function Collapsible({ title, subtitle, open, onToggle, action, onAction, featured, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; featured?: boolean; children: ReactNode }) {
   return (
-    <section className="passport-card rounded-passport p-3 md:p-4">
+    <section className={`passport-card rounded-passport ${featured ? 'p-4 md:p-5' : 'p-3 md:p-4'}`}>
       <div className="flex items-center justify-between gap-3">
         <button onClick={onToggle} className="min-w-0 flex-1 text-left">
-          <h2 className="text-2xl font-black leading-none tracking-[-.04em]">{title} <span className="text-base">{open ? '−' : '+'}</span></h2>
+          <h2 className={`${featured ? 'text-[2.15rem]' : 'text-[1.75rem]'} font-black leading-none tracking-[-.055em]`}>{title} <span className="text-base align-middle opacity-70">{open ? '−' : '+'}</span></h2>
           {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
         </button>
         {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
@@ -922,7 +1008,7 @@ function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWo
         <p className="mt-1 text-xl font-black">{workspace}</p>
         <p className="mt-2 opacity-75">Use this link on another device to see and edit the same events.</p>
       </div>
-      <Field label="Share link" value={workspaceLink} onChange={() => {}} />
+      <label className="grid gap-1"><span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Share link</span><div className="passport-input min-h-12 w-full break-all px-3 py-3 text-sm">{workspaceLink}</div></label>
       <div className="grid grid-cols-2 gap-2">
         <button onClick={() => void navigator.clipboard.writeText(workspaceLink)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Copy link</button>
         <button onClick={onReload} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>

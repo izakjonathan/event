@@ -1,0 +1,36 @@
+
+> event-planner-calculator@1.0.0 build
+> NEXT_PRIVATE_BUILD_WORKER=1 next build
+
+ [33m[1m⚠[22m[39m Disabling outputFileTracing will not be an option in the next major version. Please report any issues you may be experiencing to https://github.com/vercel/next.js/issues
+[33m[1m⚠[22m[39m No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+[35m[1mAttention[22m[39m: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+[36mhttps://nextjs.org/telemetry[39m
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+ [37m[1m [22m[39m Collecting page data ...
+ [37m[1m [22m[39m Generating static pages (0/4) ...
+ [37m[1m [22m[39m Generating static pages (1/4) 
+ [37m[1m [22m[39m Generating static pages (2/4) 
+ [37m[1m [22m[39m Generating static pages (3/4) 
+ [32m[1m✓[22m[39m Generating static pages (4/4)
+ [37m[1m [22m[39m Finalizing page optimization ...
+ [37m[1m [22m[39m Collecting build traces ...
+
+[4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                    44.6 kB         [37m[1m132 kB[22m[39m
+└ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
++ First Load JS shared by all            [37m[1m87.3 kB[22m[39m
+  ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB
+  ├ chunks/fd9d1056-e3d373074663785d.js  53.6 kB
+  └ other shared chunks (total)          1.96 kB
+
+
+○  (Static)  prerendered as static content
+
