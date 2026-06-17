@@ -676,23 +676,27 @@ export default function EventPlannerApp() {
 
 
         <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
-          <div className="mb-3 grid grid-cols-[1fr_auto] items-start gap-3">
-            <div className="min-w-0">
-              <div className="mb-2 flex flex-wrap gap-1.5">
-                <span className="rounded-full border border-[var(--ink)]/30 bg-[var(--ink-soft)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em]">{statusLabel(active.meta.status)}</span>
-                <span className="rounded-full border border-[var(--ink)]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] opacity-75">{workspace}</span>
+          <div className="forecast-top">
+            <div className="forecast-title-row">
+              <h1 className="text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:text-6xl">Forecast</h1>
+              <span className="forecast-status-pill">{statusLabel(active.meta.status)}</span>
+            </div>
+
+            <div className="forecast-main-row">
+              <div className="min-w-0">
+                <h2 className="max-w-[12ch] text-[2.25rem] font-black leading-[.88] tracking-[-.06em] md:max-w-none md:text-5xl">{active.meta.name || 'Untitled event'}</h2>
+                <p className="mt-2 text-sm opacity-75">{formatEventSchedule(active.meta) || 'Add date, time and location'}</p>
               </div>
-              <h1 className="max-w-[12ch] text-[2.45rem] font-black leading-[.86] tracking-[-.065em] md:max-w-none md:text-6xl">{active.meta.name || 'Untitled event'}</h1>
-              <p className="mt-2 text-sm opacity-75">{formatEventSchedule(active.meta) || 'Add date, time and location'}</p>
-              <div className="forecast-terms-card mt-3">
-                <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
-                <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
+              <div className="profit-orb">
+                <span className="profit-kicker">Projected profit</span>
+                <strong><MoneyValue value={totals.profit} /></strong>
+                <em className="profit-sub">after costs</em>
               </div>
             </div>
-            <div className="profit-orb">
-              <span className="profit-kicker">Projected profit</span>
-              <strong><MoneyValue value={totals.profit} /></strong>
-              <em className="profit-sub">after costs</em>
+
+            <div className="forecast-terms-card mt-1">
+              <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
+              <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -1395,14 +1399,16 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
 function Collapsible({ title, subtitle, open, onToggle, action, onAction, featured, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; featured?: boolean; children: ReactNode }) {
   return (
     <section className={`passport-card rounded-passport ${featured ? 'p-4 md:p-5' : 'p-3 md:p-4'}`}>
-      <div className="flex items-center justify-between gap-3">
-        <button onClick={onToggle} className="min-w-0 flex-1 text-left">
-          <h2 className={`${featured ? 'text-[2.15rem]' : 'text-[1.75rem]'} font-black leading-none tracking-[-.055em]`}>{title} <span className="text-base align-middle opacity-70">{open ? '−' : '+'}</span></h2>
-          {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
-        </button>
-        {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
-      </div>
-      {open && <div className="mt-3">{children}</div>}
+      {!(featured && title === 'Forecast') && (
+        <div className="flex items-center justify-between gap-3">
+          <button onClick={onToggle} className="min-w-0 flex-1 text-left">
+            <h2 className={`${featured ? 'text-[2.15rem]' : 'text-[1.75rem]'} font-black leading-none tracking-[-.055em]`}>{title} <span className="text-base align-middle opacity-70">{open ? '−' : '+'}</span></h2>
+            {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
+          </button>
+          {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
+        </div>
+      )}
+      {open && <div className={featured && title === 'Forecast' ? '' : 'mt-3'}>{children}</div>}
     </section>
   );
 }

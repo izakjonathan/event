@@ -1,19 +1,12 @@
-# Event Planner Calculator v16
+# Event Planner Calculator v17
 
-Built from latest working v15.
+Built from latest working v16.
 
 Changes:
-- Reset typography feel back toward the pre-consolidation version.
-- Made all field headings/card titles use the old compact uppercase style again.
-- Added UI Studio controls for:
-  - line-height
-  - letter-spacing
-  - font size
-  - font weight
-- Controls apply to four consolidated typography roles:
-  - Headings
-  - Numbers
-  - Labels
-  - Body + buttons
-- Tied field headings, forecast labels, buttons, inputs, money values and section headings into these typography variables.
+- Removed “Live event overview” from the Forecast card.
+- Removed “main-workspace” from the Forecast card.
+- Moved the status pill to the top-right of the Forecast card, opposite the Forecast title.
+- Terms card is now full width across the forecast card.
+- Projected profit card is moved upward.
+- Forecast card now uses a custom top layout instead of the default collapsible header.
 - Existing Supabase/database compatibility unchanged.

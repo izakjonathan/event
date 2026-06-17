@@ -698,3 +698,62 @@ label > span,
     letter-spacing:var(--label-letter-spacing) !important;
   }
 }
+
+
+/* v17 forecast card layout refinement */
+.forecast-top{
+  display:grid;
+  gap:.85rem;
+}
+.forecast-title-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+}
+.forecast-title-row h1{
+  margin:0;
+}
+.forecast-status-pill{
+  flex:0 0 auto;
+  border:var(--line) solid rgb(var(--ink-rgb) / .32);
+  background:var(--ink-soft);
+  border-radius:999px;
+  padding:.45rem .7rem;
+  font-size:calc(.62rem * var(--label-size));
+  line-height:var(--label-line-height);
+  font-weight:var(--label-weight);
+  letter-spacing:var(--label-letter-spacing);
+  text-transform:uppercase;
+  opacity:.9;
+}
+.forecast-main-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:start;
+  gap:1rem;
+}
+.forecast-main-row .profit-orb{
+  margin-top:-.75rem;
+}
+.forecast-terms-card{
+  width:100%;
+  max-width:none !important;
+  grid-column:1 / -1;
+}
+@media (max-width:430px){
+  .forecast-title-row{
+    align-items:flex-start;
+  }
+  .forecast-status-pill{
+    padding:.38rem .6rem;
+    font-size:calc(.55rem * var(--label-size));
+  }
+  .forecast-main-row{
+    grid-template-columns:minmax(0,1fr) 120px;
+    gap:.75rem;
+  }
+  .forecast-main-row .profit-orb{
+    margin-top:-1.15rem;
+  }
+}
