@@ -1,0 +1,7 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'event-planner-calculator@1.0.0',
+npm warn EBADENGINE   required: { node: '20.x' },
+npm warn EBADENGINE   current: { node: 'v22.16.0', npm: '10.9.2' }
+npm warn EBADENGINE }
+
+added 121 packages in 20s

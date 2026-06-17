@@ -535,29 +535,24 @@ export default function EventPlannerApp() {
         <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
           <button
             onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
-            className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur"
+            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
           >
-            <span className="block text-[9px] font-bold uppercase tracking-[.15em] opacity-65">Choose</span>
-            <strong className="block text-[15px] font-black tracking-[-.03em]">Choose event</strong>
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Choose</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Event</strong>
           </button>
           <button
             onClick={() => { setLibraryTab('templates'); setShowLibrary(true); }}
-            className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur"
+            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
           >
-            <span className="block text-[9px] font-bold uppercase tracking-[.15em] opacity-65">Start</span>
-            <strong className="block text-[15px] font-black tracking-[-.03em]">Start template</strong>
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Start</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Template</strong>
           </button>
-          <button onClick={() => setShowSettings(true)} className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur">
-            <span className="block text-[9px] uppercase tracking-[.15em] opacity-65">Manage</span>
-            <strong className="block text-[15px] font-black tracking-[-.03em]">Settings</strong>
+          <button onClick={() => setShowSettings(true)} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
+            <span className="block text-[8px] uppercase leading-none tracking-[.13em] opacity-65">Manage</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Settings</strong>
           </button>
         </header>
 
-        <div className="compact-context compact-context-solo">
-          <p className="text-[9px] font-bold uppercase tracking-[.17em] opacity-60">Current event</p>
-          <p className="truncate text-base font-black tracking-[-.03em]">{active.meta.name || 'Untitled event'}</p>
-          <p className="truncate text-[11px] font-medium uppercase tracking-[.14em] opacity-55">{workspace}</p>
-        </div>
 
         <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
           <div className="mb-3 grid grid-cols-[1fr_auto] items-start gap-3">
