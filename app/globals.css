@@ -1820,3 +1820,140 @@ main.no-callout{
     grid-template-columns:1fr;
   }
 }
+
+
+/* v30 booking workflow polish */
+.booking-overview-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.65rem;
+}
+.booking-overview-card{
+  border-radius:24px;
+  padding:.85rem;
+}
+.booking-overview-card span{
+  display:block;
+  font-size:calc(.56rem * var(--label-size, 1));
+  font-weight:var(--label-weight, 800);
+  letter-spacing:var(--label-letter-spacing, .16em);
+  line-height:var(--label-line-height, 1.15);
+  text-transform:uppercase;
+  opacity:.62;
+}
+.booking-overview-card strong{
+  display:block;
+  margin-top:.25rem;
+  font-size:calc(2rem * var(--number-size, 1));
+  line-height:var(--number-line-height, .9);
+  font-weight:var(--number-weight, 900);
+  letter-spacing:var(--number-letter-spacing, -.055em);
+}
+.booked-overview{
+  border-radius:28px;
+  padding:1rem;
+  display:grid;
+  gap:.65rem;
+}
+.booked-overview-head h2{
+  margin:0;
+  font-size:calc(1.65rem * var(--heading-size, 1));
+  line-height:.9;
+  font-weight:var(--heading-weight, 900);
+  letter-spacing:var(--heading-letter-spacing, -.055em);
+}
+.booked-chip-row,
+.artist-link-status,
+.artist-admin-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+}
+.booked-chip-row span,
+.artist-link-status span{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .22);
+  border-radius:999px;
+  padding:.4rem .58rem;
+  background:rgb(var(--ink-rgb) / .035);
+  font-size:.74rem;
+  font-weight:900;
+  line-height:1;
+}
+.artist-link-status span{
+  background:rgb(var(--ink-rgb) / .06);
+}
+.artist-admin-actions button{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .26);
+  border-radius:999px;
+  background:rgb(var(--ink-rgb) / .035);
+  color:var(--ink);
+  min-height:36px;
+  padding:0 .7rem;
+  font-size:.74rem;
+  font-weight:900;
+  line-height:.9;
+}
+.artist-edit-modal{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:grid;
+  place-items:end center;
+  padding:calc(var(--safe-top) + 1rem) .7rem calc(var(--safe-bottom) + 1rem);
+  background:rgb(20 18 14 / .34);
+  backdrop-filter:blur(14px);
+}
+.artist-edit-card{
+  width:min(100%, 780px);
+  max-height:92dvh;
+  overflow:auto;
+  border-radius:30px;
+  padding:1rem;
+  display:grid;
+  gap:1rem;
+}
+.artist-edit-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.65rem;
+}
+.artist-success-card{
+  border:var(--line, 1.5px) solid rgb(35 110 70 / .45);
+  border-radius:26px;
+  padding:1rem;
+  background:rgb(35 110 70 / .08);
+  display:grid;
+  gap:.55rem;
+}
+.artist-success-card h2{
+  margin:0;
+  font-size:calc(1.65rem * var(--heading-size, 1));
+  line-height:.9;
+  font-weight:var(--heading-weight, 900);
+  letter-spacing:var(--heading-letter-spacing, -.055em);
+}
+.artist-success-card p{
+  margin:0;
+  line-height:1.35;
+  opacity:.78;
+}
+.artist-success-card button{
+  width:max-content;
+  border:var(--line, 1.5px) solid var(--ink);
+  border-radius:999px;
+  background:var(--ink);
+  color:var(--paper);
+  min-height:42px;
+  padding:0 .85rem;
+  font-weight:900;
+  line-height:.9;
+}
+@media (max-width:760px){
+  .booking-overview-grid,
+  .artist-edit-grid{
+    grid-template-columns:1fr;
+  }
+  .artist-edit-modal{
+    place-items:end center;
+  }
+}

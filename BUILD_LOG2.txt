@@ -1,0 +1,6 @@
+ ⚠ Linting is disabled.
+ ⚠ Disabling outputFileTracing will not be an option in the next major version. Please report any issues you may be experiencing to https://github.com/vercel/next.js/issues
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+  ▲ Next.js 14.2.35
+
+   Creating an optimized production build ...

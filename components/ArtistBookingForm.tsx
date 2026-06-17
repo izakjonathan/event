@@ -274,7 +274,14 @@ export default function ArtistBookingForm() {
           </div>
 
           {status === 'error' && <div className="artist-message artist-message-error">{error}</div>}
-          {status === 'sent' && <div className="artist-message artist-message-success">Thanks — your artist info has been submitted.</div>}
+          {status === 'sent' && (
+            <div className="artist-success-card">
+              <p className="system-kicker">Submitted</p>
+              <h2>Thanks — your artist info has been sent.</h2>
+              <p>We can now review your profile, links, availability and requirements for future events.</p>
+              <button type="button" onClick={() => setStatus('idle')}>Submit another artist</button>
+            </div>
+          )}
 
           <button className="artist-submit" disabled={status === 'sending'}>
             {status === 'sending' ? 'Submitting…' : 'Submit artist info'}

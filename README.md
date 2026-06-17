@@ -84,3 +84,14 @@ New:
 - `/artists` lets you add an artist submission to an existing event.
 - `/event-planner` now includes an Artists / Lineup section.
 - Connected artist fees count as event expenses.
+
+
+## v30 Booking workflow polish
+
+New admin workflow:
+- Edit artist submissions on `/artists`
+- Archive/reject artists without deleting their records
+- See booked/linked artists overview
+- Filter linked and unlinked artists
+- See which event an artist is connected to
+- Duplicate artist-to-event links are blocked before saving
