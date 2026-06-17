@@ -229,7 +229,7 @@ function emptyEvent(template: TemplateKey = 'blank'): PlannerEvent {
     id: uid(),
     updatedAt: now,
     meta: {
-      name: 'New event',
+      name: '',
       date: '',
       endDate: '',
       location: '',

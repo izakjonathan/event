@@ -1,11 +1,15 @@
-# Event Planner Calculator v24
+# Event Planner Calculator v25
 
-Built from latest working v23.
+Built from latest working v24.
 
 Changes:
-- Consolidated top-of-page spacing into one control only.
-- Removed duplicate/conflicting main.no-callout padding-top rules.
-- Top spacing is now controlled from app/globals.css:
-  --page-top-gap:.35rem;
-- Smaller value moves Event / Settings pills closer to the top.
+- New blank events now start with empty information.
+- Removed default/demo ticket tier.
+- Removed default/demo income and expense rows.
+- Removed default/demo bar spend values.
+- Removed default/demo staff cost.
+- Terms plan starts disabled and empty.
+- Event name/date/time/location/terms start blank.
+- Scenario defaults start from zero values.
+- Event templates can still create prefilled planning structures.
 - Existing Supabase/database compatibility unchanged.
