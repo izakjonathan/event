@@ -696,7 +696,7 @@ export default function EventPlannerApp() {
                   </div>
                   <div className="forecast-meta-pill forecast-meta-wide">
                     <span>Location</span>
-                    <strong>{active.meta.location || 'Add location'}</strong>
+                    <strong>{shortText(active.meta.location) || 'Add location'}</strong>
                   </div>
                 </div>
               </div>
@@ -1227,9 +1227,21 @@ function scenarioResult(scenario: Scenario, barCostPercent: number) {
   return { ticketRevenue, barRevenue, barProfit, profit, perGuest };
 }
 
+function shortText(value: string, max = 22) {
+  if (!value) return '';
+  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
+}
+
+function compactDate(value: string) {
+  if (!value) return '';
+  const parts = value.split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}`;
+  return value;
+}
+
 function formatEventDateRange(meta: EventMeta) {
-  const startDate = meta.date;
-  const endDate = meta.endDate;
+  const startDate = compactDate(meta.date);
+  const endDate = compactDate(meta.endDate);
   if (startDate && endDate && endDate !== startDate) return `${startDate} → ${endDate}`;
   return startDate || endDate || '';
 }

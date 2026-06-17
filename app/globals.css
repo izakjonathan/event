@@ -864,3 +864,86 @@ input[type="time"].compact-input{
     font-size:16px !important;
   }
 }
+
+
+/* v19 forecast top spacing + compact meta */
+.forecast-top{
+  gap:1rem;
+}
+
+.forecast-main-row{
+  grid-template-columns:minmax(0,1fr) 152px !important;
+  align-items:start !important;
+}
+
+.forecast-main-row .profit-orb{
+  width:152px !important;
+  min-height:122px !important;
+  border-radius:32px !important;
+  margin-top:0 !important;
+  align-self:start !important;
+}
+
+.forecast-meta-grid{
+  margin-top:.5rem !important;
+  max-width:20rem !important;
+  gap:.34rem !important;
+}
+
+.forecast-meta-pill{
+  border-radius:14px !important;
+  padding:.34rem .48rem !important;
+}
+
+.forecast-meta-pill span{
+  font-size:calc(.46rem * var(--label-size)) !important;
+}
+
+.forecast-meta-pill strong{
+  font-size:calc(.74rem * var(--body-size)) !important;
+  line-height:1.05 !important;
+}
+
+.forecast-terms-card{
+  margin-top:.4rem !important;
+  margin-bottom:.9rem !important;
+}
+
+.top-nav-pill strong{
+  font-weight:900 !important;
+}
+
+@media (max-width:430px){
+  .forecast-main-row{
+    grid-template-columns:minmax(0,1fr) 138px !important;
+    gap:.65rem !important;
+  }
+
+  .forecast-main-row .profit-orb{
+    width:138px !important;
+    min-height:112px !important;
+    border-radius:30px !important;
+    margin-top:0 !important;
+  }
+
+  .forecast-meta-grid{
+    max-width:12.5rem !important;
+    gap:.32rem !important;
+  }
+
+  .forecast-meta-pill{
+    padding:.32rem .42rem !important;
+  }
+
+  .forecast-meta-pill strong{
+    font-size:calc(.68rem * var(--body-size)) !important;
+  }
+
+  .forecast-terms-card{
+    margin-bottom:.95rem !important;
+  }
+
+  .top-nav-pill strong{
+    font-weight:900 !important;
+  }
+}

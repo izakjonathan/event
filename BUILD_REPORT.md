@@ -1,15 +1,12 @@
-# Event Planner Calculator v18
+# Event Planner Calculator v19
 
-Built from latest working v17.
+Built from latest working v18.
 
 Changes:
-- Redesigned top Forecast info layout:
-  - Date shown as its own compact row/card
-  - Time shown as its own compact row/card
-  - Location added to Forecast top area
-- Redesigned Event details schedule layout:
-  - Start/end dates and times grouped into one cleaner Schedule card
-  - Fixed spacing and layout issues
-- Made input fields less tall across the app.
-- Centered input values, including date/time fields.
+- Added more space under the Terms card in the Forecast top section.
+- Aligned Projected profit card with the top of the event name area.
+- Made the Projected profit card wider.
+- Made date, time and location pills shorter and more compact.
+- Compact date display now uses DD/MM instead of YYYY-MM-DD in the Forecast top section.
+- Top pill main text Event and Settings is now bold.
 - Existing Supabase/database compatibility unchanged.
