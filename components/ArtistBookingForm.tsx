@@ -75,6 +75,8 @@ export default function ArtistBookingForm() {
   const [form, setForm] = useState<ArtistFormState>(emptyForm);
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [error, setError] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState('');
 
   const canSubmit = useMemo(() => {
     return form.artistName.trim().length > 1 && form.email.trim().length > 3;
@@ -82,6 +84,36 @@ export default function ArtistBookingForm() {
 
   function patch<K extends keyof ArtistFormState>(key: K, value: ArtistFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  async function uploadArtistImage(supabase: NonNullable<ReturnType<typeof getSupabaseClient>>) {
+    if (!imageFile) return cleanUrl(form.imageUrl);
+
+    const extension = imageFile.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+    const path = `artist-images/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('artist-images')
+      .upload(path, imageFile, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: imageFile.type || 'image/jpeg'
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from('artist-images').getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  function handleImageFile(file: File | null) {
+    setImageFile(file);
+    if (!file) {
+      setImagePreview('');
+      return;
+    }
+    setImagePreview(URL.createObjectURL(file));
   }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -103,6 +135,15 @@ export default function ArtistBookingForm() {
 
     setStatus('sending');
 
+    let uploadedImageUrl = '';
+    try {
+      uploadedImageUrl = await uploadArtistImage(supabase);
+    } catch (uploadError) {
+      setStatus('error');
+      setError(uploadError instanceof Error ? uploadError.message : 'Image upload failed.');
+      return;
+    }
+
     const payload = {
       artist_name: form.artistName.trim(),
       contact_name: form.contactName.trim(),
@@ -110,7 +151,7 @@ export default function ArtistBookingForm() {
       phone: form.phone.trim(),
       genre: form.genre.trim(),
       description: form.description.trim(),
-      image_url: cleanUrl(form.imageUrl),
+      image_url: uploadedImageUrl,
       availability: form.availability.trim(),
       preferred_fee: form.preferredFee.trim(),
       technical_needs: form.technicalNeeds.trim(),
@@ -136,6 +177,8 @@ export default function ArtistBookingForm() {
 
     setStatus('sent');
     setForm(emptyForm);
+    setImageFile(null);
+    setImagePreview('');
   }
 
   const input = (key: keyof ArtistFormState, type = 'text', placeholder = '') => (
@@ -199,7 +242,20 @@ export default function ArtistBookingForm() {
           <div className="artist-form-section">
             <p className="system-kicker">Image + links</p>
             <div className="artist-form-grid">
-              {input('imageUrl', 'url', 'https://...')}
+              <label className="artist-field artist-upload-field">
+                <span>Artist image upload</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => handleImageFile(event.target.files?.[0] || null)}
+                />
+                {(imagePreview || form.imageUrl) && (
+                  <div className="artist-upload-preview">
+                    <img src={imagePreview || form.imageUrl} alt="" />
+                  </div>
+                )}
+              </label>
+              {input('imageUrl', 'url', 'Optional image URL instead')}
               {input('instagram', 'text', 'instagram.com/...')}
               {input('spotify', 'text', 'open.spotify.com/...')}
               {input('soundcloud', 'text', 'soundcloud.com/...')}

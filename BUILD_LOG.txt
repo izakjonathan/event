@@ -26,9 +26,9 @@ You can learn more, including how to opt-out if you'd not like to participate in
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
 ┌ ○ /                                    1.08 kB        [37m[1m97.2 kB[22m[39m
 ├ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
-├ ○ /artist-booking                      2.09 kB         [37m[1m133 kB[22m[39m
-├ ○ /artists                             1.78 kB         [37m[1m132 kB[22m[39m
-└ ○ /event-planner                       13.8 kB         [37m[1m135 kB[22m[39m
+├ ○ /artist-booking                      2.54 kB         [37m[1m133 kB[22m[39m
+├ ○ /artists                             2.64 kB         [37m[1m133 kB[22m[39m
+└ ○ /event-planner                       14.2 kB         [37m[1m136 kB[22m[39m
 + First Load JS shared by all            [37m[1m87.4 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB
   ├ chunks/fd9d1056-e3d373074663785d.js  53.6 kB

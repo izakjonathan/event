@@ -87,6 +87,21 @@ type EventFile = {
   uploadedAt: string;
 };
 
+type EventArtist = {
+  id: string;
+  sourceSubmissionId?: string;
+  artistName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  genre: string;
+  imageUrl: string;
+  fee: number;
+  setTime: string;
+  status: 'proposed' | 'contacted' | 'confirmed' | 'cancelled';
+  notes: string;
+};
+
 type PlannerEvent = {
   id: string;
   meta: EventMeta;
@@ -97,6 +112,7 @@ type PlannerEvent = {
   scenarios: Scenario[];
   termsPlan: TermsPlan;
   files: EventFile[];
+  artists: EventArtist[];
   updatedAt: string;
 };
 
@@ -179,6 +195,7 @@ function trulyBlankEvent(): PlannerEvent {
       notes: ''
     },
     files: [],
+    artists: [],
     updatedAt: new Date().toISOString()
   };
 }
@@ -289,7 +306,8 @@ function emptyEvent(template: TemplateKey = 'blank'): PlannerEvent {
     bar: defaultBarPlan(),
     scenarios: defaultScenarios(),
     termsPlan: defaultTermsPlan(),
-    files: []
+    files: [],
+    artists: []
   };
   return applyTemplate(base, template);
 }
@@ -308,6 +326,7 @@ function hydrateEvent(raw: Partial<PlannerEvent>): PlannerEvent {
     bar: { ...fallback.bar, ...(raw.bar || {}) },
     termsPlan: { ...fallback.termsPlan, ...(raw.termsPlan || {}) },
     files: raw.files || fallback.files,
+    artists: ((raw as PlannerEvent).artists || fallback.artists || []).map((artist) => ({ ...artist, id: artist.id || uid(), fee: Number(artist.fee || 0) })),
     scenarios: raw.scenarios?.length ? raw.scenarios : defaultScenarios(sold, Math.round(avgTicket), raw.bar?.spendPerGuest || 200, 8000)
   };
   return event;
@@ -428,6 +447,7 @@ export default function EventPlannerApp() {
     income: false,
     expenses: false,
     terms: false,
+    artists: false,
     files: false,
     notes: false,
     export: false
@@ -598,6 +618,14 @@ export default function EventPlannerApp() {
     patchActive({ scenarios: active.scenarios.map((scenario) => scenario.id === id ? { ...scenario, ...patch } : scenario) });
   }
 
+  function patchArtist(id: string, patch: Partial<EventArtist>) {
+    patchActive({ artists: active.artists.map((artist) => artist.id === id ? { ...artist, ...patch } : artist) });
+  }
+
+  function removeArtist(id: string) {
+    patchActive({ artists: active.artists.filter((artist) => artist.id !== id) });
+  }
+
   function createNewEvent(template: TemplateKey = 'blank') {
     const next = template === 'blank' ? trulyBlankEvent() : emptyEvent(template);
     setEvents((current) => [next, ...current]);
@@ -616,7 +644,8 @@ export default function EventPlannerApp() {
       lines: active.lines.map((line) => ({ ...line, id: uid() })),
       staff: active.staff.map((line) => ({ ...line, id: uid() })),
       scenarios: active.scenarios.map((scenario) => ({ ...scenario, id: uid() })),
-      files: active.files.map((file) => ({ ...file, id: uid() }))
+      files: active.files.map((file) => ({ ...file, id: uid() })),
+      artists: active.artists.map((artist) => ({ ...artist, id: uid() }))
     });
     setEvents((current) => [copy, ...current]);
     setActiveId(copy.id);
@@ -627,7 +656,7 @@ export default function EventPlannerApp() {
     void deleteRemote(active.id);
     const remaining = events.filter((event) => event.id !== active.id);
     if (!remaining.length) {
-      const fresh = emptyEvent();
+      const fresh = trulyBlankEvent();
       setEvents([fresh]);
       setActiveId(fresh.id);
       return;
@@ -765,6 +794,7 @@ export default function EventPlannerApp() {
           </div>
           <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4">
             <Stat label="Expenses" value={money(totals.expenses)} />
+            <Stat label="Artist cost" value={money(totals.artistCost)} />
             <Stat label="Profit per guest" value={money(totals.perGuest)} />
             <Stat label="Break-even guests" value={fmt.format(totals.breakEvenGuests)} />
             <MarginFillCard margin={totals.margin} fillRate={totals.fillRate} />
@@ -790,7 +820,7 @@ export default function EventPlannerApp() {
             <button onClick={() => toggleSection('details')} className="quick-pill">Details</button>
             <button onClick={() => toggleSection('tickets')} className="quick-pill">Tickets</button>
             <button onClick={() => toggleSection('bar')} className="quick-pill">Bar</button>
-            <button onClick={() => setShowQuickAdd(true)} className="quick-pill">Quick add</button>
+            <button onClick={() => toggleSection('artists')} className="quick-pill">Lineup</button>
           </div>
             </>
           )}
@@ -824,6 +854,46 @@ export default function EventPlannerApp() {
             </label>
 
             <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
+          </div>
+        </Collapsible>
+
+        <Collapsible title="Artists / lineup" subtitle="Artists connected to this event." open={openSections.artists} onToggle={() => toggleSection('artists')}>
+          <div className="grid gap-3">
+            {!active.artists.length && (
+              <div className="artist-empty-inline">No artists added yet. Add artists from the Artist Submissions page.</div>
+            )}
+            {active.artists.map((artist) => (
+              <div key={artist.id} className="event-artist-card">
+                {artist.imageUrl ? <img src={artist.imageUrl} alt="" /> : <div className="event-artist-image-empty">No image</div>}
+                <div className="event-artist-body">
+                  <div className="event-artist-head">
+                    <div>
+                      <p className="section-mini-label">{artist.genre || 'Artist'}</p>
+                      <h3>{artist.artistName || 'Unnamed artist'}</h3>
+                    </div>
+                    <button onClick={() => removeArtist(artist.id)} className="passport-button rounded-full px-3 text-xs font-black">Remove</button>
+                  </div>
+                  <div className="event-artist-fields">
+                    <Field label="Set time" value={artist.setTime} onChange={(value) => patchArtist(artist.id, { setTime: value })} placeholder="22:00–23:00" />
+                    <NumberField label="Fee" value={artist.fee} onChange={(value) => patchArtist(artist.id, { fee: value })} />
+                    <label className="grid gap-1">
+                      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
+                      <select value={artist.status} onChange={(event) => patchArtist(artist.id, { status: event.target.value as EventArtist['status'] })} className="passport-input compact-input w-full px-3">
+                        <option value="proposed">Proposed</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </label>
+                    <AreaField label="Notes" value={artist.notes} onChange={(value) => patchArtist(artist.id, { notes: value })} placeholder="Booking notes, rider, contact reminders..." />
+                  </div>
+                  <div className="event-artist-contact">
+                    <span>{artist.email || 'No email'}</span>
+                    <span>{artist.phone || 'No phone'}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Collapsible>
 
@@ -1226,7 +1296,7 @@ export default function EventPlannerApp() {
 
 function calculateTotals(active?: PlannerEvent) {
   if (!active) {
-    return { totalSold: 0, capacity: 0, ticketRevenue: 0, averageTicketPrice: 0, lineIncome: 0, lineExpenses: 0, staffCost: 0, barGuests: 0, barRevenue: 0, barCost: 0, barProfit: 0, income: 0, expenses: 0, profit: 0, perGuest: 0, breakEvenGuests: 0, breakEvenTicketPrice: 0, breakEvenBarSpend: 0, margin: 0, fillRate: 0, organizerNet: 0, venueNet: 0, guaranteeTopUp: 0 };
+    return { totalSold: 0, capacity: 0, ticketRevenue: 0, averageTicketPrice: 0, lineIncome: 0, lineExpenses: 0, staffCost: 0, artistCost: 0, barGuests: 0, barRevenue: 0, barCost: 0, barProfit: 0, income: 0, expenses: 0, profit: 0, perGuest: 0, breakEvenGuests: 0, breakEvenTicketPrice: 0, breakEvenBarSpend: 0, margin: 0, fillRate: 0, organizerNet: 0, venueNet: 0, guaranteeTopUp: 0 };
   }
   const totalSold = active.tickets.reduce((sum, ticket) => sum + ticket.sold, 0);
   const capacity = active.tickets.reduce((sum, ticket) => sum + ticket.capacity, 0);
@@ -1235,12 +1305,13 @@ function calculateTotals(active?: PlannerEvent) {
   const lineIncome = active.lines.filter((line) => line.kind === 'income').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
   const lineExpenses = active.lines.filter((line) => line.kind === 'expense').reduce((sum, line) => sum + lineTotal(line, ticketRevenue, totalSold), 0);
   const staffCost = active.staff.reduce((sum, line) => sum + staffTotal(line), 0);
+  const artistCost = (active.artists || []).reduce((sum, artist) => sum + Number(artist.fee || 0), 0);
   const barGuests = active.bar.enabled ? (active.bar.useTicketGuests ? totalSold : active.bar.customGuests) : 0;
   const barRevenue = active.bar.enabled ? barGuests * active.bar.spendPerGuest : 0;
   const barCost = barRevenue * (active.bar.costPercent / 100);
   const barProfit = barRevenue - barCost;
   const income = ticketRevenue + lineIncome + barRevenue;
-  const expenses = lineExpenses + staffCost + barCost;
+  const expenses = lineExpenses + staffCost + artistCost + barCost;
   const profit = income - expenses;
   const perGuest = totalSold ? profit / totalSold : 0;
   const avgRevenuePerGuest = totalSold ? income / totalSold : averageTicketPrice + active.bar.spendPerGuest * (1 - active.bar.costPercent / 100);
@@ -1262,7 +1333,7 @@ function calculateTotals(active?: PlannerEvent) {
     venueNet = venueBeforeGuarantee + guaranteeTopUp;
     organizerNet = ticketToOrganizer + lineIncome + barProfitToOrganizer - lineExpenses - staffCost - active.termsPlan.flatVenueHire - guaranteeTopUp;
   }
-  return { totalSold, capacity, ticketRevenue, averageTicketPrice, lineIncome, lineExpenses, staffCost, barGuests, barRevenue, barCost, barProfit, income, expenses, profit, perGuest, breakEvenGuests, breakEvenTicketPrice, breakEvenBarSpend, margin, fillRate, organizerNet, venueNet, guaranteeTopUp };
+  return { totalSold, capacity, ticketRevenue, averageTicketPrice, lineIncome, lineExpenses, staffCost, artistCost, barGuests, barRevenue, barCost, barProfit, income, expenses, profit, perGuest, breakEvenGuests, breakEvenTicketPrice, breakEvenBarSpend, margin, fillRate, organizerNet, venueNet, guaranteeTopUp };
 }
 
 function scenarioResult(scenario: Scenario, barCostPercent: number) {

@@ -73,3 +73,14 @@ Routes:
 The app uses the existing Vercel env vars:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+
+## v29 Artist images + event lineup
+
+Run the updated `SUPABASE_SCHEMA.sql` in Supabase.
+
+New:
+- `/artist-booking` supports real image file upload to Supabase Storage bucket `artist-images`.
+- `/artists` lets you add an artist submission to an existing event.
+- `/event-planner` now includes an Artists / Lineup section.
+- Connected artist fees count as event expenses.

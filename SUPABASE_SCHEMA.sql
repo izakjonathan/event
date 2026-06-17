@@ -79,3 +79,32 @@ for update
 to anon
 using (true)
 with check (true);
+
+
+-- v29 artist image storage
+insert into storage.buckets (id, name, public)
+values ('artist-images', 'artist-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "artist_images_public_read" on storage.objects;
+drop policy if exists "artist_images_anon_upload" on storage.objects;
+drop policy if exists "artist_images_anon_update" on storage.objects;
+
+create policy "artist_images_public_read"
+on storage.objects
+for select
+to anon, authenticated
+using (bucket_id = 'artist-images');
+
+create policy "artist_images_anon_upload"
+on storage.objects
+for insert
+to anon
+with check (bucket_id = 'artist-images');
+
+create policy "artist_images_anon_update"
+on storage.objects
+for update
+to anon
+using (bucket_id = 'artist-images')
+with check (bucket_id = 'artist-images');

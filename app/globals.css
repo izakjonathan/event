@@ -1684,3 +1684,139 @@ main.no-callout{
     padding:.55rem;
   }
 }
+
+
+/* v29 artist-event linking + uploads */
+.artist-upload-field input[type="file"]{
+  padding:.6rem;
+}
+.artist-upload-preview{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .22);
+  border-radius:18px;
+  overflow:hidden;
+  background:rgb(var(--ink-rgb) / .04);
+}
+.artist-upload-preview img{
+  display:block;
+  width:100%;
+  aspect-ratio:16/10;
+  object-fit:cover;
+}
+.artist-add-event-box{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,.55fr) minmax(0,.65fr) auto;
+  gap:.45rem;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .18);
+  border-radius:20px;
+  padding:.55rem;
+  background:rgb(var(--ink-rgb) / .025);
+}
+.artist-add-event-box select,
+.artist-add-event-box input{
+  min-width:0;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .24);
+  border-radius:14px;
+  background:rgb(255 255 255 / .22);
+  color:var(--ink);
+  padding:.55rem .6rem;
+  font:inherit;
+  font-size:.82rem;
+  font-weight:800;
+}
+.artist-add-event-box button{
+  border:var(--line, 1.5px) solid var(--ink);
+  border-radius:999px;
+  background:var(--ink);
+  color:var(--paper);
+  padding:0 .75rem;
+  font-size:.78rem;
+  font-weight:900;
+  line-height:.9;
+}
+.event-artist-card{
+  display:grid;
+  grid-template-columns:116px minmax(0,1fr);
+  gap:.75rem;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .22);
+  border-radius:24px;
+  padding:.55rem;
+  background:rgb(var(--ink-rgb) / .025);
+}
+.event-artist-card img,
+.event-artist-image-empty{
+  width:100%;
+  aspect-ratio:1;
+  border-radius:18px;
+  object-fit:cover;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .18);
+  background:rgb(var(--ink-rgb) / .04);
+}
+.event-artist-image-empty,
+.artist-empty-inline{
+  display:grid;
+  place-items:center;
+  min-height:96px;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.62;
+  text-align:center;
+}
+.event-artist-body{
+  display:grid;
+  gap:.65rem;
+  min-width:0;
+}
+.event-artist-head{
+  display:flex;
+  align-items:start;
+  justify-content:space-between;
+  gap:.65rem;
+}
+.event-artist-head h3{
+  margin:0;
+  font-size:calc(1.65rem * var(--heading-size, 1));
+  line-height:.9;
+  font-weight:var(--heading-weight, 900);
+  letter-spacing:var(--heading-letter-spacing, -.055em);
+}
+.event-artist-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:.55rem;
+}
+.event-artist-fields label:last-child{
+  grid-column:1 / -1;
+}
+.event-artist-contact{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+}
+.event-artist-contact span{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .2);
+  border-radius:999px;
+  padding:.35rem .55rem;
+  font-size:.72rem;
+  font-weight:900;
+  line-height:1;
+}
+@media (max-width:760px){
+  .artist-add-event-box{
+    grid-template-columns:1fr;
+  }
+  .artist-add-event-box button{
+    min-height:42px;
+  }
+  .event-artist-card{
+    grid-template-columns:1fr;
+  }
+  .event-artist-card img,
+  .event-artist-image-empty{
+    aspect-ratio:16/10;
+  }
+  .event-artist-fields{
+    grid-template-columns:1fr;
+  }
+}
