@@ -96,10 +96,19 @@ type DbEventRow = {
   updated_at: string;
 };
 
+type UiStudioSettings = {
+  paper: string;
+  ink: string;
+  fontScale: number;
+  typePreset: 'system' | 'rounded' | 'serif';
+};
+
 const STORAGE_KEY = 'event-planner-calculator-v2';
 const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
 const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
 const DEFAULT_WORKSPACE = 'main-workspace';
+const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v1';
+const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif' };
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
 const pct = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 1 });
@@ -110,6 +119,33 @@ const numberOrZero = (value: string) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 const safeSlug = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || DEFAULT_WORKSPACE;
+
+function hexToRgb(hex: string) {
+  const clean = hex.replace('#', '');
+  const full = clean.length === 3 ? clean.split('').map((char) => char + char).join('') : clean;
+  const int = parseInt(full, 16);
+  return { r: (int >> 16) & 255, g: (int >> 8) & 255, b: int & 255 };
+}
+
+function rgbaFromHex(hex: string, alpha: number) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function defaultUiStudio(): UiStudioSettings {
+  return {
+    paper: '#efe9dc',
+    ink: '#244cdd',
+    fontScale: 1,
+    typePreset: 'system'
+  };
+}
+
+function fontStackForPreset(preset: UiStudioSettings['typePreset']) {
+  if (preset === 'rounded') return '"SF Pro Rounded", "Avenir Next", ui-rounded, "Nunito Sans", system-ui, sans-serif';
+  if (preset === 'serif') return 'Iowan Old Style, Georgia, ui-serif, serif';
+  return '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, system-ui, sans-serif';
+}
 
 function defaultBarPlan(): BarPlan {
   return {
@@ -290,6 +326,7 @@ export default function EventPlannerApp() {
   const [libraryTab, setLibraryTab] = useState<'events' | 'templates'>('events');
   const [showSettings, setShowSettings] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [uiStudio, setUiStudio] = useState<UiStudioSettings>(defaultUiStudio());
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     forecast: true,
     scenarios: true,
@@ -323,6 +360,24 @@ export default function EventPlannerApp() {
     setEvents([starter]);
     setActiveId(starter.id);
   }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(UI_STUDIO_STORAGE_KEY);
+    if (!stored) return;
+    try {
+      setUiStudio({ ...defaultUiStudio(), ...JSON.parse(stored) });
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--paper', uiStudio.paper);
+    root.style.setProperty('--ink', uiStudio.ink);
+    root.style.setProperty('--ink-soft', rgbaFromHex(uiStudio.ink, 0.16));
+    root.style.setProperty('--app-font', fontStackForPreset(uiStudio.typePreset));
+    root.style.setProperty('--app-scale', String(uiStudio.fontScale));
+    localStorage.setItem(UI_STUDIO_STORAGE_KEY, JSON.stringify(uiStudio));
+  }, [uiStudio]);
 
   async function loadFromSupabase(workspaceKey = workspace) {
     const client = getSupabaseClient();
@@ -477,37 +532,31 @@ export default function EventPlannerApp() {
   return (
     <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-[1fr_.62fr] gap-2">
-          <div className="passport-card rounded-full p-1 backdrop-blur">
-            <div className="grid grid-cols-2 gap-1">
-              <button
-                onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
-                className="rounded-full px-2.5 py-1.5 text-center transition active:scale-[.985]"
-              >
-                <span className="block text-[9px] font-bold uppercase tracking-[.14em] opacity-65">Choose</span>
-                <strong className="block text-sm font-black tracking-[-.03em]">Events</strong>
-              </button>
-              <button
-                onClick={() => { setLibraryTab('templates'); setShowLibrary(true); }}
-                className="rounded-full px-2.5 py-1.5 text-center transition active:scale-[.985]"
-              >
-                <span className="block text-[9px] font-bold uppercase tracking-[.14em] opacity-65">Start</span>
-                <strong className="block text-sm font-black tracking-[-.03em]">Template</strong>
-              </button>
-            </div>
-          </div>
-          <button onClick={() => setShowSettings(true)} className="passport-button min-h-[48px] rounded-full px-3 text-left backdrop-blur">
-            <span className="block text-[9px] uppercase tracking-[.15em] opacity-65">Settings</span>
-            <strong className="block truncate text-sm font-black tracking-[-.03em]">{syncEnabled ? status : 'Local'}</strong>
+        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
+          <button
+            onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
+            className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur"
+          >
+            <span className="block text-[9px] font-bold uppercase tracking-[.15em] opacity-65">Choose</span>
+            <strong className="block text-[15px] font-black tracking-[-.03em]">Choose event</strong>
+          </button>
+          <button
+            onClick={() => { setLibraryTab('templates'); setShowLibrary(true); }}
+            className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur"
+          >
+            <span className="block text-[9px] font-bold uppercase tracking-[.15em] opacity-65">Start</span>
+            <strong className="block text-[15px] font-black tracking-[-.03em]">Start template</strong>
+          </button>
+          <button onClick={() => setShowSettings(true)} className="passport-button top-nav-pill min-h-[58px] rounded-full px-3 text-center backdrop-blur">
+            <span className="block text-[9px] uppercase tracking-[.15em] opacity-65">Manage</span>
+            <strong className="block text-[15px] font-black tracking-[-.03em]">Settings</strong>
           </button>
         </header>
 
-        <div className="compact-context">
-          <div className="min-w-0">
-            <p className="text-[9px] font-bold uppercase tracking-[.17em] opacity-60">Current event</p>
-            <p className="truncate text-sm font-black tracking-[-.03em]">{active.meta.name || 'Untitled event'}</p>
-          </div>
-          <span className="shrink-0 rounded-full border border-[var(--ink)]/25 px-2 py-1 text-[10px] font-bold uppercase tracking-[.12em]">{statusLabel(active.meta.status)}</span>
+        <div className="compact-context compact-context-solo">
+          <p className="text-[9px] font-bold uppercase tracking-[.17em] opacity-60">Current event</p>
+          <p className="truncate text-base font-black tracking-[-.03em]">{active.meta.name || 'Untitled event'}</p>
+          <p className="truncate text-[11px] font-medium uppercase tracking-[.14em] opacity-55">{workspace}</p>
         </div>
 
         <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
@@ -521,8 +570,9 @@ export default function EventPlannerApp() {
               <p className="mt-2 text-sm opacity-75">{[active.meta.date, active.meta.time, active.meta.location].filter(Boolean).join(' · ') || 'Add date, time and location'}</p>
             </div>
             <div className="profit-orb">
-              <span>Profit</span>
-              <strong>{money(totals.profit)}</strong>
+              <span className="profit-kicker">Projected profit</span>
+              <strong><MoneyValue value={totals.profit} /></strong>
+              <em className="profit-sub">after costs</em>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -593,7 +643,7 @@ export default function EventPlannerApp() {
                     <Field label="Notes" value={ticket.notes} onChange={(value) => patchTicket(ticket.id, { notes: value })} />
                     <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
                       <div className="text-xs uppercase tracking-[.14em] opacity-70">{money(ticket.price)} × {fmt.format(ticket.sold)}</div>
-                      <div className="text-2xl font-black tracking-[-.04em]">{money(total)}</div>
+                      <MoneyValue value={total} className="text-2xl font-black tracking-[-.04em]" />
                     </div>
                   </div>
                 </div>
@@ -645,7 +695,7 @@ export default function EventPlannerApp() {
                   <Field label="Notes" value={line.notes} onChange={(value) => patchStaff(line.id, { notes: value })} />
                   <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
                     <div className="text-xs uppercase tracking-[.14em] opacity-70">Staff cost</div>
-                    <div className="text-2xl font-black tracking-[-.04em]">{money(staffTotal(line))}</div>
+                    <MoneyValue value={staffTotal(line)} className="text-2xl font-black tracking-[-.04em]" />
                   </div>
                 </div>
               </div>
@@ -823,6 +873,44 @@ export default function EventPlannerApp() {
               </div>
             </div>
 
+            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">UI studio</p>
+                  <p className="text-lg font-black tracking-[-.03em]">Color + type</p>
+                </div>
+                <button onClick={() => setUiStudio(defaultUiStudio())} className="passport-button min-h-10 rounded-full px-3 text-sm font-bold">Reset</button>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <ColorField label="Background" value={uiStudio.paper} onChange={(value) => setUiStudio((current) => ({ ...current, paper: value }))} />
+                <ColorField label="Accent" value={uiStudio.ink} onChange={(value) => setUiStudio((current) => ({ ...current, ink: value }))} />
+                <label className="grid gap-1">
+                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Type preset</span>
+                  <select value={uiStudio.typePreset} onChange={(event) => setUiStudio((current) => ({ ...current, typePreset: event.target.value as UiStudioSettings['typePreset'] }))} className="passport-input min-h-12 w-full px-3">
+                    <option value="system">System</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="serif">Serif</option>
+                  </select>
+                </label>
+                <label className="grid gap-1">
+                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Type scale · {uiStudio.fontScale.toFixed(2)}×</span>
+                  <input type="range" min="0.9" max="1.15" step="0.01" value={uiStudio.fontScale} onChange={(event) => setUiStudio((current) => ({ ...current, fontScale: Number(event.target.value) }))} className="w-full accent-[var(--ink)]" />
+                </label>
+              </div>
+              <div className="studio-preview mt-3">
+                <p className="studio-label">Preview</p>
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[.15em] opacity-65">{TYPE_PRESET_LABELS[uiStudio.typePreset]}</p>
+                    <p className="text-2xl font-black tracking-[-.05em]">Forecast style</p>
+                  </div>
+                  <div className="text-right">
+                    <MoneyValue value={26401} className="text-[1.7rem] font-black tracking-[-.05em]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3 text-sm leading-relaxed">
               <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Notes</p>
               <p className="mt-2">Open the same workspace link on another phone or computer to edit the same events. Line modes still work the same: Fixed = amount × quantity, Per ticket holder = amount × tickets sold × quantity, Percentage = % of ticket revenue × quantity.</p>
@@ -889,22 +977,44 @@ function statusLabel(status: EventStatus) {
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
+  const isMoney = value.endsWith(' DKK');
   return (
-    <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+    <div className="stat-card">
       <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</div>
-      <div className="mt-1 truncate text-xl font-black tracking-[-.04em] md:text-2xl">{value}</div>
+      <div className="mt-1.5 truncate text-xl font-black tracking-[-.05em] md:text-2xl">{isMoney ? <MoneyString text={value} /> : value}</div>
     </div>
   );
 }
 
 function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+    <div className="mini-panel">
       <h3 className="font-black tracking-[-.03em]">{title}</h3>
       <div className="mt-2 space-y-1 text-sm opacity-75">
         {lines.map((line) => <p key={line}>{line}</p>)}
       </div>
     </div>
+  );
+}
+
+function MoneyString({ text }: { text: string }) {
+  const number = text.replace(/\s*DKK$/, '');
+  return <span className="money-inline"><span className="money-number">{number}</span><span className="money-currency">DKK</span></span>;
+}
+
+function MoneyValue({ value, className = '' }: { value: number; className?: string }) {
+  return <span className={`money-inline ${className}`.trim()}><span className="money-number">{fmt.format(Math.round(value || 0))}</span><span className="money-currency">DKK</span></span>;
+}
+
+function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label className="grid gap-1">
+      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
+      <div className="color-field passport-input min-h-12 px-3">
+        <input type="color" value={value} onChange={(event) => onChange(event.target.value)} className="h-8 w-10 cursor-pointer border-0 bg-transparent p-0" />
+        <input value={value} onChange={(event) => onChange(event.target.value)} className="w-full bg-transparent text-sm font-bold outline-none" />
+      </div>
+    </label>
   );
 }
 
@@ -989,7 +1099,7 @@ function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: 
               <Field label="Notes" value={line.notes} onChange={(value) => patchLine(line.id, { notes: value })} />
               <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
                 <div className="text-xs uppercase tracking-[.14em] opacity-70">Row total</div>
-                <div className="text-2xl font-black tracking-[-.04em]">{money(total)}</div>
+                <MoneyValue value={total} className="text-2xl font-black tracking-[-.04em]" />
               </div>
             </div>
           </div>
