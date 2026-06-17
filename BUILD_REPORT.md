@@ -1,10 +1,10 @@
-# Event Planner Calculator v12
+# Event Planner Calculator v13
 
-Built from latest working v11.
+Built from latest working v12.
 
 Changes:
-- Removed the slash from the Margin / Fill number area.
-- Margin / Fill now displays as two separate values.
-- Margin / Fill number styling now matches the other forecast stat cards more closely.
-- Added Supabase error details inside Settings so it shows the real error message.
+- Fixed Event details date/time fields overflowing to the right on mobile Safari.
+- Added stricter max-width/min-width rules for the Event details cards.
+- Forced native date/time inputs to stay inside their cards.
+- Kept Supabase debug box from v12.
 - Existing Supabase table/schema remains compatible.

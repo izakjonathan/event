@@ -501,3 +501,57 @@ input,textarea,select{outline:none;background:transparent}
     font-size:.88rem !important;
   }
 }
+
+
+/* v13 event details overflow fix */
+.event-details-grid,
+.event-details-card,
+.event-two-col,
+.event-two-col label,
+.event-two-col .passport-input{
+  min-width:0;
+  max-width:100%;
+}
+
+.event-two-col{
+  overflow:hidden;
+}
+
+.event-two-col label{
+  overflow:hidden;
+}
+
+.event-two-col input[type="date"],
+.event-two-col input[type="time"]{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  appearance:none;
+  -webkit-appearance:none;
+  overflow:hidden;
+}
+
+.event-details-card .passport-input{
+  border-radius:18px;
+}
+
+@media (max-width: 430px){
+  .event-details-card{
+    overflow:hidden;
+  }
+
+  .event-two-col{
+    grid-template-columns:1fr !important;
+    gap:.85rem !important;
+  }
+
+  .event-two-col input[type="date"],
+  .event-two-col input[type="time"]{
+    font-size:16px;
+    min-height:48px;
+    padding-left:.9rem;
+    padding-right:.9rem;
+  }
+}
