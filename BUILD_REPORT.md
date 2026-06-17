@@ -1,9 +1,11 @@
-# Event Planner Calculator v23
+# Event Planner Calculator v24
 
-Built from latest working v22.
+Built from latest working v23.
 
 Changes:
-- Made the Forecast title smaller so it feels like a card title, not the main event title.
-- Event name now has stronger visual priority over Forecast.
-- Reduced the top safe-area spacing so the top pills sit closer to the top of the iPhone screen.
+- Consolidated top-of-page spacing into one control only.
+- Removed duplicate/conflicting main.no-callout padding-top rules.
+- Top spacing is now controlled from app/globals.css:
+  --page-top-gap:.35rem;
+- Smaller value moves Event / Settings pills closer to the top.
 - Existing Supabase/database compatibility unchanged.

@@ -11,6 +11,7 @@
   --danger:#b93232;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
+  --page-top-gap:.35rem;
   --app-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;
   --app-scale:1;
   --heading-size:1;
@@ -956,10 +957,7 @@ body{
   overflow-x:hidden;
 }
 
-main.no-callout{
-  padding-top:max(calc(var(--safe-top) + .85rem), 1.35rem) !important;
-  padding-bottom:max(calc(var(--safe-bottom) + 7rem), 7rem) !important;
-}
+
 
 .forecast-title-button{
   width:100%;
@@ -1033,10 +1031,7 @@ main.no-callout{
 }
 
 @media (max-width:430px){
-  main.no-callout{
-    padding-top:max(calc(var(--safe-top) + 1.2rem), 2.25rem) !important;
-    padding-bottom:max(calc(var(--safe-bottom) + 7.5rem), 7.5rem) !important;
-  }
+  
 
   .forecast-main-row{
     grid-template-columns:minmax(0,1fr) 142px !important;
@@ -1234,9 +1229,7 @@ main.no-callout{
 
 
 /* v23 smaller Forecast title + less top spacing */
-main.no-callout{
-  padding-top:max(calc(var(--safe-top) + .35rem), .85rem) !important;
-}
+
 
 .forecast-title-text{
   font-size:calc(1.35rem * var(--heading-size)) !important;
@@ -1250,11 +1243,18 @@ main.no-callout{
 }
 
 @media (max-width:430px){
-  main.no-callout{
-    padding-top:max(calc(var(--safe-top) + .45rem), 1.05rem) !important;
-  }
+  
 
   .forecast-title-text{
     font-size:calc(1.28rem * var(--heading-size)) !important;
   }
+}
+
+
+/* v24 SINGLE TOP SPACING CONTROL
+   Change only --page-top-gap in :root to move the Event / Settings pills up or down.
+   Smaller value = less space above the pills.
+   There should be no other padding-top controls for main.no-callout. */
+main.no-callout{
+  padding-top:calc(var(--safe-top) + var(--page-top-gap)) !important;
 }
