@@ -340,6 +340,7 @@ export default function EventPlannerApp() {
   const [status, setStatus] = useState('Local draft');
   const [workspace, setWorkspace] = useState(DEFAULT_WORKSPACE);
   const [syncEnabled, setSyncEnabled] = useState(false);
+  const [syncError, setSyncError] = useState('');
   const [showLibrary, setShowLibrary] = useState(false);
   const [libraryTab, setLibraryTab] = useState<'events' | 'templates'>('events');
   const [showSettings, setShowSettings] = useState(false);
@@ -406,9 +407,11 @@ export default function EventPlannerApp() {
     const client = getSupabaseClient();
     if (!client) {
       setStatus('Saved locally');
+      setSyncError('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.');
       return;
     }
     setSyncEnabled(true);
+    setSyncError('');
     setStatus('Loading...');
     const { data, error } = await client
       .from('event_plans')
@@ -417,6 +420,7 @@ export default function EventPlannerApp() {
       .order('updated_at', { ascending: false });
     if (error) {
       setStatus('Supabase error');
+      setSyncError(error.message || 'Unknown Supabase load error.');
       return;
     }
     const remote = ((data || []) as DbEventRow[]).map((row) => hydrateEvent(row.payload)).filter(Boolean);
@@ -447,9 +451,11 @@ export default function EventPlannerApp() {
     const client = getSupabaseClient();
     if (!client) {
       setStatus('Saved locally');
+      setSyncError('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.');
       return;
     }
     setSyncEnabled(true);
+    setSyncError('');
     setStatus('Saving...');
     const rows = nextEvents.map((event) => ({
       id: event.id,
@@ -460,7 +466,13 @@ export default function EventPlannerApp() {
       updated_at: event.updatedAt
     }));
     const { error } = await client.from('event_plans').upsert(rows, { onConflict: 'id' });
-    setStatus(error ? 'Local saved / Supabase error' : 'Synced');
+    if (error) {
+      setStatus('Local saved / Supabase error');
+      setSyncError(error.message || 'Unknown Supabase save error.');
+      return;
+    }
+    setSyncError('');
+    setStatus('Synced');
   }
 
   async function deleteRemote(eventId: string) {
@@ -987,6 +999,12 @@ export default function EventPlannerApp() {
                 <span className="rounded-full border border-[var(--ink)]/25 px-3 py-1.5 text-xs font-bold">{status}</span>
               </div>
               <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
+              {syncError && (
+                <div className="supabase-error-card mt-3">
+                  <p className="text-[10px] font-bold uppercase tracking-[.16em]">Supabase error details</p>
+                  <p className="mt-2 text-sm leading-relaxed">{syncError}</p>
+                </div>
+              )}
             </div>
 
             <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
@@ -1120,12 +1138,11 @@ function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number
       <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Margin / Fill</div>
       <div className="margin-fill-values">
         <div className="margin-fill-item">
-          <strong>{margin}</strong><span>%</span>
+          <div className="margin-fill-number"><strong>{margin}</strong><span>%</span></div>
           <em>Margin</em>
         </div>
-        <div className="margin-fill-divider">/</div>
         <div className="margin-fill-item">
-          <strong>{fillRate}</strong><span>%</span>
+          <div className="margin-fill-number"><strong>{fillRate}</strong><span>%</span></div>
           <em>Fill</em>
         </div>
       </div>

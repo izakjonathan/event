@@ -1,11 +1,10 @@
-# Event Planner Calculator v11
+# Event Planner Calculator v12
 
-Built from latest working v10.
+Built from latest working v11.
 
 Changes:
-- Redesigned Margin / Fill card.
-- Added proper visual spacing between margin and fill values.
-- Numbers stay bold.
-- Percent signs and divider are lighter weight.
-- Added small labels under each value: Margin and Fill.
-- Existing Supabase/database compatibility unchanged.
+- Removed the slash from the Margin / Fill number area.
+- Margin / Fill now displays as two separate values.
+- Margin / Fill number styling now matches the other forecast stat cards more closely.
+- Added Supabase error details inside Settings so it shows the real error message.
+- Existing Supabase table/schema remains compatible.

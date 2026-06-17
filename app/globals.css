@@ -439,3 +439,65 @@ input,textarea,select{outline:none;background:transparent}
     font-size:1.05rem;
   }
 }
+
+
+/* v12 margin / fill and Supabase debug */
+.margin-fill-values{
+  margin-top:.45rem !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  align-items:end !important;
+  gap:.85rem !important;
+}
+.margin-fill-item{
+  min-width:0;
+  display:block !important;
+}
+.margin-fill-number{
+  display:inline-flex;
+  align-items:baseline;
+  gap:.12em;
+  white-space:nowrap;
+}
+.margin-fill-item strong{
+  font-size:1.55rem !important;
+  line-height:.95 !important;
+  font-weight:900 !important;
+  letter-spacing:-.055em !important;
+}
+.margin-fill-item span{
+  font-size:.96rem !important;
+  font-weight:400 !important;
+  opacity:.72 !important;
+}
+.margin-fill-item em{
+  display:block;
+  margin-top:.24rem;
+  font-style:normal;
+  font-size:.58rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.58;
+}
+.margin-fill-divider{
+  display:none !important;
+}
+.supabase-error-card{
+  border:1.5px solid var(--danger);
+  color:var(--danger);
+  border-radius:20px;
+  padding:.8rem;
+  background:rgba(185,50,50,.04);
+}
+@media (max-width:430px){
+  .margin-fill-values{
+    gap:.55rem !important;
+  }
+  .margin-fill-item strong{
+    font-size:1.45rem !important;
+  }
+  .margin-fill-item span{
+    font-size:.88rem !important;
+  }
+}
