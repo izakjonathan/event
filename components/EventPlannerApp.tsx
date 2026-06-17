@@ -75,6 +75,16 @@ type TermsPlan = {
   notes: string;
 };
 
+type EventFile = {
+  id: string;
+  name: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+  dataUrl: string;
+  uploadedAt: string;
+};
+
 type PlannerEvent = {
   id: string;
   meta: EventMeta;
@@ -84,6 +94,7 @@ type PlannerEvent = {
   bar: BarPlan;
   scenarios: Scenario[];
   termsPlan: TermsPlan;
+  files: EventFile[];
   updatedAt: string;
 };
 
@@ -201,7 +212,8 @@ function emptyEvent(template: TemplateKey = 'blank'): PlannerEvent {
     ],
     bar: defaultBarPlan(),
     scenarios: defaultScenarios(),
-    termsPlan: defaultTermsPlan()
+    termsPlan: defaultTermsPlan(),
+    files: []
   };
   return applyTemplate(base, template);
 }
@@ -219,6 +231,7 @@ function hydrateEvent(raw: Partial<PlannerEvent>): PlannerEvent {
     staff: raw.staff?.length ? raw.staff : fallback.staff,
     bar: { ...fallback.bar, ...(raw.bar || {}) },
     termsPlan: { ...fallback.termsPlan, ...(raw.termsPlan || {}) },
+    files: raw.files || fallback.files,
     scenarios: raw.scenarios?.length ? raw.scenarios : defaultScenarios(sold, Math.round(avgTicket), raw.bar?.spendPerGuest || 200, 8000)
   };
   return event;
@@ -330,13 +343,14 @@ export default function EventPlannerApp() {
   const [uiStudio, setUiStudio] = useState<UiStudioSettings>(defaultUiStudio());
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     forecast: true,
-    scenarios: true,
-    tickets: true,
-    bar: true,
-    staff: true,
-    income: true,
-    expenses: true,
-    terms: true,
+    scenarios: false,
+    tickets: false,
+    bar: false,
+    staff: false,
+    income: false,
+    expenses: false,
+    terms: false,
+    files: false,
     notes: false,
     export: false
   });
@@ -379,6 +393,7 @@ export default function EventPlannerApp() {
     root.style.setProperty('--ink-rgb', `${inkRgb.r} ${inkRgb.g} ${inkRgb.b}`);
     root.style.setProperty('--app-font', fontStackForPreset(uiStudio.typePreset));
     root.style.setProperty('--app-scale', String(uiStudio.fontScale));
+    root.style.fontSize = `${16 * uiStudio.fontScale}px`;
     localStorage.setItem(UI_STUDIO_STORAGE_KEY, JSON.stringify(uiStudio));
   }, [uiStudio]);
 
@@ -496,7 +511,8 @@ export default function EventPlannerApp() {
       tickets: active.tickets.map((ticket) => ({ ...ticket, id: uid() })),
       lines: active.lines.map((line) => ({ ...line, id: uid() })),
       staff: active.staff.map((line) => ({ ...line, id: uid() })),
-      scenarios: active.scenarios.map((scenario) => ({ ...scenario, id: uid() }))
+      scenarios: active.scenarios.map((scenario) => ({ ...scenario, id: uid() })),
+      files: active.files.map((file) => ({ ...file, id: uid() }))
     });
     setEvents((current) => [copy, ...current]);
     setActiveId(copy.id);
@@ -526,6 +542,50 @@ export default function EventPlannerApp() {
     const url = new URL(window.location.href);
     url.searchParams.set('workspace', slug);
     window.location.href = url.toString();
+  }
+
+  async function addFilesToEvent(fileList: FileList | null) {
+    if (!fileList?.length || !active) return;
+    const loaded = await Promise.all(Array.from(fileList).map((file) => new Promise<EventFile>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({
+        id: uid(),
+        name: file.name,
+        originalName: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        size: file.size,
+        dataUrl: String(reader.result || ''),
+        uploadedAt: new Date().toISOString()
+      });
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    })));
+    patchActive({ files: [...active.files, ...loaded] });
+  }
+
+  function patchFile(id: string, patch: Partial<EventFile>) {
+    patchActive({ files: active.files.map((file) => file.id === id ? { ...file, ...patch } : file) });
+  }
+
+  function removeFile(id: string) {
+    patchActive({ files: active.files.filter((file) => file.id !== id) });
+  }
+
+  function downloadFile(file: EventFile) {
+    const a = document.createElement('a');
+    a.href = file.dataUrl;
+    a.download = file.name || file.originalName || 'event-file';
+    a.click();
+  }
+
+  function openFile(file: EventFile) {
+    const win = window.open();
+    if (win) {
+      win.document.write(`<iframe src="${file.dataUrl}" style="border:0;width:100vw;height:100vh"></iframe>`);
+      win.document.title = file.name || file.originalName || 'Event file';
+    } else {
+      downloadFile(file);
+    }
   }
 
   if (!active) return <main className="min-h-dvh bg-[var(--paper)]" />;
@@ -579,9 +639,21 @@ export default function EventPlannerApp() {
             <Stat label="Margin / fill" value={`${totals.margin}% / ${totals.fillRate}%`} />
           </div>
           <div className="mt-3 grid gap-2 md:grid-cols-3">
-            <MiniPanel title="Break-even helper" lines={[`Need ${fmt.format(totals.breakEvenGuests)} guests at current average revenue.`, `Need ticket price of ${money(totals.breakEvenTicketPrice)} without bar revenue.`, `Need average bar spend of ${money(totals.breakEvenBarSpend)} per guest with current ticket setup.`]} />
-            <MiniPanel title="Organizer" lines={[`Organizer net: ${money(totals.organizerNet)}`, `Venue net: ${money(totals.venueNet)}`, `Terms: ${active.termsPlan.enabled ? 'on' : 'off'}`]} />
-            <MiniPanel title="Bar" lines={[`Revenue: ${money(totals.barRevenue)}`, `Stock cost: ${money(totals.barCost)}`, `Avg spend: ${money(active.bar.spendPerGuest)}`]} />
+            <ForecastInfoCard title="Break-even helper" rows={[
+              ['Guests', fmt.format(totals.breakEvenGuests)],
+              ['Tickets', money(totals.breakEvenTicketPrice)],
+              ['Avg. bar spend', money(totals.breakEvenBarSpend)]
+            ]} />
+            <ForecastInfoCard title="Organizer" rows={[
+              ['Organizer net', money(totals.organizerNet)],
+              ['Venue net', money(totals.venueNet)],
+              ['Terms', active.termsPlan.enabled ? 'On' : 'Off']
+            ]} />
+            <ForecastInfoCard title="Bar" rows={[
+              ['Revenue', money(totals.barRevenue)],
+              ['Stock cost', money(totals.barCost)],
+              ['Avg. spend', money(active.bar.spendPerGuest)]
+            ]} />
           </div>
           <div className="mt-3 grid grid-cols-3 gap-2">
             <button onClick={() => toggleSection('tickets')} className="quick-pill">Tickets</button>
@@ -727,6 +799,35 @@ export default function EventPlannerApp() {
           </div>
         </Collapsible>
 
+        <Collapsible title="Files" subtitle="Upload files to this event." open={openSections.files} onToggle={() => toggleSection('files')}>
+          <div className="grid gap-3">
+            <label className="file-drop-card">
+              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Upload files</span>
+              <strong className="mt-1 block text-2xl font-black tracking-[-.05em]">Add files</strong>
+              <span className="mt-1 block text-sm opacity-70">Saved inside this event. Tap files to view or download.</span>
+              <input type="file" multiple onChange={(event) => void addFilesToEvent(event.target.files)} className="sr-only" />
+            </label>
+            {!active.files.length && (
+              <div className="rounded-soft border-[1.5px] border-dashed border-[var(--ink)] p-4 text-center text-sm opacity-70">No files uploaded yet.</div>
+            )}
+            <div className="grid gap-2">
+              {active.files.map((file) => (
+                <div key={file.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                  <div className="grid gap-2 md:grid-cols-[1fr_auto_auto] md:items-end">
+                    <Field label="File name" value={file.name} onChange={(value) => patchFile(file.id, { name: value })} />
+                    <button onClick={() => openFile(file)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Open</button>
+                    <button onClick={() => downloadFile(file)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Download</button>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-3 text-xs opacity-70">
+                    <span>{file.mimeType || 'file'} · {formatFileSize(file.size)}</span>
+                    <button onClick={() => removeFile(file.id)} className="font-bold text-[var(--danger)]">Remove</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Collapsible>
+
         <Collapsible title="Planning notes" subtitle="Terms, assumptions and event notes." open={openSections.notes} onToggle={() => toggleSection('notes')}>
           <div className="grid gap-2 md:grid-cols-2">
             <AreaField label="Terms / deal" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} placeholder="Door split, guarantee, venue terms, cancellation terms..." />
@@ -756,6 +857,7 @@ export default function EventPlannerApp() {
 
             {libraryTab === 'events' ? (
               <>
+                <button onClick={() => createNewEvent('blank')} className="passport-button min-h-12 rounded-soft px-3 font-bold">Add new event</button>
                 <div className="grid gap-2">
                   {events.map((event) => (
                     <button key={event.id} onClick={() => { setActiveId(event.id); setShowLibrary(false); }} className={`passport-button rounded-soft p-3 text-left ${event.id === active.id ? 'bg-[var(--ink-soft)]' : ''}`}>
@@ -824,8 +926,7 @@ export default function EventPlannerApp() {
       {showSettings && (
         <Modal title="Settings" onClose={() => setShowSettings(false)}>
           <div className="grid gap-3">
-            <div className="grid gap-2 md:grid-cols-3">
-              <button onClick={() => createNewEvent('blank')} className="passport-button min-h-12 rounded-soft px-3 font-bold">Add new event</button>
+            <div className="grid gap-2 md:grid-cols-2">
               <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">Duplicate current</button>
               <button onClick={() => void loadFromSupabase()} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>
             </div>
@@ -839,29 +940,6 @@ export default function EventPlannerApp() {
                 <span className="rounded-full border border-[var(--ink)]/25 px-3 py-1.5 text-xs font-bold">{status}</span>
               </div>
               <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
-            </div>
-
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
-              <p className="mb-3 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Event details</p>
-              <div className="grid gap-2">
-                <Field label="Name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
-                <label className="grid gap-1">
-                  <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-                  <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input min-h-12 w-full px-3">
-                    <option value="idea">Idea</option>
-                    <option value="quoted">Quoted</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Field label="Date" type="date" value={active.meta.date} onChange={(value) => patchMeta('date', value)} />
-                  <Field label="Time" type="time" value={active.meta.time} onChange={(value) => patchMeta('time', value)} />
-                </div>
-                <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
-                <AreaField label="Terms" value={active.meta.terms} onChange={(value) => patchMeta('terms', value)} />
-              </div>
             </div>
 
             <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
@@ -884,10 +962,14 @@ export default function EventPlannerApp() {
                     <option value="unbounded">Unbounded</option>
                   </select>
                 </label>
-                <label className="grid gap-1">
+                <div className="grid gap-1">
                   <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Type scale · {uiStudio.fontScale.toFixed(2)}×</span>
-                  <input type="range" min="0.9" max="1.15" step="0.01" value={uiStudio.fontScale} onChange={(event) => setUiStudio((current) => ({ ...current, fontScale: Number(event.target.value) }))} className="w-full accent-[var(--ink)]" />
-                </label>
+                  <div className="grid grid-cols-[48px_1fr_48px] gap-2">
+                    <button onClick={() => setUiStudio((current) => ({ ...current, fontScale: Math.max(0.85, Number((current.fontScale - 0.03).toFixed(2))) }))} className="passport-button min-h-12 rounded-soft text-xl font-black">−</button>
+                    <div className="passport-input grid min-h-12 place-items-center px-3 font-black">{Math.round(uiStudio.fontScale * 100)}%</div>
+                    <button onClick={() => setUiStudio((current) => ({ ...current, fontScale: Math.min(1.25, Number((current.fontScale + 0.03).toFixed(2))) }))} className="passport-button min-h-12 rounded-soft text-xl font-black">+</button>
+                  </div>
+                </div>
               </div>
               <div className="studio-preview mt-3">
                 <p className="studio-label">Preview</p>
@@ -973,7 +1055,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="stat-card">
       <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</div>
-      <div className="mt-1.5 truncate text-xl font-black tracking-[-.05em] md:text-2xl">{isMoney ? <MoneyString text={value} /> : value}</div>
+      <div className="mt-1.5 truncate text-xl font-black tracking-[-.05em] md:text-2xl">{isMoney ? <MoneyString text={value} /> : value.includes('%') ? <PercentString text={value} /> : value}</div>
     </div>
   );
 }
@@ -987,6 +1069,36 @@ function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
       </div>
     </div>
   );
+}
+
+function ForecastInfoCard({ title, rows }: { title: string; rows: [string, string][] }) {
+  return (
+    <div className="forecast-info-card">
+      <h3>{title}</h3>
+      <div className="mt-3 grid gap-2">
+        {rows.map(([label, value]) => (
+          <div key={label} className="forecast-info-row">
+            <span>{label}</span>
+            <strong>{value.endsWith(' DKK') ? <MoneyString text={value} /> : value}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PercentString({ text }: { text: string }) {
+  return (
+    <span className="percent-inline">
+      {text.split('').map((char, index) => /[0-9]/.test(char) ? <span key={index} className="percent-number">{char}</span> : <span key={index} className="percent-light">{char}</span>)}
+    </span>
+  );
+}
+
+function formatFileSize(bytes: number) {
+  if (!bytes) return '0 KB';
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 function MoneyString({ text }: { text: string }) {
