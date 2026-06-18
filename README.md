@@ -178,3 +178,8 @@ The Bar Planner has been restyled to better match Event Planner:
 ## v40 Bar Planner title spacing fix
 
 The Bar Planner top title now uses a smaller, controlled size and normal line-height so event names do not create huge vertical gaps.
+
+
+## v41
+
+This build refines Bar Planner currency styling and redesigns Artist Management fee/time display and top summary layout.

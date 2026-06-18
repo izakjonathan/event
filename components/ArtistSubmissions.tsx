@@ -91,6 +91,22 @@ function formatDate(value: string | null) {
   }
 }
 
+function formatFeeText(value: string | null) {
+  const fee = parseFee(value);
+  if (!fee) return null;
+  return (
+    <span className="money-inline">
+      <span className="money-number">{new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 }).format(Math.round(fee))}</span>
+      <span className="money-currency">DKK</span>
+    </span>
+  );
+}
+
+function formatFeeInput(value: string | undefined) {
+  const fee = parseFee(value || null);
+  return fee ? new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 }).format(Math.round(fee)) : '';
+}
+
 function eventTitle(event: EventPlanRow) {
   return event.name || event.payload?.meta?.name || 'Untitled event';
 }
@@ -366,16 +382,12 @@ export default function ArtistSubmissions() {
               Review, edit, archive and connect artists to events.
             </p>
           </div>
-          <div className="system-status-pill">
-            <span>Total</span>
-            <strong>{items.length}</strong>
-          </div>
         </section>
 
         <section className="booking-overview-grid">
           <div className="booking-overview-card passport-card">
-            <span>Booked / linked</span>
-            <strong>{bookedArtists.length}</strong>
+            <span>Total / linked / booked</span>
+            <strong>{items.length} / {bookedArtists.length}</strong>
           </div>
           <div className="booking-overview-card passport-card">
             <span>Needs event</span>
@@ -464,10 +476,22 @@ export default function ArtistSubmissions() {
                         <span>Contact</span><strong>{artist.contact_name || '—'}</strong>
                         <span>Email</span><strong>{artist.email}</strong>
                         <span>Phone</span><strong>{artist.phone || '—'}</strong>
-                        <span>Fee</span><strong>{artist.preferred_fee || '—'}</strong>
                         <span>Available</span><strong>{artist.availability || '—'}</strong>
-                        <span>Start time</span><strong>{artist.availability_start_time || '—'}</strong>
-                        <span>End time</span><strong>{artist.availability_end_time || '—'}</strong>
+                      </div>
+
+                      <div className="artist-meta-cards">
+                        <div className="artist-meta-card">
+                          <span>Fee</span>
+                          <strong>{formatFeeText(artist.preferred_fee) || '—'}</strong>
+                        </div>
+                        <div className="artist-meta-card">
+                          <span>Start time</span>
+                          <strong>{artist.availability_start_time || '—'}</strong>
+                        </div>
+                        <div className="artist-meta-card">
+                          <span>End time</span>
+                          <strong>{artist.availability_end_time || '—'}</strong>
+                        </div>
                       </div>
 
                       {artist.description && (
@@ -484,35 +508,47 @@ export default function ArtistSubmissions() {
                       </div>
 
                       <div className="artist-add-event-box">
-                        <select
-                          value={selectedEventByArtist[artist.id] || ''}
-                          onChange={(event) => setSelectedEventByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                        >
-                          <option value="">Choose event</option>
-                          {events.map((event) => (
-                            <option key={event.id} value={event.id}>
-                              {eventTitle(event)}{event.event_date ? ` · ${formatDate(event.event_date)}` : ''}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          value={artistFeeByArtist[artist.id] || ''}
-                          inputMode="decimal"
-                          placeholder="Fee"
-                          onChange={(event) => setArtistFeeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                        />
-                        <input
-                          value={startTimeByArtist[artist.id] || artist.availability_start_time || ''}
-                          type="time"
-                          placeholder="Start time"
-                          onChange={(event) => setStartTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                        />
-                        <input
-                          value={endTimeByArtist[artist.id] || artist.availability_end_time || ''}
-                          type="time"
-                          placeholder="End time"
-                          onChange={(event) => setEndTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                        />
+                        <label className="artist-add-field artist-add-field-event">
+                          <span>Choose event</span>
+                          <select
+                            value={selectedEventByArtist[artist.id] || ''}
+                            onChange={(event) => setSelectedEventByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                          >
+                            <option value="">Choose event</option>
+                            {events.map((event) => (
+                              <option key={event.id} value={event.id}>
+                                {eventTitle(event)}{event.event_date ? ` · ${formatDate(event.event_date)}` : ''}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="artist-add-field">
+                          <span>Fee</span>
+                          <input
+                            value={artistFeeByArtist[artist.id] || ''}
+                            inputMode="decimal"
+                            placeholder="500"
+                            onChange={(event) => setArtistFeeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                          />
+                        </label>
+                        <label className="artist-add-field">
+                          <span>Start time</span>
+                          <input
+                            value={startTimeByArtist[artist.id] || artist.availability_start_time || ''}
+                            type="time"
+                            placeholder="Start time"
+                            onChange={(event) => setStartTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                          />
+                        </label>
+                        <label className="artist-add-field">
+                          <span>End time</span>
+                          <input
+                            value={endTimeByArtist[artist.id] || artist.availability_end_time || ''}
+                            type="time"
+                            placeholder="End time"
+                            onChange={(event) => setEndTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                          />
+                        </label>
                         <button onClick={() => addArtistToEvent(artist)}>Add to event</button>
                       </div>
 

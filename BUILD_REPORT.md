@@ -1,13 +1,16 @@
-# Event Operations System v40
+# Event Operations System v41
 
-Built from v39.
+Base: v40
 
-Changes:
-- Fixed oversized Bar Planner event title.
-- Reduced event title font size.
-- Fixed excessive title line spacing.
-- Removed the very narrow title width that forced huge vertical wrapping.
-- Tightened Bar Planner top card spacing.
-- Reduced margin pill size.
-- Reduced projected profit orb height.
-- Kept all Bar Planner functionality intact.
+Changes in this build:
+- Bar Planner money styling updated so all `DKK` currency suffixes use a lighter font weight while numbers keep the heavier weight.
+- Artist Management top hero total pill removed.
+- Artist Management first overview card changed to `Total / linked / booked`.
+- Artist submission detail layout redesigned so Fee, Start time, and End time have clear labels.
+- Artist submission Start time and End time now sit next to each other.
+- Artist submission Fee now renders automatically with `DKK` as a lighter-weight suffix.
+- Add-to-event controls redesigned with labels for Choose event, Fee, Start time, and End time.
+- Mobile layout adjusted for the new artist meta cards and add-to-event fields.
+
+Build status:
+- `npm run build` passed successfully.

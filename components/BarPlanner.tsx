@@ -61,8 +61,17 @@ function number(value: unknown) {
   return Number.isFinite(next) ? next : 0;
 }
 
-function money(value: number) {
+function moneyText(value: number) {
   return `${new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 }).format(Math.round(value || 0))} DKK`;
+}
+
+function moneyNode(value: number) {
+  return (
+    <span className="money-inline">
+      <span className="money-number">{new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 }).format(Math.round(value || 0))}</span>
+      <span className="money-currency">DKK</span>
+    </span>
+  );
 }
 
 function percent(value: number) {
@@ -271,7 +280,7 @@ export default function BarPlanner() {
   async function copyMenu() {
     const menuText = groupedMenu.map(([category, items]) => [
       category.toUpperCase(),
-      ...items.map((item) => `${item.name} — ${money(item.sellPrice)}${item.menuDescription ? `\n${item.menuDescription}` : ''}`)
+      ...items.map((item) => `${item.name} — ${moneyText(item.sellPrice)}${item.menuDescription ? `\n${item.menuDescription}` : ''}`)
     ].join('\n')).join('\n\n');
 
     try {
@@ -375,7 +384,7 @@ export default function BarPlanner() {
 
             <div className="bar-profit-orb">
               <span>After staff</span>
-              <strong>{money(totals.netAfterStaff)}</strong>
+              <strong>{moneyNode(totals.netAfterStaff)}</strong>
               <em>projected</em>
             </div>
           </div>
@@ -385,10 +394,10 @@ export default function BarPlanner() {
         {loading && <div className="artist-message">Loading events…</div>}
 
         <section className="bar-summary-grid bar-summary-grid-v39">
-          <div className="booking-overview-card passport-card"><span>Revenue</span><strong>{money(totals.productRevenue)}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Stock cost</span><strong>{money(totals.productCost)}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Gross profit</span><strong>{money(totals.productProfit)}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Staff cost</span><strong>{money(totals.staffCost)}</strong></div>
+          <div className="booking-overview-card passport-card"><span>Revenue</span><strong>{moneyNode(totals.productRevenue)}</strong></div>
+          <div className="booking-overview-card passport-card"><span>Stock cost</span><strong>{moneyNode(totals.productCost)}</strong></div>
+          <div className="booking-overview-card passport-card"><span>Gross profit</span><strong>{moneyNode(totals.productProfit)}</strong></div>
+          <div className="booking-overview-card passport-card"><span>Staff cost</span><strong>{moneyNode(totals.staffCost)}</strong></div>
         </section>
 
         {warnings.length > 0 && (
@@ -434,9 +443,9 @@ export default function BarPlanner() {
                     </div>
 
                     <div className="bar-product-total-row">
-                      <span>Revenue <strong>{money(revenue)}</strong></span>
-                      <span>Cost <strong>{money(cost)}</strong></span>
-                      <span>Profit <strong>{money(profit)}</strong></span>
+                      <span>Revenue <strong>{moneyNode(revenue)}</strong></span>
+                      <span>Cost <strong>{moneyNode(cost)}</strong></span>
+                      <span>Profit <strong>{moneyNode(profit)}</strong></span>
                       <span>Margin <strong>{percent(margin)}</strong></span>
                     </div>
 
@@ -478,7 +487,7 @@ export default function BarPlanner() {
                       </div>
                       <div className="bar-staff-total">
                         <span>{hours ? `${hours} hours` : 'No time'}</span>
-                        <strong>{money(cost)}</strong>
+                        <strong>{moneyNode(cost)}</strong>
                         <button onClick={() => removeStaffLine(line.id)}>Remove</button>
                       </div>
                     </article>
@@ -524,7 +533,7 @@ export default function BarPlanner() {
                           <strong>{item.name}</strong>
                           {item.menuDescription && <span>{item.menuDescription}</span>}
                         </div>
-                        <em>{money(item.sellPrice)}</em>
+                        <em>{moneyNode(item.sellPrice)}</em>
                       </div>
                     ))}
                   </section>
