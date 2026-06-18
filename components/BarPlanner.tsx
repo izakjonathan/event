@@ -443,10 +443,22 @@ export default function BarPlanner() {
                     </div>
 
                     <div className="bar-product-total-row">
-                      <span>Revenue <strong>{moneyNode(revenue)}</strong></span>
-                      <span>Cost <strong>{moneyNode(cost)}</strong></span>
-                      <span>Profit <strong>{moneyNode(profit)}</strong></span>
-                      <span>Margin <strong>{percent(margin)}</strong></span>
+                      <div className="bar-product-total-card">
+                        <span>Revenue</span>
+                        <strong>{moneyNode(revenue)}</strong>
+                      </div>
+                      <div className="bar-product-total-card">
+                        <span>Cost</span>
+                        <strong>{moneyNode(cost)}</strong>
+                      </div>
+                      <div className="bar-product-total-card">
+                        <span>Profit</span>
+                        <strong>{moneyNode(profit)}</strong>
+                      </div>
+                      <div className="bar-product-total-card">
+                        <span>Margin</span>
+                        <strong>{percent(margin)}</strong>
+                      </div>
                     </div>
 
                     <div className="bar-product-actions">
