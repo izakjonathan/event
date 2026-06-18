@@ -323,7 +323,7 @@ export default function BarPlanner() {
   return (
     <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="system-wrap">
-        <div className="bar-top-nav">
+        <div className="bar-top-nav bar-top-nav-v39">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Dashboard</strong>
@@ -332,59 +332,69 @@ export default function BarPlanner() {
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Open</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Planner</strong>
           </Link>
-          <Link href="/calendar" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
-            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Open</span>
-            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Calendar</strong>
-          </Link>
           <button onClick={savePlan} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Save</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Bar plan</strong>
           </button>
         </div>
 
-        <section className="system-hero passport-card">
-          <div>
-            <p className="system-kicker">Bar Planner</p>
-            <h1>Bar plan</h1>
-            <p className="system-intro">
-              Build product forecasts, staffing cost and event menus connected directly to an event.
-            </p>
+        <section className="bar-forecast-card passport-card">
+          <div className="bar-forecast-top-row">
+            <div>
+              <p className="system-kicker">Bar Planner</p>
+              <h1>{activeEvent ? eventTitle(activeEvent) : 'Bar plan'}</h1>
+            </div>
+            <div className="bar-status-pill">
+              <span>Margin</span>
+              <strong>{percent(totals.margin)}</strong>
+            </div>
           </div>
-        </section>
 
-        <section className="bar-event-selector passport-card">
-          <label>
-            <span>Event</span>
-            <select value={activeEvent?.id || ''} onChange={(event) => chooseEvent(event.target.value)}>
-              {!events.length && <option value="">No events</option>}
-              {events.map((event) => (
-                <option key={event.id} value={event.id}>
-                  {eventTitle(event)} · {formatDate(event.event_date || event.payload?.meta?.date)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div>
-            <span>Selected</span>
-            <strong>{activeEvent ? eventTitle(activeEvent) : 'No event selected'}</strong>
+          <div className="bar-forecast-main">
+            <div className="bar-event-selector-inline">
+              <label>
+                <span>Event</span>
+                <select value={activeEvent?.id || ''} onChange={(event) => chooseEvent(event.target.value)}>
+                  {!events.length && <option value="">No events</option>}
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {eventTitle(event)} · {formatDate(event.event_date || event.payload?.meta?.date)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="bar-meta-pill">
+                <span>Date</span>
+                <strong>{formatDate(activeEvent?.event_date || activeEvent?.payload?.meta?.date)}</strong>
+              </div>
+              <div className="bar-meta-pill">
+                <span>Products</span>
+                <strong>{plan.products.length}</strong>
+              </div>
+            </div>
+
+            <div className="bar-profit-orb">
+              <span>After staff</span>
+              <strong>{money(totals.netAfterStaff)}</strong>
+              <em>projected</em>
+            </div>
           </div>
         </section>
 
         {message && <div className="artist-message">{message}</div>}
         {loading && <div className="artist-message">Loading events…</div>}
 
-        <section className="bar-summary-grid">
+        <section className="bar-summary-grid bar-summary-grid-v39">
           <div className="booking-overview-card passport-card"><span>Revenue</span><strong>{money(totals.productRevenue)}</strong></div>
           <div className="booking-overview-card passport-card"><span>Stock cost</span><strong>{money(totals.productCost)}</strong></div>
           <div className="booking-overview-card passport-card"><span>Gross profit</span><strong>{money(totals.productProfit)}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Margin</span><strong>{percent(totals.margin)}</strong></div>
           <div className="booking-overview-card passport-card"><span>Staff cost</span><strong>{money(totals.staffCost)}</strong></div>
-          <div className="booking-overview-card passport-card"><span>After staff</span><strong>{money(totals.netAfterStaff)}</strong></div>
         </section>
 
         {warnings.length > 0 && (
           <section className="bar-warning-row">
-            {warnings.map((warning, index) => <span key={`${warning}-${index}`}>{warning}</span>)}
+            {warnings.slice(0, 5).map((warning, index) => <span key={`${warning}-${index}`}>{warning}</span>)}
+            {warnings.length > 5 && <span>+{warnings.length - 5} more</span>}
           </section>
         )}
 

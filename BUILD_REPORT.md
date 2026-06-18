@@ -1,48 +1,21 @@
-# Event Operations System v37 + v38
+# Event Operations System v39
 
-Built from confirmed working v36.
+Built from v37/v38.
 
-v37 Bar Planner foundation:
-- Added new Bar Planner module at `/bar-planner`.
-- Added Bar Planner card to the dashboard.
-- Connects bar plans to existing Event Planner events through Supabase `event_plans.payload.barPlanner`.
-- Added event selector.
-- Added product library per event.
-- Product fields:
-  - product name
-  - category
-  - supplier
-  - unit type
-  - unit size
-  - buy price
-  - sell price
-  - expected quantity
-- Added live calculations:
-  - revenue
-  - stock cost
-  - gross profit
-  - margin %
-  - total quantity
-- Added staffing plan:
-  - role
-  - staff count
-  - start time
-  - end time
-  - hourly wage
-  - wage cost
-- Added bar summary:
-  - revenue
-  - stock cost
-  - gross profit
-  - margin
-  - staff cost
-  - profit after staff
-- Added warnings for missing product prices, quantities, staff times and low/negative margin.
-
-v38 Menu Builder:
-- Added menu visibility toggle per product.
-- Added menu descriptions per product.
-- Added live menu preview grouped by category.
-- Added copy menu button.
-- Added bar notes field.
-- Build passed.
+Changes:
+- Reworked Bar Planner visual design to match Event Planner more closely.
+- Bar Planner now uses a Forecast-style top card instead of a large dashboard-style hero.
+- Top Bar Planner navigation reduced to three Event Planner-style pills:
+  - Dashboard
+  - Planner
+  - Bar plan
+- Added Event Planner-style summary layout with:
+  - selected event
+  - date
+  - products count
+  - margin pill
+  - projected after-staff profit orb
+- Reduced oversized Bar Planner typography.
+- Tightened mobile spacing and card sizes.
+- Product, staffing and menu sections now use smaller, denser Event Planner-like proportions.
+- Kept all v37/v38 product calculations, staffing planner, menu builder and Supabase save intact.

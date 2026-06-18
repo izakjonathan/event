@@ -22,7 +22,7 @@ Route (app)                              Size     First Load JS
 ├ ○ /_not-found                          873 B          88.2 kB
 ├ ○ /artist-booking                      2.61 kB         124 kB
 ├ ○ /artists                             4.16 kB         135 kB
-├ ○ /bar-planner                         4.22 kB         135 kB
+├ ○ /bar-planner                         4.25 kB         135 kB
 ├ ○ /calendar                            2.33 kB         133 kB
 └ ○ /event-planner                       14.3 kB         136 kB
 + First Load JS shared by all            87.4 kB

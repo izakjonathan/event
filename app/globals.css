@@ -3205,3 +3205,319 @@ main.no-callout{
     padding:.58rem;
   }
 }
+
+
+/* v39 Bar Planner: match Event Planner proportions/typography */
+.bar-top-nav-v39{
+  position:sticky;
+  top:calc(var(--safe-top) + 6px);
+  z-index:40;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:.5rem !important;
+  align-items:center;
+}
+
+.bar-top-nav-v39 .top-nav-pill{
+  min-height:46px !important;
+  border-radius:999px !important;
+  padding:0 .5rem !important;
+}
+
+.bar-forecast-card{
+  border-radius:30px;
+  padding:1rem;
+  display:grid;
+  gap:.85rem;
+}
+
+.bar-forecast-top-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:.75rem;
+  align-items:start;
+}
+
+.bar-forecast-top-row h1{
+  margin:0;
+  font-size:clamp(2.35rem, 11vw, 5.8rem);
+  line-height:.82;
+  font-weight:var(--heading-weight, 900);
+  letter-spacing:-.075em;
+  max-width:10ch;
+}
+
+.bar-status-pill{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .28);
+  border-radius:999px;
+  min-width:88px;
+  min-height:54px;
+  padding:.55rem .75rem;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  background:rgb(var(--ink-rgb) / .035);
+}
+
+.bar-status-pill span,
+.bar-profit-orb span,
+.bar-profit-orb em,
+.bar-meta-pill span,
+.bar-event-selector-inline label span{
+  font-size:.66rem;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.65;
+}
+
+.bar-status-pill strong{
+  font-size:1.1rem;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.04em;
+}
+
+.bar-forecast-main{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(170px, .38fr);
+  gap:.9rem;
+  align-items:stretch;
+}
+
+.bar-event-selector-inline{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:.45rem;
+}
+
+.bar-event-selector-inline label{
+  display:grid;
+  gap:.32rem;
+}
+
+.bar-event-selector-inline select,
+.bar-meta-pill{
+  min-height:54px;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .23);
+  border-radius:18px;
+  background:rgb(255 255 255 / .12);
+  padding:.55rem .68rem;
+}
+
+.bar-event-selector-inline select{
+  width:100%;
+  font-size:1rem;
+  font-weight:500;
+  color:var(--ink);
+}
+
+.bar-meta-pill{
+  display:grid;
+  align-content:center;
+  gap:.2rem;
+}
+
+.bar-meta-pill strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:1.05rem;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:-.035em;
+}
+
+.bar-profit-orb{
+  border:var(--line, 1.5px) solid var(--ink);
+  border-radius:28px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  text-align:center;
+  min-height:164px;
+  padding:.85rem;
+  background:radial-gradient(circle at 50% 10%, rgb(var(--ink-rgb) / .08), transparent 70%);
+}
+
+.bar-profit-orb strong{
+  margin:.35rem 0;
+  font-size:clamp(2rem, 8vw, 3.25rem);
+  line-height:.86;
+  font-weight:var(--number-weight, 900);
+  letter-spacing:-.075em;
+}
+
+.bar-profit-orb em{
+  font-style:normal;
+}
+
+.bar-summary-grid-v39{
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:.65rem !important;
+}
+
+.bar-summary-grid-v39 .booking-overview-card{
+  min-height:118px;
+  border-radius:24px;
+  padding:.8rem;
+  align-content:center;
+}
+
+.bar-summary-grid-v39 .booking-overview-card strong{
+  font-size:clamp(1.8rem, 7vw, 3rem);
+  line-height:.86;
+}
+
+.bar-module-grid{
+  gap:.75rem !important;
+}
+
+.bar-panel{
+  border-radius:28px !important;
+  padding:.72rem !important;
+  gap:.65rem !important;
+}
+
+.bar-panel-head h2{
+  font-size:calc(1.45rem * var(--heading-size, 1)) !important;
+  line-height:.9 !important;
+}
+
+.bar-panel-head button,
+.bar-product-actions button,
+.bar-staff-total button{
+  min-height:34px !important;
+  padding:0 .62rem !important;
+  font-size:.72rem !important;
+}
+
+.bar-product-card,
+.bar-staff-card,
+.bar-menu-edit-row{
+  border-radius:20px !important;
+  padding:.58rem !important;
+  gap:.55rem !important;
+}
+
+.bar-product-top input,
+.bar-product-top select,
+.bar-product-card input,
+.bar-product-card select,
+.bar-staff-card input,
+.bar-menu-edit-row textarea,
+.bar-notes{
+  border-radius:14px !important;
+  padding:.56rem .62rem !important;
+  font-size:.88rem !important;
+  line-height:1.12 !important;
+}
+
+.bar-product-fields span,
+.bar-staff-fields span,
+.bar-menu-edit-row span{
+  font-size:.58rem !important;
+  letter-spacing:.13em !important;
+}
+
+.bar-product-total-row{
+  gap:.35rem !important;
+}
+
+.bar-product-total-row span{
+  border-radius:14px !important;
+  padding:.45rem !important;
+  font-size:.58rem !important;
+}
+
+.bar-product-total-row strong{
+  font-size:.78rem !important;
+}
+
+.bar-warning-row{
+  margin-top:-.05rem;
+}
+
+.bar-warning-row span{
+  font-size:.72rem !important;
+  border-radius:999px !important;
+}
+
+@media (max-width:760px){
+  .bar-forecast-main{
+    grid-template-columns:1fr;
+  }
+  .bar-profit-orb{
+    min-height:138px;
+  }
+  .bar-summary-grid-v39{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width:430px){
+  .bar-top-nav-v39{
+    gap:.36rem !important;
+  }
+
+  .bar-top-nav-v39 .top-nav-pill{
+    min-height:42px !important;
+    padding:0 .34rem !important;
+  }
+
+  .bar-forecast-card{
+    border-radius:28px;
+    padding:.78rem;
+    gap:.72rem;
+  }
+
+  .bar-forecast-top-row h1{
+    font-size:clamp(2.35rem, 12vw, 3.35rem);
+    max-width:8.5ch;
+  }
+
+  .bar-status-pill{
+    min-width:76px;
+    min-height:48px;
+    padding:.45rem .55rem;
+  }
+
+  .bar-status-pill span,
+  .bar-profit-orb span,
+  .bar-profit-orb em,
+  .bar-meta-pill span,
+  .bar-event-selector-inline label span{
+    font-size:.56rem;
+  }
+
+  .bar-status-pill strong{
+    font-size:.95rem;
+  }
+
+  .bar-event-selector-inline select,
+  .bar-meta-pill{
+    min-height:48px;
+    border-radius:16px;
+  }
+
+  .bar-profit-orb{
+    min-height:126px;
+    border-radius:24px;
+  }
+
+  .bar-profit-orb strong{
+    font-size:2.1rem;
+  }
+
+  .bar-summary-grid-v39 .booking-overview-card{
+    min-height:104px;
+    border-radius:22px;
+    padding:.7rem;
+  }
+
+  .bar-summary-grid-v39 .booking-overview-card strong{
+    font-size:clamp(1.55rem, 7vw, 2.15rem);
+  }
+}

@@ -163,3 +163,13 @@ Includes:
 - menu preview
 - copy menu
 - bar notes
+
+
+## v39 Bar Planner UI match
+
+The Bar Planner has been restyled to better match Event Planner:
+- Forecast-style top card
+- three top pills
+- smaller typography
+- tighter mobile spacing
+- denser cards and inputs
