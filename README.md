@@ -183,3 +183,8 @@ The Bar Planner top title now uses a smaller, controlled size and normal line-he
 ## v41
 
 This build refines Bar Planner currency styling and redesigns Artist Management fee/time display and top summary layout.
+
+
+## v42 Bar Planner money cleanup
+
+Bar Planner money values now keep bold/dark numbers and light `DKK` suffixes without nested inner pill/card styling.

@@ -330,7 +330,7 @@ export default function BarPlanner() {
   }, [plan.products]);
 
   return (
-    <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+    <main className="system-shell bar-planner-page no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="system-wrap">
         <div className="bar-top-nav bar-top-nav-v39">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
