@@ -213,7 +213,7 @@ export default function ArtistBookingForm() {
   );
 
   return (
-    <main className="artist-public-shell artist-standalone-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+    <main className="public-artist-page artist-booking-scale-fixed no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="artist-public-wrap">
         <section className="artist-public-hero passport-card">
           <p className="system-kicker">Artist booking</p>

@@ -1,38 +1,11 @@
-# Event Operations System v45
+# Event Operations System v46
 
-Base: v44
+Base: v45
 
 Changes:
-- Added new Project Management module at `/project-management`.
-- Added Project Management card to the dashboard.
-- Added Supabase tables for projects and tasks.
-- Project fields:
-  - project name
-  - status
-  - priority
-  - owner
-  - deadline
-  - linked event
-  - description
-  - notes
-- Task fields:
-  - title
-  - project
-  - status
-  - priority
-  - owner
-  - due date
-  - linked event
-  - notes
-- Added task board columns:
-  - To do
-  - Doing
-  - Waiting
-  - Done
-- Added overview cards:
-  - Projects
-  - To do
-  - Doing
-  - Overdue
-- Added warning chips for missing owners, missing deadlines and overdue tasks.
-- Added dashboard / planner / new project top navigation.
+- Hard-fixed public Artist Booking form scale.
+- Added page-level `artist-booking-scale-fixed` scope.
+- Prevented the Artist Booking hero from inheriting oversized dashboard/event hero typography.
+- Reduced Artist Booking title size and line-height on mobile.
+- Re-controlled form/card spacing and input sizing.
+- Kept Project Management module from v45 intact.

@@ -210,3 +210,8 @@ Includes:
 - priority, owner and deadline fields
 - linked events
 - warnings for overdue/missing info
+
+
+## v46 Artist Booking scale fix
+
+The public `/artist-booking` form now uses a hard-scoped `artist-booking-scale-fixed` layout to stop inherited oversized hero styles.

@@ -4321,3 +4321,230 @@ main.no-callout{
     font-size:clamp(2.25rem, 12vw, 3.4rem);
   }
 }
+
+
+/* v46 HARD FIX: public Artist Booking scale */
+.artist-booking-scale-fixed,
+.public-artist-page.artist-booking-scale-fixed{
+  min-height:100dvh !important;
+  overflow-x:hidden !important;
+  padding:calc(var(--safe-top) + .65rem) .72rem calc(var(--safe-bottom) + 2rem) !important;
+  background:var(--paper) !important;
+  color:var(--ink) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-wrap,
+.artist-booking-scale-fixed .artist-public-wrap{
+  width:min(100%, 760px) !important;
+  margin:0 auto !important;
+  display:grid !important;
+  gap:.8rem !important;
+}
+
+.artist-booking-scale-fixed .public-artist-hero,
+.artist-booking-scale-fixed .artist-public-hero{
+  border:var(--line, 1.5px) solid var(--ink) !important;
+  border-radius:30px !important;
+  padding:1rem !important;
+  background:rgb(255 255 255 / .075) !important;
+  overflow:hidden !important;
+  min-height:0 !important;
+}
+
+/* Stop this page from inheriting the huge dashboard/event hero title scale */
+.artist-booking-scale-fixed .public-artist-hero h1,
+.artist-booking-scale-fixed .artist-public-hero h1,
+.artist-booking-scale-fixed h1{
+  margin:0 !important;
+  max-width:11ch !important;
+  font-size:clamp(2.6rem, 13vw, 4.3rem) !important;
+  line-height:.86 !important;
+  font-weight:900 !important;
+  letter-spacing:-.075em !important;
+  text-wrap:balance !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+}
+
+.artist-booking-scale-fixed .public-artist-lead,
+.artist-booking-scale-fixed .public-artist-hero p:not(.public-artist-kicker),
+.artist-booking-scale-fixed .artist-public-hero p:not(.system-kicker){
+  max-width:31rem !important;
+  margin:.8rem 0 0 !important;
+  font-size:clamp(1rem, 4vw, 1.22rem) !important;
+  line-height:1.22 !important;
+  letter-spacing:-.035em !important;
+  color:rgb(var(--ink-rgb) / .72) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-kicker,
+.artist-booking-scale-fixed .system-kicker{
+  margin:0 0 .55rem !important;
+  font-size:.72rem !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ink-rgb) / .62) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-form,
+.artist-booking-scale-fixed .artist-form-public,
+.artist-booking-scale-fixed .artist-form{
+  border:var(--line, 1.5px) solid var(--ink) !important;
+  border-radius:30px !important;
+  padding:.8rem !important;
+  background:rgb(255 255 255 / .075) !important;
+  display:grid !important;
+  gap:.75rem !important;
+}
+
+.artist-booking-scale-fixed .public-artist-section,
+.artist-booking-scale-fixed .artist-form-section{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .18) !important;
+  border-radius:24px !important;
+  padding:.75rem !important;
+  background:rgb(var(--ink-rgb) / .018) !important;
+  display:grid !important;
+  gap:.7rem !important;
+}
+
+.artist-booking-scale-fixed .public-section-heading h2,
+.artist-booking-scale-fixed .artist-section-title,
+.artist-booking-scale-fixed .artist-form-section > h2{
+  margin:0 !important;
+  font-size:clamp(1.35rem, 6vw, 2rem) !important;
+  line-height:.9 !important;
+  font-weight:900 !important;
+  letter-spacing:-.055em !important;
+}
+
+.artist-booking-scale-fixed .public-artist-grid,
+.artist-booking-scale-fixed .artist-form-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:.65rem !important;
+}
+
+.artist-booking-scale-fixed .public-artist-field,
+.artist-booking-scale-fixed .artist-field{
+  display:grid !important;
+  gap:.32rem !important;
+  min-width:0 !important;
+}
+
+.artist-booking-scale-fixed .public-artist-wide,
+.artist-booking-scale-fixed .artist-field-wide,
+.artist-booking-scale-fixed .public-upload-field{
+  grid-column:1 / -1 !important;
+}
+
+.artist-booking-scale-fixed .public-artist-field span,
+.artist-booking-scale-fixed .artist-field span{
+  font-size:.66rem !important;
+  line-height:1.05 !important;
+  font-weight:900 !important;
+  letter-spacing:.13em !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ink-rgb) / .62) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-field input,
+.artist-booking-scale-fixed .public-artist-field textarea,
+.artist-booking-scale-fixed .artist-field input,
+.artist-booking-scale-fixed .artist-field textarea{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:52px !important;
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .26) !important;
+  border-radius:18px !important;
+  background:rgb(255 255 255 / .26) !important;
+  color:var(--ink) !important;
+  padding:.68rem .74rem !important;
+  font:inherit !important;
+  font-size:1rem !important;
+  line-height:1.15 !important;
+  outline:none !important;
+}
+
+.artist-booking-scale-fixed .public-artist-field textarea,
+.artist-booking-scale-fixed .artist-field textarea{
+  min-height:112px !important;
+  resize:vertical !important;
+}
+
+.artist-booking-scale-fixed .public-artist-submit,
+.artist-booking-scale-fixed .artist-submit{
+  min-height:56px !important;
+  border:var(--line, 1.5px) solid var(--ink) !important;
+  border-radius:999px !important;
+  background:var(--ink) !important;
+  color:var(--paper) !important;
+  font-size:1rem !important;
+  font-weight:900 !important;
+  line-height:.9 !important;
+}
+
+@media (max-width:520px){
+  .artist-booking-scale-fixed,
+  .public-artist-page.artist-booking-scale-fixed{
+    padding-left:.64rem !important;
+    padding-right:.64rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-hero,
+  .artist-booking-scale-fixed .artist-public-hero{
+    border-radius:28px !important;
+    padding:.9rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-hero h1,
+  .artist-booking-scale-fixed .artist-public-hero h1,
+  .artist-booking-scale-fixed h1{
+    font-size:clamp(2.55rem, 11vw, 3.35rem) !important;
+    line-height:.88 !important;
+    max-width:9.5ch !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-lead,
+  .artist-booking-scale-fixed .public-artist-hero p:not(.public-artist-kicker),
+  .artist-booking-scale-fixed .artist-public-hero p:not(.system-kicker){
+    font-size:1rem !important;
+    max-width:22rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-form,
+  .artist-booking-scale-fixed .artist-form-public,
+  .artist-booking-scale-fixed .artist-form{
+    border-radius:28px !important;
+    padding:.68rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-section,
+  .artist-booking-scale-fixed .artist-form-section{
+    border-radius:22px !important;
+    padding:.66rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-grid,
+  .artist-booking-scale-fixed .artist-form-grid{
+    grid-template-columns:1fr !important;
+    gap:.62rem !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-wide,
+  .artist-booking-scale-fixed .artist-field-wide,
+  .artist-booking-scale-fixed .public-upload-field{
+    grid-column:auto !important;
+  }
+
+  .artist-booking-scale-fixed .public-artist-field input,
+  .artist-booking-scale-fixed .public-artist-field textarea,
+  .artist-booking-scale-fixed .artist-field input,
+  .artist-booking-scale-fixed .artist-field textarea{
+    min-height:50px !important;
+    border-radius:17px !important;
+    padding:.66rem .72rem !important;
+    font-size:.98rem !important;
+  }
+}

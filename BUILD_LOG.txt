@@ -26,7 +26,7 @@ You can learn more, including how to opt-out if you'd not like to participate in
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
 ┌ ○ /                                    1.16 kB        [37m[1m97.3 kB[22m[39m
 ├ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
-├ ○ /artist-booking                      2.61 kB         [37m[1m124 kB[22m[39m
+├ ○ /artist-booking                      2.62 kB         [37m[1m124 kB[22m[39m
 ├ ○ /artists                             4.31 kB         [37m[1m135 kB[22m[39m
 ├ ○ /bar-planner                         4.31 kB         [37m[1m135 kB[22m[39m
 ├ ○ /calendar                            2.33 kB         [37m[1m133 kB[22m[39m
