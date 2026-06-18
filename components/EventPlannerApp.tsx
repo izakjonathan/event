@@ -152,7 +152,7 @@ const STORAGE_KEY = 'event-planner-calculator-v2';
 const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
 const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
 const DEFAULT_WORKSPACE = 'main-workspace';
-const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v1';
+const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v2-red-default';
 const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif', unbounded: 'Unbounded' };
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
@@ -221,7 +221,7 @@ function rgbaFromHex(hex: string, alpha: number) {
 function defaultUiStudio(): UiStudioSettings {
   return {
     paper: '#efe9dc',
-    ink: '#244cdd',
+    ink: '#5c0701',
     fontScale: 1,
     typePreset: 'system',
     headingSize: 1,
@@ -728,7 +728,14 @@ export default function EventPlannerApp() {
   return (
     <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-2 gap-2">
+        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
+          <button
+            onClick={() => { window.location.href = '/'; }}
+            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
+          >
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Dashboard</strong>
+          </button>
           <button
             onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
             className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"

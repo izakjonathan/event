@@ -106,3 +106,18 @@ New admin workflow:
 ## v32 Artist form scale fix
 
 `/artist-booking` has been hard redesigned with unique `public-artist-*` classes so it no longer inherits the oversized system dashboard hero styling.
+
+
+## v33 Artist Submissions top pills
+
+The `/artists` top controls are now forced into a single 3-column mobile row:
+Dashboard / Copy artist form link / Reload
+
+
+## v34 changes
+
+- Default ink color is now `#5c0701`.
+- Landing page only shows Event Planner and Artist Management.
+- Public Artist Booking is hidden from the dashboard and shared from Artist Management via copy link.
+- Artist Management cards are collapsible.
+- Event Planner top nav has Dashboard / Event / Settings.

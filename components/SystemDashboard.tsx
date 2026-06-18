@@ -23,15 +23,7 @@ const modules: ModuleCard[] = [
     items: ['Forecast calculator', 'Ticket scenarios', 'Event files', 'Supabase sync']
   },
   {
-    title: 'Artist Booking',
-    label: 'Public form',
-    description: 'Send this form link to artists for submissions, availability, images and requirements.',
-    href: '/artist-booking',
-    status: 'Live',
-    items: ['Artist info', 'Availability', 'Image upload', 'Links + fee']
-  },
-  {
-    title: 'Artist Submissions',
+    title: 'Artist Management',
     label: 'Internal',
     description: 'Review submitted artists, update their status and prepare bookings for events.',
     href: '/artists',
@@ -51,10 +43,6 @@ export default function SystemDashboard() {
             <p className="system-intro">
               A modular workspace for planning events, collecting artist submissions and building future event tools.
             </p>
-          </div>
-          <div className="system-status-pill">
-            <span>Current baseline</span>
-            <strong>v27</strong>
           </div>
         </header>
 

@@ -120,10 +120,15 @@ export default function ArtistSubmissions() {
   const [editingArtist, setEditingArtist] = useState<ArtistSubmission | null>(null);
   const [editForm, setEditForm] = useState<EditableArtist | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [expandedArtistIds, setExpandedArtistIds] = useState<Record<string, boolean>>({});
 
   function showMessage(text: string, kind: 'info' | 'error' | 'success' = 'info') {
     setMessage(text);
     setMessageKind(kind);
+  }
+
+  function toggleArtistCard(id: string) {
+    setExpandedArtistIds((current) => ({ ...current, [id]: !current[id] }));
   }
 
   async function copyArtistFormLink() {
@@ -340,7 +345,7 @@ export default function ArtistSubmissions() {
         <section className="system-hero passport-card">
           <div>
             <p className="system-kicker">Internal module</p>
-            <h1>Artist submissions</h1>
+            <h1>Artist Management</h1>
             <p className="system-intro">
               Review, edit, archive and connect artists to events.
             </p>
@@ -406,90 +411,121 @@ export default function ArtistSubmissions() {
           {filtered.map((artist) => {
             const linkedEvents = linkedEventsByArtist[artist.id] || [];
             return (
-              <article key={artist.id} className="artist-submission-card passport-card">
-                {artist.image_url ? (
-                  <img src={artist.image_url} alt="" className="artist-image" />
-                ) : (
-                  <div className="artist-image artist-image-empty">No image</div>
-                )}
+              <article key={artist.id} className={`artist-submission-card artist-submission-card-v34 passport-card ${expandedArtistIds[artist.id] ? 'is-open' : 'is-collapsed'}`}>
+                <button onClick={() => toggleArtistCard(artist.id)} className="artist-collapsed-head">
+                  <span>{artist.artist_name}</span>
+                  <em>{expandedArtistIds[artist.id] ? '−' : '+'}</em>
+                </button>
 
-                <div className="artist-submission-body">
-                  <div className="artist-card-head">
-                    <div>
-                      <p className="system-kicker">{artist.genre || 'No genre'}</p>
-                      <h2>{artist.artist_name}</h2>
-                    </div>
-                    <select value={artist.status || 'new'} onChange={(event) => updateStatus(artist.id, event.target.value)}>
-                      {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="artist-link-status">
-                    {linkedEvents.length ? (
-                      linkedEvents.map((event) => <span key={event.id}>Linked to {eventTitle(event)}</span>)
+                {expandedArtistIds[artist.id] && (
+                  <>
+                    {artist.image_url ? (
+                      <img src={artist.image_url} alt="" className="artist-image" />
                     ) : (
-                      <span>Not linked to an event</span>
+                      <div className="artist-image artist-image-empty">No image</div>
                     )}
-                  </div>
 
-                  <div className="artist-data-grid">
-                    <span>Submitted</span><strong>{formatDate(artist.created_at)}</strong>
-                    <span>Contact</span><strong>{artist.contact_name || '—'}</strong>
-                    <span>Email</span><strong>{artist.email}</strong>
-                    <span>Phone</span><strong>{artist.phone || '—'}</strong>
-                    <span>Fee</span><strong>{artist.preferred_fee || '—'}</strong>
-                    <span>Available</span><strong>{artist.availability || '—'}</strong>
-                  </div>
+                    <div className="artist-submission-body">
+                      <div className="artist-card-head">
+                        <div>
+                          <p className="system-kicker">{artist.genre || 'No genre'}</p>
+                          <h2>{artist.artist_name}</h2>
+                        </div>
+                        <select value={artist.status || 'new'} onChange={(event) => updateStatus(artist.id, event.target.value)}>
+                          {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
+                        </select>
+                      </div>
 
-                  {artist.description && <p className="artist-text">{artist.description}</p>}
+                      <div className="artist-link-status">
+                        {linkedEvents.length ? (
+                          linkedEvents.map((event) => <span key={event.id}>Linked to {eventTitle(event)}</span>)
+                        ) : (
+                          <span>Not linked to an event</span>
+                        )}
+                      </div>
 
-                  <div className="artist-link-row">
-                    {artist.links && Object.entries(artist.links).filter(([, value]) => value).map(([key, value]) => (
-                      <a key={key} href={value} target="_blank" rel="noreferrer">{key}</a>
-                    ))}
-                  </div>
+                      <div className="artist-data-grid">
+                        <span>Submitted</span><strong>{formatDate(artist.created_at)}</strong>
+                        <span>Contact</span><strong>{artist.contact_name || '—'}</strong>
+                        <span>Email</span><strong>{artist.email}</strong>
+                        <span>Phone</span><strong>{artist.phone || '—'}</strong>
+                        <span>Fee</span><strong>{artist.preferred_fee || '—'}</strong>
+                        <span>Available</span><strong>{artist.availability || '—'}</strong>
+                      </div>
 
-                  <div className="artist-add-event-box">
-                    <select
-                      value={selectedEventByArtist[artist.id] || ''}
-                      onChange={(event) => setSelectedEventByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                    >
-                      <option value="">Choose event</option>
-                      {events.map((event) => (
-                        <option key={event.id} value={event.id}>
-                          {eventTitle(event)}{event.event_date ? ` · ${formatDate(event.event_date)}` : ''}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      value={artistFeeByArtist[artist.id] || ''}
-                      inputMode="decimal"
-                      placeholder="Fee"
-                      onChange={(event) => setArtistFeeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                    />
-                    <input
-                      value={setTimeByArtist[artist.id] || ''}
-                      placeholder="Set time"
-                      onChange={(event) => setSetTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
-                    />
-                    <button onClick={() => addArtistToEvent(artist)}>Add to event</button>
-                  </div>
+                      {artist.description && (
+                        <section className="artist-info-section">
+                          <h3>Description</h3>
+                          <p>{artist.description}</p>
+                        </section>
+                      )}
 
-                  <div className="artist-admin-actions">
-                    <button onClick={() => startEdit(artist)}>Edit</button>
-                    <button onClick={() => archiveArtist(artist)}>Archive</button>
-                    <button onClick={() => rejectArtist(artist)}>Reject</button>
-                  </div>
+                      <div className="artist-link-row">
+                        {artist.links && Object.entries(artist.links).filter(([, value]) => value).map(([key, value]) => (
+                          <a key={key} href={value} target="_blank" rel="noreferrer">{key}</a>
+                        ))}
+                      </div>
 
-                  {(artist.technical_needs || artist.hospitality_needs || artist.notes) && (
-                    <details className="artist-more">
-                      <summary>More info</summary>
-                      {artist.technical_needs && <p><strong>Technical:</strong> {artist.technical_needs}</p>}
-                      {artist.hospitality_needs && <p><strong>Hospitality:</strong> {artist.hospitality_needs}</p>}
-                      {artist.notes && <p><strong>Notes:</strong> {artist.notes}</p>}
-                    </details>
-                  )}
-                </div>
+                      <div className="artist-add-event-box">
+                        <select
+                          value={selectedEventByArtist[artist.id] || ''}
+                          onChange={(event) => setSelectedEventByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                        >
+                          <option value="">Choose event</option>
+                          {events.map((event) => (
+                            <option key={event.id} value={event.id}>
+                              {eventTitle(event)}{event.event_date ? ` · ${formatDate(event.event_date)}` : ''}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          value={artistFeeByArtist[artist.id] || ''}
+                          inputMode="decimal"
+                          placeholder="Fee"
+                          onChange={(event) => setArtistFeeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                        />
+                        <input
+                          value={setTimeByArtist[artist.id] || ''}
+                          placeholder="Set time"
+                          onChange={(event) => setSetTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                        />
+                        <button onClick={() => addArtistToEvent(artist)}>Add to event</button>
+                      </div>
+
+                      <div className="artist-admin-actions">
+                        <button onClick={() => startEdit(artist)}>Edit</button>
+                        <button onClick={() => archiveArtist(artist)}>Archive</button>
+                        <button onClick={() => rejectArtist(artist)}>Reject</button>
+                      </div>
+
+                      {(artist.technical_needs || artist.hospitality_needs || artist.notes) && (
+                        <section className="artist-more-sections">
+                          <h3>More info</h3>
+                          <div className="artist-more-grid">
+                            {artist.technical_needs && (
+                              <div className="artist-info-section">
+                                <h4>Technical</h4>
+                                <p>{artist.technical_needs}</p>
+                              </div>
+                            )}
+                            {artist.hospitality_needs && (
+                              <div className="artist-info-section">
+                                <h4>Hospitality</h4>
+                                <p>{artist.hospitality_needs}</p>
+                              </div>
+                            )}
+                            {artist.notes && (
+                              <div className="artist-info-section">
+                                <h4>Notes</h4>
+                                <p>{artist.notes}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+                      )}
+                    </div>
+                  </>
+                )}
               </article>
             );
           })}
