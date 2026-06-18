@@ -193,3 +193,20 @@ Bar Planner money values now keep bold/dark numbers and light `DKK` suffixes wit
 ## v44 Bar Planner product totals hard fix
 
 The product totals now directly override the old nested span/card CSS so Revenue, Cost, Profit and Margin display as clean Event Planner-style stat cards.
+
+
+## v45 Project Management
+
+New route:
+- `/project-management`
+
+Run updated `SUPABASE_SCHEMA.sql` before testing.
+
+Includes:
+- project list
+- create/edit/remove projects
+- task board
+- task status columns
+- priority, owner and deadline fields
+- linked events
+- warnings for overdue/missing info

@@ -15,22 +15,23 @@ You can learn more, including how to opt-out if you'd not like to participate in
  [32m[1m✓[22m[39m Compiled successfully
  [37m[1m [22m[39m Linting and checking validity of types ...
  [37m[1m [22m[39m Collecting page data ...
- [37m[1m [22m[39m Generating static pages (0/9) ...
- [37m[1m [22m[39m Generating static pages (2/9) 
- [37m[1m [22m[39m Generating static pages (4/9) 
- [37m[1m [22m[39m Generating static pages (6/9) 
- [32m[1m✓[22m[39m Generating static pages (9/9)
+ [37m[1m [22m[39m Generating static pages (0/10) ...
+ [37m[1m [22m[39m Generating static pages (2/10) 
+ [37m[1m [22m[39m Generating static pages (4/10) 
+ [37m[1m [22m[39m Generating static pages (7/10) 
+ [32m[1m✓[22m[39m Generating static pages (10/10)
  [37m[1m [22m[39m Finalizing page optimization ...
  [37m[1m [22m[39m Collecting build traces ...
 
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
-┌ ○ /                                    1.09 kB        [37m[1m97.2 kB[22m[39m
+┌ ○ /                                    1.16 kB        [37m[1m97.3 kB[22m[39m
 ├ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
 ├ ○ /artist-booking                      2.61 kB         [37m[1m124 kB[22m[39m
 ├ ○ /artists                             4.31 kB         [37m[1m135 kB[22m[39m
 ├ ○ /bar-planner                         4.31 kB         [37m[1m135 kB[22m[39m
 ├ ○ /calendar                            2.33 kB         [37m[1m133 kB[22m[39m
-└ ○ /event-planner                       14.3 kB         [37m[1m136 kB[22m[39m
+├ ○ /event-planner                       14.3 kB         [37m[1m136 kB[22m[39m
+└ ○ /project-management                  3.37 kB         [37m[1m134 kB[22m[39m
 + First Load JS shared by all            [37m[1m87.4 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB
   ├ chunks/fd9d1056-e3d373074663785d.js  53.6 kB

@@ -1,11 +1,38 @@
-# Event Operations System v44
+# Event Operations System v45
 
-Base: v43
+Base: v44
 
 Changes:
-- Hard-fixed Bar Planner product totals.
-- Removed the old nested span styling that was still turning Revenue / Cost / Profit labels and money parts into mini pills.
-- Revenue, Cost, Profit and Margin now use a clean Event Planner-like stat-card style.
-- Numbers are large, dark and bold.
-- DKK remains lighter weight.
-- Margin uses the same visual weight as the other values.
+- Added new Project Management module at `/project-management`.
+- Added Project Management card to the dashboard.
+- Added Supabase tables for projects and tasks.
+- Project fields:
+  - project name
+  - status
+  - priority
+  - owner
+  - deadline
+  - linked event
+  - description
+  - notes
+- Task fields:
+  - title
+  - project
+  - status
+  - priority
+  - owner
+  - due date
+  - linked event
+  - notes
+- Added task board columns:
+  - To do
+  - Doing
+  - Waiting
+  - Done
+- Added overview cards:
+  - Projects
+  - To do
+  - Doing
+  - Overdue
+- Added warning chips for missing owners, missing deadlines and overdue tasks.
+- Added dashboard / planner / new project top navigation.

@@ -45,6 +45,14 @@ const modules: ModuleCard[] = [
     href: '/bar-planner',
     status: 'Live',
     items: ['Products', 'Buy/sell prices', 'Staffing', 'Menu builder']
+  },
+  {
+    title: 'Project Management',
+    label: 'Live module',
+    description: 'Manage projects, tasks, owners, deadlines and linked events.',
+    href: '/project-management',
+    status: 'Live',
+    items: ['Projects', 'Tasks', 'Owners', 'Deadlines']
   }
 ];
 
