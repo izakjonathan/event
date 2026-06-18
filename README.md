@@ -144,3 +144,22 @@ The Calendar / Schedule module shows:
 - linked artists with start/end times and fee
 - missing-info warnings
 - quick navigation to Dashboard, Event Planner, Artist Management and copy artist form link
+
+
+## v37 + v38 Bar Planner and Menu Builder
+
+New route:
+- `/bar-planner`
+
+The module is connected to events and saves data into `event_plans.payload.barPlanner`.
+
+Includes:
+- product library
+- buy/sell price
+- expected quantity
+- revenue/cost/profit/margin calculations
+- staffing cost
+- event menu builder
+- menu preview
+- copy menu
+- bar notes

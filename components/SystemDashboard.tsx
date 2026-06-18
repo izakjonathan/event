@@ -37,6 +37,14 @@ const modules: ModuleCard[] = [
     href: '/calendar',
     status: 'Live',
     items: ['Event dates', 'Artist set times', 'Warnings', 'Quick links']
+  },
+  {
+    title: 'Bar Planner',
+    label: 'Live module',
+    description: 'Plan products, prices, quantities, staffing and event menus.',
+    href: '/bar-planner',
+    status: 'Live',
+    items: ['Products', 'Buy/sell prices', 'Staffing', 'Menu builder']
   }
 ];
 
