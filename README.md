@@ -131,3 +131,16 @@ Dashboard / Copy artist form link / Reload
 - Run updated `SUPABASE_SCHEMA.sql` to add:
   - `availability_start_time`
   - `availability_end_time`
+
+
+## v36 Calendar / Schedule
+
+New route:
+- `/calendar`
+
+The Calendar / Schedule module shows:
+- all saved events from Supabase
+- event status, date, time and location
+- linked artists with start/end times and fee
+- missing-info warnings
+- quick navigation to Dashboard, Event Planner, Artist Management and copy artist form link

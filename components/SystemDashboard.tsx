@@ -29,6 +29,14 @@ const modules: ModuleCard[] = [
     href: '/artists',
     status: 'Live',
     items: ['Submission cards', 'Status tracking', 'Contact info', 'Booking notes']
+  },
+  {
+    title: 'Calendar / Schedule',
+    label: 'Overview',
+    description: 'See all events, linked artists, set times and missing planning info.',
+    href: '/calendar',
+    status: 'Live',
+    items: ['Event dates', 'Artist set times', 'Warnings', 'Quick links']
   }
 ];
 
@@ -67,7 +75,6 @@ export default function SystemDashboard() {
           <p className="system-kicker">Future modules</p>
           <div className="future-list">
             <span>Staff planner</span>
-            <span>Venue calendar</span>
             <span>Contracts</span>
             <span>Supplier list</span>
             <span>Budget reports</span>
