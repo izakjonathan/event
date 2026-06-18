@@ -173,3 +173,8 @@ The Bar Planner has been restyled to better match Event Planner:
 - smaller typography
 - tighter mobile spacing
 - denser cards and inputs
+
+
+## v40 Bar Planner title spacing fix
+
+The Bar Planner top title now uses a smaller, controlled size and normal line-height so event names do not create huge vertical gaps.

@@ -3521,3 +3521,97 @@ main.no-callout{
     font-size:clamp(1.55rem, 7vw, 2.15rem);
   }
 }
+
+
+/* v40 Bar Planner title scale + top card spacing fix */
+.bar-forecast-card{
+  padding:.85rem !important;
+  gap:.65rem !important;
+}
+
+.bar-forecast-top-row{
+  grid-template-columns:minmax(0,1fr) auto !important;
+  gap:.65rem !important;
+}
+
+.bar-forecast-top-row h1{
+  max-width:none !important;
+  font-size:clamp(2.05rem, 8.2vw, 4.15rem) !important;
+  line-height:.92 !important;
+  letter-spacing:-.065em !important;
+  text-wrap:balance;
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+
+.bar-status-pill{
+  min-width:82px !important;
+  min-height:48px !important;
+  padding:.45rem .62rem !important;
+}
+
+.bar-status-pill span{
+  font-size:.58rem !important;
+}
+
+.bar-status-pill strong{
+  font-size:1rem !important;
+}
+
+.bar-forecast-main{
+  gap:.65rem !important;
+}
+
+.bar-event-selector-inline{
+  gap:.38rem !important;
+}
+
+.bar-event-selector-inline select,
+.bar-meta-pill{
+  min-height:48px !important;
+  border-radius:16px !important;
+  padding:.48rem .62rem !important;
+}
+
+.bar-profit-orb{
+  min-height:132px !important;
+  border-radius:24px !important;
+  padding:.7rem !important;
+}
+
+.bar-profit-orb strong{
+  font-size:clamp(1.85rem, 7vw, 2.75rem) !important;
+  line-height:.88 !important;
+  letter-spacing:-.07em !important;
+}
+
+@media (max-width:430px){
+  .bar-forecast-card{
+    padding:.72rem !important;
+    border-radius:26px !important;
+  }
+
+  .bar-forecast-top-row h1{
+    font-size:clamp(2rem, 8.8vw, 2.75rem) !important;
+    line-height:.93 !important;
+    letter-spacing:-.06em !important;
+  }
+
+  .bar-status-pill{
+    min-width:72px !important;
+    min-height:44px !important;
+    padding:.38rem .48rem !important;
+  }
+
+  .bar-forecast-main{
+    gap:.55rem !important;
+  }
+
+  .bar-profit-orb{
+    min-height:112px !important;
+  }
+
+  .bar-profit-orb strong{
+    font-size:1.9rem !important;
+  }
+}
