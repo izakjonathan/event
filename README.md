@@ -215,3 +215,21 @@ Includes:
 ## v46 Artist Booking scale fix
 
 The public `/artist-booking` form now uses a hard-scoped `artist-booking-scale-fixed` layout to stop inherited oversized hero styles.
+
+
+## v47 Design System Refactor
+
+A shared design-system layer has been added to `app/globals.css`.
+
+Change the `--ds-*` tokens once to affect the whole system:
+- color
+- card radius
+- labels
+- headings
+- titles
+- stat numbers
+- field size
+- top pill size
+- spacing
+
+A new `DESIGN_SYSTEM.md` file explains the shared classes and tokens for future modules.

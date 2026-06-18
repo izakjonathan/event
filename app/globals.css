@@ -4548,3 +4548,307 @@ main.no-callout{
     font-size:.98rem !important;
   }
 }
+
+
+/* =========================================================
+   v47 SHARED DESIGN SYSTEM
+   Central controls for every module.
+   Change these tokens once and the whole system follows.
+   ========================================================= */
+
+:root{
+  --ds-ink: #5c0701;
+  --ds-ink-rgb: 92 7 1;
+  --ds-paper: #f4efe3;
+  --ds-line: 1.5px;
+
+  --ds-page-max: 1040px;
+  --ds-page-gap: .8rem;
+
+  --ds-card-radius: 30px;
+  --ds-card-radius-sm: 22px;
+  --ds-card-padding: .85rem;
+  --ds-card-bg: rgb(255 255 255 / .075);
+  --ds-card-soft-bg: rgb(var(--ds-ink-rgb) / .018);
+
+  --ds-title-size: clamp(2.35rem, 11vw, 5rem);
+  --ds-title-line: .86;
+  --ds-title-spacing: -.075em;
+  --ds-title-weight: 900;
+
+  --ds-heading-size: clamp(1.45rem, 6vw, 2.1rem);
+  --ds-heading-line: .9;
+  --ds-heading-spacing: -.055em;
+  --ds-heading-weight: 900;
+
+  --ds-label-size: .64rem;
+  --ds-label-line: 1.05;
+  --ds-label-spacing: .15em;
+  --ds-label-weight: 900;
+  --ds-label-opacity: .66;
+
+  --ds-body-size: .98rem;
+  --ds-body-line: 1.34;
+
+  --ds-number-size: clamp(1.75rem, 8vw, 3.15rem);
+  --ds-number-line: .88;
+  --ds-number-spacing: -.065em;
+  --ds-number-weight: 900;
+
+  --ds-pill-height: 46px;
+  --ds-pill-radius: 999px;
+  --ds-pill-padding-x: .65rem;
+
+  --ds-field-height: 52px;
+  --ds-field-radius: 18px;
+  --ds-field-padding-y: .66rem;
+  --ds-field-padding-x: .72rem;
+
+  --ds-gap-xs: .35rem;
+  --ds-gap-sm: .55rem;
+  --ds-gap-md: .75rem;
+  --ds-gap-lg: .95rem;
+}
+
+/* Keep legacy variables synced with design system tokens */
+:root{
+  --ink: var(--ds-ink);
+  --ink-rgb: var(--ds-ink-rgb);
+  --paper: var(--ds-paper);
+  --line: var(--ds-line);
+
+  --heading-size: 1;
+  --heading-weight: var(--ds-heading-weight);
+  --heading-letter-spacing: var(--ds-heading-spacing);
+  --heading-line-height: var(--ds-heading-line);
+
+  --label-size: 1;
+  --label-weight: var(--ds-label-weight);
+  --label-letter-spacing: var(--ds-label-spacing);
+  --label-line-height: var(--ds-label-line);
+
+  --number-size: 1;
+  --number-weight: var(--ds-number-weight);
+  --number-letter-spacing: var(--ds-number-spacing);
+  --number-line-height: var(--ds-number-line);
+
+  --body-size: 1;
+  --body-line-height: var(--ds-body-line);
+}
+
+/* Shared module page shell */
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  color: var(--ds-ink) !important;
+  background: var(--ds-paper) !important;
+}
+
+.system-wrap,
+.public-artist-wrap,
+.artist-public-wrap{
+  width: min(100%, var(--ds-page-max)) !important;
+  margin-inline: auto !important;
+  display: grid !important;
+  gap: var(--ds-page-gap) !important;
+}
+
+/* Shared cards */
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.public-artist-section,
+.artist-form-section,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34,
+.project-status-pill,
+.system-status-pill,
+.bar-status-pill,
+.bar-profit-orb,
+.bar-meta-pill,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card{
+  border-color: var(--ds-ink) !important;
+}
+
+/* Shared main title behaviour */
+.system-hero h1,
+.system-hero-card h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1,
+.bar-forecast-top-row h1{
+  font-weight: var(--ds-title-weight) !important;
+  letter-spacing: var(--ds-title-spacing) !important;
+}
+
+/* Shared section headings */
+.bar-panel-head h2,
+.project-panel-head h2,
+.booked-overview-head h2,
+.public-section-heading h2,
+.artist-section-title,
+.calendar-event-head h2{
+  font-weight: var(--ds-heading-weight) !important;
+  letter-spacing: var(--ds-heading-spacing) !important;
+}
+
+/* Shared labels across modules */
+.system-kicker,
+.public-artist-kicker,
+.booking-overview-card span,
+.project-status-pill span,
+.system-status-pill span,
+.bar-status-pill span,
+.bar-profit-orb span,
+.bar-profit-orb em,
+.bar-meta-pill span,
+.bar-event-selector-inline label span,
+.artist-data-grid span,
+.artist-meta-card span,
+.artist-add-field > span,
+.artist-field span,
+.public-artist-field span,
+.project-field span,
+.task-field-grid span,
+.bar-product-fields span,
+.bar-staff-fields span,
+.bar-menu-edit-row span,
+.calendar-meta-row span,
+.calendar-warning-row span{
+  font-size: var(--ds-label-size) !important;
+  line-height: var(--ds-label-line) !important;
+  font-weight: var(--ds-label-weight) !important;
+  letter-spacing: var(--ds-label-spacing) !important;
+}
+
+/* Shared top nav pills */
+.top-nav-pill,
+.passport-button,
+.back-pill,
+.project-panel-head button,
+.project-panel-actions button,
+.task-card-footer button,
+.bar-panel-head button,
+.bar-product-actions button,
+.bar-staff-total button,
+.calendar-small-button,
+.artist-admin-actions button,
+.artist-add-event-box button{
+  border-radius: var(--ds-pill-radius) !important;
+}
+
+/* Shared form controls */
+input,
+select,
+textarea,
+.public-artist-field input,
+.public-artist-field textarea,
+.artist-field input,
+.artist-field textarea,
+.project-field input,
+.project-field select,
+.project-field textarea,
+.task-card input,
+.task-card select,
+.task-card textarea,
+.bar-product-card input,
+.bar-product-card select,
+.bar-staff-card input,
+.bar-menu-edit-row textarea,
+.bar-notes,
+.artist-add-field select,
+.artist-add-field input{
+  border-color: rgb(var(--ds-ink-rgb) / .24) !important;
+  color: var(--ds-ink) !important;
+}
+
+/* Shared money style */
+.money-inline{
+  display: inline-flex;
+  align-items: baseline;
+  gap: .14em;
+}
+
+.money-number{
+  font-weight: var(--ds-number-weight);
+  color: var(--ds-ink);
+}
+
+.money-currency{
+  font-weight: 400;
+  opacity: .62;
+  color: var(--ds-ink);
+}
+
+/* Optional shared utility classes for all future modules */
+.ds-page{ color:var(--ds-ink); background:var(--ds-paper); }
+.ds-wrap{ width:min(100%, var(--ds-page-max)); margin-inline:auto; display:grid; gap:var(--ds-page-gap); }
+.ds-card{ border:var(--ds-line) solid var(--ds-ink); border-radius:var(--ds-card-radius); padding:var(--ds-card-padding); background:var(--ds-card-bg); }
+.ds-section{ border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .18); border-radius:var(--ds-card-radius-sm); padding:var(--ds-card-padding); background:var(--ds-card-soft-bg); }
+.ds-title{ margin:0; font-size:var(--ds-title-size); line-height:var(--ds-title-line); letter-spacing:var(--ds-title-spacing); font-weight:var(--ds-title-weight); }
+.ds-heading{ margin:0; font-size:var(--ds-heading-size); line-height:var(--ds-heading-line); letter-spacing:var(--ds-heading-spacing); font-weight:var(--ds-heading-weight); }
+.ds-label{ font-size:var(--ds-label-size); line-height:var(--ds-label-line); letter-spacing:var(--ds-label-spacing); font-weight:var(--ds-label-weight); text-transform:uppercase; opacity:var(--ds-label-opacity); }
+.ds-body{ font-size:var(--ds-body-size); line-height:var(--ds-body-line); }
+.ds-number{ font-size:var(--ds-number-size); line-height:var(--ds-number-line); letter-spacing:var(--ds-number-spacing); font-weight:var(--ds-number-weight); }
+.ds-pill{ min-height:var(--ds-pill-height); border-radius:var(--ds-pill-radius); padding-inline:var(--ds-pill-padding-x); }
+.ds-field{ min-height:var(--ds-field-height); border-radius:var(--ds-field-radius); padding:var(--ds-field-padding-y) var(--ds-field-padding-x); }
+
+@media (max-width:520px){
+  :root{
+    --ds-page-gap: .72rem;
+    --ds-card-radius: 28px;
+    --ds-card-radius-sm: 22px;
+    --ds-card-padding: .72rem;
+    --ds-title-size: clamp(2.25rem, 11vw, 3.35rem);
+    --ds-number-size: clamp(1.55rem, 7vw, 2.25rem);
+    --ds-pill-height: 42px;
+    --ds-field-height: 50px;
+  }
+}
+
+/* v47 cleanup: make common module summary cards obey shared design values */
+.booking-overview-card{
+  border-radius: var(--ds-card-radius-sm) !important;
+  padding: var(--ds-card-padding) !important;
+}
+
+.booking-overview-card strong{
+  color: var(--ds-ink) !important;
+  opacity: 1 !important;
+}
+
+/* v47 cleanup: stable product total cards */
+.bar-planner-page .bar-product-total-card{
+  border-radius: var(--ds-card-radius-sm) !important;
+}
+
+.bar-planner-page .bar-product-total-card > span:first-child{
+  font-size: var(--ds-label-size) !important;
+  line-height: var(--ds-label-line) !important;
+  letter-spacing: var(--ds-label-spacing) !important;
+}
+
+.bar-planner-page .bar-product-total-card > strong{
+  color: var(--ds-ink) !important;
+  font-weight: var(--ds-number-weight) !important;
+}
