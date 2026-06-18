@@ -24,10 +24,10 @@ You can learn more, including how to opt-out if you'd not like to participate in
  [37m[1m [22m[39m Collecting build traces ...
 
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
-┌ ○ /                                    957 B          [37m[1m97.1 kB[22m[39m
+┌ ○ /                                    958 B          [37m[1m97.1 kB[22m[39m
 ├ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
-├ ○ /artist-booking                      2.55 kB         [37m[1m124 kB[22m[39m
-├ ○ /artists                             3.91 kB         [37m[1m134 kB[22m[39m
+├ ○ /artist-booking                      2.61 kB         [37m[1m124 kB[22m[39m
+├ ○ /artists                             4.16 kB         [37m[1m135 kB[22m[39m
 └ ○ /event-planner                       14.3 kB         [37m[1m136 kB[22m[39m
 + First Load JS shared by all            [37m[1m87.4 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB

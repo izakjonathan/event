@@ -17,6 +17,8 @@ type ArtistFormState = {
   youtube: string;
   website: string;
   availability: string;
+  startTime: string;
+  endTime: string;
   preferredFee: string;
   technicalNeeds: string;
   hospitalityNeeds: string;
@@ -37,6 +39,8 @@ const emptyForm: ArtistFormState = {
   youtube: '',
   website: '',
   availability: '',
+  startTime: '',
+  endTime: '',
   preferredFee: '',
   technicalNeeds: '',
   hospitalityNeeds: '',
@@ -57,6 +61,8 @@ const fieldLabels: Record<keyof ArtistFormState, string> = {
   youtube: 'YouTube',
   website: 'Website',
   availability: 'Availability',
+  startTime: 'Start time',
+  endTime: 'End time',
   preferredFee: 'Preferred fee',
   technicalNeeds: 'Technical requirements',
   hospitalityNeeds: 'Hospitality requirements',
@@ -152,6 +158,8 @@ export default function ArtistBookingForm() {
       description: form.description.trim(),
       image_url: uploadedImageUrl,
       availability: form.availability.trim(),
+      availability_start_time: form.startTime.trim(),
+      availability_end_time: form.endTime.trim(),
       preferred_fee: form.preferredFee.trim(),
       technical_needs: form.technicalNeeds.trim(),
       hospitality_needs: form.hospitalityNeeds.trim(),
@@ -227,6 +235,8 @@ export default function ArtistBookingForm() {
               {input('preferredFee', 'text', 'Fee / price range')}
               {area('description', 5, 'Tell us about your sound, experience and what kind of events you fit.')}
               {area('availability', 4, 'Specific dates, weekdays, months or periods you are available.')}
+              {input('startTime', 'time')}
+              {input('endTime', 'time')}
             </div>
           </div>
 

@@ -1,16 +1,14 @@
-# Event Operations System v34
+# Event Operations System v35
 
-Built from v33.
+Built from v34.
 
 Changes:
-- Changed default system color from blue to #5c0701.
-- Updated Event Planner UI Studio default ink color to #5c0701 and moved to a new UI Studio storage key so old blue defaults do not override it.
-- Removed Artist Booking from the landing/dashboard page.
-- Artist Booking is now only accessible via the copy link button in Artist Management.
-- Renamed Artist Submissions to Artist Management.
-- Removed the Current baseline pill from the dashboard hero.
-- Added Dashboard button to Event Planner top navigation, making Dashboard / Event / Settings.
-- Artist Management submission cards are now collapsible.
-- Collapsed artist cards only show the artist name.
-- Redesigned More info into clear section cards for technical, hospitality and notes.
-- Existing image upload, artist form, submissions and event linking remain intact.
+- Artist Management top buttons now match Event Planner top pill style.
+- Dashboard, Copy link and Reload use the same two-line pill style as Event Planner.
+- Removed the horizontal line under the artist name in expanded submission cards.
+- Removed the duplicate artist name below the image; artist name only appears at the top of the card.
+- Added start time and end time fields to the public artist submission form.
+- Artist Management submission cards now show start time and end time.
+- Add to event workflow now uses start time and end time instead of one set-time field.
+- Event Planner lineup now uses start time and end time for connected artists.
+- Added Supabase SQL migration for availability_start_time and availability_end_time.

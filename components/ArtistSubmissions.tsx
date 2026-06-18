@@ -14,7 +14,8 @@ type EventArtist = {
   genre: string;
   imageUrl: string;
   fee: number;
-  setTime: string;
+  startTime: string;
+  endTime: string;
   status: 'proposed' | 'contacted' | 'confirmed' | 'cancelled';
   notes: string;
 };
@@ -44,6 +45,8 @@ type ArtistSubmission = {
   description: string | null;
   image_url: string | null;
   availability: string | null;
+  availability_start_time: string | null;
+  availability_end_time: string | null;
   preferred_fee: string | null;
   technical_needs: string | null;
   hospitality_needs: string | null;
@@ -63,6 +66,8 @@ type EditableArtist = {
   description: string;
   image_url: string;
   availability: string;
+  availability_start_time: string;
+  availability_end_time: string;
   preferred_fee: string;
   technical_needs: string;
   hospitality_needs: string;
@@ -100,6 +105,8 @@ function editableFromArtist(artist: ArtistSubmission): EditableArtist {
     description: artist.description || '',
     image_url: artist.image_url || '',
     availability: artist.availability || '',
+    availability_start_time: artist.availability_start_time || '',
+    availability_end_time: artist.availability_end_time || '',
     preferred_fee: artist.preferred_fee || '',
     technical_needs: artist.technical_needs || '',
     hospitality_needs: artist.hospitality_needs || '',
@@ -116,7 +123,8 @@ export default function ArtistSubmissions() {
   const [events, setEvents] = useState<EventPlanRow[]>([]);
   const [selectedEventByArtist, setSelectedEventByArtist] = useState<Record<string, string>>({});
   const [artistFeeByArtist, setArtistFeeByArtist] = useState<Record<string, string>>({});
-  const [setTimeByArtist, setSetTimeByArtist] = useState<Record<string, string>>({});
+  const [startTimeByArtist, setStartTimeByArtist] = useState<Record<string, string>>({});
+  const [endTimeByArtist, setEndTimeByArtist] = useState<Record<string, string>>({});
   const [editingArtist, setEditingArtist] = useState<ArtistSubmission | null>(null);
   const [editForm, setEditForm] = useState<EditableArtist | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -292,7 +300,8 @@ export default function ArtistSubmissions() {
       genre: artist.genre || '',
       imageUrl: artist.image_url || '',
       fee: Number(artistFeeByArtist[artist.id] || parseFee(artist.preferred_fee) || 0),
-      setTime: setTimeByArtist[artist.id] || '',
+      startTime: startTimeByArtist[artist.id] || artist.availability_start_time || '',
+      endTime: endTimeByArtist[artist.id] || artist.availability_end_time || '',
       status: 'proposed',
       notes: [artist.description, artist.technical_needs ? `Technical: ${artist.technical_needs}` : '', artist.hospitality_needs ? `Hospitality: ${artist.hospitality_needs}` : '', artist.notes].filter(Boolean).join('\n\n')
     };
@@ -334,12 +343,19 @@ export default function ArtistSubmissions() {
   return (
     <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="system-wrap">
-        <div className="artist-admin-top">
-          <Link href="/" className="back-pill passport-button">← Dashboard</Link>
-          <div className="artist-admin-top-actions">
-            <button onClick={copyArtistFormLink} className="back-pill passport-button">{copiedLink ? 'Copied' : 'Copy artist form link'}</button>
-            <button onClick={load} className="back-pill passport-button">Reload</button>
-          </div>
+        <div className="artist-admin-top artist-management-top-nav">
+          <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Dashboard</strong>
+          </Link>
+          <button onClick={copyArtistFormLink} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Public</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">{copiedLink ? 'Copied' : 'Copy link'}</strong>
+          </button>
+          <button onClick={load} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
+            <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Data</span>
+            <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Reload</strong>
+          </button>
         </div>
 
         <section className="system-hero passport-card">
@@ -426,10 +442,9 @@ export default function ArtistSubmissions() {
                     )}
 
                     <div className="artist-submission-body">
-                      <div className="artist-card-head">
+                      <div className="artist-card-head artist-card-head-no-name">
                         <div>
                           <p className="system-kicker">{artist.genre || 'No genre'}</p>
-                          <h2>{artist.artist_name}</h2>
                         </div>
                         <select value={artist.status || 'new'} onChange={(event) => updateStatus(artist.id, event.target.value)}>
                           {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
@@ -451,6 +466,8 @@ export default function ArtistSubmissions() {
                         <span>Phone</span><strong>{artist.phone || '—'}</strong>
                         <span>Fee</span><strong>{artist.preferred_fee || '—'}</strong>
                         <span>Available</span><strong>{artist.availability || '—'}</strong>
+                        <span>Start time</span><strong>{artist.availability_start_time || '—'}</strong>
+                        <span>End time</span><strong>{artist.availability_end_time || '—'}</strong>
                       </div>
 
                       {artist.description && (
@@ -485,9 +502,16 @@ export default function ArtistSubmissions() {
                           onChange={(event) => setArtistFeeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
                         />
                         <input
-                          value={setTimeByArtist[artist.id] || ''}
-                          placeholder="Set time"
-                          onChange={(event) => setSetTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                          value={startTimeByArtist[artist.id] || artist.availability_start_time || ''}
+                          type="time"
+                          placeholder="Start time"
+                          onChange={(event) => setStartTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
+                        />
+                        <input
+                          value={endTimeByArtist[artist.id] || artist.availability_end_time || ''}
+                          type="time"
+                          placeholder="End time"
+                          onChange={(event) => setEndTimeByArtist((current) => ({ ...current, [artist.id]: event.target.value }))}
                         />
                         <button onClick={() => addArtistToEvent(artist)}>Add to event</button>
                       </div>
@@ -551,7 +575,9 @@ export default function ArtistSubmissions() {
                   ['genre', 'Genre'],
                   ['preferred_fee', 'Preferred fee'],
                   ['image_url', 'Image URL'],
-                  ['availability', 'Availability']
+                  ['availability', 'Availability'],
+                  ['availability_start_time', 'Start time'],
+                  ['availability_end_time', 'End time']
                 ] as [keyof EditableArtist, string][]).map(([key, label]) => (
                   <label key={key} className="artist-field">
                     <span>{label}</span>

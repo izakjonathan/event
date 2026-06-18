@@ -108,3 +108,9 @@ for update
 to anon
 using (bucket_id = 'artist-images')
 with check (bucket_id = 'artist-images');
+
+
+-- v35 Artist submission availability times
+alter table public.artist_submissions
+add column if not exists availability_start_time text null,
+add column if not exists availability_end_time text null;

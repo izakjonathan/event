@@ -121,3 +121,13 @@ Dashboard / Copy artist form link / Reload
 - Public Artist Booking is hidden from the dashboard and shared from Artist Management via copy link.
 - Artist Management cards are collapsible.
 - Event Planner top nav has Dashboard / Event / Settings.
+
+
+## v35 Artist Management refinements
+
+- Artist Management top controls now match Event Planner top pills.
+- Artist cards no longer repeat artist names inside expanded content.
+- Artist availability now has start time and end time fields.
+- Run updated `SUPABASE_SCHEMA.sql` to add:
+  - `availability_start_time`
+  - `availability_end_time`

@@ -2529,3 +2529,87 @@ main.no-callout{
     gap:.62rem;
   }
 }
+
+
+/* v35 Artist Management buttons + card cleanup + time fields */
+.artist-management-top-nav{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:.42rem !important;
+  align-items:center !important;
+  width:100% !important;
+}
+
+.artist-management-top-nav .top-nav-pill{
+  width:100% !important;
+  min-width:0 !important;
+  text-decoration:none !important;
+}
+
+.artist-management-top-nav .top-nav-pill strong{
+  font-weight:900 !important;
+}
+
+.artist-management-top-nav + .system-hero{
+  margin-top:.15rem;
+}
+
+.artist-submission-card-v34.is-open .artist-collapsed-head{
+  border-bottom:0 !important;
+  padding-bottom:.45rem !important;
+  margin-bottom:0 !important;
+}
+
+.artist-card-head-no-name{
+  align-items:center !important;
+}
+
+.artist-card-head-no-name h2{
+  display:none !important;
+}
+
+.artist-add-event-box{
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.55fr) minmax(0,.6fr) minmax(0,.6fr) auto !important;
+}
+
+.event-artist-fields{
+  grid-template-columns:1fr 1fr 1fr 1fr !important;
+}
+
+.event-artist-fields label:last-child{
+  grid-column:1 / -1;
+}
+
+@media (max-width:760px){
+  .artist-add-event-box{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .artist-add-event-box select,
+  .artist-add-event-box button{
+    grid-column:1 / -1;
+  }
+
+  .event-artist-fields{
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media (max-width:430px){
+  .artist-management-top-nav{
+    gap:.34rem !important;
+  }
+
+  .artist-management-top-nav .top-nav-pill{
+    min-height:42px !important;
+    padding:0 .34rem !important;
+  }
+
+  .artist-management-top-nav .top-nav-pill strong{
+    font-size:11px !important;
+  }
+
+  .artist-management-top-nav .top-nav-pill span{
+    font-size:7px !important;
+  }
+}

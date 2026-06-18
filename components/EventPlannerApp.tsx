@@ -97,7 +97,8 @@ type EventArtist = {
   genre: string;
   imageUrl: string;
   fee: number;
-  setTime: string;
+  startTime: string;
+  endTime: string;
   status: 'proposed' | 'contacted' | 'confirmed' | 'cancelled';
   notes: string;
 };
@@ -881,7 +882,8 @@ export default function EventPlannerApp() {
                     <button onClick={() => removeArtist(artist.id)} className="passport-button rounded-full px-3 text-xs font-black">Remove</button>
                   </div>
                   <div className="event-artist-fields">
-                    <Field label="Set time" value={artist.setTime} onChange={(value) => patchArtist(artist.id, { setTime: value })} placeholder="22:00–23:00" />
+                    <Field label="Start time" type="time" value={artist.startTime || ''} onChange={(value) => patchArtist(artist.id, { startTime: value })} />
+                    <Field label="End time" type="time" value={artist.endTime || ''} onChange={(value) => patchArtist(artist.id, { endTime: value })} />
                     <NumberField label="Fee" value={artist.fee} onChange={(value) => patchArtist(artist.id, { fee: value })} />
                     <label className="grid gap-1">
                       <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
