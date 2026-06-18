@@ -1,15 +1,12 @@
-# Event Operations System v30
+# Event Operations System v31
 
-Built from confirmed working v29.
+Built from v30.
 
 Changes:
-- Added polished public form success screen.
-- Added artist submission editing modal on `/artists`.
-- Added archive and reject workflow buttons.
-- Added booked/linked artists overview.
-- Added admin stats for booked/linked, needs event and total events.
-- Added linked/unlinked filters.
-- Artist cards now show which event(s) they are connected to.
-- Improved duplicate prevention before adding an artist to the same event again.
-- Improved event selector workflow and success/error messages.
-- Existing v29 image upload and event-linking remain intact.
+- Made `/artist-booking` a cleaner standalone public artist form.
+- Removed the Dashboard button from the public artist form.
+- Removed the “Form Open” status card.
+- Redesigned the public artist form with a stronger hero, cleaner sections and better mobile spacing.
+- Added “Copy artist form link” button to `/artists`.
+- The copy button copies the public `/artist-booking` URL to clipboard.
+- Existing v30 booking workflow, image upload and artist-to-event linking remain intact.

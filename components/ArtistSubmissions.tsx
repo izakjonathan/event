@@ -119,10 +119,23 @@ export default function ArtistSubmissions() {
   const [setTimeByArtist, setSetTimeByArtist] = useState<Record<string, string>>({});
   const [editingArtist, setEditingArtist] = useState<ArtistSubmission | null>(null);
   const [editForm, setEditForm] = useState<EditableArtist | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   function showMessage(text: string, kind: 'info' | 'error' | 'success' = 'info') {
     setMessage(text);
     setMessageKind(kind);
+  }
+
+  async function copyArtistFormLink() {
+    const url = `${window.location.origin}/artist-booking`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      showMessage('Artist form link copied to clipboard.', 'success');
+      window.setTimeout(() => setCopiedLink(false), 1800);
+    } catch {
+      showMessage(url, 'info');
+    }
   }
 
   async function load() {
@@ -318,7 +331,10 @@ export default function ArtistSubmissions() {
       <div className="system-wrap">
         <div className="artist-admin-top">
           <Link href="/" className="back-pill passport-button">← Dashboard</Link>
-          <button onClick={load} className="back-pill passport-button">Reload</button>
+          <div className="artist-admin-top-actions">
+            <button onClick={copyArtistFormLink} className="back-pill passport-button">{copiedLink ? 'Copied' : 'Copy artist form link'}</button>
+            <button onClick={load} className="back-pill passport-button">Reload</button>
+          </div>
         </div>
 
         <section className="system-hero passport-card">

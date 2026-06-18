@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 
 type ArtistFormState = {
@@ -206,27 +205,19 @@ export default function ArtistBookingForm() {
   );
 
   return (
-    <main className="system-shell artist-public-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
-        <Link href="/" className="back-pill passport-button">← Dashboard</Link>
-
-        <section className="system-hero passport-card">
-          <div>
-            <p className="system-kicker">Artist booking</p>
-            <h1>Submit your artist info</h1>
-            <p className="system-intro">
-              Send your contact details, availability, links and requirements so we can review you for future events.
-            </p>
-          </div>
-          <div className="system-status-pill">
-            <span>Form</span>
-            <strong>Open</strong>
-          </div>
+    <main className="artist-public-shell artist-standalone-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="artist-public-wrap">
+        <section className="artist-public-hero passport-card">
+          <p className="system-kicker">Artist booking</p>
+          <h1>Artist submission</h1>
+          <p>
+            Share your artist profile, links, availability and requirements so we can review you for upcoming events.
+          </p>
         </section>
 
-        <form onSubmit={submit} className="artist-form passport-card">
+        <form onSubmit={submit} className="artist-form artist-form-public passport-card">
           <div className="artist-form-section">
-            <p className="system-kicker">Main info</p>
+            <p className="artist-section-title">Main info</p>
             <div className="artist-form-grid">
               {input('artistName', 'text', 'Artist name')}
               {input('contactName', 'text', 'Your name')}
@@ -234,13 +225,13 @@ export default function ArtistBookingForm() {
               {input('phone', 'tel', '+45 ...')}
               {input('genre', 'text', 'DJ, live band, singer-songwriter...')}
               {input('preferredFee', 'text', 'Fee / price range')}
-              {area('description', 5, 'Short artist bio, sound, experience and what kind of events you fit.')}
-              {area('availability', 4, 'Dates, weekdays, months or periods you are available.')}
+              {area('description', 5, 'Tell us about your sound, experience and what kind of events you fit.')}
+              {area('availability', 4, 'Specific dates, weekdays, months or periods you are available.')}
             </div>
           </div>
 
           <div className="artist-form-section">
-            <p className="system-kicker">Image + links</p>
+            <p className="artist-section-title">Image + links</p>
             <div className="artist-form-grid">
               <label className="artist-field artist-upload-field">
                 <span>Artist image upload</span>
@@ -265,7 +256,7 @@ export default function ArtistBookingForm() {
           </div>
 
           <div className="artist-form-section">
-            <p className="system-kicker">Requirements</p>
+            <p className="artist-section-title">Requirements</p>
             <div className="artist-form-grid">
               {area('technicalNeeds', 4, 'Equipment, stage, sound, setup time, DJ gear, microphones etc.')}
               {area('hospitalityNeeds', 4, 'Drinks, food, backstage, guestlist or other needs.')}

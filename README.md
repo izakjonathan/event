@@ -95,3 +95,9 @@ New admin workflow:
 - Filter linked and unlinked artists
 - See which event an artist is connected to
 - Duplicate artist-to-event links are blocked before saving
+
+
+## v31 Public artist form polish
+
+- `/artist-booking` is now a standalone public form with no dashboard link.
+- `/artists` has a “Copy artist form link” button for sharing the public form with artists.
