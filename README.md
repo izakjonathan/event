@@ -101,3 +101,8 @@ New admin workflow:
 
 - `/artist-booking` is now a standalone public form with no dashboard link.
 - `/artists` has a “Copy artist form link” button for sharing the public form with artists.
+
+
+## v32 Artist form scale fix
+
+`/artist-booking` has been hard redesigned with unique `public-artist-*` classes so it no longer inherits the oversized system dashboard hero styling.
