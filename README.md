@@ -188,3 +188,8 @@ This build refines Bar Planner currency styling and redesigns Artist Management 
 ## v42 Bar Planner money cleanup
 
 Bar Planner money values now keep bold/dark numbers and light `DKK` suffixes without nested inner pill/card styling.
+
+
+## v44 Bar Planner product totals hard fix
+
+The product totals now directly override the old nested span/card CSS so Revenue, Cost, Profit and Margin display as clean Event Planner-style stat cards.

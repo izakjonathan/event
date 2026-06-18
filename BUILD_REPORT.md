@@ -1,13 +1,11 @@
-# Event Operations System v43
+# Event Operations System v44
 
-Base: v42 (`event-system-v42-bar-money-card-cleanup.zip`)
+Base: v43
 
-## Changes
-- Restyled the **Revenue / Cost / Profit / Margin** area at the bottom of each Bar Planner product card.
-- These totals now follow the **Event Planner stat-card style** more closely.
-- Removed the split stacked look where the amount and `DKK` appeared in separate inner boxes.
-- The amount now appears as one clean bold value with a lighter `DKK` suffix.
-- Kept Bar Planner money styling consistent with the rest of the system.
-
-## Validation
-- `next build` completed successfully.
+Changes:
+- Hard-fixed Bar Planner product totals.
+- Removed the old nested span styling that was still turning Revenue / Cost / Profit labels and money parts into mini pills.
+- Revenue, Cost, Profit and Margin now use a clean Event Planner-like stat-card style.
+- Numbers are large, dark and bold.
+- DKK remains lighter weight.
+- Margin uses the same visual weight as the other values.

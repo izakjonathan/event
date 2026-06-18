@@ -3892,3 +3892,109 @@ main.no-callout{
     font-size:1.05rem !important;
   }
 }
+
+
+/* v44 HARD FIX: remove old nested span/card styling from Bar Planner product totals */
+.bar-planner-page .bar-product-total-row{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:.65rem !important;
+}
+
+.bar-planner-page .bar-product-total-card{
+  border:var(--line, 1.5px) solid rgb(var(--ink-rgb) / .18) !important;
+  border-radius:24px !important;
+  background:rgb(var(--ink-rgb) / .018) !important;
+  padding:.9rem .95rem !important;
+  min-height:92px !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:.42rem !important;
+}
+
+/* This is the important fix: old `.bar-product-total-row span` was styling ALL nested spans */
+.bar-planner-page .bar-product-total-row span,
+.bar-planner-page .bar-product-total-row .money-inline,
+.bar-planner-page .bar-product-total-row .money-number,
+.bar-planner-page .bar-product-total-row .money-currency{
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:0 !important;
+  letter-spacing:inherit !important;
+  text-transform:none !important;
+  opacity:1 !important;
+}
+
+.bar-planner-page .bar-product-total-card > span:first-child{
+  display:block !important;
+  font-size:.66rem !important;
+  line-height:1.05 !important;
+  font-weight:900 !important;
+  letter-spacing:.15em !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ink-rgb) / .68) !important;
+  opacity:1 !important;
+}
+
+.bar-planner-page .bar-product-total-card > strong{
+  display:block !important;
+  color:var(--ink) !important;
+  opacity:1 !important;
+  font-size:clamp(1.45rem, 7vw, 2.2rem) !important;
+  line-height:.9 !important;
+  letter-spacing:-.065em !important;
+  font-weight:900 !important;
+  margin:0 !important;
+}
+
+.bar-planner-page .bar-product-total-card > strong .money-inline{
+  display:inline-flex !important;
+  align-items:baseline !important;
+  gap:.14em !important;
+  color:var(--ink) !important;
+  font-size:inherit !important;
+  line-height:inherit !important;
+  font-weight:inherit !important;
+  letter-spacing:inherit !important;
+}
+
+.bar-planner-page .bar-product-total-card > strong .money-number{
+  color:var(--ink) !important;
+  opacity:1 !important;
+  font-size:inherit !important;
+  line-height:inherit !important;
+  font-weight:900 !important;
+  letter-spacing:inherit !important;
+}
+
+.bar-planner-page .bar-product-total-card > strong .money-currency{
+  color:var(--ink) !important;
+  opacity:.62 !important;
+  font-size:.62em !important;
+  line-height:1 !important;
+  font-weight:400 !important;
+  letter-spacing:.02em !important;
+}
+
+.bar-planner-page .bar-product-total-card:nth-child(4) > strong{
+  font-size:clamp(1.45rem, 7vw, 2.2rem) !important;
+}
+
+@media (max-width:430px){
+  .bar-planner-page .bar-product-total-row{
+    gap:.55rem !important;
+  }
+
+  .bar-planner-page .bar-product-total-card{
+    border-radius:22px !important;
+    padding:.78rem .82rem !important;
+    min-height:86px !important;
+  }
+
+  .bar-planner-page .bar-product-total-card > strong{
+    font-size:1.55rem !important;
+  }
+}
