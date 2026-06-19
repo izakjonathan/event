@@ -6503,3 +6503,313 @@ button{
     font-size:.82rem !important;
   }
 }
+
+
+/* =========================================================
+   v55 APP-LIKE NEGATIVE COLOR POLISH
+   Selectively uses red surfaces with beige text to create
+   stronger app hierarchy without making the UI too heavy.
+   ========================================================= */
+
+:root{
+  --ds-negative-bg:var(--ds-ink);
+  --ds-negative-text:var(--ds-paper);
+  --ds-negative-muted:rgb(244 239 227 / .68);
+  --ds-negative-line:rgb(244 239 227 / .22);
+  --ds-negative-soft:rgb(92 7 1 / .88);
+  --ds-positive-fill:rgb(244 239 227 / .12);
+}
+
+/* App-like selected / primary surfaces */
+.project-list-card.active,
+.artist-submission-card[data-selected="true"],
+.system-module-card:hover,
+.module-card:hover{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.project-list-card.active span,
+.project-list-card.active strong,
+.project-list-card.active em,
+.system-module-card:hover *,
+.module-card:hover *{
+  color:var(--ds-negative-text) !important;
+}
+
+/* Primary top actions */
+.project-top-nav button:last-child,
+.bar-top-nav button:last-child,
+.calendar-top-nav button:last-child,
+.artist-management-top-nav button:last-child,
+.system-top-nav button:last-child{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.project-top-nav button:last-child span,
+.project-top-nav button:last-child strong,
+.bar-top-nav button:last-child span,
+.bar-top-nav button:last-child strong,
+.calendar-top-nav button:last-child span,
+.calendar-top-nav button:last-child strong,
+.artist-management-top-nav button:last-child span,
+.artist-management-top-nav button:last-child strong,
+.system-top-nav button:last-child span,
+.system-top-nav button:last-child strong{
+  color:var(--ds-negative-text) !important;
+  opacity:1 !important;
+}
+
+/* Module add/save/copy actions: make the important button feel tappable */
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.public-artist-submit,
+.artist-submit,
+.artist-add-event-box button,
+.artist-admin-actions button:first-child{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.artist-add-event-box button{
+  box-shadow:0 5px 14px rgb(var(--ds-ink-rgb) / .10) !important;
+}
+
+/* Keep destructive / remove buttons outlined, not filled */
+.project-panel-actions button:last-child,
+.bar-product-actions button,
+.bar-staff-total button,
+.task-image-row button,
+.subtask-row button{
+  background:transparent !important;
+  color:var(--ds-ink) !important;
+  border-color:var(--ds-ink) !important;
+  box-shadow:none !important;
+}
+
+/* Compact summary gets app-like dark accent when values are operational */
+.project-compact-summary,
+.calendar-compact-summary,
+.artist-compact-summary{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.project-compact-summary > div,
+.calendar-compact-summary > div,
+.artist-compact-summary > div{
+  border-right-color:var(--ds-negative-line) !important;
+}
+
+.project-compact-summary span,
+.calendar-compact-summary span,
+.artist-compact-summary span{
+  color:var(--ds-negative-muted) !important;
+  opacity:1 !important;
+}
+
+.project-compact-summary strong,
+.calendar-compact-summary strong,
+.artist-compact-summary strong{
+  color:var(--ds-negative-text) !important;
+}
+
+/* Status chips / warnings keep attention but feel app-native */
+.bar-warning-row span,
+.calendar-warning-row span{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+/* Calendar collapsed date tile can be dark for stronger scanability */
+.calendar-event-card-v51.is-collapsed .calendar-date-block,
+.calendar-collapse-head .calendar-date-block{
+  background:var(--ds-negative-bg) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.calendar-event-card-v51.is-collapsed .calendar-date-block span,
+.calendar-event-card-v51.is-collapsed .calendar-date-block em,
+.calendar-collapse-head .calendar-date-block span,
+.calendar-collapse-head .calendar-date-block em{
+  color:var(--ds-negative-text) !important;
+}
+
+/* Bar Planner top projected profit gets primary app tile treatment */
+.bar-planner-page .bar-profit-orb{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.bar-planner-page .bar-profit-orb span,
+.bar-planner-page .bar-profit-orb em,
+.bar-planner-page .bar-profit-orb strong,
+.bar-planner-page .bar-profit-orb .money-number,
+.bar-planner-page .bar-profit-orb .money-currency{
+  color:var(--ds-negative-text) !important;
+}
+
+.bar-planner-page .bar-profit-orb span,
+.bar-planner-page .bar-profit-orb em,
+.bar-planner-page .bar-profit-orb .money-currency{
+  opacity:.68 !important;
+}
+
+/* Bar Planner metric cards: keep light, but selected-looking on touch/hover */
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card{
+  transition:background .16s ease, color .16s ease, border-color .16s ease;
+}
+
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active span,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active strong,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active .money-number,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active .money-currency{
+  color:var(--ds-negative-text) !important;
+}
+
+/* Project task status and completed state */
+.task-status-done{
+  background:rgb(var(--ds-ink-rgb) / .035) !important;
+}
+
+.task-check.checked{
+  background:var(--ds-negative-bg) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.task-status-row select{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.task-status-row select option{
+  background:var(--ds-paper);
+  color:var(--ds-ink);
+}
+
+.task-status-row button{
+  background:transparent !important;
+  color:var(--ds-ink) !important;
+}
+
+/* Task settings modal: header + save are more app-like */
+.task-settings-head button{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.task-settings-modal{
+  border-color:var(--ds-negative-bg) !important;
+}
+
+/* Artist Management: linked/add button primary */
+.artist-add-event-box button{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+/* Public form submit is proper app primary action */
+.artist-booking-scale-fixed .public-artist-submit,
+.artist-booking-scale-fixed .artist-submit{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+/* Collapse icon: fill when collapsed to make tap affordance clearer */
+.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
+.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
+.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em{
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+/* Product collapsed cards: dark left accent line for app card feel */
+.bar-product-card-v50,
+.task-card-v52,
+.calendar-event-card-v51{
+  position:relative !important;
+}
+
+.bar-product-card-v50::before,
+.task-card-v52::before,
+.calendar-event-card-v51::before{
+  content:"" !important;
+  position:absolute !important;
+  left:-1px !important;
+  top:14px !important;
+  bottom:14px !important;
+  width:4px !important;
+  border-radius:999px !important;
+  background:rgb(var(--ds-ink-rgb) / .18) !important;
+}
+
+.bar-product-card-v50.is-open::before,
+.task-card-v52.task-status-doing::before,
+.calendar-event-card-v51.is-open::before{
+  background:var(--ds-negative-bg) !important;
+}
+
+/* Dashboard: primary modules feel like app tiles */
+.system-module-card,
+.module-card{
+  transition:transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease;
+}
+
+.system-module-card:active,
+.module-card:active{
+  transform:scale(.992);
+  background:var(--ds-negative-bg) !important;
+  color:var(--ds-negative-text) !important;
+  border-color:var(--ds-negative-bg) !important;
+}
+
+.system-module-card:active *,
+.module-card:active *{
+  color:var(--ds-negative-text) !important;
+}
+
+/* Mobile polish for dark elements */
+@media (max-width:640px){
+  .project-compact-summary,
+  .calendar-compact-summary,
+  .artist-compact-summary{
+    padding:.46rem .5rem !important;
+  }
+
+  .bar-collapsible-head > button:not(.bar-section-toggle-icon),
+  .project-collapsible-head > button:not(.project-section-toggle-icon),
+  .bar-panel-head button:not(.bar-section-toggle-icon){
+    min-height:38px !important;
+    padding-inline:.68rem !important;
+  }
+
+  .task-status-row select{
+    min-height:38px !important;
+  }
+}

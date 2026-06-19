@@ -1,32 +1,29 @@
-# Event Operations System v54
+# Event Operations System v55
 
-Base: v53
+Base: v54
 
-## Full design polish
+## App-like negative color polish
 
-Sitewide design polish across all modules:
-- Dashboard
-- Event Planner
-- Artist Booking
-- Artist Management
-- Calendar / Schedule
-- Bar Planner
-- Project Management
+This build adds a second design polish pass with selective negative-color treatment:
+- red backgrounds
+- beige text
+- stronger app-like hierarchy
+- clearer primary actions
+- selected/active states
 
 Changes:
-- tightened mobile spacing across the whole app
-- reduced heavy nested-card feeling
-- improved shared typography consistency
-- improved label/title rhythm
-- cleaned up buttons and inputs
-- made cards calmer and more consistent
-- improved compact summary styling
-- improved Bar Planner card spacing
-- improved Calendar collapsible card styling
-- improved Project Management task board and modal styling
-- added stronger overflow protection across pages
-- improved mobile-safe card radii and touch targets
-- kept v53 Project Management mobile cleanup intact
+- primary top-nav actions use dark red with beige text
+- main add/save/copy actions use dark red with beige text
+- compact summaries in Artist Management, Calendar and Project Management use dark red treatment
+- Bar Planner projected profit tile uses dark red treatment
+- Calendar date tiles use dark red treatment
+- task status dropdown uses dark red treatment
+- task settings close/save actions use app-like negative color
+- collapse icons become dark when collapsed
+- selected project cards use dark red treatment
+- dashboard cards have app-like active/touch states
+- subtle dark left accents on product/task/calendar cards
+- destructive/remove actions remain outlined instead of filled
 
 Build validation:
 - `npm run build` passed.

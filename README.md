@@ -291,3 +291,13 @@ This version adds a full sitewide design polish layer:
 - fewer visual nested-card effects
 - stronger overflow protection
 - improved Project Management / Calendar / Bar Planner polish
+
+
+## v55 App-like negative color polish
+
+This version adds selective negative colors across the site:
+- red backgrounds
+- beige text
+- stronger app-like hierarchy
+
+Used for primary actions, compact summaries, selected states, collapsed controls, projected profit, date tiles, task status controls and modal actions.
