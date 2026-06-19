@@ -193,20 +193,20 @@ export default function EventCalendar() {
           </div>
         </section>
 
-        <section className="calendar-stats-grid">
-          <div className="booking-overview-card passport-card">
+        <section className="module-compact-summary calendar-compact-summary passport-card">
+          <div>
             <span>Events</span>
             <strong>{events.length}</strong>
           </div>
-          <div className="booking-overview-card passport-card">
+          <div>
             <span>Confirmed</span>
             <strong>{confirmedEvents}</strong>
           </div>
-          <div className="booking-overview-card passport-card">
+          <div>
             <span>Artists</span>
             <strong>{totalArtists}</strong>
           </div>
-          <div className="booking-overview-card passport-card">
+          <div>
             <span>Warnings</span>
             <strong>{totalWarnings}</strong>
           </div>

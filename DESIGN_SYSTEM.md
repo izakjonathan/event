@@ -55,3 +55,20 @@ The design system also controls existing module classes such as:
 - `.money-currency`
 
 Future modules should use the `ds-*` classes first and only add small module-specific layout classes when necessary.
+
+
+## v49 shared compact summaries
+
+Use `.module-compact-summary` for low-emphasis module metrics that should fit on one row.
+
+Used in:
+- Artist Management style pattern
+- Project Management
+- Calendar / Schedule
+
+Bar Planner top metric cards now explicitly use:
+- `--ds-card-radius-sm`
+- `--ds-card-padding`
+- `--ds-label-size`
+- `--ds-number-size`
+- `--ds-number-weight`

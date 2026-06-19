@@ -4927,3 +4927,140 @@ textarea,
     font-size:.92rem !important;
   }
 }
+
+
+/* v49 shared compact summary strip for secondary module metrics */
+.module-compact-summary{
+  border-radius:22px !important;
+  padding:.55rem .65rem !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:.35rem !important;
+  background:rgb(var(--ds-ink-rgb) / .018) !important;
+  border-color:rgb(var(--ds-ink-rgb) / .22) !important;
+}
+
+.module-compact-summary > div{
+  min-width:0 !important;
+  display:grid !important;
+  gap:.18rem !important;
+  align-content:center !important;
+  padding:.18rem .28rem !important;
+  border-right:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .14) !important;
+}
+
+.module-compact-summary > div:last-child{
+  border-right:0 !important;
+}
+
+.module-compact-summary span{
+  display:block !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:calc(var(--ds-label-size) * .82) !important;
+  line-height:1 !important;
+  font-weight:var(--ds-label-weight) !important;
+  letter-spacing:calc(var(--ds-label-spacing) * .82) !important;
+  text-transform:uppercase !important;
+  opacity:.56 !important;
+}
+
+.module-compact-summary strong{
+  display:block !important;
+  font-size:calc(var(--ds-number-size) * .42) !important;
+  line-height:.9 !important;
+  font-weight:var(--ds-number-weight) !important;
+  letter-spacing:calc(var(--ds-number-spacing) * .68) !important;
+  color:var(--ds-ink) !important;
+  opacity:1 !important;
+}
+
+.project-top-nav + .project-hero + .module-compact-summary,
+.calendar-top-nav + .system-hero + .module-compact-summary{
+  margin-top:-.15rem !important;
+}
+
+/* v49 Bar Planner top metrics tied to shared design-system controls */
+.bar-planner-page .bar-profit-orb,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card{
+  border-radius:var(--ds-card-radius-sm) !important;
+  padding:var(--ds-card-padding) !important;
+  border-width:var(--ds-line) !important;
+  border-color:var(--ds-ink) !important;
+  background:var(--ds-card-bg) !important;
+}
+
+.bar-planner-page .bar-profit-orb span,
+.bar-planner-page .bar-profit-orb em,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > span{
+  font-size:var(--ds-label-size) !important;
+  line-height:var(--ds-label-line) !important;
+  letter-spacing:var(--ds-label-spacing) !important;
+  font-weight:var(--ds-label-weight) !important;
+  color:var(--ds-ink) !important;
+  opacity:var(--ds-label-opacity) !important;
+}
+
+.bar-planner-page .bar-profit-orb strong,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong{
+  font-size:var(--ds-number-size) !important;
+  line-height:var(--ds-number-line) !important;
+  letter-spacing:var(--ds-number-spacing) !important;
+  font-weight:var(--ds-number-weight) !important;
+  color:var(--ds-ink) !important;
+  opacity:1 !important;
+}
+
+.bar-planner-page .bar-profit-orb strong .money-inline,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-inline{
+  display:inline-flex !important;
+  align-items:baseline !important;
+  gap:.14em !important;
+  font-size:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  font-weight:inherit !important;
+}
+
+.bar-planner-page .bar-profit-orb strong .money-number,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-number{
+  font-size:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  font-weight:var(--ds-number-weight) !important;
+  color:var(--ds-ink) !important;
+  opacity:1 !important;
+}
+
+.bar-planner-page .bar-profit-orb strong .money-currency,
+.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-currency{
+  font-size:.62em !important;
+  line-height:1 !important;
+  letter-spacing:.02em !important;
+  font-weight:400 !important;
+  color:var(--ds-ink) !important;
+  opacity:.62 !important;
+}
+
+@media (max-width:430px){
+  .module-compact-summary{
+    gap:.18rem !important;
+    padding:.48rem .5rem !important;
+    border-radius:20px !important;
+  }
+
+  .module-compact-summary > div{
+    padding:.12rem .18rem !important;
+  }
+
+  .module-compact-summary span{
+    font-size:calc(var(--ds-label-size) * .72) !important;
+    letter-spacing:calc(var(--ds-label-spacing) * .68) !important;
+  }
+
+  .module-compact-summary strong{
+    font-size:calc(var(--ds-number-size) * .42) !important;
+  }
+}

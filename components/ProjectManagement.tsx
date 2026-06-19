@@ -330,11 +330,23 @@ export default function ProjectManagement() {
         {message && <div className="artist-message">{message}</div>}
         {loading && <div className="artist-message">Loading project management…</div>}
 
-        <section className="project-summary-grid">
-          <div className="booking-overview-card passport-card"><span>Projects</span><strong>{projects.length}</strong></div>
-          <div className="booking-overview-card passport-card"><span>To do</span><strong>{taskCounts['to-do'] || 0}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Doing</span><strong>{taskCounts.doing || 0}</strong></div>
-          <div className="booking-overview-card passport-card"><span>Overdue</span><strong>{overdueTasks.length}</strong></div>
+        <section className="module-compact-summary project-compact-summary passport-card">
+          <div>
+            <span>Projects</span>
+            <strong>{projects.length}</strong>
+          </div>
+          <div>
+            <span>To do</span>
+            <strong>{taskCounts['to-do'] || 0}</strong>
+          </div>
+          <div>
+            <span>Doing</span>
+            <strong>{taskCounts.doing || 0}</strong>
+          </div>
+          <div>
+            <span>Overdue</span>
+            <strong>{overdueTasks.length}</strong>
+          </div>
         </section>
 
         {warnings.length > 0 && (

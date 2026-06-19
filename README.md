@@ -238,3 +238,10 @@ A new `DESIGN_SYSTEM.md` file explains the shared classes and tokens for future 
 ## v48 Artist Management compact summary
 
 Artist Management now uses one compact low-emphasis summary strip instead of large stat cards.
+
+
+## v49 Compact summaries + Bar Planner design token linking
+
+Project Management and Calendar / Schedule now use a shared compact summary strip.
+
+Bar Planner top metrics now explicitly inherit the shared design-system controls for labels, numbers, card radius and card padding.
