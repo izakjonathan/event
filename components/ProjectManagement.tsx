@@ -368,15 +368,11 @@ export default function ProjectManagement() {
           </button>
         </div>
 
-        <section className="project-hero passport-card">
+        <section className="project-hero project-hero-no-pill passport-card">
           <div>
             <p className="system-kicker">Project Management</p>
             <h1>Tasks</h1>
             <p>Quick task boards with reminders-style task settings.</p>
-          </div>
-          <div className="project-status-pill">
-            <span>Open tasks</span>
-            <strong>{tasks.filter((task) => task.status !== 'done' && task.status !== 'archived').length}</strong>
           </div>
         </section>
 
@@ -453,11 +449,14 @@ export default function ProjectManagement() {
                               </span>
                             </button>
                           </div>
-                          <div className="task-quick-actions">
-                            <button onClick={() => setTaskStatus(task, 'pending')}>Pending</button>
-                            <button onClick={() => setTaskStatus(task, 'doing')}>Doing</button>
-                            <button onClick={() => setTaskStatus(task, 'done')}>Done</button>
-                            <button onClick={() => archiveTask(task)}>Archive</button>
+                          <div className="task-status-row">
+                            <label>
+                              <span>Status</span>
+                              <select value={task.status} onChange={(event) => setTaskStatus(task, event.target.value as TaskStatus)}>
+                                {taskStatuses.map((status) => <option key={status} value={status}>{nice(status)}</option>)}
+                              </select>
+                            </label>
+                            <button onClick={() => setEditingTask(task)}>Edit</button>
                           </div>
                         </article>
                       ))}

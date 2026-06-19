@@ -5743,3 +5743,217 @@ textarea,
     grid-column:1 / -1 !important;
   }
 }
+
+
+/* v53 Project Management mobile cleanup */
+.project-page-v52,
+.project-page-v52 *{
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+.project-hero-no-pill{
+  grid-template-columns:1fr !important;
+}
+
+.project-hero-no-pill .project-status-pill{
+  display:none !important;
+}
+
+/* Boards are stacked vertically, not Trello-horizontal on mobile/system */
+.task-board-v52{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:.65rem !important;
+  overflow-x:hidden !important;
+  padding-bottom:0 !important;
+  scroll-snap-type:none !important;
+}
+
+.task-board-v52 .task-column{
+  width:100% !important;
+  min-width:0 !important;
+  scroll-snap-align:none !important;
+  border-radius:22px !important;
+  padding:.55rem !important;
+  background:rgb(var(--ds-ink-rgb) / .012) !important;
+}
+
+/* Full width task cards, less nested card feeling */
+.task-card-v52{
+  width:100% !important;
+  border-radius:18px !important;
+  border-color:rgb(var(--ds-ink-rgb) / .16) !important;
+  background:transparent !important;
+  padding:.55rem 0 !important;
+  border-left:0 !important;
+  border-right:0 !important;
+  border-top:0 !important;
+  box-shadow:none !important;
+}
+
+.task-column .task-card-v52:last-child{
+  border-bottom:0 !important;
+}
+
+.task-simple-row{
+  width:100% !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  gap:.55rem !important;
+  padding:0 .15rem !important;
+}
+
+.task-simple-main strong{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  line-height:1.05 !important;
+}
+
+.task-simple-main span{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+.task-status-row{
+  margin-top:.42rem !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  gap:.45rem !important;
+  align-items:end !important;
+  padding:0 .15rem !important;
+}
+
+.task-status-row label{
+  min-width:0 !important;
+  display:grid !important;
+  gap:.25rem !important;
+}
+
+.task-status-row label span{
+  font-size:calc(var(--ds-label-size) * .78) !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:calc(var(--ds-label-spacing) * .8) !important;
+  text-transform:uppercase !important;
+  opacity:.58 !important;
+}
+
+.task-status-row select{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:40px !important;
+  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .22) !important;
+  border-radius:999px !important;
+  background:rgb(255 255 255 / .18) !important;
+  color:var(--ds-ink) !important;
+  padding:0 .7rem !important;
+  font-size:.82rem !important;
+  font-weight:900 !important;
+}
+
+.task-status-row button{
+  min-height:40px !important;
+  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .24) !important;
+  border-radius:999px !important;
+  background:transparent !important;
+  color:var(--ds-ink) !important;
+  padding:0 .75rem !important;
+  font-size:.78rem !important;
+  font-weight:900 !important;
+}
+
+/* Hide old all-buttons UI if any old CSS keeps it alive */
+.task-quick-actions{
+  display:none !important;
+}
+
+/* Modal cannot scroll horizontally */
+.task-settings-backdrop{
+  overflow:hidden !important;
+  padding:calc(var(--safe-top) + .45rem) .45rem calc(var(--safe-bottom) + .45rem) !important;
+}
+
+.task-settings-modal{
+  width:100% !important;
+  max-width:min(760px, calc(100vw - .9rem)) !important;
+  min-width:0 !important;
+  overflow-x:hidden !important;
+  overscroll-behavior:contain !important;
+}
+
+.task-settings-modal *{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+.task-settings-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+}
+
+.task-settings-head h2{
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  font-size:clamp(1.55rem, 9vw, 2.3rem) !important;
+}
+
+.task-settings-modal .project-form-grid{
+  grid-template-columns:1fr !important;
+}
+
+.task-add-inline{
+  grid-template-columns:minmax(0,1fr) auto !important;
+}
+
+.task-image-row{
+  grid-template-columns:42px minmax(0,1fr) auto !important;
+}
+
+@media (max-width:640px){
+  .project-page-v52 .project-layout-v52{
+    grid-template-columns:1fr !important;
+  }
+
+  .project-page-v52 .project-panel{
+    border-radius:26px !important;
+    padding:.68rem !important;
+  }
+
+  .task-board-v52{
+    grid-template-columns:1fr !important;
+  }
+
+  .task-board-v52 .task-column{
+    min-width:0 !important;
+  }
+
+  .task-column h3{
+    font-size:.68rem !important;
+  }
+
+  .task-settings-modal{
+    border-radius:26px !important;
+    padding:.68rem !important;
+  }
+
+  .task-image-row{
+    grid-template-columns:34px minmax(0,1fr) !important;
+  }
+
+  .task-image-row button{
+    grid-column:1 / -1 !important;
+  }
+}
+
+/* More understated Project list/details panels */
+.project-page-v52 .project-list-card,
+.project-page-v52 .task-column{
+  box-shadow:none !important;
+}
+
+.project-page-v52 .project-collapsible-panel{
+  overflow:hidden !important;
+}
