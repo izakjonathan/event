@@ -174,3 +174,8 @@ create policy "project_management_tasks_select_anon" on public.project_managemen
 create policy "project_management_tasks_insert_anon" on public.project_management_tasks for insert to anon with check (true);
 create policy "project_management_tasks_update_anon" on public.project_management_tasks for update to anon using (true) with check (true);
 create policy "project_management_tasks_delete_anon" on public.project_management_tasks for delete to anon using (true);
+
+
+-- v52 Project Management task settings additions
+alter table public.project_management_tasks
+  add column if not exists image_urls jsonb not null default '[]'::jsonb;

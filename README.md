@@ -257,3 +257,20 @@ Bar Planner now has collapsible Products, Staff plan, Menu builder and Bar notes
 Bar Planner section headers now use the order `Title - Action - Expand/Collapse`, with the expand/collapse symbol always on the far right.
 
 Calendar event cards and Project Management panels/task cards are now collapsible.
+
+
+## v52 Project Management Reminders/Trello redesign
+
+Project Management is now task-first:
+- Tap Add task
+- Edit task settings
+- Save task
+- Task appears in the right board column
+
+Statuses:
+- Pending
+- Doing
+- Done
+- Archived
+
+Run the updated `SUPABASE_SCHEMA.sql` before using image URLs in tasks.
