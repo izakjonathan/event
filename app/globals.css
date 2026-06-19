@@ -4852,3 +4852,78 @@ textarea,
   color: var(--ds-ink) !important;
   font-weight: var(--ds-number-weight) !important;
 }
+
+
+/* v48 Artist Management compact summary */
+.artist-compact-summary{
+  border-radius:22px !important;
+  padding:.55rem .65rem !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:.35rem !important;
+  background:rgb(var(--ds-ink-rgb) / .018) !important;
+  border-color:rgb(var(--ds-ink-rgb) / .22) !important;
+}
+
+.artist-compact-summary > div{
+  min-width:0 !important;
+  display:grid !important;
+  gap:.18rem !important;
+  align-content:center !important;
+  padding:.18rem .28rem !important;
+  border-right:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .14) !important;
+}
+
+.artist-compact-summary > div:last-child{
+  border-right:0 !important;
+}
+
+.artist-compact-summary span{
+  display:block !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:.52rem !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.13em !important;
+  text-transform:uppercase !important;
+  opacity:.56 !important;
+}
+
+.artist-compact-summary strong{
+  display:block !important;
+  font-size:1.05rem !important;
+  line-height:.9 !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+  color:var(--ds-ink) !important;
+  opacity:1 !important;
+}
+
+.artist-management-top-nav + .system-hero + .artist-compact-summary{
+  margin-top:-.15rem !important;
+}
+
+@media (max-width:430px){
+  .artist-compact-summary{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:.18rem !important;
+    padding:.48rem .5rem !important;
+    border-radius:20px !important;
+  }
+
+  .artist-compact-summary > div{
+    padding:.12rem .18rem !important;
+  }
+
+  .artist-compact-summary span{
+    font-size:.46rem !important;
+    letter-spacing:.1em !important;
+  }
+
+  .artist-compact-summary strong{
+    font-size:.92rem !important;
+  }
+}

@@ -384,16 +384,20 @@ export default function ArtistSubmissions() {
           </div>
         </section>
 
-        <section className="booking-overview-grid">
-          <div className="booking-overview-card passport-card">
-            <span>Total / linked / booked</span>
-            <strong>{items.length} / {bookedArtists.length}</strong>
+        <section className="artist-compact-summary passport-card">
+          <div>
+            <span>Total</span>
+            <strong>{items.length}</strong>
           </div>
-          <div className="booking-overview-card passport-card">
+          <div>
+            <span>Linked / booked</span>
+            <strong>{bookedArtists.length}</strong>
+          </div>
+          <div>
             <span>Needs event</span>
             <strong>{items.filter((artist) => !(linkedEventsByArtist[artist.id] || []).length && artist.status !== 'archived').length}</strong>
           </div>
-          <div className="booking-overview-card passport-card">
+          <div>
             <span>Events</span>
             <strong>{events.length}</strong>
           </div>

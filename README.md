@@ -233,3 +233,8 @@ Change the `--ds-*` tokens once to affect the whole system:
 - spacing
 
 A new `DESIGN_SYSTEM.md` file explains the shared classes and tokens for future modules.
+
+
+## v48 Artist Management compact summary
+
+Artist Management now uses one compact low-emphasis summary strip instead of large stat cards.
