@@ -113,6 +113,15 @@ export default function EventCalendar() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [copied, setCopied] = useState(false);
+  const [openEvents, setOpenEvents] = useState<Record<string, boolean>>({});
+
+  function toggleEventCard(id: string) {
+    setOpenEvents((current) => ({ ...current, [id]: !(current[id] ?? false) }));
+  }
+
+  function isEventOpen(id: string) {
+    return openEvents[id] ?? false;
+  }
 
   async function load() {
     setLoading(true);
@@ -226,51 +235,61 @@ export default function EventCalendar() {
             const timeText = [meta.time, meta.endTime].filter(Boolean).join(' – ');
 
             return (
-              <article key={event.id} className="calendar-event-card passport-card">
-                <div className="calendar-date-block">
-                  <span>{date ? shortDate(date) : '—'}</span>
-                  {endDate && endDate !== date && <em>→ {shortDate(endDate)}</em>}
-                </div>
+              <article key={event.id} className={`calendar-event-card calendar-event-card-v51 passport-card ${isEventOpen(event.id) ? 'is-open' : 'is-collapsed'}`}>
+                <button type="button" className="calendar-collapse-head" onClick={() => toggleEventCard(event.id)}>
+                  <div className="calendar-date-block">
+                    <span>{date ? shortDate(date) : '—'}</span>
+                    {endDate && endDate !== date && <em>→ {shortDate(endDate)}</em>}
+                  </div>
+                  <div className="calendar-collapse-title">
+                    <span>{statusLabel(meta.status)} · {artists.length} artist{artists.length === 1 ? '' : 's'}</span>
+                    <strong>{eventName(event)}</strong>
+                  </div>
+                  <small>{warnings.length ? `${warnings.length} warnings` : timeText || meta.location || 'Ready'}</small>
+                  <em>{isEventOpen(event.id) ? '−' : '+'}</em>
+                </button>
 
-                <div className="calendar-event-main">
-                  <div className="calendar-event-head">
-                    <div>
-                      <p className="system-kicker">{statusLabel(meta.status)}</p>
-                      <h2>{eventName(event)}</h2>
+                {isEventOpen(event.id) && (
+                  <div className="calendar-event-main">
+                    <div className="calendar-event-head">
+                      <div>
+                        <p className="system-kicker">{statusLabel(meta.status)}</p>
+                        <h2>{eventName(event)}</h2>
+                      </div>
+                      <Link href={`/event-planner?workspace=main-workspace`} className="calendar-small-button">Open event</Link>
                     </div>
-                    <Link href={`/event-planner?workspace=main-workspace`} className="calendar-small-button">Open event</Link>
-                  </div>
 
-                  <div className="calendar-meta-row">
-                    <span>{formatDate(date)}</span>
-                    <span>{timeText || 'No event time'}</span>
-                    <span>{meta.location || 'No location'}</span>
-                  </div>
+                    <div className="calendar-meta-row">
+                      <span>{formatDate(date)}</span>
+                      <span>{timeText || 'No event time'}</span>
+                      <span>{meta.location || 'No location'}</span>
+                    </div>
 
-                  <div className="calendar-artist-list">
-                    {!artists.length ? (
-                      <div className="calendar-empty-artist">No artists linked</div>
-                    ) : (
-                      artists.map((artist) => (
-                        <div key={artist.id} className="calendar-artist-row">
-                          {artist.imageUrl ? <img src={artist.imageUrl} alt="" /> : <div className="calendar-artist-placeholder" />}
-                          <div>
-                            <strong>{artist.artistName || 'Unnamed artist'}</strong>
-                            <span>{[artist.genre, artist.status].filter(Boolean).join(' · ') || 'Artist'}</span>
+                    <div className="calendar-artist-list">
+                      {!artists.length ? (
+                        <div className="calendar-empty-artist">No artists linked</div>
+                      ) : (
+                        artists.map((artist) => (
+                          <div key={artist.id} className="calendar-artist-row">
+                            {artist.imageUrl ? <img src={artist.imageUrl} alt="" /> : <div className="calendar-artist-placeholder" />}
+                            <div>
+                              <strong>{artist.artistName || 'Unnamed artist'}</strong>
+                              <span>{[artist.genre, artist.status].filter(Boolean).join(' · ') || 'Artist'}</span>
+                            </div>
+                            <em>{artist.startTime || artist.setTime || '—'}{(artist.endTime || artist.setTime) ? ` – ${artist.endTime || artist.setTime}` : ''}</em>
+                            <b>{artist.fee ? money(artist.fee) : 'No fee'}</b>
                           </div>
-                          <em>{artist.startTime || artist.setTime || '—'}{(artist.endTime || artist.setTime) ? ` – ${artist.endTime || artist.setTime}` : ''}</em>
-                          <b>{artist.fee ? money(artist.fee) : 'No fee'}</b>
-                        </div>
-                      ))
+                        ))
+                      )}
+                    </div>
+
+                    {warnings.length > 0 && (
+                      <div className="calendar-warning-row">
+                        {warnings.map((warning) => <span key={warning}>{warning}</span>)}
+                      </div>
                     )}
                   </div>
-
-                  {warnings.length > 0 && (
-                    <div className="calendar-warning-row">
-                      {warnings.map((warning) => <span key={warning}>{warning}</span>)}
-                    </div>
-                  )}
-                </div>
+                )}
               </article>
             );
           })}

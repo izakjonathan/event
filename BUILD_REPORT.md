@@ -1,19 +1,29 @@
-# Event Operations System v50
+# Event Operations System v51
 
-Base: v49
+Base: v50
 
 Changes:
-- Made Bar Planner sections collapsible:
+- Bar Planner collapse/expand symbol is now always the furthest-right element.
+- Bar Planner header order is now:
+  - Title
+  - Add/copy action
+  - Expand/collapse
+- Applied to:
   - Products
   - Staff plan
   - Menu builder
   - Bar notes
-- Made individual product cards collapsible.
-- Collapsed product cards show only:
-  - product name
-  - category / quantity
+- Calendar / Schedule event cards are now collapsible.
+- Collapsed Calendar cards show:
+  - date
+  - event title
+  - status / artist count
+  - warning/time/location hint
   - expand symbol
-- New products open automatically after creation.
-- Products section opens automatically after adding a product.
-- Removed the old `v37` label from the Products card header.
-- Kept v49 compact summaries and shared design-system controls intact.
+- Project Management panels are now collapsible:
+  - Project list
+  - Project details
+  - Tasks
+- Individual Project Management task cards are now collapsible.
+- New tasks open automatically after creation.
+- Kept v50 Bar Planner collapsible product cards and v49 compact summaries intact.

@@ -250,3 +250,10 @@ Bar Planner top metrics now explicitly inherit the shared design-system controls
 ## v50 Bar Planner collapsible cards
 
 Bar Planner now has collapsible Products, Staff plan, Menu builder and Bar notes sections. Individual product cards are also collapsible and show only the product name when collapsed.
+
+
+## v51 Collapsible Calendar + Project Management
+
+Bar Planner section headers now use the order `Title - Action - Expand/Collapse`, with the expand/collapse symbol always on the far right.
+
+Calendar event cards and Project Management panels/task cards are now collapsible.

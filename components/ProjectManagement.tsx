@@ -116,6 +116,28 @@ export default function ProjectManagement() {
   const [activeProjectId, setActiveProjectId] = useState('');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    projectList: true,
+    projectDetails: true,
+    tasks: true
+  });
+  const [openTasks, setOpenTasks] = useState<Record<string, boolean>>({});
+
+  function toggleSection(section: string) {
+    setOpenSections((current) => ({ ...current, [section]: !current[section] }));
+  }
+
+  function isSectionOpen(section: string) {
+    return openSections[section] !== false;
+  }
+
+  function toggleTaskCard(id: string) {
+    setOpenTasks((current) => ({ ...current, [id]: !(current[id] ?? false) }));
+  }
+
+  function isTaskOpen(id: string) {
+    return openTasks[id] ?? false;
+  }
 
   const activeProject = projects.find((project) => project.id === activeProjectId) || projects[0] || null;
 
@@ -223,6 +245,8 @@ export default function ProjectManagement() {
     }
 
     setTasks((current) => [task, ...current]);
+    setOpenTasks((current) => ({ ...current, [task.id]: true }));
+    setOpenSections((current) => ({ ...current, tasks: true }));
     setMessage('Task created.');
   }
 
@@ -356,16 +380,17 @@ export default function ProjectManagement() {
         )}
 
         <section className="project-layout">
-          <div className="project-panel passport-card">
-            <div className="project-panel-head">
-              <div>
-                <p className="system-kicker">Project list</p>
-                <h2>Projects</h2>
-              </div>
+          <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('projectList') ? 'is-open' : 'is-collapsed'}`}>
+            <div className="project-panel-head project-collapsible-head">
+              <div className="project-section-title">Projects</div>
               <button onClick={createProject}>Add</button>
+              <button type="button" className="project-section-toggle-icon" onClick={() => toggleSection('projectList')} aria-label="Toggle project list">
+                {isSectionOpen('projectList') ? '−' : '+'}
+              </button>
             </div>
 
-            <div className="project-list">
+            {isSectionOpen('projectList') && (
+              <div className="project-list">
               {projects.map((project) => (
                 <button
                   key={project.id}
@@ -378,24 +403,26 @@ export default function ProjectManagement() {
                 </button>
               ))}
               {!projects.length && <p className="project-empty">No projects yet.</p>}
-            </div>
+              </div>
+            )}
           </div>
 
           <div className="project-main-stack">
             {activeProject ? (
-              <div className="project-panel passport-card">
-                <div className="project-panel-head">
-                  <div>
-                    <p className="system-kicker">Project details</p>
-                    <h2>{activeProject.title}</h2>
-                  </div>
+              <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('projectDetails') ? 'is-open' : 'is-collapsed'}`}>
+                <div className="project-panel-head project-collapsible-head">
+                  <div className="project-section-title">{activeProject.title}</div>
                   <div className="project-panel-actions">
                     <button onClick={() => saveProject(activeProject)}>Save</button>
                     <button onClick={() => removeProject(activeProject.id)}>Remove</button>
                   </div>
+                  <button type="button" className="project-section-toggle-icon" onClick={() => toggleSection('projectDetails')} aria-label="Toggle project details">
+                    {isSectionOpen('projectDetails') ? '−' : '+'}
+                  </button>
                 </div>
 
-                <div className="project-form-grid">
+                {isSectionOpen('projectDetails') && (
+                  <div className="project-form-grid">
                   <label className="project-field project-field-wide">
                     <span>Project name</span>
                     <input value={activeProject.title} onChange={(event) => patchProject(activeProject.id, { title: event.target.value })} />
@@ -435,7 +462,8 @@ export default function ProjectManagement() {
                     <span>Notes</span>
                     <textarea rows={3} value={activeProject.notes} onChange={(event) => patchProject(activeProject.id, { notes: event.target.value })} />
                   </label>
-                </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="project-panel passport-card">
@@ -443,21 +471,29 @@ export default function ProjectManagement() {
               </div>
             )}
 
-            <div className="project-panel passport-card">
-              <div className="project-panel-head">
-                <div>
-                  <p className="system-kicker">Task board</p>
-                  <h2>Tasks</h2>
-                </div>
+            <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('tasks') ? 'is-open' : 'is-collapsed'}`}>
+              <div className="project-panel-head project-collapsible-head">
+                <div className="project-section-title">Tasks</div>
                 <button onClick={() => createTask(activeProject?.id)}>Add task</button>
+                <button type="button" className="project-section-toggle-icon" onClick={() => toggleSection('tasks')} aria-label="Toggle tasks">
+                  {isSectionOpen('tasks') ? '−' : '+'}
+                </button>
               </div>
 
-              <div className="task-board">
+              {isSectionOpen('tasks') && (
+                <div className="task-board">
                 {taskStatuses.map((status) => (
                   <section key={status} className="task-column">
                     <h3>{nice(status)} <span>{tasks.filter((task) => task.status === status).length}</span></h3>
                     {tasks.filter((task) => task.status === status).map((task) => (
-                      <article key={task.id} className="task-card">
+                      <article key={task.id} className={`task-card task-card-v51 ${isTaskOpen(task.id) ? 'is-open' : 'is-collapsed'}`}>
+                        <button type="button" className="task-collapse-head" onClick={() => toggleTaskCard(task.id)}>
+                          <span>{task.title || 'Untitled task'}</span>
+                          <small>{nice(task.priority)} · {task.due_date ? formatDate(task.due_date) : 'No deadline'}</small>
+                          <em>{isTaskOpen(task.id) ? '−' : '+'}</em>
+                        </button>
+                        {isTaskOpen(task.id) && (
+                          <>
                         <input className="task-title-input" value={task.title} onChange={(event) => patchTask(task.id, { title: event.target.value })} onBlur={() => saveTask(task)} />
                         <div className="task-field-grid">
                           <label>
@@ -500,11 +536,14 @@ export default function ProjectManagement() {
                           <span>{eventTitle(linkedEvent(task.linked_event_id))}</span>
                           <button onClick={() => removeTask(task.id)}>Remove</button>
                         </div>
+                          </>
+                        )}
                       </article>
                     ))}
                   </section>
                 ))}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

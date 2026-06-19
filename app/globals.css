@@ -5207,3 +5207,230 @@ textarea,
     font-size:1rem !important;
   }
 }
+
+
+/* v51: shared furthest-right collapse controls */
+.bar-collapsible-head,
+.project-collapsible-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto auto !important;
+  align-items:center !important;
+  gap:.55rem !important;
+}
+
+.bar-section-title,
+.project-section-title{
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:calc(var(--ds-heading-size) * .86) !important;
+  line-height:var(--ds-heading-line) !important;
+  letter-spacing:var(--ds-heading-spacing) !important;
+  font-weight:var(--ds-heading-weight) !important;
+  color:var(--ds-ink) !important;
+}
+
+.bar-section-toggle-icon,
+.project-section-toggle-icon,
+.calendar-collapse-head > em,
+.task-collapse-head > em{
+  width:2rem !important;
+  height:2rem !important;
+  min-width:2rem !important;
+  min-height:2rem !important;
+  padding:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .22) !important;
+  border-radius:var(--ds-pill-radius) !important;
+  background:rgb(var(--ds-ink-rgb) / .025) !important;
+  color:var(--ds-ink) !important;
+  font-size:1.15rem !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  font-style:normal !important;
+}
+
+/* Override v50 title toggle layout: symbol is never inside the title button now */
+.bar-section-toggle{
+  display:none !important;
+}
+
+/* v51 Calendar collapsible cards */
+.calendar-event-card-v51{
+  display:grid !important;
+  gap:.65rem !important;
+}
+
+.calendar-event-card-v51.is-collapsed{
+  gap:0 !important;
+}
+
+.calendar-collapse-head{
+  width:100% !important;
+  min-width:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  color:var(--ds-ink) !important;
+  padding:0 !important;
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) auto auto !important;
+  align-items:center !important;
+  gap:.65rem !important;
+  text-align:left !important;
+}
+
+.calendar-collapse-head .calendar-date-block{
+  margin:0 !important;
+  min-width:58px !important;
+}
+
+.calendar-collapse-title{
+  min-width:0 !important;
+  display:grid !important;
+  gap:.22rem !important;
+}
+
+.calendar-collapse-title span{
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:calc(var(--ds-label-size) * .86) !important;
+  line-height:1 !important;
+  font-weight:var(--ds-label-weight) !important;
+  letter-spacing:calc(var(--ds-label-spacing) * .82) !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ds-ink-rgb) / .62) !important;
+}
+
+.calendar-collapse-title strong{
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:1.08rem !important;
+  line-height:.95 !important;
+  font-weight:900 !important;
+  letter-spacing:-.045em !important;
+  color:var(--ds-ink) !important;
+}
+
+.calendar-collapse-head > small{
+  min-width:0 !important;
+  max-width:9rem !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:.64rem !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.12em !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ds-ink-rgb) / .58) !important;
+}
+
+/* v51 Project Management collapsible panels and task cards */
+.project-collapsible-panel.is-collapsed{
+  gap:0 !important;
+}
+
+.task-card-v51{
+  padding:.55rem !important;
+  border-radius:18px !important;
+}
+
+.task-card-v51.is-collapsed{
+  gap:0 !important;
+}
+
+.task-collapse-head{
+  width:100% !important;
+  min-width:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  color:var(--ds-ink) !important;
+  padding:.05rem 0 !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto auto !important;
+  align-items:center !important;
+  gap:.5rem !important;
+  text-align:left !important;
+}
+
+.task-collapse-head span{
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:1rem !important;
+  line-height:.95 !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+  color:var(--ds-ink) !important;
+}
+
+.task-collapse-head small{
+  min-width:0 !important;
+  max-width:8rem !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:.6rem !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:.1em !important;
+  text-transform:uppercase !important;
+  color:rgb(var(--ds-ink-rgb) / .58) !important;
+}
+
+.task-card-v51.is-open .task-collapse-head{
+  border-bottom:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .13) !important;
+  padding-bottom:.52rem !important;
+}
+
+@media (max-width:430px){
+  .bar-collapsible-head,
+  .project-collapsible-head{
+    grid-template-columns:minmax(0,1fr) auto auto !important;
+    gap:.4rem !important;
+  }
+
+  .bar-section-title,
+  .project-section-title{
+    font-size:calc(var(--ds-heading-size) * .78) !important;
+  }
+
+  .bar-section-toggle-icon,
+  .project-section-toggle-icon,
+  .calendar-collapse-head > em,
+  .task-collapse-head > em{
+    width:1.8rem !important;
+    height:1.8rem !important;
+    min-width:1.8rem !important;
+    min-height:1.8rem !important;
+    font-size:1.05rem !important;
+  }
+
+  .calendar-collapse-head{
+    grid-template-columns:auto minmax(0,1fr) auto !important;
+    gap:.5rem !important;
+  }
+
+  .calendar-collapse-head > small{
+    display:none !important;
+  }
+
+  .calendar-collapse-title strong{
+    font-size:1rem !important;
+  }
+
+  .task-collapse-head{
+    grid-template-columns:minmax(0,1fr) auto !important;
+  }
+
+  .task-collapse-head small{
+    display:none !important;
+  }
+}

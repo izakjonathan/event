@@ -436,11 +436,11 @@ export default function BarPlanner() {
         <section className="bar-module-grid">
           <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('products') ? 'is-open' : 'is-collapsed'}`}>
             <div className="bar-panel-head bar-collapsible-head">
-              <button type="button" className="bar-section-toggle" onClick={() => toggleSection('products')}>
-                <span>Products</span>
-                <em>{isSectionOpen('products') ? '−' : '+'}</em>
-              </button>
+              <div className="bar-section-title">Products</div>
               <button onClick={addProduct}>Add product</button>
+              <button type="button" className="bar-section-toggle-icon" onClick={() => toggleSection('products')} aria-label="Toggle products">
+                {isSectionOpen('products') ? '−' : '+'}
+              </button>
             </div>
 
             {isSectionOpen('products') && (
@@ -515,11 +515,11 @@ export default function BarPlanner() {
           <div className="bar-side-stack">
             <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('staff') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
-                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('staff')}>
-                  <span>Staff plan</span>
-                  <em>{isSectionOpen('staff') ? '−' : '+'}</em>
-                </button>
+                <div className="bar-section-title">Staff plan</div>
                 <button onClick={addStaffLine}>Add shift</button>
+                <button type="button" className="bar-section-toggle-icon" onClick={() => toggleSection('staff')} aria-label="Toggle staff plan">
+                  {isSectionOpen('staff') ? '−' : '+'}
+                </button>
               </div>
 
               {isSectionOpen('staff') && (
@@ -550,11 +550,11 @@ export default function BarPlanner() {
 
             <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('menu') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
-                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('menu')}>
-                  <span>Menu builder</span>
-                  <em>{isSectionOpen('menu') ? '−' : '+'}</em>
-                </button>
+                <div className="bar-section-title">Menu builder</div>
                 <button onClick={copyMenu}>{copied ? 'Copied' : 'Copy menu'}</button>
+                <button type="button" className="bar-section-toggle-icon" onClick={() => toggleSection('menu')} aria-label="Toggle menu builder">
+                  {isSectionOpen('menu') ? '−' : '+'}
+                </button>
               </div>
 
               {isSectionOpen('menu') && (
@@ -599,9 +599,9 @@ export default function BarPlanner() {
 
             <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('notes') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
-                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('notes')}>
-                  <span>Bar notes</span>
-                  <em>{isSectionOpen('notes') ? '−' : '+'}</em>
+                <div className="bar-section-title">Bar notes</div>
+                <button type="button" className="bar-section-toggle-icon" onClick={() => toggleSection('notes')} aria-label="Toggle bar notes">
+                  {isSectionOpen('notes') ? '−' : '+'}
                 </button>
               </div>
               {isSectionOpen('notes') && (
