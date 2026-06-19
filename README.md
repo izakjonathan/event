@@ -279,3 +279,15 @@ Run the updated `SUPABASE_SCHEMA.sql` before using image URLs in tasks.
 ## v53 Project Management mobile cleanup
 
 Project Management task boards now stack vertically, tasks are full-width, status changes use a dropdown, the Open Tasks top pill is removed, and the task settings modal is fixed so it cannot scroll horizontally.
+
+
+## v54 Full design polish
+
+This version adds a full sitewide design polish layer:
+- calmer cards
+- more consistent labels/headings
+- cleaner buttons and fields
+- tighter mobile spacing
+- fewer visual nested-card effects
+- stronger overflow protection
+- improved Project Management / Calendar / Bar Planner polish

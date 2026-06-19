@@ -5957,3 +5957,549 @@ textarea,
 .project-page-v52 .project-collapsible-panel{
   overflow:hidden !important;
 }
+
+
+/* =========================================================
+   v54 FULL SITE DESIGN POLISH
+   Global cleanup after v47 design-system refactor.
+   Goals:
+   - consistent mobile rhythm
+   - calmer cards
+   - less nested-card feeling
+   - better touch targets
+   - no horizontal overflow
+   - shared typography/field/button treatment
+   ========================================================= */
+
+:root{
+  --ds-page-gap:.72rem;
+  --ds-card-radius:28px;
+  --ds-card-radius-sm:20px;
+  --ds-card-padding:.78rem;
+  --ds-field-radius:17px;
+  --ds-field-height:50px;
+  --ds-pill-height:42px;
+  --ds-soft-line:rgb(var(--ds-ink-rgb) / .16);
+  --ds-mid-line:rgb(var(--ds-ink-rgb) / .24);
+  --ds-soft-fill:rgb(var(--ds-ink-rgb) / .015);
+  --ds-input-fill:rgb(255 255 255 / .20);
+}
+
+html,
+body{
+  overflow-x:hidden !important;
+  background:var(--ds-paper) !important;
+  color:var(--ds-ink) !important;
+}
+
+*,
+*::before,
+*::after{
+  box-sizing:border-box !important;
+}
+
+body{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  width:100% !important;
+  max-width:100vw !important;
+  overflow-x:hidden !important;
+  padding-left:max(.62rem, env(safe-area-inset-left)) !important;
+  padding-right:max(.62rem, env(safe-area-inset-right)) !important;
+}
+
+.system-wrap,
+.public-artist-wrap,
+.artist-public-wrap{
+  max-width:var(--ds-page-max) !important;
+  gap:var(--ds-page-gap) !important;
+}
+
+/* Overall cards: thinner visual weight and consistent rhythm */
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.public-artist-section,
+.artist-form-section,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card{
+  border-width:var(--ds-line) !important;
+  border-color:var(--ds-soft-line) !important;
+  border-radius:var(--ds-card-radius) !important;
+  background:rgb(255 255 255 / .065) !important;
+  box-shadow:none !important;
+}
+
+/* Primary hero cards keep stronger border, but not oversized */
+.system-hero,
+.project-hero,
+.public-artist-hero,
+.artist-public-hero,
+.bar-forecast-card{
+  border-color:var(--ds-ink) !important;
+  padding:var(--ds-card-padding) !important;
+}
+
+/* Labels and headings: reduce shoutiness slightly across modules */
+.system-kicker,
+.public-artist-kicker,
+.ds-label,
+.booking-overview-card span,
+.module-compact-summary span,
+.artist-compact-summary span,
+.bar-product-fields span,
+.bar-staff-fields span,
+.project-field span,
+.task-field-grid span,
+.public-artist-field span,
+.artist-field span{
+  font-size:calc(var(--ds-label-size) * .92) !important;
+  letter-spacing:calc(var(--ds-label-spacing) * .88) !important;
+}
+
+/* Main big titles: prevent horizontal clipping */
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1,
+.bar-forecast-top-row h1{
+  max-width:100% !important;
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  text-wrap:balance !important;
+}
+
+/* Shared top navigation polish */
+.bar-top-nav,
+.project-top-nav,
+.calendar-top-nav,
+.artist-management-top-nav,
+.system-top-nav{
+  gap:.42rem !important;
+}
+
+.top-nav-pill,
+.passport-button{
+  min-height:var(--ds-pill-height) !important;
+  border-color:var(--ds-mid-line) !important;
+  background:rgb(255 255 255 / .12) !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+.top-nav-pill span,
+.passport-button span{
+  font-size:7.5px !important;
+  letter-spacing:.12em !important;
+}
+
+.top-nav-pill strong,
+.passport-button strong{
+  font-size:12px !important;
+}
+
+/* Inputs/selects/textareas */
+input,
+select,
+textarea{
+  max-width:100% !important;
+  min-width:0 !important;
+  min-height:var(--ds-field-height) !important;
+  border-radius:var(--ds-field-radius) !important;
+  border-color:var(--ds-mid-line) !important;
+  background:var(--ds-input-fill) !important;
+  color:var(--ds-ink) !important;
+  box-shadow:none !important;
+}
+
+textarea{
+  line-height:1.24 !important;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:rgb(var(--ds-ink-rgb) / .36) !important;
+}
+
+/* Generic action buttons */
+button{
+  touch-action:manipulation;
+}
+
+.bar-panel-head button,
+.project-panel-head button,
+.project-panel-actions button,
+.task-status-row button,
+.task-settings-head button,
+.task-settings-actions button,
+.task-add-inline button,
+.subtask-row button,
+.task-image-row button,
+.calendar-small-button,
+.artist-admin-actions button,
+.artist-add-event-box button,
+.bar-product-actions button,
+.bar-staff-total button{
+  min-height:38px !important;
+  border-color:var(--ds-mid-line) !important;
+  background:rgb(255 255 255 / .10) !important;
+  color:var(--ds-ink) !important;
+  box-shadow:none !important;
+  font-weight:900 !important;
+}
+
+/* Compact summaries: one calmer shared style */
+.module-compact-summary,
+.artist-compact-summary{
+  border-color:var(--ds-soft-line) !important;
+  background:rgb(255 255 255 / .05) !important;
+  border-radius:20px !important;
+  padding:.48rem .55rem !important;
+}
+
+.module-compact-summary > div,
+.artist-compact-summary > div{
+  border-right-color:rgb(var(--ds-ink-rgb) / .12) !important;
+}
+
+.module-compact-summary strong,
+.artist-compact-summary strong{
+  font-size:1rem !important;
+}
+
+/* Dashboard polish */
+.system-grid,
+.module-grid{
+  gap:.72rem !important;
+}
+
+.system-module-card,
+.module-card,
+.system-card{
+  min-height:auto !important;
+}
+
+.system-module-card h2,
+.module-card h2{
+  line-height:.95 !important;
+}
+
+/* Artist Management */
+.artist-submission-card,
+.artist-submission-card-v34{
+  padding:.68rem !important;
+  gap:.65rem !important;
+}
+
+.artist-meta-cards{
+  gap:.45rem !important;
+}
+
+.artist-meta-card{
+  border-radius:18px !important;
+  padding:.55rem .6rem !important;
+  background:var(--ds-soft-fill) !important;
+}
+
+/* Artist booking public form */
+.artist-booking-scale-fixed .public-artist-hero,
+.artist-booking-scale-fixed .public-artist-form{
+  border-color:var(--ds-ink) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-section,
+.artist-booking-scale-fixed .artist-form-section{
+  border-color:var(--ds-soft-line) !important;
+  background:var(--ds-soft-fill) !important;
+}
+
+/* Bar Planner */
+.bar-module-grid,
+.bar-side-stack,
+.bar-product-list,
+.bar-staff-list{
+  gap:.65rem !important;
+}
+
+.bar-panel{
+  padding:.68rem !important;
+}
+
+.bar-collapsible-head,
+.project-collapsible-head{
+  gap:.45rem !important;
+}
+
+.bar-section-title,
+.project-section-title{
+  font-size:calc(var(--ds-heading-size) * .80) !important;
+}
+
+.bar-product-card-v50{
+  border-color:var(--ds-soft-line) !important;
+  background:rgb(255 255 255 / .055) !important;
+}
+
+.bar-product-card-v50.is-open .bar-product-collapse-head,
+.task-card-v51.is-open .task-collapse-head{
+  border-bottom-color:rgb(var(--ds-ink-rgb) / .10) !important;
+}
+
+.bar-product-collapse-head span{
+  font-size:1rem !important;
+}
+
+.bar-product-total-card{
+  border-color:var(--ds-soft-line) !important;
+  background:var(--ds-soft-fill) !important;
+}
+
+.bar-product-total-card > strong{
+  font-size:clamp(1.2rem, 6vw, 1.7rem) !important;
+}
+
+/* Calendar */
+.calendar-event-card-v51{
+  padding:.62rem !important;
+  background:rgb(255 255 255 / .055) !important;
+}
+
+.calendar-collapse-head{
+  gap:.5rem !important;
+}
+
+.calendar-collapse-title strong{
+  font-size:1rem !important;
+}
+
+.calendar-date-block{
+  border-color:var(--ds-soft-line) !important;
+  background:var(--ds-soft-fill) !important;
+}
+
+/* Project Management */
+.project-page-v52 .project-panel{
+  border-color:var(--ds-soft-line) !important;
+  background:rgb(255 255 255 / .055) !important;
+}
+
+.project-page-v52 .project-list-card{
+  border-color:var(--ds-soft-line) !important;
+  background:var(--ds-soft-fill) !important;
+  padding:.55rem .62rem !important;
+}
+
+.task-board-v52 .task-column{
+  border-color:var(--ds-soft-line) !important;
+  background:rgb(255 255 255 / .045) !important;
+}
+
+.task-card-v52{
+  border-bottom-color:rgb(var(--ds-ink-rgb) / .12) !important;
+}
+
+.task-status-row select,
+.task-status-row button{
+  min-height:38px !important;
+}
+
+/* Task modal: cleaner and safer */
+.task-settings-backdrop{
+  overflow:hidden !important;
+}
+
+.task-settings-modal{
+  border-color:var(--ds-ink) !important;
+  background:var(--ds-paper) !important;
+  box-shadow:0 18px 70px rgb(0 0 0 / .18) !important;
+}
+
+.task-settings-section{
+  border-color:var(--ds-soft-line) !important;
+  background:var(--ds-soft-fill) !important;
+  border-radius:20px !important;
+}
+
+/* Avoid nested-card heaviness in lists */
+.project-page-v52 .task-column .task-card-v52,
+.bar-product-card-v50,
+.calendar-event-card-v51{
+  box-shadow:none !important;
+}
+
+/* Better scrollbars on web without affecting iOS */
+*{
+  scrollbar-width:thin;
+  scrollbar-color:rgb(var(--ds-ink-rgb) / .35) transparent;
+}
+
+::-webkit-scrollbar{
+  width:8px;
+  height:8px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:rgb(var(--ds-ink-rgb) / .28);
+  border-radius:999px;
+}
+
+::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+/* Mobile-specific polish */
+@media (max-width:640px){
+  :root{
+    --ds-page-gap:.62rem;
+    --ds-card-radius:26px;
+    --ds-card-radius-sm:18px;
+    --ds-card-padding:.68rem;
+    --ds-title-size:clamp(2.1rem, 10vw, 3.1rem);
+    --ds-heading-size:clamp(1.25rem, 5.8vw, 1.75rem);
+    --ds-label-size:.62rem;
+    --ds-number-size:clamp(1.35rem, 7vw, 2rem);
+  }
+
+  .system-shell,
+  .public-artist-page,
+  .project-page,
+  .bar-planner-page{
+    padding-left:.5rem !important;
+    padding-right:.5rem !important;
+  }
+
+  .system-wrap,
+  .public-artist-wrap,
+  .artist-public-wrap{
+    gap:.62rem !important;
+  }
+
+  .top-nav-pill,
+  .passport-button{
+    min-height:40px !important;
+    padding-left:.32rem !important;
+    padding-right:.32rem !important;
+  }
+
+  .top-nav-pill strong,
+  .passport-button strong{
+    font-size:11px !important;
+  }
+
+  .top-nav-pill span,
+  .passport-button span{
+    font-size:7px !important;
+  }
+
+  .system-hero,
+  .project-hero,
+  .public-artist-hero,
+  .artist-public-hero,
+  .bar-forecast-card,
+  .bar-panel,
+  .project-panel,
+  .calendar-event-card,
+  .artist-submission-card,
+  .artist-submission-card-v34{
+    border-radius:26px !important;
+    padding:.64rem !important;
+  }
+
+  .module-compact-summary,
+  .artist-compact-summary{
+    border-radius:18px !important;
+    padding:.42rem .46rem !important;
+  }
+
+  .module-compact-summary span,
+  .artist-compact-summary span{
+    font-size:.45rem !important;
+  }
+
+  .module-compact-summary strong,
+  .artist-compact-summary strong{
+    font-size:.9rem !important;
+  }
+
+  .bar-section-title,
+  .project-section-title{
+    font-size:1.25rem !important;
+  }
+
+  .bar-section-toggle-icon,
+  .project-section-toggle-icon,
+  .calendar-collapse-head > em,
+  .task-collapse-head > em{
+    width:1.72rem !important;
+    height:1.72rem !important;
+    min-width:1.72rem !important;
+    min-height:1.72rem !important;
+  }
+
+  input,
+  select,
+  textarea{
+    font-size:.96rem !important;
+  }
+
+  .calendar-collapse-head,
+  .bar-product-collapse-head,
+  .task-collapse-head{
+    gap:.42rem !important;
+  }
+
+  .task-settings-modal{
+    border-radius:25px !important;
+  }
+}
+
+/* Very small mobile screens */
+@media (max-width:380px){
+  .module-compact-summary,
+  .artist-compact-summary{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:.1rem !important;
+  }
+
+  .module-compact-summary > div,
+  .artist-compact-summary > div{
+    padding:.08rem .12rem !important;
+  }
+
+  .module-compact-summary span,
+  .artist-compact-summary span{
+    font-size:.4rem !important;
+    letter-spacing:.07em !important;
+  }
+
+  .module-compact-summary strong,
+  .artist-compact-summary strong{
+    font-size:.82rem !important;
+  }
+}

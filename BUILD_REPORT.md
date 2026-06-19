@@ -1,19 +1,32 @@
-# Event Operations System v53
+# Event Operations System v54
 
-Base: v52
+Base: v53
+
+## Full design polish
+
+Sitewide design polish across all modules:
+- Dashboard
+- Event Planner
+- Artist Booking
+- Artist Management
+- Calendar / Schedule
+- Bar Planner
+- Project Management
 
 Changes:
-- Project Management boards now stack vertically.
-- Pending, Doing, Done and Archived columns are full-width sections.
-- Each task is full-width inside its board.
-- Task status is now changed with a dropdown instead of four buttons.
-- Removed the top Open tasks pill from Project Management.
-- Reduced nested-card feeling in the task board.
-- Task settings modal no longer scrolls horizontally.
-- Modal content is constrained to viewport width on mobile.
-- Kept task settings fields from v52:
-  - deadline
-  - responsible
-  - notes
-  - images
-  - subtasks
+- tightened mobile spacing across the whole app
+- reduced heavy nested-card feeling
+- improved shared typography consistency
+- improved label/title rhythm
+- cleaned up buttons and inputs
+- made cards calmer and more consistent
+- improved compact summary styling
+- improved Bar Planner card spacing
+- improved Calendar collapsible card styling
+- improved Project Management task board and modal styling
+- added stronger overflow protection across pages
+- improved mobile-safe card radii and touch targets
+- kept v53 Project Management mobile cleanup intact
+
+Build validation:
+- `npm run build` passed.
