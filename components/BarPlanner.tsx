@@ -171,6 +171,29 @@ export default function BarPlanner() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [copied, setCopied] = useState(false);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    products: true,
+    staff: false,
+    menu: false,
+    notes: false
+  });
+  const [openProducts, setOpenProducts] = useState<Record<string, boolean>>({});
+
+  function toggleSection(section: string) {
+    setOpenSections((current) => ({ ...current, [section]: !current[section] }));
+  }
+
+  function isSectionOpen(section: string) {
+    return openSections[section] !== false;
+  }
+
+  function toggleProductCard(id: string) {
+    setOpenProducts((current) => ({ ...current, [id]: !(current[id] ?? false) }));
+  }
+
+  function isProductOpen(id: string) {
+    return openProducts[id] ?? false;
+  }
 
   const activeEvent = events.find((event) => event.id === activeEventId) || events[0];
 
@@ -233,7 +256,10 @@ export default function BarPlanner() {
   }
 
   function addProduct() {
-    setPlan((current) => ({ ...current, products: [...current.products, blankProduct()] }));
+    const product = blankProduct();
+    setPlan((current) => ({ ...current, products: [...current.products, product] }));
+    setOpenProducts((current) => ({ ...current, [product.id]: true }));
+    setOpenSections((current) => ({ ...current, products: true }));
   }
 
   function removeProduct(id: string) {
@@ -408,16 +434,17 @@ export default function BarPlanner() {
         )}
 
         <section className="bar-module-grid">
-          <div className="bar-panel passport-card">
-            <div className="bar-panel-head">
-              <div>
-                <p className="system-kicker">v37</p>
-                <h2>Products</h2>
-              </div>
+          <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('products') ? 'is-open' : 'is-collapsed'}`}>
+            <div className="bar-panel-head bar-collapsible-head">
+              <button type="button" className="bar-section-toggle" onClick={() => toggleSection('products')}>
+                <span>Products</span>
+                <em>{isSectionOpen('products') ? '−' : '+'}</em>
+              </button>
               <button onClick={addProduct}>Add product</button>
             </div>
 
-            <div className="bar-product-list">
+            {isSectionOpen('products') && (
+              <div className="bar-product-list">
               {plan.products.map((product) => {
                 const revenue = number(product.sellPrice) * number(product.expectedQty);
                 const cost = number(product.buyPrice) * number(product.expectedQty);
@@ -425,7 +452,15 @@ export default function BarPlanner() {
                 const margin = revenue ? (profit / revenue) * 100 : 0;
 
                 return (
-                  <article key={product.id} className="bar-product-card">
+                  <article key={product.id} className={`bar-product-card bar-product-card-v50 ${isProductOpen(product.id) ? 'is-open' : 'is-collapsed'}`}>
+                    <button type="button" className="bar-product-collapse-head" onClick={() => toggleProductCard(product.id)}>
+                      <span>{product.name || 'Unnamed product'}</span>
+                      <small>{product.category} · {product.expectedQty || 0} qty</small>
+                      <em>{isProductOpen(product.id) ? '−' : '+'}</em>
+                    </button>
+
+                    {isProductOpen(product.id) && (
+                      <>
                     <div className="bar-product-top">
                       <input value={product.name} placeholder="Product name" onChange={(event) => patchProduct(product.id, { name: event.target.value })} />
                       <select value={product.category} onChange={(event) => patchProduct(product.id, { category: event.target.value as ProductCategory })}>
@@ -468,23 +503,27 @@ export default function BarPlanner() {
                       </label>
                       <button onClick={() => removeProduct(product.id)}>Remove</button>
                     </div>
+                      </>
+                    )}
                   </article>
                 );
               })}
-            </div>
+              </div>
+            )}
           </div>
 
           <div className="bar-side-stack">
-            <div className="bar-panel passport-card">
-              <div className="bar-panel-head">
-                <div>
-                  <p className="system-kicker">Staffing</p>
-                  <h2>Staff plan</h2>
-                </div>
+            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('staff') ? 'is-open' : 'is-collapsed'}`}>
+              <div className="bar-panel-head bar-collapsible-head">
+                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('staff')}>
+                  <span>Staff plan</span>
+                  <em>{isSectionOpen('staff') ? '−' : '+'}</em>
+                </button>
                 <button onClick={addStaffLine}>Add shift</button>
               </div>
 
-              <div className="bar-staff-list">
+              {isSectionOpen('staff') && (
+                <div className="bar-staff-list">
                 {plan.staff.map((line) => {
                   const hours = hoursBetween(line.startTime, line.endTime);
                   const cost = hours * line.hourlyWage * line.staffCount;
@@ -505,18 +544,21 @@ export default function BarPlanner() {
                     </article>
                   );
                 })}
-              </div>
+                </div>
+              )}
             </div>
 
-            <div className="bar-panel passport-card">
-              <div className="bar-panel-head">
-                <div>
-                  <p className="system-kicker">v38</p>
-                  <h2>Menu builder</h2>
-                </div>
+            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('menu') ? 'is-open' : 'is-collapsed'}`}>
+              <div className="bar-panel-head bar-collapsible-head">
+                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('menu')}>
+                  <span>Menu builder</span>
+                  <em>{isSectionOpen('menu') ? '−' : '+'}</em>
+                </button>
                 <button onClick={copyMenu}>{copied ? 'Copied' : 'Copy menu'}</button>
               </div>
 
+              {isSectionOpen('menu') && (
+                <>
               <div className="bar-menu-builder">
                 {plan.products.map((product) => (
                   <article key={product.id} className="bar-menu-edit-row">
@@ -551,22 +593,26 @@ export default function BarPlanner() {
                   </section>
                 ))}
               </div>
+                </>
+              )}
             </div>
 
-            <div className="bar-panel passport-card">
-              <div className="bar-panel-head">
-                <div>
-                  <p className="system-kicker">Notes</p>
-                  <h2>Bar notes</h2>
-                </div>
+            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('notes') ? 'is-open' : 'is-collapsed'}`}>
+              <div className="bar-panel-head bar-collapsible-head">
+                <button type="button" className="bar-section-toggle" onClick={() => toggleSection('notes')}>
+                  <span>Bar notes</span>
+                  <em>{isSectionOpen('notes') ? '−' : '+'}</em>
+                </button>
               </div>
-              <textarea
+              {isSectionOpen('notes') && (
+                <textarea
                 className="bar-notes"
                 rows={5}
                 value={plan.notes}
                 placeholder="Setup notes, service style, special stock, supplier notes..."
                 onChange={(event) => setPlan((current) => ({ ...current, notes: event.target.value }))}
               />
+              )}
             </div>
           </div>
         </section>

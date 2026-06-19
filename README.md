@@ -245,3 +245,8 @@ Artist Management now uses one compact low-emphasis summary strip instead of lar
 Project Management and Calendar / Schedule now use a shared compact summary strip.
 
 Bar Planner top metrics now explicitly inherit the shared design-system controls for labels, numbers, card radius and card padding.
+
+
+## v50 Bar Planner collapsible cards
+
+Bar Planner now has collapsible Products, Staff plan, Menu builder and Bar notes sections. Individual product cards are also collapsible and show only the product name when collapsed.
