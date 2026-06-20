@@ -1,47 +1,50 @@
-# Event Operations System Design System — v56 Ready
+# Event Operations System Design System — v60 Cleanup
 
-This build prepares the app for a full redesign.
+v60 is the cleaned design-system baseline.
 
-The goal is that the next redesign can be done mostly by changing tokens in one place instead of editing every module separately.
-
-## 1. Master tokens
-
-The current master tokens are at the end of `app/globals.css` under:
+The previous build had many accumulated CSS layers from v47–v59. v60 replaces that stacked override tail with one final clean layer in `app/globals.css`:
 
 ```css
-/* v56 DESIGN SYSTEM READY LAYER */
+/* v60 CLEAN DESIGN SYSTEM LAYER */
 ```
 
-Primary tokens:
+## Current result
+
+- The pill-app visual direction is preserved.
+- Functionality is unchanged.
+- Old module classes still work.
+- The design system is easier to change from one place.
+- CSS length was reduced.
+- `!important` usage was significantly reduced.
+
+## Primary token area
+
+Change the look of the whole app from the `:root` block inside the v60 layer.
+
+Important tokens:
 
 ```css
 --app-color-ink
---app-color-ink-rgb
 --app-color-paper
---app-color-paper-rgb
 --app-color-primary
 --app-color-on-primary
---app-color-surface
---app-color-surface-soft
---app-color-border
---app-color-border-strong
+--app-color-accent
+--app-color-on-accent
 
 --app-radius-card
 --app-radius-section
 --app-radius-field
 --app-radius-pill
 
---app-line-width
-
---app-space-1
---app-space-2
---app-space-3
---app-space-4
---app-space-5
---app-space-6
+--app-page-max
+--app-page-gap
+--app-card-pad
+--app-section-pad
 
 --app-title-size
+--app-title-weight
 --app-heading-size
+--app-heading-weight
 --app-label-size
 --app-body-size
 --app-number-size
@@ -50,23 +53,9 @@ Primary tokens:
 --app-field-height
 ```
 
-## 2. Legacy sync
+## Canonical classes for future JSX
 
-All older variables are now mapped to the master `--app-*` tokens:
-
-```css
---ds-*
---ink
---ink-rgb
---paper
---line
-```
-
-This means old modules should still work, but the redesign should start from `--app-*`.
-
-## 3. Canonical classes for future modules
-
-Use these for all new module UI:
+Use these for future modules and redesigned markup:
 
 ```css
 .ds-page
@@ -84,64 +73,101 @@ Use these for all new module UI:
 .ds-button-danger
 .ds-field
 .ds-invert
+.ds-accent
 .ds-compact-summary
 ```
 
-## 4. Existing module mapping
+## Legacy class support
 
-The v56 CSS maps existing module classes into the same controls, including:
-
-- Dashboard
-- Event Planner
-- Artist Booking
-- Artist Management
-- Calendar / Schedule
-- Bar Planner
-- Project Management
-
-Examples:
-
-```css
-.passport-card -> ds-card behavior
-.system-hero h1 -> ds-title behavior
-.booking-overview-card strong -> ds-number behavior
-input/select/textarea -> ds-field behavior
-top-nav-pill/passport-button -> ds-button behavior
-module-compact-summary -> ds-compact-summary behavior
-```
-
-## 5. Redesign process
-
-For the next big redesign:
-
-1. Change the master tokens first.
-2. Use `.ds-*` classes for any new or rewritten markup.
-3. Avoid writing new colors, font sizes, radii, or button styles inside module-specific CSS.
-4. Only use module-specific CSS for layout differences.
-
-## 6. Current deprecated classes
-
-These still work, but should not be used for new components:
+The following older classes are still mapped to the same design system:
 
 ```css
 .passport-card
-.booking-overview-card
+.system-shell
+.system-wrap
+.system-hero
 .system-kicker
-.top-nav-pill
 .passport-button
+.top-nav-pill
+.booking-overview-card
+.module-compact-summary
+.artist-compact-summary
+.bar-panel
+.project-panel
+.calendar-event-card
+artist-submission-card
 ```
 
-Use the `.ds-*` equivalents instead.
+These should not be used for new components. Use `.ds-*` classes instead.
+
+## Recommended agile workflow
+
+For fast redesigns:
+
+1. Change tokens first.
+2. Use `.ds-*` classes in new JSX.
+3. Avoid module-specific visual CSS unless it is layout-only.
+4. Keep module-specific selectors for layout structure only.
+5. Add visual design changes to the v60 layer, not scattered through old sections.
+
+## Known reality
+
+The old modules still contain old class names and some Tailwind utility classes. v60 makes them behave through the shared design layer, but a later JSX cleanup could still make the code cleaner.
 
 
-## v57 audit note
+## v61 module integration
 
-The Event Planner UI Studio now writes into the master `--app-*` token layer as well as the old fallback variables.
+v61 adds `.ds-*` classes directly to module JSX where practical and adds module identity classes:
 
-This means live design controls and future redesign tokens now point to the same places.
-
-A full readiness audit is available in:
-
-```txt
-DESIGN_AUDIT.md
+```css
+.module-dashboard
+.module-event-planner
+.module-artist-booking
+.module-artist-management
+.module-calendar
+.module-bar-planner
+.module-project-management
 ```
+
+Shared patterns now explicitly cover:
+
+```css
+.ds-hero
+.ds-card
+.ds-section
+.ds-module-grid
+.ds-module-card
+.ds-stat-grid
+.ds-compact-summary
+```
+
+Existing legacy module classes are still supported, but all modules now have a clearer path into the canonical design system.
+
+
+## v61 module integration
+
+v61 adds `.ds-*` classes directly to module JSX where practical and adds module identity classes:
+
+```css
+.module-dashboard
+.module-event-planner
+.module-artist-booking
+.module-artist-management
+.module-calendar
+.module-bar-planner
+.module-project-management
+```
+
+Shared patterns now explicitly cover:
+
+```css
+.ds-hero
+.ds-card
+.ds-section
+.ds-module-grid
+.ds-module-card
+.ds-stat-grid
+.ds-compact-summary
+```
+
+Existing legacy module classes are still supported, but all modules now have a clearer path into the canonical design system.

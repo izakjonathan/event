@@ -171,8 +171,8 @@ export default function EventCalendar() {
   const totalWarnings = events.reduce((sum, event) => sum + eventWarnings(event).length, 0);
 
   return (
-    <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
+    <main className="ds-page module-calendar system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="ds-wrap system-wrap">
         <div className="calendar-top-nav">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
@@ -192,7 +192,7 @@ export default function EventCalendar() {
           </button>
         </div>
 
-        <section className="system-hero passport-card">
+        <section className="ds-card ds-hero system-hero passport-card">
           <div>
             <p className="system-kicker">Calendar / schedule</p>
             <h1>Event schedule</h1>
@@ -202,7 +202,7 @@ export default function EventCalendar() {
           </div>
         </section>
 
-        <section className="module-compact-summary calendar-compact-summary passport-card">
+        <section className="ds-compact-summary module-compact-summary calendar-compact-summary passport-card">
           <div>
             <span>Events</span>
             <strong>{events.length}</strong>
@@ -235,7 +235,7 @@ export default function EventCalendar() {
             const timeText = [meta.time, meta.endTime].filter(Boolean).join(' – ');
 
             return (
-              <article key={event.id} className={`calendar-event-card calendar-event-card-v51 passport-card ${isEventOpen(event.id) ? 'is-open' : 'is-collapsed'}`}>
+              <article key={event.id} className={`ds-card calendar-event-card calendar-event-card-v51 passport-card ${isEventOpen(event.id) ? 'is-open' : 'is-collapsed'}`}>
                 <button type="button" className="calendar-collapse-head" onClick={() => toggleEventCard(event.id)}>
                   <div className="calendar-date-block">
                     <span>{date ? shortDate(date) : '—'}</span>

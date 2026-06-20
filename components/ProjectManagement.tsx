@@ -351,8 +351,8 @@ export default function ProjectManagement() {
   }, [tasks, activeProject]);
 
   return (
-    <main className="system-shell project-page project-page-v52 no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
+    <main className="ds-page module-project-management system-shell project-page project-page-v52 no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="ds-wrap system-wrap">
         <div className="project-top-nav">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
@@ -368,7 +368,7 @@ export default function ProjectManagement() {
           </button>
         </div>
 
-        <section className="project-hero project-hero-no-pill passport-card">
+        <section className="ds-card ds-hero project-hero project-hero-no-pill passport-card">
           <div>
             <p className="system-kicker">Project Management</p>
             <h1>Tasks</h1>
@@ -379,7 +379,7 @@ export default function ProjectManagement() {
         {message && <div className="artist-message">{message}</div>}
         {loading && <div className="artist-message">Loading project management…</div>}
 
-        <section className="module-compact-summary project-compact-summary passport-card">
+        <section className="ds-compact-summary module-compact-summary project-compact-summary passport-card">
           <div><span>Pending</span><strong>{taskCounts.pending || 0}</strong></div>
           <div><span>Doing</span><strong>{taskCounts.doing || 0}</strong></div>
           <div><span>Done</span><strong>{taskCounts.done || 0}</strong></div>
@@ -393,7 +393,7 @@ export default function ProjectManagement() {
         )}
 
         <section className="project-layout project-layout-v52">
-          <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('projectList') ? 'is-open' : 'is-collapsed'}`}>
+          <div className={`ds-card project-panel project-collapsible-panel passport-card ${isSectionOpen('projectList') ? 'is-open' : 'is-collapsed'}`}>
             <div className="project-panel-head project-collapsible-head">
               <div className="project-section-title">Projects</div>
               <button onClick={createProject}>Add project</button>
@@ -421,7 +421,7 @@ export default function ProjectManagement() {
           </div>
 
           <div className="project-main-stack">
-            <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('taskBoard') ? 'is-open' : 'is-collapsed'}`}>
+            <div className={`ds-card project-panel project-collapsible-panel passport-card ${isSectionOpen('taskBoard') ? 'is-open' : 'is-collapsed'}`}>
               <div className="project-panel-head project-collapsible-head">
                 <div className="project-section-title">Task board</div>
                 <button onClick={startNewTask}>Add task</button>
@@ -436,7 +436,7 @@ export default function ProjectManagement() {
                     <section key={status} className={`task-column task-column-${status}`}>
                       <h3>{nice(status)} <span>{projectTasks.filter((task) => task.status === status).length}</span></h3>
                       {projectTasks.filter((task) => task.status === status).map((task) => (
-                        <article key={task.id} className={`task-card task-card-v52 task-status-${task.status}`}>
+                        <article key={task.id} className={`ds-section task-card task-card-v52 task-status-${task.status}`}>
                           <div className="task-simple-row">
                             <button type="button" className={`task-check ${task.status === 'done' ? 'checked' : ''}`} onClick={() => completeTask(task)} aria-label="Complete task" />
                             <button type="button" className="task-simple-main" onClick={() => setEditingTask(task)}>
@@ -467,7 +467,7 @@ export default function ProjectManagement() {
             </div>
 
             {activeProject && (
-              <div className={`project-panel project-collapsible-panel passport-card ${isSectionOpen('projectDetails') ? 'is-open' : 'is-collapsed'}`}>
+              <div className={`ds-card project-panel project-collapsible-panel passport-card ${isSectionOpen('projectDetails') ? 'is-open' : 'is-collapsed'}`}>
                 <div className="project-panel-head project-collapsible-head">
                   <div className="project-section-title">{activeProject.title}</div>
                   <div className="project-panel-actions">
@@ -530,7 +530,7 @@ export default function ProjectManagement() {
 
       {editingTask && (
         <div className="task-settings-backdrop">
-          <section className="task-settings-modal passport-card">
+          <section className="ds-card task-settings-modal passport-card">
             <div className="task-settings-head">
               <div>
                 <p className="system-kicker">Task settings</p>
@@ -591,7 +591,7 @@ export default function ProjectManagement() {
               <textarea rows={4} value={editingTask.notes} placeholder="Notes, context, links, reminders..." onChange={(event) => patchEditingTask({ notes: event.target.value })} />
             </label>
 
-            <div className="task-settings-section">
+            <div className="ds-section task-settings-section">
               <div className="task-settings-section-head">
                 <span>Subtasks</span>
                 <strong>{editingTask.checklist.length}</strong>
@@ -610,7 +610,7 @@ export default function ProjectManagement() {
               </div>
             </div>
 
-            <div className="task-settings-section">
+            <div className="ds-section task-settings-section">
               <div className="task-settings-section-head">
                 <span>Images</span>
                 <strong>{(editingTask.image_urls || []).length}</strong>

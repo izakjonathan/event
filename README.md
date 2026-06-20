@@ -341,3 +341,46 @@ Functionality is unchanged.
 A review found that the v58 redesign CSS was missing from `app/globals.css`.
 
 v59 fixes this by adding the verified pill-app redesign layer to the actual CSS source.
+
+
+## v60 Design System Cleanup
+
+v60 is the cleaned design-system baseline.
+
+The accumulated v47–v59 CSS override tail has been replaced with one cleaner final v60 design-system layer.
+
+The pill-app redesign remains active, but the CSS is now easier to change from one place.
+
+
+## v61 Unified Module Design System Integration
+
+All modules are now integrated into the same design-system expression.
+
+The build adds `.ds-*` classes to module JSX where practical and applies unified styling for:
+- top navigation
+- heroes
+- cards
+- sections
+- compact summaries
+- stats
+- collapsible headers
+- fields
+- buttons
+- list cards
+
+
+## v61 Unified Module Design System Integration
+
+All modules are now integrated into the same design-system expression.
+
+The build adds `.ds-*` classes to module JSX where practical and applies unified styling for:
+- top navigation
+- heroes
+- cards
+- sections
+- compact summaries
+- stats
+- collapsible headers
+- fields
+- buttons
+- list cards

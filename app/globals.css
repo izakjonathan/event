@@ -4551,2377 +4551,95 @@ main.no-callout{
 
 
 /* =========================================================
-   v47 SHARED DESIGN SYSTEM
-   Central controls for every module.
-   Change these tokens once and the whole system follows.
+   v60 CLEAN DESIGN SYSTEM LAYER
+   One final layer replaces the accumulated v47-v59 override stack.
+
+   Intent:
+   - one token source
+   - one visual expression
+   - old module classes mapped once
+   - function unchanged
+   - ready for agile redesign changes
    ========================================================= */
 
+/* 1. MASTER TOKENS */
 :root{
-  --ds-ink: #5c0701;
-  --ds-ink-rgb: 92 7 1;
-  --ds-paper: #f4efe3;
-  --ds-line: 1.5px;
-
-  --ds-page-max: 1040px;
-  --ds-page-gap: .8rem;
-
-  --ds-card-radius: 30px;
-  --ds-card-radius-sm: 22px;
-  --ds-card-padding: .85rem;
-  --ds-card-bg: rgb(255 255 255 / .075);
-  --ds-card-soft-bg: rgb(var(--ds-ink-rgb) / .018);
-
-  --ds-title-size: clamp(2.35rem, 11vw, 5rem);
-  --ds-title-line: .86;
-  --ds-title-spacing: -.075em;
-  --ds-title-weight: 900;
-
-  --ds-heading-size: clamp(1.45rem, 6vw, 2.1rem);
-  --ds-heading-line: .9;
-  --ds-heading-spacing: -.055em;
-  --ds-heading-weight: 900;
-
-  --ds-label-size: .64rem;
-  --ds-label-line: 1.05;
-  --ds-label-spacing: .15em;
-  --ds-label-weight: 900;
-  --ds-label-opacity: .66;
-
-  --ds-body-size: .98rem;
-  --ds-body-line: 1.34;
-
-  --ds-number-size: clamp(1.75rem, 8vw, 3.15rem);
-  --ds-number-line: .88;
-  --ds-number-spacing: -.065em;
-  --ds-number-weight: 900;
-
-  --ds-pill-height: 46px;
-  --ds-pill-radius: 999px;
-  --ds-pill-padding-x: .65rem;
-
-  --ds-field-height: 52px;
-  --ds-field-radius: 18px;
-  --ds-field-padding-y: .66rem;
-  --ds-field-padding-x: .72rem;
-
-  --ds-gap-xs: .35rem;
-  --ds-gap-sm: .55rem;
-  --ds-gap-md: .75rem;
-  --ds-gap-lg: .95rem;
-}
-
-/* Keep legacy variables synced with design system tokens */
-:root{
-  --ink: var(--ds-ink);
-  --ink-rgb: var(--ds-ink-rgb);
-  --paper: var(--ds-paper);
-  --line: var(--ds-line);
-
-  --heading-size: 1;
-  --heading-weight: var(--ds-heading-weight);
-  --heading-letter-spacing: var(--ds-heading-spacing);
-  --heading-line-height: var(--ds-heading-line);
-
-  --label-size: 1;
-  --label-weight: var(--ds-label-weight);
-  --label-letter-spacing: var(--ds-label-spacing);
-  --label-line-height: var(--ds-label-line);
-
-  --number-size: 1;
-  --number-weight: var(--ds-number-weight);
-  --number-letter-spacing: var(--ds-number-spacing);
-  --number-line-height: var(--ds-number-line);
-
-  --body-size: 1;
-  --body-line-height: var(--ds-body-line);
-}
-
-/* Shared module page shell */
-.system-shell,
-.public-artist-page,
-.project-page,
-.bar-planner-page{
-  color: var(--ds-ink) !important;
-  background: var(--ds-paper) !important;
-}
-
-.system-wrap,
-.public-artist-wrap,
-.artist-public-wrap{
-  width: min(100%, var(--ds-page-max)) !important;
-  margin-inline: auto !important;
-  display: grid !important;
-  gap: var(--ds-page-gap) !important;
-}
-
-/* Shared cards */
-.passport-card,
-.system-card,
-.system-hero,
-.system-hero-card,
-.public-artist-hero,
-.artist-public-hero,
-.public-artist-form,
-.artist-form,
-.artist-form-public,
-.public-artist-section,
-.artist-form-section,
-.bar-forecast-card,
-.bar-panel,
-.calendar-event-card,
-.project-hero,
-.project-panel,
-.booking-overview-card,
-.booked-overview,
-.artist-submission-card,
-.artist-submission-card-v34,
-.project-status-pill,
-.system-status-pill,
-.bar-status-pill,
-.bar-profit-orb,
-.bar-meta-pill,
-.artist-info-section,
-.artist-meta-card,
-.bar-product-card,
-.bar-staff-card,
-.task-card,
-.task-column,
-.project-list-card{
-  border-color: var(--ds-ink) !important;
-}
-
-/* Shared main title behaviour */
-.system-hero h1,
-.system-hero-card h1,
-.project-hero h1,
-.public-artist-hero h1,
-.artist-public-hero h1,
-.bar-forecast-top-row h1{
-  font-weight: var(--ds-title-weight) !important;
-  letter-spacing: var(--ds-title-spacing) !important;
-}
-
-/* Shared section headings */
-.bar-panel-head h2,
-.project-panel-head h2,
-.booked-overview-head h2,
-.public-section-heading h2,
-.artist-section-title,
-.calendar-event-head h2{
-  font-weight: var(--ds-heading-weight) !important;
-  letter-spacing: var(--ds-heading-spacing) !important;
-}
-
-/* Shared labels across modules */
-.system-kicker,
-.public-artist-kicker,
-.booking-overview-card span,
-.project-status-pill span,
-.system-status-pill span,
-.bar-status-pill span,
-.bar-profit-orb span,
-.bar-profit-orb em,
-.bar-meta-pill span,
-.bar-event-selector-inline label span,
-.artist-data-grid span,
-.artist-meta-card span,
-.artist-add-field > span,
-.artist-field span,
-.public-artist-field span,
-.project-field span,
-.task-field-grid span,
-.bar-product-fields span,
-.bar-staff-fields span,
-.bar-menu-edit-row span,
-.calendar-meta-row span,
-.calendar-warning-row span{
-  font-size: var(--ds-label-size) !important;
-  line-height: var(--ds-label-line) !important;
-  font-weight: var(--ds-label-weight) !important;
-  letter-spacing: var(--ds-label-spacing) !important;
-}
-
-/* Shared top nav pills */
-.top-nav-pill,
-.passport-button,
-.back-pill,
-.project-panel-head button,
-.project-panel-actions button,
-.task-card-footer button,
-.bar-panel-head button,
-.bar-product-actions button,
-.bar-staff-total button,
-.calendar-small-button,
-.artist-admin-actions button,
-.artist-add-event-box button{
-  border-radius: var(--ds-pill-radius) !important;
-}
-
-/* Shared form controls */
-input,
-select,
-textarea,
-.public-artist-field input,
-.public-artist-field textarea,
-.artist-field input,
-.artist-field textarea,
-.project-field input,
-.project-field select,
-.project-field textarea,
-.task-card input,
-.task-card select,
-.task-card textarea,
-.bar-product-card input,
-.bar-product-card select,
-.bar-staff-card input,
-.bar-menu-edit-row textarea,
-.bar-notes,
-.artist-add-field select,
-.artist-add-field input{
-  border-color: rgb(var(--ds-ink-rgb) / .24) !important;
-  color: var(--ds-ink) !important;
-}
-
-/* Shared money style */
-.money-inline{
-  display: inline-flex;
-  align-items: baseline;
-  gap: .14em;
-}
-
-.money-number{
-  font-weight: var(--ds-number-weight);
-  color: var(--ds-ink);
-}
-
-.money-currency{
-  font-weight: 400;
-  opacity: .62;
-  color: var(--ds-ink);
-}
-
-/* Optional shared utility classes for all future modules */
-.ds-page{ color:var(--ds-ink); background:var(--ds-paper); }
-.ds-wrap{ width:min(100%, var(--ds-page-max)); margin-inline:auto; display:grid; gap:var(--ds-page-gap); }
-.ds-card{ border:var(--ds-line) solid var(--ds-ink); border-radius:var(--ds-card-radius); padding:var(--ds-card-padding); background:var(--ds-card-bg); }
-.ds-section{ border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .18); border-radius:var(--ds-card-radius-sm); padding:var(--ds-card-padding); background:var(--ds-card-soft-bg); }
-.ds-title{ margin:0; font-size:var(--ds-title-size); line-height:var(--ds-title-line); letter-spacing:var(--ds-title-spacing); font-weight:var(--ds-title-weight); }
-.ds-heading{ margin:0; font-size:var(--ds-heading-size); line-height:var(--ds-heading-line); letter-spacing:var(--ds-heading-spacing); font-weight:var(--ds-heading-weight); }
-.ds-label{ font-size:var(--ds-label-size); line-height:var(--ds-label-line); letter-spacing:var(--ds-label-spacing); font-weight:var(--ds-label-weight); text-transform:uppercase; opacity:var(--ds-label-opacity); }
-.ds-body{ font-size:var(--ds-body-size); line-height:var(--ds-body-line); }
-.ds-number{ font-size:var(--ds-number-size); line-height:var(--ds-number-line); letter-spacing:var(--ds-number-spacing); font-weight:var(--ds-number-weight); }
-.ds-pill{ min-height:var(--ds-pill-height); border-radius:var(--ds-pill-radius); padding-inline:var(--ds-pill-padding-x); }
-.ds-field{ min-height:var(--ds-field-height); border-radius:var(--ds-field-radius); padding:var(--ds-field-padding-y) var(--ds-field-padding-x); }
-
-@media (max-width:520px){
-  :root{
-    --ds-page-gap: .72rem;
-    --ds-card-radius: 28px;
-    --ds-card-radius-sm: 22px;
-    --ds-card-padding: .72rem;
-    --ds-title-size: clamp(2.25rem, 11vw, 3.35rem);
-    --ds-number-size: clamp(1.55rem, 7vw, 2.25rem);
-    --ds-pill-height: 42px;
-    --ds-field-height: 50px;
-  }
-}
-
-/* v47 cleanup: make common module summary cards obey shared design values */
-.booking-overview-card{
-  border-radius: var(--ds-card-radius-sm) !important;
-  padding: var(--ds-card-padding) !important;
-}
-
-.booking-overview-card strong{
-  color: var(--ds-ink) !important;
-  opacity: 1 !important;
-}
-
-/* v47 cleanup: stable product total cards */
-.bar-planner-page .bar-product-total-card{
-  border-radius: var(--ds-card-radius-sm) !important;
-}
-
-.bar-planner-page .bar-product-total-card > span:first-child{
-  font-size: var(--ds-label-size) !important;
-  line-height: var(--ds-label-line) !important;
-  letter-spacing: var(--ds-label-spacing) !important;
-}
-
-.bar-planner-page .bar-product-total-card > strong{
-  color: var(--ds-ink) !important;
-  font-weight: var(--ds-number-weight) !important;
-}
-
-
-/* v48 Artist Management compact summary */
-.artist-compact-summary{
-  border-radius:22px !important;
-  padding:.55rem .65rem !important;
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:.35rem !important;
-  background:rgb(var(--ds-ink-rgb) / .018) !important;
-  border-color:rgb(var(--ds-ink-rgb) / .22) !important;
-}
-
-.artist-compact-summary > div{
-  min-width:0 !important;
-  display:grid !important;
-  gap:.18rem !important;
-  align-content:center !important;
-  padding:.18rem .28rem !important;
-  border-right:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .14) !important;
-}
-
-.artist-compact-summary > div:last-child{
-  border-right:0 !important;
-}
-
-.artist-compact-summary span{
-  display:block !important;
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.52rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:.13em !important;
-  text-transform:uppercase !important;
-  opacity:.56 !important;
-}
-
-.artist-compact-summary strong{
-  display:block !important;
-  font-size:1.05rem !important;
-  line-height:.9 !important;
-  font-weight:900 !important;
-  letter-spacing:-.04em !important;
-  color:var(--ds-ink) !important;
-  opacity:1 !important;
-}
-
-.artist-management-top-nav + .system-hero + .artist-compact-summary{
-  margin-top:-.15rem !important;
-}
-
-@media (max-width:430px){
-  .artist-compact-summary{
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    gap:.18rem !important;
-    padding:.48rem .5rem !important;
-    border-radius:20px !important;
-  }
-
-  .artist-compact-summary > div{
-    padding:.12rem .18rem !important;
-  }
-
-  .artist-compact-summary span{
-    font-size:.46rem !important;
-    letter-spacing:.1em !important;
-  }
-
-  .artist-compact-summary strong{
-    font-size:.92rem !important;
-  }
-}
-
-
-/* v49 shared compact summary strip for secondary module metrics */
-.module-compact-summary{
-  border-radius:22px !important;
-  padding:.55rem .65rem !important;
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:.35rem !important;
-  background:rgb(var(--ds-ink-rgb) / .018) !important;
-  border-color:rgb(var(--ds-ink-rgb) / .22) !important;
-}
-
-.module-compact-summary > div{
-  min-width:0 !important;
-  display:grid !important;
-  gap:.18rem !important;
-  align-content:center !important;
-  padding:.18rem .28rem !important;
-  border-right:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .14) !important;
-}
-
-.module-compact-summary > div:last-child{
-  border-right:0 !important;
-}
-
-.module-compact-summary span{
-  display:block !important;
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:calc(var(--ds-label-size) * .82) !important;
-  line-height:1 !important;
-  font-weight:var(--ds-label-weight) !important;
-  letter-spacing:calc(var(--ds-label-spacing) * .82) !important;
-  text-transform:uppercase !important;
-  opacity:.56 !important;
-}
-
-.module-compact-summary strong{
-  display:block !important;
-  font-size:calc(var(--ds-number-size) * .42) !important;
-  line-height:.9 !important;
-  font-weight:var(--ds-number-weight) !important;
-  letter-spacing:calc(var(--ds-number-spacing) * .68) !important;
-  color:var(--ds-ink) !important;
-  opacity:1 !important;
-}
-
-.project-top-nav + .project-hero + .module-compact-summary,
-.calendar-top-nav + .system-hero + .module-compact-summary{
-  margin-top:-.15rem !important;
-}
-
-/* v49 Bar Planner top metrics tied to shared design-system controls */
-.bar-planner-page .bar-profit-orb,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card{
-  border-radius:var(--ds-card-radius-sm) !important;
-  padding:var(--ds-card-padding) !important;
-  border-width:var(--ds-line) !important;
-  border-color:var(--ds-ink) !important;
-  background:var(--ds-card-bg) !important;
-}
-
-.bar-planner-page .bar-profit-orb span,
-.bar-planner-page .bar-profit-orb em,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > span{
-  font-size:var(--ds-label-size) !important;
-  line-height:var(--ds-label-line) !important;
-  letter-spacing:var(--ds-label-spacing) !important;
-  font-weight:var(--ds-label-weight) !important;
-  color:var(--ds-ink) !important;
-  opacity:var(--ds-label-opacity) !important;
-}
-
-.bar-planner-page .bar-profit-orb strong,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong{
-  font-size:var(--ds-number-size) !important;
-  line-height:var(--ds-number-line) !important;
-  letter-spacing:var(--ds-number-spacing) !important;
-  font-weight:var(--ds-number-weight) !important;
-  color:var(--ds-ink) !important;
-  opacity:1 !important;
-}
-
-.bar-planner-page .bar-profit-orb strong .money-inline,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-inline{
-  display:inline-flex !important;
-  align-items:baseline !important;
-  gap:.14em !important;
-  font-size:inherit !important;
-  line-height:inherit !important;
-  letter-spacing:inherit !important;
-  font-weight:inherit !important;
-}
-
-.bar-planner-page .bar-profit-orb strong .money-number,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-number{
-  font-size:inherit !important;
-  line-height:inherit !important;
-  letter-spacing:inherit !important;
-  font-weight:var(--ds-number-weight) !important;
-  color:var(--ds-ink) !important;
-  opacity:1 !important;
-}
-
-.bar-planner-page .bar-profit-orb strong .money-currency,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card > strong .money-currency{
-  font-size:.62em !important;
-  line-height:1 !important;
-  letter-spacing:.02em !important;
-  font-weight:400 !important;
-  color:var(--ds-ink) !important;
-  opacity:.62 !important;
-}
-
-@media (max-width:430px){
-  .module-compact-summary{
-    gap:.18rem !important;
-    padding:.48rem .5rem !important;
-    border-radius:20px !important;
-  }
-
-  .module-compact-summary > div{
-    padding:.12rem .18rem !important;
-  }
-
-  .module-compact-summary span{
-    font-size:calc(var(--ds-label-size) * .72) !important;
-    letter-spacing:calc(var(--ds-label-spacing) * .68) !important;
-  }
-
-  .module-compact-summary strong{
-    font-size:calc(var(--ds-number-size) * .42) !important;
-  }
-}
-
-
-/* v50 Bar Planner collapsible cards */
-.bar-collapsible-panel{
-  overflow:hidden !important;
-}
-
-.bar-collapsible-panel.is-collapsed{
-  gap:0 !important;
-}
-
-.bar-collapsible-head{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:.6rem !important;
-}
-
-.bar-section-toggle{
-  min-width:0 !important;
-  flex:1 1 auto !important;
-  border:0 !important;
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  padding:.15rem 0 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:.65rem !important;
-  text-align:left !important;
-}
-
-.bar-section-toggle span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:calc(var(--ds-heading-size) * .86) !important;
-  line-height:var(--ds-heading-line) !important;
-  letter-spacing:var(--ds-heading-spacing) !important;
-  font-weight:var(--ds-heading-weight) !important;
-  color:var(--ds-ink) !important;
-}
-
-.bar-section-toggle em,
-.bar-product-collapse-head em{
-  flex:0 0 auto !important;
-  width:2rem !important;
-  height:2rem !important;
-  display:grid !important;
-  place-items:center !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .22) !important;
-  border-radius:var(--ds-pill-radius) !important;
-  font-style:normal !important;
-  font-size:1.15rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  color:var(--ds-ink) !important;
-  background:rgb(var(--ds-ink-rgb) / .025) !important;
-}
-
-.bar-product-card-v50{
-  padding:.55rem !important;
-  border-radius:22px !important;
-}
-
-.bar-product-card-v50.is-collapsed{
-  gap:0 !important;
-}
-
-.bar-product-collapse-head{
-  width:100% !important;
-  min-width:0 !important;
-  border:0 !important;
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  padding:.2rem .05rem !important;
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto auto !important;
-  align-items:center !important;
-  gap:.55rem !important;
-  text-align:left !important;
-}
-
-.bar-product-collapse-head span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:1.1rem !important;
-  line-height:.95 !important;
-  letter-spacing:-.045em !important;
-  font-weight:900 !important;
-  color:var(--ds-ink) !important;
-}
-
-.bar-product-collapse-head small{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.62rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:.12em !important;
-  text-transform:uppercase !important;
-  color:rgb(var(--ds-ink-rgb) / .6) !important;
-}
-
-.bar-product-card-v50.is-open .bar-product-collapse-head{
-  border-bottom:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .13) !important;
-  padding-bottom:.58rem !important;
-  margin-bottom:.05rem !important;
-}
-
-.bar-product-card-v50.is-open .bar-product-top{
-  margin-top:.05rem !important;
-}
-
-@media (max-width:430px){
-  .bar-section-toggle span{
-    font-size:calc(var(--ds-heading-size) * .78) !important;
-  }
-
-  .bar-section-toggle em,
-  .bar-product-collapse-head em{
-    width:1.8rem !important;
-    height:1.8rem !important;
-    font-size:1.05rem !important;
-  }
-
-  .bar-product-collapse-head{
-    grid-template-columns:minmax(0,1fr) auto !important;
-  }
-
-  .bar-product-collapse-head small{
-    display:none !important;
-  }
-
-  .bar-product-collapse-head span{
-    font-size:1rem !important;
-  }
-}
-
-
-/* v51: shared furthest-right collapse controls */
-.bar-collapsible-head,
-.project-collapsible-head{
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto auto !important;
-  align-items:center !important;
-  gap:.55rem !important;
-}
-
-.bar-section-title,
-.project-section-title{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:calc(var(--ds-heading-size) * .86) !important;
-  line-height:var(--ds-heading-line) !important;
-  letter-spacing:var(--ds-heading-spacing) !important;
-  font-weight:var(--ds-heading-weight) !important;
-  color:var(--ds-ink) !important;
-}
-
-.bar-section-toggle-icon,
-.project-section-toggle-icon,
-.calendar-collapse-head > em,
-.task-collapse-head > em{
-  width:2rem !important;
-  height:2rem !important;
-  min-width:2rem !important;
-  min-height:2rem !important;
-  padding:0 !important;
-  display:grid !important;
-  place-items:center !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .22) !important;
-  border-radius:var(--ds-pill-radius) !important;
-  background:rgb(var(--ds-ink-rgb) / .025) !important;
-  color:var(--ds-ink) !important;
-  font-size:1.15rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  font-style:normal !important;
-}
-
-/* Override v50 title toggle layout: symbol is never inside the title button now */
-.bar-section-toggle{
-  display:none !important;
-}
-
-/* v51 Calendar collapsible cards */
-.calendar-event-card-v51{
-  display:grid !important;
-  gap:.65rem !important;
-}
-
-.calendar-event-card-v51.is-collapsed{
-  gap:0 !important;
-}
-
-.calendar-collapse-head{
-  width:100% !important;
-  min-width:0 !important;
-  border:0 !important;
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  padding:0 !important;
-  display:grid !important;
-  grid-template-columns:auto minmax(0,1fr) auto auto !important;
-  align-items:center !important;
-  gap:.65rem !important;
-  text-align:left !important;
-}
-
-.calendar-collapse-head .calendar-date-block{
-  margin:0 !important;
-  min-width:58px !important;
-}
-
-.calendar-collapse-title{
-  min-width:0 !important;
-  display:grid !important;
-  gap:.22rem !important;
-}
-
-.calendar-collapse-title span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:calc(var(--ds-label-size) * .86) !important;
-  line-height:1 !important;
-  font-weight:var(--ds-label-weight) !important;
-  letter-spacing:calc(var(--ds-label-spacing) * .82) !important;
-  text-transform:uppercase !important;
-  color:rgb(var(--ds-ink-rgb) / .62) !important;
-}
-
-.calendar-collapse-title strong{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:1.08rem !important;
-  line-height:.95 !important;
-  font-weight:900 !important;
-  letter-spacing:-.045em !important;
-  color:var(--ds-ink) !important;
-}
-
-.calendar-collapse-head > small{
-  min-width:0 !important;
-  max-width:9rem !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.64rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:.12em !important;
-  text-transform:uppercase !important;
-  color:rgb(var(--ds-ink-rgb) / .58) !important;
-}
-
-/* v51 Project Management collapsible panels and task cards */
-.project-collapsible-panel.is-collapsed{
-  gap:0 !important;
-}
-
-.task-card-v51{
-  padding:.55rem !important;
-  border-radius:18px !important;
-}
-
-.task-card-v51.is-collapsed{
-  gap:0 !important;
-}
-
-.task-collapse-head{
-  width:100% !important;
-  min-width:0 !important;
-  border:0 !important;
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  padding:.05rem 0 !important;
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto auto !important;
-  align-items:center !important;
-  gap:.5rem !important;
-  text-align:left !important;
-}
-
-.task-collapse-head span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:1rem !important;
-  line-height:.95 !important;
-  font-weight:900 !important;
-  letter-spacing:-.04em !important;
-  color:var(--ds-ink) !important;
-}
-
-.task-collapse-head small{
-  min-width:0 !important;
-  max-width:8rem !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.6rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:.1em !important;
-  text-transform:uppercase !important;
-  color:rgb(var(--ds-ink-rgb) / .58) !important;
-}
-
-.task-card-v51.is-open .task-collapse-head{
-  border-bottom:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .13) !important;
-  padding-bottom:.52rem !important;
-}
-
-@media (max-width:430px){
-  .bar-collapsible-head,
-  .project-collapsible-head{
-    grid-template-columns:minmax(0,1fr) auto auto !important;
-    gap:.4rem !important;
-  }
-
-  .bar-section-title,
-  .project-section-title{
-    font-size:calc(var(--ds-heading-size) * .78) !important;
-  }
-
-  .bar-section-toggle-icon,
-  .project-section-toggle-icon,
-  .calendar-collapse-head > em,
-  .task-collapse-head > em{
-    width:1.8rem !important;
-    height:1.8rem !important;
-    min-width:1.8rem !important;
-    min-height:1.8rem !important;
-    font-size:1.05rem !important;
-  }
-
-  .calendar-collapse-head{
-    grid-template-columns:auto minmax(0,1fr) auto !important;
-    gap:.5rem !important;
-  }
-
-  .calendar-collapse-head > small{
-    display:none !important;
-  }
-
-  .calendar-collapse-title strong{
-    font-size:1rem !important;
-  }
-
-  .task-collapse-head{
-    grid-template-columns:minmax(0,1fr) auto !important;
-  }
-
-  .task-collapse-head small{
-    display:none !important;
-  }
-}
-
-
-/* v52 Project Management: Apple Reminders + Trello board */
-.project-page-v52 .project-layout-v52{
-  grid-template-columns:minmax(230px,.28fr) minmax(0,1fr) !important;
-}
-
-.project-page-v52 .project-hero h1{
-  max-width:none !important;
-}
-
-.task-board-v52{
-  grid-template-columns:repeat(4,minmax(180px,1fr)) !important;
-  overflow-x:auto !important;
-  padding-bottom:.2rem !important;
-  scroll-snap-type:x proximity !important;
-}
-
-.task-board-v52 .task-column{
-  min-width:180px !important;
-  scroll-snap-align:start !important;
-}
-
-.task-card-v52{
-  gap:.45rem !important;
-  padding:.55rem !important;
-  border-radius:18px !important;
-  background:rgb(255 255 255 / .12) !important;
-}
-
-.task-simple-row{
-  display:grid !important;
-  grid-template-columns:auto minmax(0,1fr) !important;
-  align-items:start !important;
-  gap:.45rem !important;
-}
-
-.task-check{
-  width:1.35rem !important;
-  height:1.35rem !important;
-  min-width:1.35rem !important;
-  min-height:1.35rem !important;
-  margin-top:.1rem !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .42) !important;
-  border-radius:999px !important;
-  background:transparent !important;
-  padding:0 !important;
-}
-
-.task-check.checked{
-  background:var(--ds-ink) !important;
-  box-shadow:inset 0 0 0 4px var(--ds-paper) !important;
-}
-
-.task-simple-main{
-  min-width:0 !important;
-  border:0 !important;
-  background:transparent !important;
-  padding:0 !important;
-  color:var(--ds-ink) !important;
-  display:grid !important;
-  gap:.24rem !important;
-  text-align:left !important;
-}
-
-.task-simple-main strong{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.98rem !important;
-  line-height:1 !important;
-  letter-spacing:-.04em !important;
-  font-weight:900 !important;
-  color:var(--ds-ink) !important;
-}
-
-.task-simple-main span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.68rem !important;
-  line-height:1.15 !important;
-  font-weight:800 !important;
-  letter-spacing:-.01em !important;
-  color:rgb(var(--ds-ink-rgb) / .58) !important;
-}
-
-.task-quick-actions{
-  display:grid !important;
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:.28rem !important;
-}
-
-.task-quick-actions button{
-  min-height:30px !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .18) !important;
-  border-radius:999px !important;
-  background:rgb(var(--ds-ink-rgb) / .02) !important;
-  color:var(--ds-ink) !important;
-  padding:0 .36rem !important;
-  font-size:.58rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:.08em !important;
-  text-transform:uppercase !important;
-}
-
-.task-status-done .task-simple-main strong{
-  text-decoration:line-through !important;
-  opacity:.56 !important;
-}
-
-.task-status-archived{
-  opacity:.52 !important;
-}
-
-.task-settings-backdrop{
-  position:fixed !important;
-  inset:0 !important;
-  z-index:100 !important;
-  padding:calc(var(--safe-top) + .75rem) .75rem calc(var(--safe-bottom) + .75rem) !important;
-  background:rgb(22 14 12 / .42) !important;
-  backdrop-filter:blur(18px) !important;
-  display:grid !important;
-  place-items:center !important;
-}
-
-.task-settings-modal{
-  width:min(100%, 760px) !important;
-  max-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 1.5rem) !important;
-  overflow:auto !important;
-  border-radius:30px !important;
-  padding:.85rem !important;
-  display:grid !important;
-  gap:.75rem !important;
-  background:var(--ds-paper) !important;
-}
-
-.task-settings-head{
-  display:flex !important;
-  align-items:flex-start !important;
-  justify-content:space-between !important;
-  gap:.8rem !important;
-}
-
-.task-settings-head h2{
-  margin:0 !important;
-  font-size:clamp(1.65rem, 7vw, 2.65rem) !important;
-  line-height:.9 !important;
-  letter-spacing:-.06em !important;
-  font-weight:900 !important;
-}
-
-.task-settings-head button,
-.task-settings-actions button,
-.task-add-inline button,
-.subtask-row button,
-.task-image-row button{
-  border:var(--ds-line) solid var(--ds-ink) !important;
-  border-radius:999px !important;
-  background:rgb(var(--ds-ink-rgb) / .025) !important;
-  color:var(--ds-ink) !important;
-  min-height:36px !important;
-  padding:0 .72rem !important;
-  font-size:.72rem !important;
-  font-weight:900 !important;
-}
-
-.task-settings-section{
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .16) !important;
-  border-radius:22px !important;
-  padding:.65rem !important;
-  display:grid !important;
-  gap:.55rem !important;
-  background:rgb(var(--ds-ink-rgb) / .018) !important;
-}
-
-.task-settings-section-head{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:.55rem !important;
-}
-
-.task-settings-section-head span{
-  font-size:var(--ds-label-size) !important;
-  line-height:1 !important;
-  letter-spacing:var(--ds-label-spacing) !important;
-  text-transform:uppercase !important;
-  font-weight:900 !important;
-  opacity:.62 !important;
-}
-
-.task-settings-section-head strong{
-  font-size:.95rem !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-}
-
-.task-add-inline{
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto !important;
-  gap:.45rem !important;
-}
-
-.task-add-inline input{
-  min-width:0 !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .24) !important;
-  border-radius:18px !important;
-  background:rgb(255 255 255 / .22) !important;
-  padding:.64rem .7rem !important;
-  color:var(--ds-ink) !important;
-}
-
-.subtask-list,
-.task-image-list{
-  display:grid !important;
-  gap:.35rem !important;
-}
-
-.subtask-row,
-.task-image-row{
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto !important;
-  gap:.45rem !important;
-  align-items:center !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .13) !important;
-  border-radius:16px !important;
-  padding:.42rem !important;
-  background:rgb(255 255 255 / .12) !important;
-}
-
-.subtask-row span,
-.task-image-row span{
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:.82rem !important;
-  font-weight:800 !important;
-}
-
-.task-image-row{
-  grid-template-columns:42px minmax(0,1fr) auto !important;
-}
-
-.task-image-row img{
-  width:42px !important;
-  height:42px !important;
-  border-radius:12px !important;
-  object-fit:cover !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .14) !important;
-}
-
-.task-settings-actions{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
-  gap:.5rem !important;
-}
-
-.task-settings-actions button:last-child{
-  background:var(--ds-ink) !important;
-  color:var(--ds-paper) !important;
-}
-
-@media (max-width:860px){
-  .project-page-v52 .project-layout-v52{
-    grid-template-columns:1fr !important;
-  }
-
-  .task-board-v52{
-    grid-template-columns:repeat(4, minmax(220px, 72vw)) !important;
-  }
-}
-
-@media (max-width:430px){
-  .task-settings-backdrop{
-    padding:calc(var(--safe-top) + .45rem) .45rem calc(var(--safe-bottom) + .45rem) !important;
-    place-items:end center !important;
-  }
-
-  .task-settings-modal{
-    border-radius:28px !important;
-    padding:.72rem !important;
-  }
-
-  .task-board-v52{
-    grid-template-columns:repeat(4, minmax(210px, 82vw)) !important;
-  }
-
-  .task-quick-actions{
-    grid-template-columns:1fr 1fr !important;
-  }
-
-  .task-image-row{
-    grid-template-columns:34px minmax(0,1fr) !important;
-  }
-
-  .task-image-row img{
-    width:34px !important;
-    height:34px !important;
-  }
-
-  .task-image-row button{
-    grid-column:1 / -1 !important;
-  }
-}
-
-
-/* v53 Project Management mobile cleanup */
-.project-page-v52,
-.project-page-v52 *{
-  max-width:100% !important;
-  box-sizing:border-box !important;
-}
-
-.project-hero-no-pill{
-  grid-template-columns:1fr !important;
-}
-
-.project-hero-no-pill .project-status-pill{
-  display:none !important;
-}
-
-/* Boards are stacked vertically, not Trello-horizontal on mobile/system */
-.task-board-v52{
-  display:grid !important;
-  grid-template-columns:1fr !important;
-  gap:.65rem !important;
-  overflow-x:hidden !important;
-  padding-bottom:0 !important;
-  scroll-snap-type:none !important;
-}
-
-.task-board-v52 .task-column{
-  width:100% !important;
-  min-width:0 !important;
-  scroll-snap-align:none !important;
-  border-radius:22px !important;
-  padding:.55rem !important;
-  background:rgb(var(--ds-ink-rgb) / .012) !important;
-}
-
-/* Full width task cards, less nested card feeling */
-.task-card-v52{
-  width:100% !important;
-  border-radius:18px !important;
-  border-color:rgb(var(--ds-ink-rgb) / .16) !important;
-  background:transparent !important;
-  padding:.55rem 0 !important;
-  border-left:0 !important;
-  border-right:0 !important;
-  border-top:0 !important;
-  box-shadow:none !important;
-}
-
-.task-column .task-card-v52:last-child{
-  border-bottom:0 !important;
-}
-
-.task-simple-row{
-  width:100% !important;
-  grid-template-columns:auto minmax(0,1fr) !important;
-  gap:.55rem !important;
-  padding:0 .15rem !important;
-}
-
-.task-simple-main strong{
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  line-height:1.05 !important;
-}
-
-.task-simple-main span{
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-}
-
-.task-status-row{
-  margin-top:.42rem !important;
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto !important;
-  gap:.45rem !important;
-  align-items:end !important;
-  padding:0 .15rem !important;
-}
-
-.task-status-row label{
-  min-width:0 !important;
-  display:grid !important;
-  gap:.25rem !important;
-}
-
-.task-status-row label span{
-  font-size:calc(var(--ds-label-size) * .78) !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:calc(var(--ds-label-spacing) * .8) !important;
-  text-transform:uppercase !important;
-  opacity:.58 !important;
-}
-
-.task-status-row select{
-  width:100% !important;
-  min-width:0 !important;
-  min-height:40px !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .22) !important;
-  border-radius:999px !important;
-  background:rgb(255 255 255 / .18) !important;
-  color:var(--ds-ink) !important;
-  padding:0 .7rem !important;
-  font-size:.82rem !important;
-  font-weight:900 !important;
-}
-
-.task-status-row button{
-  min-height:40px !important;
-  border:var(--ds-line) solid rgb(var(--ds-ink-rgb) / .24) !important;
-  border-radius:999px !important;
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  padding:0 .75rem !important;
-  font-size:.78rem !important;
-  font-weight:900 !important;
-}
-
-/* Hide old all-buttons UI if any old CSS keeps it alive */
-.task-quick-actions{
-  display:none !important;
-}
-
-/* Modal cannot scroll horizontally */
-.task-settings-backdrop{
-  overflow:hidden !important;
-  padding:calc(var(--safe-top) + .45rem) .45rem calc(var(--safe-bottom) + .45rem) !important;
-}
-
-.task-settings-modal{
-  width:100% !important;
-  max-width:min(760px, calc(100vw - .9rem)) !important;
-  min-width:0 !important;
-  overflow-x:hidden !important;
-  overscroll-behavior:contain !important;
-}
-
-.task-settings-modal *{
-  min-width:0 !important;
-  max-width:100% !important;
-}
-
-.task-settings-head{
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto !important;
-}
-
-.task-settings-head h2{
-  max-width:100% !important;
-  overflow-wrap:anywhere !important;
-  word-break:normal !important;
-  font-size:clamp(1.55rem, 9vw, 2.3rem) !important;
-}
-
-.task-settings-modal .project-form-grid{
-  grid-template-columns:1fr !important;
-}
-
-.task-add-inline{
-  grid-template-columns:minmax(0,1fr) auto !important;
-}
-
-.task-image-row{
-  grid-template-columns:42px minmax(0,1fr) auto !important;
-}
-
-@media (max-width:640px){
-  .project-page-v52 .project-layout-v52{
-    grid-template-columns:1fr !important;
-  }
-
-  .project-page-v52 .project-panel{
-    border-radius:26px !important;
-    padding:.68rem !important;
-  }
-
-  .task-board-v52{
-    grid-template-columns:1fr !important;
-  }
-
-  .task-board-v52 .task-column{
-    min-width:0 !important;
-  }
-
-  .task-column h3{
-    font-size:.68rem !important;
-  }
-
-  .task-settings-modal{
-    border-radius:26px !important;
-    padding:.68rem !important;
-  }
-
-  .task-image-row{
-    grid-template-columns:34px minmax(0,1fr) !important;
-  }
-
-  .task-image-row button{
-    grid-column:1 / -1 !important;
-  }
-}
-
-/* More understated Project list/details panels */
-.project-page-v52 .project-list-card,
-.project-page-v52 .task-column{
-  box-shadow:none !important;
-}
-
-.project-page-v52 .project-collapsible-panel{
-  overflow:hidden !important;
-}
-
-
-/* =========================================================
-   v54 FULL SITE DESIGN POLISH
-   Global cleanup after v47 design-system refactor.
-   Goals:
-   - consistent mobile rhythm
-   - calmer cards
-   - less nested-card feeling
-   - better touch targets
-   - no horizontal overflow
-   - shared typography/field/button treatment
-   ========================================================= */
-
-:root{
-  --ds-page-gap:.72rem;
-  --ds-card-radius:28px;
-  --ds-card-radius-sm:20px;
-  --ds-card-padding:.78rem;
-  --ds-field-radius:17px;
-  --ds-field-height:50px;
-  --ds-pill-height:42px;
-  --ds-soft-line:rgb(var(--ds-ink-rgb) / .16);
-  --ds-mid-line:rgb(var(--ds-ink-rgb) / .24);
-  --ds-soft-fill:rgb(var(--ds-ink-rgb) / .015);
-  --ds-input-fill:rgb(255 255 255 / .20);
-}
-
-html,
-body{
-  overflow-x:hidden !important;
-  background:var(--ds-paper) !important;
-  color:var(--ds-ink) !important;
-}
-
-*,
-*::before,
-*::after{
-  box-sizing:border-box !important;
-}
-
-body{
-  -webkit-font-smoothing:antialiased;
-  text-rendering:geometricPrecision;
-}
-
-.system-shell,
-.public-artist-page,
-.project-page,
-.bar-planner-page{
-  width:100% !important;
-  max-width:100vw !important;
-  overflow-x:hidden !important;
-  padding-left:max(.62rem, env(safe-area-inset-left)) !important;
-  padding-right:max(.62rem, env(safe-area-inset-right)) !important;
-}
-
-.system-wrap,
-.public-artist-wrap,
-.artist-public-wrap{
-  max-width:var(--ds-page-max) !important;
-  gap:var(--ds-page-gap) !important;
-}
-
-/* Overall cards: thinner visual weight and consistent rhythm */
-.passport-card,
-.system-card,
-.system-hero,
-.system-hero-card,
-.public-artist-hero,
-.artist-public-hero,
-.public-artist-form,
-.artist-form,
-.artist-form-public,
-.public-artist-section,
-.artist-form-section,
-.bar-forecast-card,
-.bar-panel,
-.calendar-event-card,
-.project-hero,
-.project-panel,
-.booking-overview-card,
-.booked-overview,
-.artist-submission-card,
-.artist-submission-card-v34,
-.artist-info-section,
-.artist-meta-card,
-.bar-product-card,
-.bar-staff-card,
-.task-card,
-.task-column,
-.project-list-card{
-  border-width:var(--ds-line) !important;
-  border-color:var(--ds-soft-line) !important;
-  border-radius:var(--ds-card-radius) !important;
-  background:rgb(255 255 255 / .065) !important;
-  box-shadow:none !important;
-}
-
-/* Primary hero cards keep stronger border, but not oversized */
-.system-hero,
-.project-hero,
-.public-artist-hero,
-.artist-public-hero,
-.bar-forecast-card{
-  border-color:var(--ds-ink) !important;
-  padding:var(--ds-card-padding) !important;
-}
-
-/* Labels and headings: reduce shoutiness slightly across modules */
-.system-kicker,
-.public-artist-kicker,
-.ds-label,
-.booking-overview-card span,
-.module-compact-summary span,
-.artist-compact-summary span,
-.bar-product-fields span,
-.bar-staff-fields span,
-.project-field span,
-.task-field-grid span,
-.public-artist-field span,
-.artist-field span{
-  font-size:calc(var(--ds-label-size) * .92) !important;
-  letter-spacing:calc(var(--ds-label-spacing) * .88) !important;
-}
-
-/* Main big titles: prevent horizontal clipping */
-.system-hero h1,
-.project-hero h1,
-.public-artist-hero h1,
-.artist-public-hero h1,
-.bar-forecast-top-row h1{
-  max-width:100% !important;
-  overflow-wrap:normal !important;
-  word-break:normal !important;
-  text-wrap:balance !important;
-}
-
-/* Shared top navigation polish */
-.bar-top-nav,
-.project-top-nav,
-.calendar-top-nav,
-.artist-management-top-nav,
-.system-top-nav{
-  gap:.42rem !important;
-}
-
-.top-nav-pill,
-.passport-button{
-  min-height:var(--ds-pill-height) !important;
-  border-color:var(--ds-mid-line) !important;
-  background:rgb(255 255 255 / .12) !important;
-  box-shadow:none !important;
-  overflow:hidden !important;
-}
-
-.top-nav-pill span,
-.passport-button span{
-  font-size:7.5px !important;
-  letter-spacing:.12em !important;
-}
-
-.top-nav-pill strong,
-.passport-button strong{
-  font-size:12px !important;
-}
-
-/* Inputs/selects/textareas */
-input,
-select,
-textarea{
-  max-width:100% !important;
-  min-width:0 !important;
-  min-height:var(--ds-field-height) !important;
-  border-radius:var(--ds-field-radius) !important;
-  border-color:var(--ds-mid-line) !important;
-  background:var(--ds-input-fill) !important;
-  color:var(--ds-ink) !important;
-  box-shadow:none !important;
-}
-
-textarea{
-  line-height:1.24 !important;
-}
-
-input::placeholder,
-textarea::placeholder{
-  color:rgb(var(--ds-ink-rgb) / .36) !important;
-}
-
-/* Generic action buttons */
-button{
-  touch-action:manipulation;
-}
-
-.bar-panel-head button,
-.project-panel-head button,
-.project-panel-actions button,
-.task-status-row button,
-.task-settings-head button,
-.task-settings-actions button,
-.task-add-inline button,
-.subtask-row button,
-.task-image-row button,
-.calendar-small-button,
-.artist-admin-actions button,
-.artist-add-event-box button,
-.bar-product-actions button,
-.bar-staff-total button{
-  min-height:38px !important;
-  border-color:var(--ds-mid-line) !important;
-  background:rgb(255 255 255 / .10) !important;
-  color:var(--ds-ink) !important;
-  box-shadow:none !important;
-  font-weight:900 !important;
-}
-
-/* Compact summaries: one calmer shared style */
-.module-compact-summary,
-.artist-compact-summary{
-  border-color:var(--ds-soft-line) !important;
-  background:rgb(255 255 255 / .05) !important;
-  border-radius:20px !important;
-  padding:.48rem .55rem !important;
-}
-
-.module-compact-summary > div,
-.artist-compact-summary > div{
-  border-right-color:rgb(var(--ds-ink-rgb) / .12) !important;
-}
-
-.module-compact-summary strong,
-.artist-compact-summary strong{
-  font-size:1rem !important;
-}
-
-/* Dashboard polish */
-.system-grid,
-.module-grid{
-  gap:.72rem !important;
-}
-
-.system-module-card,
-.module-card,
-.system-card{
-  min-height:auto !important;
-}
-
-.system-module-card h2,
-.module-card h2{
-  line-height:.95 !important;
-}
-
-/* Artist Management */
-.artist-submission-card,
-.artist-submission-card-v34{
-  padding:.68rem !important;
-  gap:.65rem !important;
-}
-
-.artist-meta-cards{
-  gap:.45rem !important;
-}
-
-.artist-meta-card{
-  border-radius:18px !important;
-  padding:.55rem .6rem !important;
-  background:var(--ds-soft-fill) !important;
-}
-
-/* Artist booking public form */
-.artist-booking-scale-fixed .public-artist-hero,
-.artist-booking-scale-fixed .public-artist-form{
-  border-color:var(--ds-ink) !important;
-}
-
-.artist-booking-scale-fixed .public-artist-section,
-.artist-booking-scale-fixed .artist-form-section{
-  border-color:var(--ds-soft-line) !important;
-  background:var(--ds-soft-fill) !important;
-}
-
-/* Bar Planner */
-.bar-module-grid,
-.bar-side-stack,
-.bar-product-list,
-.bar-staff-list{
-  gap:.65rem !important;
-}
-
-.bar-panel{
-  padding:.68rem !important;
-}
-
-.bar-collapsible-head,
-.project-collapsible-head{
-  gap:.45rem !important;
-}
-
-.bar-section-title,
-.project-section-title{
-  font-size:calc(var(--ds-heading-size) * .80) !important;
-}
-
-.bar-product-card-v50{
-  border-color:var(--ds-soft-line) !important;
-  background:rgb(255 255 255 / .055) !important;
-}
-
-.bar-product-card-v50.is-open .bar-product-collapse-head,
-.task-card-v51.is-open .task-collapse-head{
-  border-bottom-color:rgb(var(--ds-ink-rgb) / .10) !important;
-}
-
-.bar-product-collapse-head span{
-  font-size:1rem !important;
-}
-
-.bar-product-total-card{
-  border-color:var(--ds-soft-line) !important;
-  background:var(--ds-soft-fill) !important;
-}
-
-.bar-product-total-card > strong{
-  font-size:clamp(1.2rem, 6vw, 1.7rem) !important;
-}
-
-/* Calendar */
-.calendar-event-card-v51{
-  padding:.62rem !important;
-  background:rgb(255 255 255 / .055) !important;
-}
-
-.calendar-collapse-head{
-  gap:.5rem !important;
-}
-
-.calendar-collapse-title strong{
-  font-size:1rem !important;
-}
-
-.calendar-date-block{
-  border-color:var(--ds-soft-line) !important;
-  background:var(--ds-soft-fill) !important;
-}
-
-/* Project Management */
-.project-page-v52 .project-panel{
-  border-color:var(--ds-soft-line) !important;
-  background:rgb(255 255 255 / .055) !important;
-}
-
-.project-page-v52 .project-list-card{
-  border-color:var(--ds-soft-line) !important;
-  background:var(--ds-soft-fill) !important;
-  padding:.55rem .62rem !important;
-}
-
-.task-board-v52 .task-column{
-  border-color:var(--ds-soft-line) !important;
-  background:rgb(255 255 255 / .045) !important;
-}
-
-.task-card-v52{
-  border-bottom-color:rgb(var(--ds-ink-rgb) / .12) !important;
-}
-
-.task-status-row select,
-.task-status-row button{
-  min-height:38px !important;
-}
-
-/* Task modal: cleaner and safer */
-.task-settings-backdrop{
-  overflow:hidden !important;
-}
-
-.task-settings-modal{
-  border-color:var(--ds-ink) !important;
-  background:var(--ds-paper) !important;
-  box-shadow:0 18px 70px rgb(0 0 0 / .18) !important;
-}
-
-.task-settings-section{
-  border-color:var(--ds-soft-line) !important;
-  background:var(--ds-soft-fill) !important;
-  border-radius:20px !important;
-}
-
-/* Avoid nested-card heaviness in lists */
-.project-page-v52 .task-column .task-card-v52,
-.bar-product-card-v50,
-.calendar-event-card-v51{
-  box-shadow:none !important;
-}
-
-/* Better scrollbars on web without affecting iOS */
-*{
-  scrollbar-width:thin;
-  scrollbar-color:rgb(var(--ds-ink-rgb) / .35) transparent;
-}
-
-::-webkit-scrollbar{
-  width:8px;
-  height:8px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:rgb(var(--ds-ink-rgb) / .28);
-  border-radius:999px;
-}
-
-::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-/* Mobile-specific polish */
-@media (max-width:640px){
-  :root{
-    --ds-page-gap:.62rem;
-    --ds-card-radius:26px;
-    --ds-card-radius-sm:18px;
-    --ds-card-padding:.68rem;
-    --ds-title-size:clamp(2.1rem, 10vw, 3.1rem);
-    --ds-heading-size:clamp(1.25rem, 5.8vw, 1.75rem);
-    --ds-label-size:.62rem;
-    --ds-number-size:clamp(1.35rem, 7vw, 2rem);
-  }
-
-  .system-shell,
-  .public-artist-page,
-  .project-page,
-  .bar-planner-page{
-    padding-left:.5rem !important;
-    padding-right:.5rem !important;
-  }
-
-  .system-wrap,
-  .public-artist-wrap,
-  .artist-public-wrap{
-    gap:.62rem !important;
-  }
-
-  .top-nav-pill,
-  .passport-button{
-    min-height:40px !important;
-    padding-left:.32rem !important;
-    padding-right:.32rem !important;
-  }
-
-  .top-nav-pill strong,
-  .passport-button strong{
-    font-size:11px !important;
-  }
-
-  .top-nav-pill span,
-  .passport-button span{
-    font-size:7px !important;
-  }
-
-  .system-hero,
-  .project-hero,
-  .public-artist-hero,
-  .artist-public-hero,
-  .bar-forecast-card,
-  .bar-panel,
-  .project-panel,
-  .calendar-event-card,
-  .artist-submission-card,
-  .artist-submission-card-v34{
-    border-radius:26px !important;
-    padding:.64rem !important;
-  }
-
-  .module-compact-summary,
-  .artist-compact-summary{
-    border-radius:18px !important;
-    padding:.42rem .46rem !important;
-  }
-
-  .module-compact-summary span,
-  .artist-compact-summary span{
-    font-size:.45rem !important;
-  }
-
-  .module-compact-summary strong,
-  .artist-compact-summary strong{
-    font-size:.9rem !important;
-  }
-
-  .bar-section-title,
-  .project-section-title{
-    font-size:1.25rem !important;
-  }
-
-  .bar-section-toggle-icon,
-  .project-section-toggle-icon,
-  .calendar-collapse-head > em,
-  .task-collapse-head > em{
-    width:1.72rem !important;
-    height:1.72rem !important;
-    min-width:1.72rem !important;
-    min-height:1.72rem !important;
-  }
-
-  input,
-  select,
-  textarea{
-    font-size:.96rem !important;
-  }
-
-  .calendar-collapse-head,
-  .bar-product-collapse-head,
-  .task-collapse-head{
-    gap:.42rem !important;
-  }
-
-  .task-settings-modal{
-    border-radius:25px !important;
-  }
-}
-
-/* Very small mobile screens */
-@media (max-width:380px){
-  .module-compact-summary,
-  .artist-compact-summary{
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    gap:.1rem !important;
-  }
-
-  .module-compact-summary > div,
-  .artist-compact-summary > div{
-    padding:.08rem .12rem !important;
-  }
-
-  .module-compact-summary span,
-  .artist-compact-summary span{
-    font-size:.4rem !important;
-    letter-spacing:.07em !important;
-  }
-
-  .module-compact-summary strong,
-  .artist-compact-summary strong{
-    font-size:.82rem !important;
-  }
-}
-
-
-/* =========================================================
-   v55 APP-LIKE NEGATIVE COLOR POLISH
-   Selectively uses red surfaces with beige text to create
-   stronger app hierarchy without making the UI too heavy.
-   ========================================================= */
-
-:root{
-  --ds-negative-bg:var(--ds-ink);
-  --ds-negative-text:var(--ds-paper);
-  --ds-negative-muted:rgb(244 239 227 / .68);
-  --ds-negative-line:rgb(244 239 227 / .22);
-  --ds-negative-soft:rgb(92 7 1 / .88);
-  --ds-positive-fill:rgb(244 239 227 / .12);
-}
-
-/* App-like selected / primary surfaces */
-.project-list-card.active,
-.artist-submission-card[data-selected="true"],
-.system-module-card:hover,
-.module-card:hover{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.project-list-card.active span,
-.project-list-card.active strong,
-.project-list-card.active em,
-.system-module-card:hover *,
-.module-card:hover *{
-  color:var(--ds-negative-text) !important;
-}
-
-/* Primary top actions */
-.project-top-nav button:last-child,
-.bar-top-nav button:last-child,
-.calendar-top-nav button:last-child,
-.artist-management-top-nav button:last-child,
-.system-top-nav button:last-child{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.project-top-nav button:last-child span,
-.project-top-nav button:last-child strong,
-.bar-top-nav button:last-child span,
-.bar-top-nav button:last-child strong,
-.calendar-top-nav button:last-child span,
-.calendar-top-nav button:last-child strong,
-.artist-management-top-nav button:last-child span,
-.artist-management-top-nav button:last-child strong,
-.system-top-nav button:last-child span,
-.system-top-nav button:last-child strong{
-  color:var(--ds-negative-text) !important;
-  opacity:1 !important;
-}
-
-/* Module add/save/copy actions: make the important button feel tappable */
-.bar-collapsible-head > button:not(.bar-section-toggle-icon),
-.project-collapsible-head > button:not(.project-section-toggle-icon),
-.project-panel-actions button:first-child,
-.bar-panel-head button:not(.bar-section-toggle-icon),
-.task-settings-actions button:last-child,
-.public-artist-submit,
-.artist-submit,
-.artist-add-event-box button,
-.artist-admin-actions button:first-child{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.bar-collapsible-head > button:not(.bar-section-toggle-icon),
-.project-collapsible-head > button:not(.project-section-toggle-icon),
-.project-panel-actions button:first-child,
-.bar-panel-head button:not(.bar-section-toggle-icon),
-.task-settings-actions button:last-child,
-.artist-add-event-box button{
-  box-shadow:0 5px 14px rgb(var(--ds-ink-rgb) / .10) !important;
-}
-
-/* Keep destructive / remove buttons outlined, not filled */
-.project-panel-actions button:last-child,
-.bar-product-actions button,
-.bar-staff-total button,
-.task-image-row button,
-.subtask-row button{
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-  border-color:var(--ds-ink) !important;
-  box-shadow:none !important;
-}
-
-/* Compact summary gets app-like dark accent when values are operational */
-.project-compact-summary,
-.calendar-compact-summary,
-.artist-compact-summary{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.project-compact-summary > div,
-.calendar-compact-summary > div,
-.artist-compact-summary > div{
-  border-right-color:var(--ds-negative-line) !important;
-}
-
-.project-compact-summary span,
-.calendar-compact-summary span,
-.artist-compact-summary span{
-  color:var(--ds-negative-muted) !important;
-  opacity:1 !important;
-}
-
-.project-compact-summary strong,
-.calendar-compact-summary strong,
-.artist-compact-summary strong{
-  color:var(--ds-negative-text) !important;
-}
-
-/* Status chips / warnings keep attention but feel app-native */
-.bar-warning-row span,
-.calendar-warning-row span{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-/* Calendar collapsed date tile can be dark for stronger scanability */
-.calendar-event-card-v51.is-collapsed .calendar-date-block,
-.calendar-collapse-head .calendar-date-block{
-  background:var(--ds-negative-bg) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.calendar-event-card-v51.is-collapsed .calendar-date-block span,
-.calendar-event-card-v51.is-collapsed .calendar-date-block em,
-.calendar-collapse-head .calendar-date-block span,
-.calendar-collapse-head .calendar-date-block em{
-  color:var(--ds-negative-text) !important;
-}
-
-/* Bar Planner top projected profit gets primary app tile treatment */
-.bar-planner-page .bar-profit-orb{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.bar-planner-page .bar-profit-orb span,
-.bar-planner-page .bar-profit-orb em,
-.bar-planner-page .bar-profit-orb strong,
-.bar-planner-page .bar-profit-orb .money-number,
-.bar-planner-page .bar-profit-orb .money-currency{
-  color:var(--ds-negative-text) !important;
-}
-
-.bar-planner-page .bar-profit-orb span,
-.bar-planner-page .bar-profit-orb em,
-.bar-planner-page .bar-profit-orb .money-currency{
-  opacity:.68 !important;
-}
-
-/* Bar Planner metric cards: keep light, but selected-looking on touch/hover */
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card{
-  transition:background .16s ease, color .16s ease, border-color .16s ease;
-}
-
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active span,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active strong,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active .money-number,
-.bar-planner-page .bar-summary-grid-v39 .booking-overview-card:active .money-currency{
-  color:var(--ds-negative-text) !important;
-}
-
-/* Project task status and completed state */
-.task-status-done{
-  background:rgb(var(--ds-ink-rgb) / .035) !important;
-}
-
-.task-check.checked{
-  background:var(--ds-negative-bg) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.task-status-row select{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.task-status-row select option{
-  background:var(--ds-paper);
-  color:var(--ds-ink);
-}
-
-.task-status-row button{
-  background:transparent !important;
-  color:var(--ds-ink) !important;
-}
-
-/* Task settings modal: header + save are more app-like */
-.task-settings-head button{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.task-settings-modal{
-  border-color:var(--ds-negative-bg) !important;
-}
-
-/* Artist Management: linked/add button primary */
-.artist-add-event-box button{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-/* Public form submit is proper app primary action */
-.artist-booking-scale-fixed .public-artist-submit,
-.artist-booking-scale-fixed .artist-submit{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-/* Collapse icon: fill when collapsed to make tap affordance clearer */
-.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
-.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
-.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em{
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-/* Product collapsed cards: dark left accent line for app card feel */
-.bar-product-card-v50,
-.task-card-v52,
-.calendar-event-card-v51{
-  position:relative !important;
-}
-
-.bar-product-card-v50::before,
-.task-card-v52::before,
-.calendar-event-card-v51::before{
-  content:"" !important;
-  position:absolute !important;
-  left:-1px !important;
-  top:14px !important;
-  bottom:14px !important;
-  width:4px !important;
-  border-radius:999px !important;
-  background:rgb(var(--ds-ink-rgb) / .18) !important;
-}
-
-.bar-product-card-v50.is-open::before,
-.task-card-v52.task-status-doing::before,
-.calendar-event-card-v51.is-open::before{
-  background:var(--ds-negative-bg) !important;
-}
-
-/* Dashboard: primary modules feel like app tiles */
-.system-module-card,
-.module-card{
-  transition:transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease;
-}
-
-.system-module-card:active,
-.module-card:active{
-  transform:scale(.992);
-  background:var(--ds-negative-bg) !important;
-  color:var(--ds-negative-text) !important;
-  border-color:var(--ds-negative-bg) !important;
-}
-
-.system-module-card:active *,
-.module-card:active *{
-  color:var(--ds-negative-text) !important;
-}
-
-/* Mobile polish for dark elements */
-@media (max-width:640px){
-  .project-compact-summary,
-  .calendar-compact-summary,
-  .artist-compact-summary{
-    padding:.46rem .5rem !important;
-  }
-
-  .bar-collapsible-head > button:not(.bar-section-toggle-icon),
-  .project-collapsible-head > button:not(.project-section-toggle-icon),
-  .bar-panel-head button:not(.bar-section-toggle-icon){
-    min-height:38px !important;
-    padding-inline:.68rem !important;
-  }
-
-  .task-status-row select{
-    min-height:38px !important;
-  }
-}
-
-
-
-/* =========================================================
-   v56 DESIGN SYSTEM READY LAYER
-   This is the redesign-prep layer.
-   Future full redesigns should change the tokens below first,
-   then only add layout-specific CSS where unavoidable.
-
-   Rule:
-   - tokens control appearance
-   - ds-* classes are canonical
-   - old module classes are mapped into the same controls
-   ========================================================= */
-
-/* 1. MASTER DESIGN TOKENS */
-:root{
-  /* Brand */
-  --app-color-ink:#5c0701;
-  --app-color-ink-rgb:92 7 1;
-  --app-color-paper:#f4efe3;
-  --app-color-paper-rgb:244 239 227;
-
-  /* Functional colors */
-  --app-color-primary:var(--app-color-ink);
-  --app-color-primary-rgb:var(--app-color-ink-rgb);
-  --app-color-on-primary:var(--app-color-paper);
-  --app-color-surface:rgb(255 255 255 / .065);
-  --app-color-surface-soft:rgb(var(--app-color-ink-rgb) / .018);
-  --app-color-surface-strong:rgb(var(--app-color-ink-rgb) / .045);
-  --app-color-border:rgb(var(--app-color-ink-rgb) / .18);
-  --app-color-border-strong:rgb(var(--app-color-ink-rgb) / .30);
-  --app-color-muted:rgb(var(--app-color-ink-rgb) / .62);
-
-  /* Radius */
-  --app-radius-page:0px;
-  --app-radius-card:28px;
-  --app-radius-section:22px;
-  --app-radius-field:18px;
+  /* color */
+  --app-color-ink:#101010;
+  --app-color-ink-rgb:16 16 16;
+  --app-color-paper:#fbfbf6;
+  --app-color-paper-rgb:251 251 246;
+  --app-color-primary:#101010;
+  --app-color-primary-rgb:16 16 16;
+  --app-color-on-primary:#fbfbf6;
+  --app-color-accent:#eef35b;
+  --app-color-accent-rgb:238 243 91;
+  --app-color-on-accent:#101010;
+  --app-color-surface:transparent;
+  --app-color-surface-soft:transparent;
+  --app-color-border:rgb(var(--app-color-ink-rgb) / .34);
+  --app-color-border-strong:rgb(var(--app-color-ink-rgb) / .56);
+  --app-color-muted:rgb(var(--app-color-ink-rgb) / .58);
+
+  /* shape */
+  --app-line-width:1.35px;
+  --app-radius-card:34px;
+  --app-radius-section:24px;
+  --app-radius-field:999px;
   --app-radius-pill:999px;
-  --app-radius-media:18px;
 
-  /* Lines */
-  --app-line-width:1.5px;
-  --app-line:var(--app-line-width) solid var(--app-color-border);
-  --app-line-strong:var(--app-line-width) solid var(--app-color-border-strong);
-  --app-line-primary:var(--app-line-width) solid var(--app-color-primary);
-
-  /* Spacing scale */
-  --app-space-1:.25rem;
-  --app-space-2:.4rem;
-  --app-space-3:.6rem;
-  --app-space-4:.8rem;
-  --app-space-5:1rem;
-  --app-space-6:1.25rem;
-  --app-page-gap:var(--app-space-4);
-  --app-card-pad:var(--app-space-4);
-  --app-section-pad:var(--app-space-3);
-
-  /* Layout */
-  --app-page-max:1040px;
+  /* layout */
+  --app-page-max:760px;
+  --app-page-gap:.78rem;
   --app-page-pad-x:.62rem;
   --app-page-pad-top:calc(var(--safe-top) + .65rem);
   --app-page-pad-bottom:calc(var(--safe-bottom) + 1.4rem);
+  --app-card-pad:1rem;
+  --app-section-pad:.7rem;
 
-  /* Typography */
-  --app-font-body:inherit;
-  --app-title-size:clamp(2.15rem, 10vw, 4.8rem);
-  --app-title-line:.86;
-  --app-title-tracking:-.075em;
-  --app-title-weight:900;
+  /* typography */
+  --app-font-body:var(--app-font, inherit);
+  --app-title-size:clamp(2.25rem, 11vw, 4.2rem);
+  --app-title-line:.94;
+  --app-title-tracking:-.055em;
+  --app-title-weight:430;
 
-  --app-heading-size:clamp(1.35rem, 6vw, 2rem);
-  --app-heading-line:.9;
-  --app-heading-tracking:-.055em;
-  --app-heading-weight:900;
+  --app-heading-size:clamp(1.35rem, 6.5vw, 2.1rem);
+  --app-heading-line:.96;
+  --app-heading-tracking:-.045em;
+  --app-heading-weight:650;
 
-  --app-label-size:.6rem;
+  --app-label-size:.62rem;
   --app-label-line:1.05;
-  --app-label-tracking:.13em;
-  --app-label-weight:900;
+  --app-label-tracking:.17em;
+  --app-label-weight:650;
   --app-label-case:uppercase;
 
-  --app-body-size:.96rem;
-  --app-body-line:1.34;
-  --app-body-weight:500;
+  --app-body-size:1rem;
+  --app-body-line:1.28;
+  --app-body-weight:400;
 
-  --app-number-size:clamp(1.4rem, 7vw, 2.6rem);
-  --app-number-line:.88;
-  --app-number-tracking:-.065em;
-  --app-number-weight:900;
+  --app-number-size:clamp(1.35rem, 7vw, 2.3rem);
+  --app-number-line:.92;
+  --app-number-tracking:-.04em;
+  --app-number-weight:520;
 
-  /* Controls */
-  --app-control-height:42px;
-  --app-field-height:50px;
-  --app-control-pad-x:.72rem;
-  --app-field-pad-y:.66rem;
-  --app-field-pad-x:.72rem;
+  /* controls */
+  --app-control-height:46px;
+  --app-field-height:52px;
+  --app-control-pad-x:1rem;
+  --app-field-pad-y:.64rem;
+  --app-field-pad-x:1rem;
 
-  /* Effects */
+  /* effects */
   --app-shadow:none;
-  --app-shadow-active:0 8px 24px rgb(var(--app-color-ink-rgb) / .10);
   --app-transition:160ms ease;
-}
 
-/* 2. LEGACY TOKEN SYNC
-   Existing module CSS still references --ds-* and older variables.
-   Keep them all wired to the master app tokens. */
-:root{
+  /* legacy sync */
+  --ink:var(--app-color-ink);
+  --ink-rgb:var(--app-color-ink-rgb);
+  --paper:var(--app-color-paper);
+  --line:var(--app-line-width);
   --ds-ink:var(--app-color-ink);
   --ds-ink-rgb:var(--app-color-ink-rgb);
   --ds-paper:var(--app-color-paper);
@@ -6945,7 +4663,7 @@ button{
   --ds-label-line:var(--app-label-line);
   --ds-label-spacing:var(--app-label-tracking);
   --ds-label-weight:var(--app-label-weight);
-  --ds-label-opacity:.62;
+  --ds-label-opacity:.58;
   --ds-body-size:var(--app-body-size);
   --ds-body-line:var(--app-body-line);
   --ds-number-size:var(--app-number-size);
@@ -6959,28 +4677,49 @@ button{
   --ds-field-radius:var(--app-radius-field);
   --ds-field-padding-y:var(--app-field-pad-y);
   --ds-field-padding-x:var(--app-field-pad-x);
-  --ds-gap-xs:var(--app-space-1);
-  --ds-gap-sm:var(--app-space-2);
-  --ds-gap-md:var(--app-space-3);
-  --ds-gap-lg:var(--app-space-4);
-  --ds-soft-line:var(--app-color-border);
-  --ds-mid-line:var(--app-color-border-strong);
-  --ds-soft-fill:var(--app-color-surface-soft);
-  --ds-input-fill:rgb(255 255 255 / .20);
   --ds-negative-bg:var(--app-color-primary);
   --ds-negative-text:var(--app-color-on-primary);
-  --ds-negative-muted:rgb(var(--app-color-paper-rgb) / .68);
-  --ds-negative-line:rgb(var(--app-color-paper-rgb) / .22);
-
-  --ink:var(--app-color-ink);
-  --ink-rgb:var(--app-color-ink-rgb);
-  --paper:var(--app-color-paper);
-  --line:var(--app-line-width);
 }
 
-/* 3. CANONICAL DESIGN SYSTEM CLASSES
-   Future JSX should use these first. */
-.ds-app,
+/* 2. BASE / SAFETY */
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  max-width:100vw;
+  overflow-x:hidden;
+  background:var(--app-color-paper);
+  color:var(--app-color-ink);
+}
+
+body{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+  font-family:var(--app-font-body);
+  letter-spacing:-.018em;
+}
+
+img,
+svg,
+video,
+canvas{
+  max-width:100%;
+}
+
+main,
+section,
+article,
+div,
+form,
+label{
+  min-width:0;
+}
+
+/* 3. PAGE + WRAP */
 .ds-page,
 .system-shell,
 .public-artist-page,
@@ -6991,28 +4730,23 @@ button{
   min-height:100dvh;
   overflow-x:hidden;
   color:var(--app-color-ink);
-  background:var(--app-color-paper);
-  font-family:var(--app-font-body);
-}
-
-.ds-page,
-.system-shell,
-.public-artist-page,
-.project-page,
-.bar-planner-page{
-  padding:var(--app-page-pad-top) max(var(--app-page-pad-x), env(safe-area-inset-left)) var(--app-page-pad-bottom) max(var(--app-page-pad-x), env(safe-area-inset-right)) !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgb(var(--app-color-accent-rgb) / .18), transparent 32%),
+    var(--app-color-paper);
+  padding:var(--app-page-pad-top) max(var(--app-page-pad-x), env(safe-area-inset-left)) var(--app-page-pad-bottom) max(var(--app-page-pad-x), env(safe-area-inset-right));
 }
 
 .ds-wrap,
 .system-wrap,
 .public-artist-wrap,
 .artist-public-wrap{
-  width:min(100%, var(--app-page-max)) !important;
-  margin-inline:auto !important;
-  display:grid !important;
-  gap:var(--app-page-gap) !important;
+  width:min(100%, var(--app-page-max));
+  margin-inline:auto;
+  display:grid;
+  gap:var(--app-page-gap);
 }
 
+/* 4. CARDS + SECTIONS */
 .ds-card,
 .passport-card,
 .system-card,
@@ -7031,13 +4765,15 @@ button{
 .booking-overview-card,
 .booked-overview,
 .artist-submission-card,
-.artist-submission-card-v34{
-  border:var(--app-line) !important;
-  border-radius:var(--app-radius-card) !important;
-  background:var(--app-color-surface) !important;
-  color:var(--app-color-ink) !important;
-  padding:var(--app-card-pad) !important;
-  box-shadow:var(--app-shadow) !important;
+.artist-submission-card-v34,
+.system-module-card,
+.module-card{
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-card);
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:var(--app-card-pad);
+  box-shadow:var(--app-shadow);
 }
 
 .ds-section,
@@ -7051,28 +4787,31 @@ button{
 .task-column,
 .project-list-card,
 .bar-product-total-card,
-.task-settings-section{
-  border:var(--app-line) !important;
-  border-radius:var(--app-radius-section) !important;
-  background:var(--app-color-surface-soft) !important;
-  color:var(--app-color-ink) !important;
-  padding:var(--app-section-pad) !important;
-  box-shadow:var(--app-shadow) !important;
+.task-settings-section,
+.calendar-date-block{
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-section);
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:var(--app-section-pad);
+  box-shadow:var(--app-shadow);
 }
 
+/* 5. TYPE */
 .ds-title,
 .system-hero h1,
 .project-hero h1,
 .public-artist-hero h1,
 .artist-public-hero h1,
 .bar-forecast-top-row h1{
-  margin:0 !important;
-  font-size:var(--app-title-size) !important;
-  line-height:var(--app-title-line) !important;
-  letter-spacing:var(--app-title-tracking) !important;
-  font-weight:var(--app-title-weight) !important;
-  color:var(--app-color-ink) !important;
-  max-width:100% !important;
+  margin:0;
+  max-width:100%;
+  font-size:var(--app-title-size);
+  line-height:var(--app-title-line);
+  letter-spacing:var(--app-title-tracking);
+  font-weight:var(--app-title-weight);
+  color:var(--app-color-ink);
+  text-wrap:balance;
 }
 
 .ds-heading,
@@ -7084,12 +4823,12 @@ button{
 .calendar-event-head h2,
 .project-section-title,
 .bar-section-title{
-  margin:0 !important;
-  font-size:var(--app-heading-size) !important;
-  line-height:var(--app-heading-line) !important;
-  letter-spacing:var(--app-heading-tracking) !important;
-  font-weight:var(--app-heading-weight) !important;
-  color:var(--app-color-ink) !important;
+  margin:0;
+  font-size:var(--app-heading-size);
+  line-height:var(--app-heading-line);
+  letter-spacing:var(--app-heading-tracking);
+  font-weight:var(--app-heading-weight);
+  color:var(--app-color-ink);
 }
 
 .ds-label,
@@ -7118,13 +4857,16 @@ button{
 .calendar-meta-row span,
 .calendar-warning-row span,
 .task-status-row label span,
-.task-settings-section-head span{
-  font-size:var(--app-label-size) !important;
-  line-height:var(--app-label-line) !important;
-  letter-spacing:var(--app-label-tracking) !important;
-  font-weight:var(--app-label-weight) !important;
-  text-transform:var(--app-label-case) !important;
-  color:var(--app-color-muted) !important;
+.task-settings-section-head span,
+.stat-card span,
+.forecast-info-row span,
+.bar-product-total-card span{
+  font-size:var(--app-label-size);
+  line-height:var(--app-label-line);
+  letter-spacing:var(--app-label-tracking);
+  font-weight:var(--app-label-weight);
+  text-transform:var(--app-label-case);
+  color:var(--app-color-muted);
 }
 
 .ds-body,
@@ -7134,9 +4876,10 @@ button{
 .artist-public-hero p,
 .task-simple-main span,
 .project-empty{
-  font-size:var(--app-body-size) !important;
-  line-height:var(--app-body-line) !important;
-  font-weight:var(--app-body-weight) !important;
+  font-size:var(--app-body-size);
+  line-height:var(--app-body-line);
+  font-weight:var(--app-body-weight);
+  color:rgb(var(--app-color-ink-rgb) / .62);
 }
 
 .ds-number,
@@ -7148,15 +4891,50 @@ button{
 .bar-status-pill strong,
 .bar-profit-orb strong,
 .bar-meta-pill strong,
-.money-number{
-  font-size:var(--app-number-size) !important;
-  line-height:var(--app-number-line) !important;
-  letter-spacing:var(--app-number-tracking) !important;
-  font-weight:var(--app-number-weight) !important;
-  color:var(--app-color-ink) !important;
+.money-number,
+.stat-card strong,
+.forecast-info-row strong,
+.bar-product-total-card strong{
+  font-size:var(--app-number-size);
+  line-height:var(--app-number-line);
+  letter-spacing:var(--app-number-tracking);
+  font-weight:var(--app-number-weight);
+  color:var(--app-color-ink);
 }
 
-/* Controls */
+/* 6. HERO TREATMENT */
+.system-hero,
+.project-hero,
+.public-artist-hero,
+.artist-public-hero{
+  text-align:center;
+  padding:2.2rem 1.1rem;
+  border-color:transparent;
+  background:transparent;
+}
+
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1{
+  margin-inline:auto;
+  max-width:11ch;
+}
+
+.system-intro,
+.project-hero p,
+.public-artist-lead,
+.artist-public-hero p{
+  max-width:26rem;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.bar-forecast-card{
+  background:transparent;
+}
+
+/* 7. BUTTONS + PILLS */
 .ds-button,
 .ds-pill,
 .top-nav-pill,
@@ -7176,14 +4954,22 @@ button{
 .artist-add-event-box button,
 .bar-product-actions button,
 .bar-staff-total button{
-  min-height:var(--app-control-height) !important;
-  border:var(--app-line) !important;
-  border-radius:var(--app-radius-pill) !important;
-  background:rgb(255 255 255 / .10) !important;
-  color:var(--app-color-ink) !important;
-  padding-inline:var(--app-control-pad-x) !important;
-  box-shadow:var(--app-shadow) !important;
-  font-weight:900 !important;
+  min-height:var(--app-control-height);
+  border:var(--app-line-width) solid var(--app-color-border-strong);
+  border-radius:var(--app-radius-pill);
+  background:transparent;
+  color:var(--app-color-ink);
+  padding-inline:var(--app-control-pad-x);
+  box-shadow:var(--app-shadow);
+  font-weight:500;
+  letter-spacing:-.025em;
+  touch-action:manipulation;
+}
+
+.top-nav-pill,
+.passport-button{
+  background:rgb(255 255 255 / .30);
+  backdrop-filter:blur(14px);
 }
 
 .ds-button-primary,
@@ -7201,9 +4987,9 @@ button{
 .artist-submit,
 .artist-add-event-box button,
 .artist-admin-actions button:first-child{
-  background:var(--app-color-primary) !important;
-  border-color:var(--app-color-primary) !important;
-  color:var(--app-color-on-primary) !important;
+  background:var(--app-color-primary);
+  border-color:var(--app-color-primary);
+  color:var(--app-color-on-primary);
 }
 
 .ds-button-primary *,
@@ -7212,7 +4998,8 @@ button{
 .calendar-top-nav button:last-child *,
 .artist-management-top-nav button:last-child *,
 .system-top-nav button:last-child *{
-  color:var(--app-color-on-primary) !important;
+  color:var(--app-color-on-primary);
+  opacity:1;
 }
 
 .ds-button-ghost,
@@ -7222,12 +5009,12 @@ button{
 .bar-staff-total button,
 .task-image-row button,
 .subtask-row button{
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  border-color:var(--app-color-ink) !important;
+  background:transparent;
+  color:var(--app-color-ink);
+  border-color:var(--app-color-ink);
 }
 
-/* Fields */
+/* 8. FIELDS */
 .ds-field,
 input,
 select,
@@ -7249,534 +5036,17 @@ textarea,
 .bar-notes,
 .artist-add-field select,
 .artist-add-field input{
-  width:100% !important;
-  min-width:0 !important;
-  max-width:100% !important;
-  min-height:var(--app-field-height) !important;
-  border:var(--app-line) !important;
-  border-radius:var(--app-radius-field) !important;
-  background:rgb(255 255 255 / .20) !important;
-  color:var(--app-color-ink) !important;
-  padding:var(--app-field-pad-y) var(--app-field-pad-x) !important;
-  box-shadow:var(--app-shadow) !important;
-  font:inherit !important;
-}
-
-.ds-invert,
-.project-compact-summary,
-.calendar-compact-summary,
-.artist-compact-summary,
-.bar-planner-page .bar-profit-orb{
-  background:var(--app-color-primary) !important;
-  border-color:var(--app-color-primary) !important;
-  color:var(--app-color-on-primary) !important;
-}
-
-.ds-invert *,
-.project-compact-summary *,
-.calendar-compact-summary *,
-.artist-compact-summary *,
-.bar-planner-page .bar-profit-orb *{
-  color:var(--app-color-on-primary) !important;
-}
-
-.ds-compact-summary,
-.module-compact-summary,
-.artist-compact-summary{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:var(--app-space-2) !important;
-  border-radius:var(--app-radius-section) !important;
-  padding:var(--app-space-2) var(--app-space-3) !important;
-}
-
-/* 4. REDESIGN SAFETY / OVERFLOW RULES */
-*,
-*::before,
-*::after{
-  box-sizing:border-box !important;
-}
-
-html,
-body,
-#__next{
-  max-width:100vw !important;
-  overflow-x:hidden !important;
-}
-
-img,
-svg,
-video,
-canvas{
-  max-width:100%;
-}
-
-/* 5. FUTURE-READY MOBILE TOKEN ADJUSTMENTS */
-@media (max-width:640px){
-  :root{
-    --app-page-gap:.62rem;
-    --app-card-pad:.66rem;
-    --app-section-pad:.55rem;
-    --app-radius-card:26px;
-    --app-radius-section:18px;
-    --app-title-size:clamp(2rem, 10vw, 3.1rem);
-    --app-heading-size:clamp(1.25rem, 5.8vw, 1.72rem);
-    --app-label-size:.56rem;
-    --app-body-size:.94rem;
-    --app-number-size:clamp(1.25rem, 6.6vw, 1.9rem);
-    --app-control-height:40px;
-    --app-field-height:49px;
-    --app-page-pad-x:.5rem;
-  }
-}
-
-@media (max-width:380px){
-  :root{
-    --app-page-pad-x:.42rem;
-    --app-card-pad:.58rem;
-    --app-section-pad:.5rem;
-    --app-label-size:.52rem;
-  }
-}
-
-/* 6. DEPRECATED CLASS WARNING MAP
-   These still work but should not be used in new components:
-   - booking-overview-card -> use ds-card + ds-number/ds-label
-   - passport-card -> use ds-card
-   - system-kicker -> use ds-label
-   - top-nav-pill/passport-button -> use ds-button/ds-pill
-   - module-specific card names should use ds-card/ds-section plus layout class
-*/
-
-
-/* =========================================================
-   v57 AUDIT READINESS PATCH
-   Ensures dynamic UI Studio values and legacy module classes
-   resolve through the same --app-* master controls.
-   ========================================================= */
-
-:root{
-  --ds-paper:var(--app-color-paper);
-  --ds-ink:var(--app-color-ink);
-  --ds-ink-rgb:var(--app-color-ink-rgb);
-  --paper:var(--app-color-paper);
-  --ink:var(--app-color-ink);
-  --ink-rgb:var(--app-color-ink-rgb);
-}
-
-/* Any old stat/card classes now explicitly resolve to canonical controls */
-.stat-card,
-.forecast-info-row,
-.booking-overview-card,
-.module-compact-summary,
-.artist-compact-summary,
-.bar-product-total-card,
-.calendar-date-block,
-.project-status-pill,
-.system-status-pill,
-.bar-status-pill{
-  border-color:var(--app-color-border) !important;
-  border-radius:var(--app-radius-section) !important;
-}
-
-.stat-card strong,
-.forecast-info-row strong,
-.booking-overview-card strong,
-.module-compact-summary strong,
-.artist-compact-summary strong,
-.bar-product-total-card strong,
-.project-status-pill strong,
-.system-status-pill strong,
-.bar-status-pill strong{
-  font-size:var(--app-number-size) !important;
-  line-height:var(--app-number-line) !important;
-  letter-spacing:var(--app-number-tracking) !important;
-  font-weight:var(--app-number-weight) !important;
-}
-
-.stat-card span,
-.forecast-info-row span,
-.booking-overview-card span,
-.module-compact-summary span,
-.artist-compact-summary span,
-.bar-product-total-card span,
-.project-status-pill span,
-.system-status-pill span,
-.bar-status-pill span{
-  font-size:var(--app-label-size) !important;
-  line-height:var(--app-label-line) !important;
-  letter-spacing:var(--app-label-tracking) !important;
-  font-weight:var(--app-label-weight) !important;
-  text-transform:var(--app-label-case) !important;
-}
-
-/* Force future redesign safety: no component should create page-wide horizontal scroll */
-main,
-section,
-article,
-div,
-form,
-label{
+  width:100%;
   min-width:0;
-}
-
-
-/* =========================================================
-   v59 VERIFIED PILL APP REDESIGN
-   This layer is intentionally placed last.
-   It verifies the reference-inspired redesign is actually
-   present in the compiled source.
-   ========================================================= */
-
-:root{
-  --app-color-ink:#101010;
-  --app-color-ink-rgb:16 16 16;
-  --app-color-paper:#fbfbf6;
-  --app-color-paper-rgb:251 251 246;
-
-  --app-color-primary:#101010;
-  --app-color-primary-rgb:16 16 16;
-  --app-color-on-primary:#fbfbf6;
-
-  --app-color-accent:#eef35b;
-  --app-color-accent-rgb:238 243 91;
-  --app-color-on-accent:#101010;
-
-  --app-color-surface:rgb(255 255 255 / .62);
-  --app-color-surface-soft:rgb(16 16 16 / .018);
-  --app-color-surface-strong:rgb(16 16 16 / .045);
-  --app-color-border:rgb(16 16 16 / .34);
-  --app-color-border-strong:rgb(16 16 16 / .55);
-  --app-color-muted:rgb(16 16 16 / .58);
-
-  --app-radius-card:34px;
-  --app-radius-section:24px;
-  --app-radius-field:999px;
-  --app-radius-pill:999px;
-
-  --app-line-width:1.35px;
-  --app-page-max:760px;
-  --app-page-gap:.78rem;
-  --app-card-pad:1rem;
-  --app-section-pad:.7rem;
-
-  --app-title-size:clamp(2.25rem, 11vw, 4.2rem);
-  --app-title-line:.94;
-  --app-title-tracking:-.055em;
-  --app-title-weight:430;
-
-  --app-heading-size:clamp(1.35rem, 6.5vw, 2.1rem);
-  --app-heading-line:.96;
-  --app-heading-tracking:-.045em;
-  --app-heading-weight:650;
-
-  --app-label-size:.62rem;
-  --app-label-tracking:.17em;
-  --app-label-weight:650;
-
-  --app-body-size:1rem;
-  --app-body-line:1.28;
-  --app-body-weight:400;
-
-  --app-number-size:clamp(1.35rem, 7vw, 2.3rem);
-  --app-number-line:.92;
-  --app-number-tracking:-.04em;
-  --app-number-weight:520;
-
-  --app-control-height:46px;
-  --app-field-height:52px;
-  --app-control-pad-x:1rem;
-  --app-field-pad-y:.64rem;
-  --app-field-pad-x:1rem;
-
-  --ds-ink:var(--app-color-ink);
-  --ds-ink-rgb:var(--app-color-ink-rgb);
-  --ds-paper:var(--app-color-paper);
-  --ds-negative-bg:var(--app-color-primary);
-  --ds-negative-text:var(--app-color-on-primary);
-  --ink:var(--app-color-ink);
-  --ink-rgb:var(--app-color-ink-rgb);
-  --paper:var(--app-color-paper);
-}
-
-html,
-body{
-  background:var(--app-color-paper) !important;
-  color:var(--app-color-ink) !important;
-}
-
-body{
-  letter-spacing:-.018em;
-}
-
-/* App canvas */
-.system-shell,
-.public-artist-page,
-.project-page,
-.bar-planner-page{
-  background:
-    radial-gradient(circle at 50% -10%, rgb(238 243 91 / .18), transparent 32%),
-    var(--app-color-paper) !important;
-  color:var(--app-color-ink) !important;
-  padding-left:.62rem !important;
-  padding-right:.62rem !important;
-}
-
-/* Light card system */
-.ds-card,
-.passport-card,
-.system-card,
-.system-hero,
-.system-hero-card,
-.public-artist-hero,
-.artist-public-hero,
-.public-artist-form,
-.artist-form,
-.artist-form-public,
-.bar-forecast-card,
-.bar-panel,
-.calendar-event-card,
-.project-hero,
-.project-panel,
-.booking-overview-card,
-.booked-overview,
-.artist-submission-card,
-.artist-submission-card-v34{
-  border:var(--app-line-width) solid var(--app-color-border) !important;
-  border-radius:var(--app-radius-card) !important;
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  box-shadow:none !important;
-}
-
-.ds-section,
-.public-artist-section,
-.artist-form-section,
-.artist-info-section,
-.artist-meta-card,
-.bar-product-card,
-.bar-staff-card,
-.task-card,
-.task-column,
-.project-list-card,
-.bar-product-total-card,
-.task-settings-section{
-  border:var(--app-line-width) solid var(--app-color-border) !important;
-  border-radius:var(--app-radius-section) !important;
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  box-shadow:none !important;
-}
-
-/* Calm onboarding-like hero */
-.system-hero,
-.project-hero,
-.public-artist-hero,
-.artist-public-hero{
-  text-align:center !important;
-  padding:2.2rem 1.1rem !important;
-  border-color:transparent !important;
-  background:transparent !important;
-}
-
-.system-hero h1,
-.project-hero h1,
-.public-artist-hero h1,
-.artist-public-hero h1{
-  margin-inline:auto !important;
-  max-width:11ch !important;
-  font-weight:430 !important;
-  letter-spacing:-.06em !important;
-}
-
-.bar-forecast-card{
-  padding:1rem !important;
-  background:transparent !important;
-}
-
-.bar-forecast-top-row h1{
-  font-weight:430 !important;
-  letter-spacing:-.06em !important;
-}
-
-.system-intro,
-.project-hero p,
-.public-artist-lead,
-.artist-public-hero p{
-  max-width:26rem !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  color:rgb(var(--app-color-ink-rgb) / .62) !important;
-  font-weight:400 !important;
-}
-
-/* Pill controls */
-.ds-button,
-.ds-pill,
-.top-nav-pill,
-.passport-button,
-.back-pill,
-.bar-panel-head button,
-.project-panel-head button,
-.project-panel-actions button,
-.task-status-row button,
-.task-settings-head button,
-.task-settings-actions button,
-.task-add-inline button,
-.subtask-row button,
-.task-image-row button,
-.calendar-small-button,
-.artist-admin-actions button,
-.artist-add-event-box button,
-.bar-product-actions button,
-.bar-staff-total button{
-  min-height:var(--app-control-height) !important;
-  border:var(--app-line-width) solid var(--app-color-border-strong) !important;
-  border-radius:999px !important;
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  padding-inline:var(--app-control-pad-x) !important;
-  box-shadow:none !important;
-  font-weight:500 !important;
-  letter-spacing:-.025em !important;
-}
-
-.top-nav-pill,
-.passport-button{
-  background:rgb(255 255 255 / .30) !important;
-  backdrop-filter:blur(14px) !important;
-}
-
-/* Black primary actions */
-.ds-button-primary,
-.project-top-nav button:last-child,
-.bar-top-nav button:last-child,
-.calendar-top-nav button:last-child,
-.artist-management-top-nav button:last-child,
-.system-top-nav button:last-child,
-.bar-collapsible-head > button:not(.bar-section-toggle-icon),
-.project-collapsible-head > button:not(.project-section-toggle-icon),
-.project-panel-actions button:first-child,
-.bar-panel-head button:not(.bar-section-toggle-icon),
-.task-settings-actions button:last-child,
-.public-artist-submit,
-.artist-submit,
-.artist-add-event-box button,
-.artist-admin-actions button:first-child{
-  background:var(--app-color-primary) !important;
-  border-color:var(--app-color-primary) !important;
-  color:var(--app-color-on-primary) !important;
-}
-
-.ds-button-primary *,
-.project-top-nav button:last-child *,
-.bar-top-nav button:last-child *,
-.calendar-top-nav button:last-child *,
-.artist-management-top-nav button:last-child *,
-.system-top-nav button:last-child *{
-  color:var(--app-color-on-primary) !important;
-  opacity:1 !important;
-}
-
-/* Yellow selected/highlight language */
-.project-list-card.active,
-.task-check.checked,
-.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
-.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
-.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em,
-.bar-product-card-v50.is-open::before,
-.calendar-event-card-v51.is-open::before,
-.task-card-v52.task-status-doing::before{
-  background:var(--app-color-accent) !important;
-  color:var(--app-color-on-accent) !important;
-  border-color:var(--app-color-ink) !important;
-}
-
-.project-list-card.active *,
-.project-list-card.active span,
-.project-list-card.active strong,
-.project-list-card.active em{
-  color:var(--app-color-on-accent) !important;
-}
-
-/* Summary rows as pill-like information */
-.module-compact-summary,
-.artist-compact-summary,
-.project-compact-summary,
-.calendar-compact-summary{
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  border-color:var(--app-color-border) !important;
-  border-radius:999px !important;
-  padding:.38rem .5rem !important;
-}
-
-.module-compact-summary > div,
-.artist-compact-summary > div{
-  border-right-color:rgb(var(--app-color-ink-rgb) / .22) !important;
-}
-
-.module-compact-summary span,
-.artist-compact-summary span,
-.project-compact-summary span,
-.calendar-compact-summary span{
-  color:rgb(var(--app-color-ink-rgb) / .55) !important;
-}
-
-.module-compact-summary strong,
-.artist-compact-summary strong,
-.project-compact-summary strong,
-.calendar-compact-summary strong{
-  color:var(--app-color-ink) !important;
-  font-weight:520 !important;
-}
-
-/* Bar projected profit as black app tile */
-.bar-planner-page .bar-profit-orb{
-  background:var(--app-color-primary) !important;
-  border-color:var(--app-color-primary) !important;
-  color:var(--app-color-on-primary) !important;
-  border-radius:34px !important;
-}
-
-.bar-planner-page .bar-profit-orb *{
-  color:var(--app-color-on-primary) !important;
-}
-
-.bar-planner-page .bar-profit-orb span,
-.bar-planner-page .bar-profit-orb em,
-.bar-planner-page .bar-profit-orb .money-currency{
-  opacity:.68 !important;
-}
-
-/* Input fields as pills */
-.ds-field,
-input,
-select,
-textarea,
-.public-artist-field input,
-.public-artist-field textarea,
-.artist-field input,
-.artist-field textarea,
-.project-field input,
-.project-field select,
-.project-field textarea,
-.task-card input,
-.task-card select,
-.task-card textarea,
-.bar-product-card input,
-.bar-product-card select,
-.bar-staff-card input,
-.bar-menu-edit-row textarea,
-.bar-notes,
-.artist-add-field select,
-.artist-add-field input{
-  border:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .24) !important;
-  border-radius:999px !important;
-  background:rgb(255 255 255 / .30) !important;
-  color:var(--app-color-ink) !important;
-  min-height:var(--app-field-height) !important;
-  box-shadow:none !important;
+  max-width:100%;
+  min-height:var(--app-field-height);
+  border:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .24);
+  border-radius:var(--app-radius-field);
+  background:rgb(255 255 255 / .30);
+  color:var(--app-color-ink);
+  padding:var(--app-field-pad-y) var(--app-field-pad-x);
+  box-shadow:var(--app-shadow);
+  font:inherit;
 }
 
 textarea,
@@ -7785,141 +5055,172 @@ textarea,
 .project-field textarea,
 .bar-menu-edit-row textarea,
 .bar-notes{
-  border-radius:24px !important;
+  border-radius:var(--app-radius-section);
+  line-height:1.24;
 }
 
-/* Calendar date tiles as yellow pills */
+input::placeholder,
+textarea::placeholder{
+  color:rgb(var(--app-color-ink-rgb) / .36);
+}
+
+/* 9. INVERT + ACCENT PATTERNS */
+.ds-invert,
+.bar-planner-page .bar-profit-orb{
+  background:var(--app-color-primary);
+  border-color:var(--app-color-primary);
+  color:var(--app-color-on-primary);
+}
+
+.ds-invert *,
+.bar-planner-page .bar-profit-orb *{
+  color:var(--app-color-on-primary);
+}
+
+.ds-accent,
+.project-list-card.active,
+.task-check.checked,
+.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
+.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
+.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em,
 .calendar-collapse-head .calendar-date-block,
-.calendar-event-card-v51.is-collapsed .calendar-date-block{
-  background:var(--app-color-accent) !important;
-  border-color:var(--app-color-ink) !important;
-  color:var(--app-color-ink) !important;
-  border-radius:999px !important;
-}
-
-.calendar-collapse-head .calendar-date-block *,
-.calendar-event-card-v51.is-collapsed .calendar-date-block *{
-  color:var(--app-color-ink) !important;
-}
-
-/* Project board reminders feel */
-.task-board-v52 .task-column{
-  border-radius:28px !important;
-  background:transparent !important;
-  border-color:var(--app-color-border) !important;
-}
-
-.task-card-v52{
-  background:transparent !important;
-  border-bottom-color:rgb(var(--app-color-ink-rgb) / .18) !important;
-}
-
-.task-simple-main strong{
-  font-weight:520 !important;
-}
-
-.task-status-row select{
-  background:var(--app-color-accent) !important;
-  border-color:var(--app-color-ink) !important;
-  color:var(--app-color-ink) !important;
-  font-weight:520 !important;
-}
-
-/* Bar product totals as tags */
-.bar-product-total-row{
-  gap:.42rem !important;
-}
-
-.bar-product-total-card{
-  border-radius:999px !important;
-  padding:.52rem .72rem !important;
-}
-
-.bar-product-total-card > strong{
-  font-weight:520 !important;
-}
-
-/* Warnings as yellow tags */
+.calendar-event-card-v51.is-collapsed .calendar-date-block,
+.task-status-row select,
 .bar-warning-row span,
 .calendar-warning-row span{
-  background:var(--app-color-accent) !important;
-  color:var(--app-color-ink) !important;
-  border-color:var(--app-color-ink) !important;
-  border-radius:999px !important;
+  background:var(--app-color-accent);
+  color:var(--app-color-on-accent);
+  border-color:var(--app-color-ink);
 }
 
-/* Dashboard/app cards */
+.project-list-card.active *,
+.calendar-collapse-head .calendar-date-block *,
+.calendar-event-card-v51.is-collapsed .calendar-date-block *{
+  color:var(--app-color-on-accent);
+}
+
+/* 10. COMPACT SUMMARIES */
+.ds-compact-summary,
+.module-compact-summary,
+.artist-compact-summary,
+.project-compact-summary,
+.calendar-compact-summary{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.4rem;
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-pill);
+  background:transparent;
+  padding:.38rem .5rem;
+}
+
+.module-compact-summary > div,
+.artist-compact-summary > div{
+  border-right:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .22);
+}
+
+.module-compact-summary > div:last-child,
+.artist-compact-summary > div:last-child{
+  border-right:0;
+}
+
+/* 11. MODULE POLISH */
 .system-module-card,
 .module-card,
 .system-card{
-  border-radius:32px !important;
-  background:transparent !important;
-  border-color:var(--app-color-border) !important;
+  border-radius:32px;
 }
 
 .system-module-card:active,
 .module-card:active,
 .system-module-card:hover,
 .module-card:hover{
-  background:var(--app-color-accent) !important;
-  color:var(--app-color-ink) !important;
-  border-color:var(--app-color-ink) !important;
-  transform:none !important;
+  background:var(--app-color-accent);
+  color:var(--app-color-ink);
+  border-color:var(--app-color-ink);
+  transform:none;
 }
 
 .system-module-card:active *,
 .module-card:active *,
 .system-module-card:hover *,
 .module-card:hover *{
-  color:var(--app-color-ink) !important;
+  color:var(--app-color-ink);
 }
 
-/* Modal as clean iOS-style sheet */
+.task-board-v52 .task-column{
+  border-radius:28px;
+  background:transparent;
+}
+
+.task-card-v52{
+  background:transparent;
+  border-left:0;
+  border-right:0;
+  border-top:0;
+  border-bottom:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .18);
+}
+
+.task-simple-main strong{
+  font-weight:520;
+}
+
+.task-status-row select{
+  font-weight:520;
+}
+
+.bar-product-total-row{
+  gap:.42rem;
+}
+
+.bar-product-total-card{
+  border-radius:var(--app-radius-pill);
+  padding:.52rem .72rem;
+}
+
+.bar-product-total-card > strong{
+  font-weight:520;
+}
+
 .task-settings-backdrop{
-  background:rgb(16 16 16 / .36) !important;
-  backdrop-filter:blur(24px) !important;
+  background:rgb(16 16 16 / .36);
+  backdrop-filter:blur(24px);
+  overflow:hidden;
 }
 
 .task-settings-modal{
-  background:var(--app-color-paper) !important;
-  border-color:var(--app-color-ink) !important;
-  border-radius:34px !important;
+  background:var(--app-color-paper);
+  border-color:var(--app-color-ink);
+  border-radius:var(--app-radius-card);
+  max-width:min(760px, calc(100vw - .9rem));
+  overflow-x:hidden;
 }
 
 .task-settings-head h2{
-  font-weight:430 !important;
-  letter-spacing:-.06em !important;
+  font-weight:430;
+  letter-spacing:-.06em;
 }
 
 .task-settings-head button{
-  background:transparent !important;
-  color:var(--app-color-ink) !important;
-  border-color:var(--app-color-border-strong) !important;
+  background:transparent;
+  color:var(--app-color-ink);
+  border-color:var(--app-color-border-strong);
 }
 
 .task-settings-actions button:last-child{
-  background:var(--app-color-primary) !important;
-  color:var(--app-color-on-primary) !important;
-  border-color:var(--app-color-primary) !important;
+  background:var(--app-color-primary);
+  color:var(--app-color-on-primary);
+  border-color:var(--app-color-primary);
 }
 
-/* Remove previous accent bars */
 .bar-product-card-v50::before,
 .task-card-v52::before,
 .calendar-event-card-v51::before{
-  width:0 !important;
-  display:none !important;
+  width:0;
+  display:none;
 }
 
-/* Public artist submit as black bottom button */
-.artist-booking-scale-fixed .public-artist-submit,
-.artist-booking-scale-fixed .artist-submit{
-  border-radius:999px !important;
-  min-height:56px !important;
-  font-weight:430 !important;
-  font-size:1.15rem !important;
-}
-
+/* 12. MOBILE */
 @media (max-width:640px){
   :root{
     --app-page-max:100%;
@@ -7934,39 +5235,35 @@ textarea,
     --app-field-height:50px;
   }
 
+  .ds-page,
   .system-shell,
   .public-artist-page,
   .project-page,
   .bar-planner-page{
-    padding-left:.6rem !important;
-    padding-right:.6rem !important;
+    padding-left:.6rem;
+    padding-right:.6rem;
   }
 
   .system-hero,
   .project-hero,
   .public-artist-hero,
   .artist-public-hero{
-    padding:1.85rem .8rem !important;
-  }
-
-  .top-nav-pill,
-  .passport-button{
-    border-radius:999px !important;
+    padding:1.85rem .8rem;
   }
 
   .module-compact-summary,
   .artist-compact-summary,
   .project-compact-summary,
   .calendar-compact-summary{
-    padding:.34rem .42rem !important;
+    padding:.34rem .42rem;
   }
 
   .bar-product-total-row{
-    grid-template-columns:1fr 1fr !important;
+    grid-template-columns:1fr 1fr;
   }
 
   .bar-product-total-card{
-    border-radius:24px !important;
+    border-radius:var(--app-radius-section);
   }
 }
 
@@ -7975,11 +5272,351 @@ textarea,
   .project-hero,
   .public-artist-hero,
   .artist-public-hero{
-    padding:1.45rem .6rem !important;
+    padding:1.45rem .6rem;
   }
 
   .module-compact-summary span,
   .artist-compact-summary span{
-    font-size:.38rem !important;
+    font-size:.38rem;
+  }
+}
+
+/* 13. TAILWIND/LEGACY OVERRIDE BRIDGE
+   This bridge is intentionally small. It keeps legacy utility classes
+   from visually fighting the token layer without recreating the old stack. */
+.min-h-dvh{ min-height:100dvh; }
+.bg-\[var\(--paper\)\]{ background:var(--app-color-paper); }
+.text-\[var\(--ink\)\]{ color:var(--app-color-ink); }
+.rounded-full{ border-radius:var(--app-radius-pill); }
+.backdrop-blur{ backdrop-filter:blur(14px); }
+
+
+
+/* =========================================================
+   v61 UNIFIED MODULE DESIGN SYSTEM INTEGRATION
+   All modules now share the same visual contracts.
+   Existing module classes remain, but ds-* classes are now
+   added to JSX and this layer unifies their expression.
+   ========================================================= */
+
+/* Unified module identity */
+.module-dashboard,
+.module-event-planner,
+.module-artist-booking,
+.module-artist-management,
+.module-calendar,
+.module-bar-planner,
+.module-project-management{
+  --module-accent:var(--app-color-accent);
+  --module-ink:var(--app-color-ink);
+  --module-paper:var(--app-color-paper);
+}
+
+/* Unified app top navigation */
+.bar-top-nav,
+.project-top-nav,
+.calendar-top-nav,
+.artist-management-top-nav,
+.system-top-nav,
+.event-top-nav{
+  position:sticky;
+  top:calc(var(--safe-top) + .48rem);
+  z-index:50;
+  display:grid;
+  gap:.45rem;
+}
+
+.bar-top-nav,
+.project-top-nav,
+.calendar-top-nav,
+.artist-management-top-nav{
+  grid-template-columns:repeat(auto-fit,minmax(0,1fr));
+}
+
+.bar-top-nav .top-nav-pill,
+.project-top-nav .top-nav-pill,
+.calendar-top-nav .top-nav-pill,
+.artist-management-top-nav .top-nav-pill,
+.system-top-nav .top-nav-pill,
+.bar-top-nav .passport-button,
+.project-top-nav .passport-button,
+.calendar-top-nav .passport-button,
+.artist-management-top-nav .passport-button,
+.system-top-nav .passport-button{
+  min-height:var(--app-control-height);
+  border:var(--app-line-width) solid var(--app-color-border-strong);
+  border-radius:var(--app-radius-pill);
+  background:rgb(255 255 255 / .30);
+  color:var(--app-color-ink);
+  backdrop-filter:blur(14px);
+  padding:.2rem .55rem;
+  display:grid;
+  place-items:center;
+  align-content:center;
+}
+
+.bar-top-nav .top-nav-pill span,
+.project-top-nav .top-nav-pill span,
+.calendar-top-nav .top-nav-pill span,
+.artist-management-top-nav .top-nav-pill span,
+.system-top-nav .top-nav-pill span,
+.bar-top-nav .passport-button span,
+.project-top-nav .passport-button span,
+.calendar-top-nav .passport-button span,
+.artist-management-top-nav .passport-button span,
+.system-top-nav .passport-button span{
+  font-size:.46rem;
+  line-height:1;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  font-weight:650;
+  color:var(--app-color-muted);
+}
+
+.bar-top-nav .top-nav-pill strong,
+.project-top-nav .top-nav-pill strong,
+.calendar-top-nav .top-nav-pill strong,
+.artist-management-top-nav .top-nav-pill strong,
+.system-top-nav .top-nav-pill strong,
+.bar-top-nav .passport-button strong,
+.project-top-nav .passport-button strong,
+.calendar-top-nav .passport-button strong,
+.artist-management-top-nav .passport-button strong,
+.system-top-nav .passport-button strong{
+  font-size:.75rem;
+  line-height:1;
+  letter-spacing:-.03em;
+  font-weight:650;
+  color:var(--app-color-ink);
+}
+
+/* Unified hero spacing */
+.ds-hero{
+  text-align:center;
+  border-color:transparent;
+  background:transparent;
+  padding:2.2rem 1rem;
+}
+
+.ds-hero h1{
+  margin-inline:auto;
+  max-width:12ch;
+}
+
+/* Unified cards/sections */
+.ds-card{
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-card);
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:var(--app-card-pad);
+  box-shadow:none;
+}
+
+.ds-section{
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-section);
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:var(--app-section-pad);
+  box-shadow:none;
+}
+
+/* Unified module cards on dashboard */
+.ds-module-grid,
+.module-grid,
+.system-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:var(--app-page-gap);
+}
+
+.ds-module-card,
+.module-card,
+.system-module-card{
+  min-height:150px;
+  display:grid;
+  align-content:space-between;
+  gap:var(--app-space-3, .6rem);
+  transition:border-color var(--app-transition), background var(--app-transition);
+}
+
+.ds-module-card:hover,
+.module-card:hover,
+.system-module-card:hover{
+  background:var(--app-color-accent);
+  border-color:var(--app-color-ink);
+}
+
+/* Unified stats */
+.ds-stat-grid,
+.bar-summary-grid,
+.project-summary-grid,
+.calendar-stats-grid,
+.booking-overview-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:.55rem;
+}
+
+.ds-compact-summary{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.35rem;
+  align-items:center;
+}
+
+/* Unified collapse headers */
+.bar-collapsible-head,
+.project-collapsible-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:.5rem;
+}
+
+.bar-section-title,
+.project-section-title{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.bar-section-toggle-icon,
+.project-section-toggle-icon,
+.calendar-collapse-head > em,
+.bar-product-collapse-head em,
+.task-collapse-head > em{
+  width:2rem;
+  height:2rem;
+  min-width:2rem;
+  min-height:2rem;
+  display:grid;
+  place-items:center;
+  border:var(--app-line-width) solid var(--app-color-border-strong);
+  border-radius:999px;
+  background:transparent;
+  color:var(--app-color-ink);
+  font-style:normal;
+  font-size:1rem;
+  font-weight:650;
+  padding:0;
+}
+
+/* Unified list cards */
+.calendar-event-card-v51,
+.bar-product-card-v50,
+.task-card-v52,
+.project-list-card,
+.artist-submission-card{
+  background:transparent;
+  border-color:var(--app-color-border);
+}
+
+/* Unified simple rows */
+.calendar-collapse-head,
+.bar-product-collapse-head,
+.task-collapse-head,
+.task-simple-row{
+  min-width:0;
+}
+
+.calendar-collapse-title strong,
+.bar-product-collapse-head span,
+.task-simple-main strong,
+.project-list-card strong{
+  color:var(--app-color-ink);
+  font-weight:520;
+  letter-spacing:-.035em;
+}
+
+/* Unified fields inside all modules */
+.project-field,
+.artist-field,
+.public-artist-field,
+.artist-add-field,
+.bar-product-fields label,
+.bar-staff-fields label,
+.task-field-grid label{
+  display:grid;
+  gap:.28rem;
+}
+
+/* Unified image/media */
+.artist-image,
+.calendar-artist-row img,
+.task-image-row img{
+  border-radius:var(--app-radius-section);
+  border:var(--app-line-width) solid var(--app-color-border);
+}
+
+/* Unified messages/warnings */
+.artist-message,
+.bar-warning-row span,
+.calendar-warning-row span{
+  border:var(--app-line-width) solid var(--app-color-ink);
+  border-radius:var(--app-radius-pill);
+  background:var(--app-color-accent);
+  color:var(--app-color-on-accent);
+  padding:.55rem .75rem;
+}
+
+/* Better visual consistency for Event Planner legacy blocks */
+.module-event-planner .passport-card,
+.module-event-planner .rounded-soft,
+.module-event-planner .stat-card,
+.module-event-planner .forecast-info-row{
+  border-color:var(--app-color-border);
+  border-radius:var(--app-radius-section);
+  background:transparent;
+  color:var(--app-color-ink);
+}
+
+.module-event-planner .passport-button{
+  border-radius:var(--app-radius-pill);
+  border-color:var(--app-color-border-strong);
+  background:transparent;
+  color:var(--app-color-ink);
+}
+
+/* Mobile unified rhythm */
+@media (max-width:640px){
+  .ds-hero{
+    padding:1.75rem .75rem;
+  }
+
+  .ds-module-grid,
+  .module-grid,
+  .system-grid{
+    grid-template-columns:1fr;
+  }
+
+  .ds-stat-grid,
+  .bar-summary-grid,
+  .project-summary-grid,
+  .calendar-stats-grid,
+  .booking-overview-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .ds-compact-summary{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:.18rem;
+  }
+
+  .bar-collapsible-head,
+  .project-collapsible-head{
+    gap:.38rem;
+  }
+
+  .bar-section-toggle-icon,
+  .project-section-toggle-icon,
+  .calendar-collapse-head > em,
+  .bar-product-collapse-head em,
+  .task-collapse-head > em{
+    width:1.72rem;
+    height:1.72rem;
+    min-width:1.72rem;
+    min-height:1.72rem;
   }
 }

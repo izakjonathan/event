@@ -213,7 +213,7 @@ export default function ArtistBookingForm() {
   );
 
   return (
-    <main className="public-artist-page artist-booking-scale-fixed no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+    <main className="ds-page module-artist-booking public-artist-page artist-booking-scale-fixed no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="artist-public-wrap">
         <section className="artist-public-hero passport-card">
           <p className="system-kicker">Artist booking</p>
@@ -224,7 +224,7 @@ export default function ArtistBookingForm() {
         </section>
 
         <form onSubmit={submit} className="artist-form artist-form-public passport-card">
-          <div className="artist-form-section">
+          <div className="ds-section artist-form-section">
             <p className="artist-section-title">Main info</p>
             <div className="artist-form-grid">
               {input('artistName', 'text', 'Artist name')}
@@ -240,7 +240,7 @@ export default function ArtistBookingForm() {
             </div>
           </div>
 
-          <div className="artist-form-section">
+          <div className="ds-section artist-form-section">
             <p className="artist-section-title">Image + links</p>
             <div className="artist-form-grid">
               <label className="artist-field artist-upload-field">
@@ -265,7 +265,7 @@ export default function ArtistBookingForm() {
             </div>
           </div>
 
-          <div className="artist-form-section">
+          <div className="ds-section artist-form-section">
             <p className="artist-section-title">Requirements</p>
             <div className="artist-form-grid">
               {area('technicalNeeds', 4, 'Equipment, stage, sound, setup time, DJ gear, microphones etc.')}

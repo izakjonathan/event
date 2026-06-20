@@ -356,8 +356,8 @@ export default function BarPlanner() {
   }, [plan.products]);
 
   return (
-    <main className="system-shell bar-planner-page no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
+    <main className="ds-page module-bar-planner system-shell bar-planner-page no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="ds-wrap system-wrap">
         <div className="bar-top-nav bar-top-nav-v39">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
@@ -373,7 +373,7 @@ export default function BarPlanner() {
           </button>
         </div>
 
-        <section className="bar-forecast-card passport-card">
+        <section className="ds-card ds-hero bar-forecast-card passport-card">
           <div className="bar-forecast-top-row">
             <div>
               <p className="system-kicker">Bar Planner</p>
@@ -419,7 +419,7 @@ export default function BarPlanner() {
         {message && <div className="artist-message">{message}</div>}
         {loading && <div className="artist-message">Loading events…</div>}
 
-        <section className="bar-summary-grid bar-summary-grid-v39">
+        <section className="ds-stat-grid bar-summary-grid bar-summary-grid-v39">
           <div className="booking-overview-card passport-card"><span>Revenue</span><strong>{moneyNode(totals.productRevenue)}</strong></div>
           <div className="booking-overview-card passport-card"><span>Stock cost</span><strong>{moneyNode(totals.productCost)}</strong></div>
           <div className="booking-overview-card passport-card"><span>Gross profit</span><strong>{moneyNode(totals.productProfit)}</strong></div>
@@ -434,7 +434,7 @@ export default function BarPlanner() {
         )}
 
         <section className="bar-module-grid">
-          <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('products') ? 'is-open' : 'is-collapsed'}`}>
+          <div className={`ds-card bar-panel bar-collapsible-panel passport-card ${isSectionOpen('products') ? 'is-open' : 'is-collapsed'}`}>
             <div className="bar-panel-head bar-collapsible-head">
               <div className="bar-section-title">Products</div>
               <button onClick={addProduct}>Add product</button>
@@ -452,7 +452,7 @@ export default function BarPlanner() {
                 const margin = revenue ? (profit / revenue) * 100 : 0;
 
                 return (
-                  <article key={product.id} className={`bar-product-card bar-product-card-v50 ${isProductOpen(product.id) ? 'is-open' : 'is-collapsed'}`}>
+                  <article key={product.id} className={`ds-section bar-product-card bar-product-card-v50 ${isProductOpen(product.id) ? 'is-open' : 'is-collapsed'}`}>
                     <button type="button" className="bar-product-collapse-head" onClick={() => toggleProductCard(product.id)}>
                       <span>{product.name || 'Unnamed product'}</span>
                       <small>{product.category} · {product.expectedQty || 0} qty</small>
@@ -478,19 +478,19 @@ export default function BarPlanner() {
                     </div>
 
                     <div className="bar-product-total-row">
-                      <div className="bar-product-total-card">
+                      <div className="ds-section bar-product-total-card">
                         <span>Revenue</span>
                         <strong>{moneyNode(revenue)}</strong>
                       </div>
-                      <div className="bar-product-total-card">
+                      <div className="ds-section bar-product-total-card">
                         <span>Cost</span>
                         <strong>{moneyNode(cost)}</strong>
                       </div>
-                      <div className="bar-product-total-card">
+                      <div className="ds-section bar-product-total-card">
                         <span>Profit</span>
                         <strong>{moneyNode(profit)}</strong>
                       </div>
-                      <div className="bar-product-total-card">
+                      <div className="ds-section bar-product-total-card">
                         <span>Margin</span>
                         <strong>{percent(margin)}</strong>
                       </div>
@@ -513,7 +513,7 @@ export default function BarPlanner() {
           </div>
 
           <div className="bar-side-stack">
-            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('staff') ? 'is-open' : 'is-collapsed'}`}>
+            <div className={`ds-card bar-panel bar-collapsible-panel passport-card ${isSectionOpen('staff') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
                 <div className="bar-section-title">Staff plan</div>
                 <button onClick={addStaffLine}>Add shift</button>
@@ -548,7 +548,7 @@ export default function BarPlanner() {
               )}
             </div>
 
-            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('menu') ? 'is-open' : 'is-collapsed'}`}>
+            <div className={`ds-card bar-panel bar-collapsible-panel passport-card ${isSectionOpen('menu') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
                 <div className="bar-section-title">Menu builder</div>
                 <button onClick={copyMenu}>{copied ? 'Copied' : 'Copy menu'}</button>
@@ -597,7 +597,7 @@ export default function BarPlanner() {
               )}
             </div>
 
-            <div className={`bar-panel bar-collapsible-panel passport-card ${isSectionOpen('notes') ? 'is-open' : 'is-collapsed'}`}>
+            <div className={`ds-card bar-panel bar-collapsible-panel passport-card ${isSectionOpen('notes') ? 'is-open' : 'is-collapsed'}`}>
               <div className="bar-panel-head bar-collapsible-head">
                 <div className="bar-section-title">Bar notes</div>
                 <button type="button" className="bar-section-toggle-icon" onClick={() => toggleSection('notes')} aria-label="Toggle bar notes">

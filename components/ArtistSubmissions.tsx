@@ -357,8 +357,8 @@ export default function ArtistSubmissions() {
   const messageClass = messageKind === 'error' ? 'artist-message-error' : messageKind === 'success' ? 'artist-message-success' : '';
 
   return (
-    <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
+    <main className="ds-page module-artist-management system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="ds-wrap system-wrap">
         <div className="artist-admin-top artist-management-top-nav">
           <Link href="/" className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
@@ -374,7 +374,7 @@ export default function ArtistSubmissions() {
           </button>
         </div>
 
-        <section className="system-hero passport-card">
+        <section className="ds-card ds-hero system-hero passport-card">
           <div>
             <p className="system-kicker">Internal module</p>
             <h1>Artist Management</h1>
@@ -384,7 +384,7 @@ export default function ArtistSubmissions() {
           </div>
         </section>
 
-        <section className="artist-compact-summary passport-card">
+        <section className="ds-compact-summary artist-compact-summary passport-card">
           <div>
             <span>Total</span>
             <strong>{items.length}</strong>
@@ -484,22 +484,22 @@ export default function ArtistSubmissions() {
                       </div>
 
                       <div className="artist-meta-cards">
-                        <div className="artist-meta-card">
+                        <div className="ds-section artist-meta-card">
                           <span>Fee</span>
                           <strong>{formatFeeText(artist.preferred_fee) || '—'}</strong>
                         </div>
-                        <div className="artist-meta-card">
+                        <div className="ds-section artist-meta-card">
                           <span>Start time</span>
                           <strong>{artist.availability_start_time || '—'}</strong>
                         </div>
-                        <div className="artist-meta-card">
+                        <div className="ds-section artist-meta-card">
                           <span>End time</span>
                           <strong>{artist.availability_end_time || '—'}</strong>
                         </div>
                       </div>
 
                       {artist.description && (
-                        <section className="artist-info-section">
+                        <section className="ds-section artist-info-section">
                           <h3>Description</h3>
                           <p>{artist.description}</p>
                         </section>
@@ -567,19 +567,19 @@ export default function ArtistSubmissions() {
                           <h3>More info</h3>
                           <div className="artist-more-grid">
                             {artist.technical_needs && (
-                              <div className="artist-info-section">
+                              <div className="ds-section artist-info-section">
                                 <h4>Technical</h4>
                                 <p>{artist.technical_needs}</p>
                               </div>
                             )}
                             {artist.hospitality_needs && (
-                              <div className="artist-info-section">
+                              <div className="ds-section artist-info-section">
                                 <h4>Hospitality</h4>
                                 <p>{artist.hospitality_needs}</p>
                               </div>
                             )}
                             {artist.notes && (
-                              <div className="artist-info-section">
+                              <div className="ds-section artist-info-section">
                                 <h4>Notes</h4>
                                 <p>{artist.notes}</p>
                               </div>

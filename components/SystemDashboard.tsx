@@ -58,9 +58,9 @@ const modules: ModuleCard[] = [
 
 export default function SystemDashboard() {
   return (
-    <main className="system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
-      <div className="system-wrap">
-        <header className="system-hero passport-card">
+    <main className="ds-page module-dashboard system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
+      <div className="ds-wrap system-wrap">
+        <header className="ds-card ds-hero system-hero passport-card">
           <div>
             <p className="system-kicker">Event system</p>
             <h1>Event operations</h1>
@@ -70,7 +70,7 @@ export default function SystemDashboard() {
           </div>
         </header>
 
-        <section className="module-grid">
+        <section className="ds-module-grid module-grid">
           {modules.map((module) => (
             <Link key={module.title} href={module.href} className={`module-card passport-card ${module.active ? 'module-card-active' : ''}`}>
               <div className="module-card-top">
