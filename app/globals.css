@@ -7767,3 +7767,270 @@ textarea,
     padding:14px !important;
   }
 }
+
+
+/* =========================================================
+   v66 NEO-BRUTALIST PHASE 1 POLISH
+   Fixes visible mobile issues from v65 screenshots:
+   - landing title no longer collides with module rows
+   - hero composition keeps the huge-type feeling but is readable
+   - Event Planner forecast meta rows show real values clearly
+   - forecast/profit layout is better balanced on mobile
+   - bottom content has safer Safari address-bar spacing
+   ========================================================= */
+
+/* LANDING: controlled huge type, no white block collision */
+.module-dashboard .ds-wrap,
+.module-dashboard .system-wrap{
+  min-height:100dvh !important;
+  display:block !important;
+  background:var(--nb-paper) !important;
+}
+
+.nb-landing-hero{
+  min-height:calc(100dvh - 148px) !important;
+  max-height:none !important;
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) auto !important;
+  border-bottom:var(--nb-border) !important;
+  padding:18px !important;
+  overflow:hidden !important;
+}
+
+.nb-landing-title-wrap{
+  align-self:end !important;
+  min-height:0 !important;
+  display:grid !important;
+  gap:18px !important;
+  padding-top:8vh !important;
+}
+
+.nb-landing-title-wrap h1{
+  font-size:clamp(66px, 22vw, 178px) !important;
+  line-height:.76 !important;
+  letter-spacing:-.095em !important;
+  max-width:100% !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  transform:none !important;
+}
+
+.nb-landing-title-wrap p{
+  max-width:680px !important;
+  font-size:clamp(22px, 6vw, 48px) !important;
+  line-height:.98 !important;
+  letter-spacing:-.065em !important;
+}
+
+.nb-primary-link{
+  margin-top:12px !important;
+}
+
+.nb-module-list{
+  position:relative !important;
+  z-index:2 !important;
+  background:var(--nb-paper) !important;
+}
+
+.nb-module-row{
+  min-height:112px !important;
+}
+
+.nb-module-main strong{
+  font-size:clamp(30px, 8.5vw, 64px) !important;
+  line-height:.86 !important;
+  letter-spacing:-.075em !important;
+}
+
+/* EVENT PLANNER: top nav still brutal but more stable */
+.nb-event-topbar{
+  min-height:72px !important;
+}
+
+.nb-event-topbar .passport-button,
+.nb-event-topbar .top-nav-pill{
+  min-height:72px !important;
+  overflow:hidden !important;
+}
+
+/* EVENT PLANNER: forecast header spacing/readability */
+.event-planner-v63 .forecast-title-row{
+  min-height:120px !important;
+  padding:24px 18px !important;
+  align-items:start !important;
+}
+
+.event-planner-v63 .forecast-title-text{
+  font-size:clamp(48px, 15vw, 118px) !important;
+  max-width:8ch !important;
+  overflow-wrap:normal !important;
+}
+
+.event-planner-v63 .forecast-status-pill{
+  min-width:92px !important;
+  min-height:44px !important;
+  display:grid !important;
+  place-items:center !important;
+  align-self:start !important;
+}
+
+/* EVENT PLANNER: event title less airy and easier to scan */
+.nb-forecast-title{
+  padding:30px 18px 34px !important;
+  font-size:clamp(48px, 15vw, 118px) !important;
+  line-height:.84 !important;
+  letter-spacing:-.09em !important;
+  min-height:auto !important;
+}
+
+/* EVENT PLANNER: meta rows must show both label + value */
+.event-planner-v63 .forecast-meta-pill{
+  min-height:88px !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:8px !important;
+  padding:18px !important;
+}
+
+.event-planner-v63 .forecast-meta-pill span{
+  display:block !important;
+  color:rgb(17 17 17 / .46) !important;
+}
+
+.event-planner-v63 .forecast-meta-pill strong{
+  display:block !important;
+  margin:0 !important;
+  min-height:1em !important;
+  font-size:clamp(26px, 7.6vw, 54px) !important;
+  line-height:.92 !important;
+  letter-spacing:-.065em !important;
+  color:var(--nb-black) !important;
+}
+
+/* EVENT PLANNER: profit block becomes clear mobile app component */
+.nb-forecast-grid{
+  grid-template-columns:1fr !important;
+}
+
+.nb-profit-block,
+.event-planner-v63 .profit-orb{
+  min-height:260px !important;
+  border-left:0 !important;
+  border-top:var(--nb-border) !important;
+  display:grid !important;
+  align-content:center !important;
+  justify-items:start !important;
+  text-align:left !important;
+  padding:24px 18px !important;
+}
+
+.event-planner-v63 .profit-kicker,
+.event-planner-v63 .profit-sub{
+  font-size:12px !important;
+  letter-spacing:.12em !important;
+}
+
+.event-planner-v63 .profit-orb strong{
+  margin:18px 0 !important;
+  font-size:clamp(52px, 16vw, 112px) !important;
+  line-height:.82 !important;
+  letter-spacing:-.09em !important;
+}
+
+/* EVENT PLANNER: terms block should read as text, not almost invisible */
+.event-planner-v63 .forecast-terms-card{
+  padding:18px !important;
+  border-top:0 !important;
+}
+
+.event-planner-v63 .forecast-terms-card p:last-child{
+  margin-top:8px !important;
+  color:rgb(17 17 17 / .72) !important;
+  font-size:22px !important;
+  line-height:1.05 !important;
+  letter-spacing:-.05em !important;
+  font-weight:650 !important;
+}
+
+/* EVENT PLANNER: stat grid starts after forecast, no hidden bottom collisions */
+.event-planner-v63 .stat-card{
+  min-height:142px !important;
+}
+
+.event-planner-v63 .stat-card div:last-child{
+  font-size:clamp(34px, 9.6vw, 68px) !important;
+}
+
+/* Safer bottom spacing for Safari address bar */
+.module-dashboard,
+.event-planner-v63{
+  padding-bottom:calc(var(--safe-bottom) + 130px) !important;
+}
+
+@media (max-width:640px){
+  .nb-landing-hero{
+    min-height:calc(100dvh - 130px) !important;
+    padding:16px !important;
+  }
+
+  .nb-landing-meta{
+    font-size:clamp(17px, 4.5vw, 24px) !important;
+  }
+
+  .nb-landing-title-wrap{
+    padding-top:5vh !important;
+  }
+
+  .nb-landing-title-wrap h1{
+    font-size:clamp(70px, 23vw, 126px) !important;
+    line-height:.74 !important;
+  }
+
+  .nb-landing-title-wrap p{
+    font-size:clamp(24px, 7vw, 36px) !important;
+    max-width:11ch !important;
+  }
+
+  .nb-module-row{
+    min-height:104px !important;
+  }
+
+  .nb-module-main strong{
+    font-size:clamp(31px, 9vw, 48px) !important;
+  }
+
+  .event-planner-v63 .forecast-title-row{
+    min-height:112px !important;
+  }
+
+  .event-planner-v63 .forecast-title-text{
+    font-size:clamp(48px, 15vw, 86px) !important;
+  }
+
+  .nb-forecast-title{
+    font-size:clamp(48px, 15vw, 82px) !important;
+  }
+
+  .event-planner-v63 .forecast-meta-pill strong{
+    font-size:clamp(28px, 8vw, 46px) !important;
+  }
+
+  .nb-profit-block,
+  .event-planner-v63 .profit-orb{
+    min-height:245px !important;
+  }
+}
+
+@media (max-width:380px){
+  .nb-landing-title-wrap h1{
+    font-size:clamp(62px, 22vw, 108px) !important;
+  }
+
+  .event-planner-v63 .forecast-title-text{
+    font-size:clamp(44px, 14vw, 76px) !important;
+  }
+
+  .nb-forecast-title{
+    font-size:clamp(44px, 14vw, 72px) !important;
+  }
+}

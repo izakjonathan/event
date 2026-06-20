@@ -54,3 +54,20 @@ Apply the same redesign to:
 - Calendar
 - Project Management
 - Artist Booking
+
+
+## v66 Phase 1 polish
+
+v66 refines the Landing page and Event Planner after real iPhone screenshots.
+
+The design direction is unchanged:
+- monochrome
+- neo-brutalist
+- simple app feel
+- strong negative space
+- large typography
+
+Main polish:
+- landing hero composition fixed
+- Event Planner forecast/meta/profit balance improved
+- Safari bottom spacing improved

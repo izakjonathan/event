@@ -1,8 +1,10 @@
-# Event Operations System v65
+# Event Operations System v66
 
-Base: v64
+Base: v65
 
-## Neo-brutalist Redesign Phase 1
+## Neo-brutalist Phase 1 Polish
+
+This build fixes visible issues from the v65 screenshots.
 
 Scope:
 - Landing page
@@ -10,38 +12,15 @@ Scope:
 
 Functionality unchanged.
 
-Design direction:
-- monochromatic
-- simple clear app feel
-- negative space
-- large typography
-- strong black/white blocks
-- square brutalist controls
-- list-row navigation
-- reduced decorative grid rails from v64 in these two modules
-- oversized landing title
-- Event Planner restructured visually through CSS into a sharper app interface
+Fixes:
+- Landing hero title no longer collides with / gets covered by the module rows.
+- Landing hero keeps the oversized neo-brutalist feeling but becomes readable.
+- Module list starts cleanly after the hero.
+- Event Planner forecast meta rows now clearly show label + value.
+- Event Planner profit block is better balanced on mobile.
+- Event Planner forecast title/event title spacing is tightened.
+- Terms block has stronger readability.
+- Added safer bottom padding for Safari address bar.
 
-References used:
-- dark portfolio menu layouts
-- oversized type portfolio pages
-- black/white agency menus
-- brutal list rows
-- résumé/editorial layout references
-
-Changes:
-- Landing page rebuilt into a neo-brutalist app home:
-  - dark hero block
-  - huge type
-  - simple primary CTA
-  - full-width module rows
-- Event Planner restyled:
-  - top nav as hard square app tabs
-  - forecast section as main product screen
-  - large event title
-  - black projected profit panel
-  - sharp stat cells
-  - square fields
-  - simplified visual hierarchy
-- All functionality preserved.
+Status:
 - Build passed.

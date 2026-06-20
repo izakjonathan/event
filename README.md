@@ -419,3 +419,8 @@ Functionality is unchanged.
 Landing page and Event Planner redesigned in a monochrome neo-brutalist app style.
 
 Functionality unchanged.
+
+
+## v66 Neo-brutalist Phase 1 Polish
+
+Refines the Landing page and Event Planner based on mobile screenshots.
