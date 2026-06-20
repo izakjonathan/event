@@ -1,45 +1,36 @@
-# Event Operations System v61
+# Event Operations System v64
 
-Base: v60
+Base: v63
 
-## Unified Module Design System Integration
+## Mono Editorial Grid Redesign
 
-This build integrates all modules into the same design-system expression.
+Resources used:
+- `variables.css.txt`
+- `DESIGN(1).md`
+- supplied mono.frm.fm screenshots / reference
+
+This build applies the uploaded Mono design reference across the whole event operations system.
+
+Design direction:
+- black / white / charcoal only
+- no yellow or red accents
+- no gradients
+- no shadows
+- no rounded corners
+- editorial grid structure
+- strict borders and visible structural lines
+- vertical side rails
+- condensed / editorial typography feel using safe font fallbacks
+- table-like compact summaries
+- black block primary actions
+- square inputs and form controls
 
 Functionality unchanged.
 
-What changed:
-- Added `.ds-*` classes directly into module JSX where practical.
-- Added module identity classes:
-  - `module-dashboard`
-  - `module-event-planner`
-  - `module-artist-booking`
-  - `module-artist-management`
-  - `module-calendar`
-  - `module-bar-planner`
-  - `module-project-management`
-- Unified top navigation styling across modules.
-- Unified hero treatment across modules.
-- Unified cards and section styling.
-- Unified compact summaries.
-- Unified stats grids.
-- Unified collapsible headers.
-- Unified buttons/pills/fields.
-- Unified list cards:
-  - project list cards
-  - task cards
-  - calendar cards
-  - bar product cards
-  - artist submission cards
-- Added Event Planner legacy bridge so its older internal classes follow the same design system.
-- Kept v60 cleaned design-system baseline.
-- Kept pill-app visual language:
-  - off-white canvas
-  - black primary actions
-  - yellow highlights
-  - rounded pills
-  - soft outline cards
+System integration:
+- The v63 Event Planner design-system cleanup remains active.
+- v64 remaps all master `--app-*` tokens to the uploaded Mono variables.
+- All modules use the same mono editorial grid layer.
 
-Status:
-- All modules now express the same design language.
-- Build passed.
+Build status:
+- `npm run build` passed.

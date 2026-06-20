@@ -153,7 +153,7 @@ const STORAGE_KEY = 'event-planner-calculator-v2';
 const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
 const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
 const DEFAULT_WORKSPACE = 'main-workspace';
-const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v3-design-system-ready';
+const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v4-unified-pill-system';
 const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif', unbounded: 'Unbounded' };
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
@@ -221,8 +221,8 @@ function rgbaFromHex(hex: string, alpha: number) {
 
 function defaultUiStudio(): UiStudioSettings {
   return {
-    paper: '#f4efe3',
-    ink: '#5c0701',
+    paper: '#fbfbf6',
+    ink: '#101010',
     fontScale: 1,
     typePreset: 'system',
     headingSize: 1,
@@ -767,29 +767,29 @@ export default function EventPlannerApp() {
     }
   }
 
-  if (!active) return <main className="min-h-dvh bg-[var(--paper)]" />;
+  if (!active) return <main className="ds-page module-event-planner event-planner-v63" />;
 
   const workspaceLink = typeof window === 'undefined' ? '' : `${window.location.origin}${window.location.pathname}?workspace=${workspace}`;
 
   return (
-    <main className="no-callout min-h-dvh overflow-x-hidden bg-[var(--paper)] px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)] text-[var(--ink)]">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
+    <main className="ds-page module-event-planner event-planner-v63 no-callout min-h-dvh overflow-x-hidden px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)]">
+      <div className="ds-wrap event-planner-wrap mx-auto flex w-full max-w-6xl flex-col gap-3">
+        <header className="event-top-nav sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
           <button
             onClick={() => { window.location.href = '/'; }}
-            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
+            className="ds-button passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
           >
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">System</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Dashboard</strong>
           </button>
           <button
             onClick={() => { setLibraryTab('events'); setShowLibrary(true); }}
-            className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
+            className="ds-button passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
           >
             <span className="block text-[8px] font-bold uppercase leading-none tracking-[.13em] opacity-65">Choose</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Event</strong>
           </button>
-          <button onClick={() => setShowSettings(true)} className="passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
+          <button onClick={() => setShowSettings(true)} className="ds-button passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur">
             <span className="block text-[8px] uppercase leading-none tracking-[.13em] opacity-65">Manage</span>
             <strong className="block text-[12.5px] font-black leading-[1.02] tracking-[-.035em]">Settings</strong>
           </button>
@@ -831,7 +831,7 @@ export default function EventPlannerApp() {
                 </div>
 
                 <div className="forecast-terms-card mt-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Terms</p>
+                  <p className="ds-label">Terms</p>
                   <p className="mt-1 text-sm leading-snug opacity-85">{active.meta.terms || 'No terms added yet.'}</p>
                 </div>
               </>
@@ -895,9 +895,9 @@ export default function EventPlannerApp() {
 
             <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
 
-            <label className="grid gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="passport-input compact-input w-full px-3">
+            <label className="ds-field-wrap event-field">
+              <span className="ds-label">Status</span>
+              <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="ds-field passport-input compact-input">
                 <option value="idea">Idea</option>
                 <option value="quoted">Quoted</option>
                 <option value="confirmed">Confirmed</option>
@@ -930,9 +930,9 @@ export default function EventPlannerApp() {
                     <Field label="Start time" type="time" value={artist.startTime || ''} onChange={(value) => patchArtist(artist.id, { startTime: value })} />
                     <Field label="End time" type="time" value={artist.endTime || ''} onChange={(value) => patchArtist(artist.id, { endTime: value })} />
                     <NumberField label="Fee" value={artist.fee} onChange={(value) => patchArtist(artist.id, { fee: value })} />
-                    <label className="grid gap-1">
-                      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Status</span>
-                      <select value={artist.status} onChange={(event) => patchArtist(artist.id, { status: event.target.value as EventArtist['status'] })} className="passport-input compact-input w-full px-3">
+                    <label className="ds-field-wrap event-field">
+                      <span className="ds-label">Status</span>
+                      <select value={artist.status} onChange={(event) => patchArtist(artist.id, { status: event.target.value as EventArtist['status'] })} className="ds-field passport-input compact-input">
                         <option value="proposed">Proposed</option>
                         <option value="contacted">Contacted</option>
                         <option value="confirmed">Confirmed</option>
@@ -956,14 +956,14 @@ export default function EventPlannerApp() {
             {active.scenarios.map((scenario) => {
               const row = scenarioResult(scenario, active.bar.costPercent);
               return (
-                <div key={scenario.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                <div key={scenario.id} className="ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1.1fr_.7fr_.8fr_.8fr_.8fr_auto] md:items-end">
                     <Field label="Scenario" value={scenario.name} onChange={(value) => patchScenario(scenario.id, { name: value })} />
                     <StepperField label="Tickets" value={scenario.ticketsSold} onChange={(value) => patchScenario(scenario.id, { ticketsSold: value })} />
                     <NumberField label="Avg ticket" value={scenario.averageTicketPrice} onChange={(value) => patchScenario(scenario.id, { averageTicketPrice: value })} />
                     <NumberField label="Bar spend" value={scenario.barSpendPerGuest} onChange={(value) => patchScenario(scenario.id, { barSpendPerGuest: value })} />
                     <NumberField label="Expenses" value={scenario.extraExpenses} onChange={(value) => patchScenario(scenario.id, { extraExpenses: value })} />
-                    <button onClick={() => patchActive({ scenarios: active.scenarios.filter((item) => item.id !== scenario.id) })} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+                    <button onClick={() => patchActive({ scenarios: active.scenarios.filter((item) => item.id !== scenario.id) })} className="ds-button passport-button">Remove</button>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
                     <Stat label="Ticket revenue" value={money(row.ticketRevenue)} />
@@ -974,7 +974,7 @@ export default function EventPlannerApp() {
                 </div>
               );
             })}
-            <button onClick={() => patchActive({ scenarios: [...active.scenarios, { id: uid(), name: 'New scenario', ticketsSold: totals.totalSold, averageTicketPrice: totals.averageTicketPrice, barSpendPerGuest: active.bar.spendPerGuest, extraExpenses: totals.expenses, notes: '' }] })} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Add scenario</button>
+            <button onClick={() => patchActive({ scenarios: [...active.scenarios, { id: uid(), name: 'New scenario', ticketsSold: totals.totalSold, averageTicketPrice: totals.averageTicketPrice, barSpendPerGuest: active.bar.spendPerGuest, extraExpenses: totals.expenses, notes: '' }] })} className="ds-button ds-button-primary passport-button">+ Add scenario</button>
           </div>
         </Collapsible>
 
@@ -983,17 +983,17 @@ export default function EventPlannerApp() {
             {active.tickets.map((ticket) => {
               const total = ticket.price * ticket.sold;
               return (
-                <div key={ticket.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                <div key={ticket.id} className="ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1.3fr_.8fr_.8fr_.8fr_auto] md:items-end">
                     <Field label="Name" value={ticket.name} onChange={(value) => patchTicket(ticket.id, { name: value })} />
                     <NumberField label="Ticket price" value={ticket.price} onChange={(value) => patchTicket(ticket.id, { price: value })} />
                     <StepperField label="Sold" value={ticket.sold} onChange={(value) => patchTicket(ticket.id, { sold: value })} />
                     <StepperField label="Capacity" value={ticket.capacity} onChange={(value) => patchTicket(ticket.id, { capacity: value })} />
-                    <button onClick={() => patchActive({ tickets: active.tickets.filter((item) => item.id !== ticket.id) })} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+                    <button onClick={() => patchActive({ tickets: active.tickets.filter((item) => item.id !== ticket.id) })} className="ds-button passport-button">Remove</button>
                   </div>
                   <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto] md:items-center">
                     <Field label="Notes" value={ticket.notes} onChange={(value) => patchTicket(ticket.id, { notes: value })} />
-                    <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
+                    <div className="ds-section event-inline-total text-right">
                       <div className="text-xs uppercase tracking-[.14em] opacity-70">{money(ticket.price)} × {fmt.format(ticket.sold)}</div>
                       <MoneyValue value={total} className="text-2xl font-black tracking-[-.04em]" />
                     </div>
@@ -1006,7 +1006,7 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Bar calculator" subtitle="Estimate bar revenue, stock cost and bar profit." open={openSections.bar} onToggle={() => toggleSection('bar')}>
           <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+            <div className="ds-section event-row-card">
               <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
                 Include bar calculator
                 <input type="checkbox" checked={active.bar.enabled} onChange={(event) => patchActive({ bar: { ...active.bar, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
@@ -1034,18 +1034,18 @@ export default function EventPlannerApp() {
         <Collapsible title="Staff cost calculator" subtitle="Auto-calculate wage cost including extra percentage." open={openSections.staff} onToggle={() => toggleSection('staff')} action="Add staff" onAction={() => patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] })}>
           <div className="grid gap-3">
             {active.staff.map((line) => (
-              <div key={line.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+              <div key={line.id} className="ds-section event-row-card">
                 <div className="grid gap-2 md:grid-cols-[1.2fr_.6fr_.6fr_.8fr_.7fr_auto] md:items-end">
                   <Field label="Role" value={line.role} onChange={(value) => patchStaff(line.id, { role: value })} />
                   <StepperField label="People" value={line.people} onChange={(value) => patchStaff(line.id, { people: value })} />
                   <NumberField label="Hours" value={line.hours} onChange={(value) => patchStaff(line.id, { hours: value })} />
                   <NumberField label="Hourly wage" value={line.hourlyWage} onChange={(value) => patchStaff(line.id, { hourlyWage: value })} />
                   <NumberField label="Extra %" value={line.extraPercent} onChange={(value) => patchStaff(line.id, { extraPercent: value })} />
-                  <button onClick={() => patchActive({ staff: active.staff.filter((item) => item.id !== line.id) })} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+                  <button onClick={() => patchActive({ staff: active.staff.filter((item) => item.id !== line.id) })} className="ds-button passport-button">Remove</button>
                 </div>
                 <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto] md:items-center">
                   <Field label="Notes" value={line.notes} onChange={(value) => patchStaff(line.id, { notes: value })} />
-                  <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
+                  <div className="ds-section event-inline-total text-right">
                     <div className="text-xs uppercase tracking-[.14em] opacity-70">Staff cost</div>
                     <MoneyValue value={staffTotal(line)} className="text-2xl font-black tracking-[-.04em]" />
                   </div>
@@ -1066,7 +1066,7 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Venue terms / profit split" subtitle="Calculate organizer and venue outcome." open={openSections.terms} onToggle={() => toggleSection('terms')}>
           <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+            <div className="ds-section event-row-card">
               <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
                 Use terms calculator
                 <input type="checkbox" checked={active.termsPlan.enabled} onChange={(event) => patchActive({ termsPlan: { ...active.termsPlan, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
@@ -1091,21 +1091,21 @@ export default function EventPlannerApp() {
         <Collapsible title="Files" subtitle="Upload files to this event." open={openSections.files} onToggle={() => toggleSection('files')}>
           <div className="grid gap-3">
             <label className="file-drop-card">
-              <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Upload files</span>
+              <span className="ds-label">Upload files</span>
               <strong className="mt-1 block text-2xl font-black tracking-[-.05em]">Add files</strong>
               <span className="mt-1 block text-sm opacity-70">Saved inside this event. Tap files to view or download.</span>
               <input type="file" multiple onChange={(event) => void addFilesToEvent(event.target.files)} className="sr-only" />
             </label>
             {!active.files.length && (
-              <div className="rounded-soft border-[1.5px] border-dashed border-[var(--ink)] p-4 text-center text-sm opacity-70">No files uploaded yet.</div>
+              <div className="ds-section event-empty-state">No files uploaded yet.</div>
             )}
             <div className="grid gap-2">
               {active.files.map((file) => (
-                <div key={file.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+                <div key={file.id} className="ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1fr_auto_auto] md:items-end">
                     <Field label="File name" value={file.name} onChange={(value) => patchFile(file.id, { name: value })} />
-                    <button onClick={() => openFile(file)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Open</button>
-                    <button onClick={() => downloadFile(file)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Download</button>
+                    <button onClick={() => openFile(file)} className="ds-button ds-button-primary passport-button">Open</button>
+                    <button onClick={() => downloadFile(file)} className="ds-button ds-button-primary passport-button">Download</button>
                   </div>
                   <div className="mt-2 flex items-center justify-between gap-3 text-xs opacity-70">
                     <span>{file.mimeType || 'file'} · {formatFileSize(file.size)}</span>
@@ -1126,10 +1126,10 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Export summary" subtitle="Copy text or download CSV." open={openSections.export} onToggle={() => toggleSection('export')}>
           <div className="grid gap-2 md:grid-cols-2">
-            <button onClick={() => void navigator.clipboard.writeText(buildTextSummary(active, totals, workspaceLink)).then(() => setStatus('Summary copied'))} className="passport-button min-h-12 rounded-soft px-3 font-bold">Copy event summary</button>
-            <button onClick={() => downloadCsv(active, totals)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Download CSV</button>
+            <button onClick={() => void navigator.clipboard.writeText(buildTextSummary(active, totals, workspaceLink)).then(() => setStatus('Summary copied'))} className="ds-button ds-button-primary passport-button">Copy event summary</button>
+            <button onClick={() => downloadCsv(active, totals)} className="ds-button ds-button-primary passport-button">Download CSV</button>
           </div>
-          <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-soft border-[1.5px] border-[var(--ink)] p-3 text-xs leading-relaxed">{buildTextSummary(active, totals, workspaceLink)}</pre>
+          <pre className="ds-section event-export-pre mt-3 max-h-80 overflow-auto whitespace-pre-wrap text-xs leading-relaxed">{buildTextSummary(active, totals, workspaceLink)}</pre>
         </Collapsible>
       </div>
 
@@ -1139,36 +1139,36 @@ export default function EventPlannerApp() {
           <div className="grid gap-3">
             <div className="passport-card rounded-full p-1">
               <div className="grid grid-cols-2 gap-1">
-                <button onClick={() => setLibraryTab('events')} className={`rounded-full px-3 py-2 text-sm font-bold ${libraryTab === 'events' ? 'bg-[var(--ink)] text-[var(--paper)]' : ''}`}>Saved events</button>
-                <button onClick={() => setLibraryTab('templates')} className={`rounded-full px-3 py-2 text-sm font-bold ${libraryTab === 'templates' ? 'bg-[var(--ink)] text-[var(--paper)]' : ''}`}>Templates</button>
+                <button onClick={() => setLibraryTab('events')} className={`ds-button event-tab-button ${libraryTab === 'events' ? 'ds-button-primary' : ''}`}>Saved events</button>
+                <button onClick={() => setLibraryTab('templates')} className={`ds-button event-tab-button ${libraryTab === 'templates' ? 'ds-button-primary' : ''}`}>Templates</button>
               </div>
             </div>
 
             {libraryTab === 'events' ? (
               <>
-                <button onClick={() => createNewEvent('blank')} className="passport-button min-h-12 rounded-soft px-3 font-bold">Add new event</button>
+                <button onClick={() => createNewEvent('blank')} className="ds-button ds-button-primary passport-button">Add new event</button>
                 <div className="grid gap-2">
                   {events.map((event) => (
-                    <button key={event.id} onClick={() => { setActiveId(event.id); setShowLibrary(false); }} className={`passport-button rounded-soft p-3 text-left ${event.id === active.id ? 'bg-[var(--ink-soft)]' : ''}`}>
+                    <button key={event.id} onClick={() => { setActiveId(event.id); setShowLibrary(false); }} className={`ds-card event-library-card passport-button ${event.id === active.id ? 'ds-accent' : ''}`}>
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="font-black text-lg tracking-[-.03em]">{event.meta.name || 'Untitled event'}</div>
                           <div className="text-sm opacity-75">{statusLabel(event.meta.status)} · {[formatEventSchedule(event.meta), event.meta.location].filter(Boolean).join(' · ') || 'No details yet'}</div>
                         </div>
-                        <span className="rounded-full border border-[var(--ink)]/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em]">Open</span>
+                        <span className="ds-accent event-status-chip">Open</span>
                       </div>
                     </button>
                   ))}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">Duplicate current</button>
-                  <button onClick={deleteActiveEvent} className="passport-button-danger min-h-12 rounded-soft px-3 font-bold">Delete current</button>
+                  <button onClick={duplicateEvent} className="ds-button ds-button-primary passport-button">Duplicate current</button>
+                  <button onClick={deleteActiveEvent} className="ds-button ds-button-danger passport-button-danger">Delete current</button>
                 </div>
               </>
             ) : (
               <div className="grid gap-2 md:grid-cols-2">
                 {templates.map((template) => (
-                  <button key={template.key} onClick={() => createNewEvent(template.key)} className="passport-button rounded-soft p-3 text-left">
+                  <button key={template.key} onClick={() => createNewEvent(template.key)} className="ds-card event-template-card passport-button">
                     <strong className="text-base">{template.label}</strong><br /><span className="text-sm opacity-70">{template.description}</span>
                   </button>
                 ))}
@@ -1182,17 +1182,17 @@ export default function EventPlannerApp() {
       {showQuickAdd && (
         <Modal title="Quick add" onClose={() => setShowQuickAdd(false)}>
           <div className="grid gap-3">
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Fast rows</p>
+            <div className="ds-section event-row-card">
+              <p className="ds-label mb-2">Fast rows</p>
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'Income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Income</button>
-                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: 'Expense', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Expense</button>
-                <button onClick={() => { patchActive({ tickets: [...active.tickets, { id: uid(), name: 'Ticket tier', price: 0, sold: 0, capacity: 0, notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Ticket</button>
-                <button onClick={() => { patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-12 rounded-soft px-3 font-bold">+ Staff</button>
+                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'Income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Income</button>
+                <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: 'Expense', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Expense</button>
+                <button onClick={() => { patchActive({ tickets: [...active.tickets, { id: uid(), name: 'Ticket tier', price: 0, sold: 0, capacity: 0, notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Ticket</button>
+                <button onClick={() => { patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Staff</button>
               </div>
             </div>
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Common event expenses</p>
+            <div className="ds-section event-row-card">
+              <p className="ds-label mb-2">Common event expenses</p>
               <div className="grid gap-2">
                 {[
                   ['DJ fee', 3500],
@@ -1202,7 +1202,7 @@ export default function EventPlannerApp() {
                   ['Sound / tech', 2500],
                   ['Door staff', 1500]
                 ].map(([name, amount]) => (
-                  <button key={name} onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: String(name), amount: Number(amount), quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="passport-button min-h-11 rounded-soft px-3 text-left font-bold">
+                  <button key={name} onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'expense', name: String(name), amount: Number(amount), quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button text-left">
                     + {name} <span className="opacity-60">· {money(Number(amount))}</span>
                   </button>
                 ))}
@@ -1216,22 +1216,22 @@ export default function EventPlannerApp() {
         <Modal title="Settings" onClose={() => setShowSettings(false)}>
           <div className="grid gap-3">
             <div className="grid gap-2 md:grid-cols-2">
-              <button onClick={duplicateEvent} className="passport-button min-h-12 rounded-soft px-3 font-bold">Duplicate current</button>
-              <button onClick={() => void loadFromSupabase()} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>
+              <button onClick={duplicateEvent} className="ds-button ds-button-primary passport-button">Duplicate current</button>
+              <button onClick={() => void loadFromSupabase()} className="ds-button ds-button-primary passport-button">Reload sync</button>
             </div>
 
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+            <div className="ds-section event-row-card">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Storage</p>
+                  <p className="ds-label">Storage</p>
                   <p className="text-lg font-black tracking-[-.03em]">{syncEnabled ? 'Supabase sync' : 'Local only'}</p>
                 </div>
-                <span className="rounded-full border border-[var(--ink)]/25 px-3 py-1.5 text-xs font-bold">{status}</span>
+                <span className="ds-section event-status-chip">{status}</span>
               </div>
               <WorkspacePanel workspace={workspace} workspaceLink={workspaceLink} status={status} onReload={() => void loadFromSupabase()} onChangeWorkspace={setWorkspaceAndReload} />
               {syncError && (
                 <div className="supabase-error-card mt-3">
-                  <p className="text-[10px] font-bold uppercase tracking-[.16em]">Supabase error details</p>
+                  <p className="ds-label">Supabase error details</p>
                   <p className="mt-2 text-sm leading-relaxed">{syncError}</p>
                 </div>
               )}
@@ -1250,9 +1250,9 @@ export default function EventPlannerApp() {
                 <ColorField label="Background" value={uiStudio.paper} onChange={(value) => setUiStudio((current) => ({ ...current, paper: value }))} />
                 <ColorField label="Accent" value={uiStudio.ink} onChange={(value) => setUiStudio((current) => ({ ...current, ink: value }))} />
 
-                <label className="grid gap-1">
+                <label className="ds-field-wrap event-field">
                   <span className="ui-label">Type preset</span>
-                  <select value={uiStudio.typePreset} onChange={(event) => setUiStudio((current) => ({ ...current, typePreset: event.target.value as UiStudioSettings['typePreset'] }))} className="passport-input min-h-12 w-full px-3">
+                  <select value={uiStudio.typePreset} onChange={(event) => setUiStudio((current) => ({ ...current, typePreset: event.target.value as UiStudioSettings['typePreset'] }))} className="ds-field passport-input">
                     <option value="system">System</option>
                     <option value="rounded">Rounded</option>
                     <option value="serif">Serif</option>
@@ -1326,7 +1326,7 @@ export default function EventPlannerApp() {
                 <p className="studio-label">Preview</p>
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[.15em] opacity-65">Labels</p>
+                    <p className="ds-label">Labels</p>
                     <p className="text-2xl font-black tracking-[-.05em]">Forecast style</p>
                     <p className="mt-1 text-sm opacity-70">Body text preview</p>
                   </div>
@@ -1337,8 +1337,8 @@ export default function EventPlannerApp() {
               </div>
             </div>
 
-            <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3 text-sm leading-relaxed">
-              <p className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Notes</p>
+            <div className="ds-section event-note-card text-sm leading-relaxed">
+              <p className="ds-label">Notes</p>
               <p className="mt-2">Open the same workspace link on another phone or computer to edit the same events. Line modes still work the same: Fixed = amount × quantity, Per ticket holder = amount × tickets sold × quantity, Percentage = % of ticket revenue × quantity.</p>
             </div>
           </div>
@@ -1448,8 +1448,8 @@ function statusLabel(status: EventStatus) {
 
 function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number }) {
   return (
-    <div className="stat-card margin-fill-card">
-      <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Margin / Fill</div>
+    <div className="ds-card stat-card margin-fill-card">
+      <div className="ds-label">Margin / Fill</div>
       <div className="margin-fill-values">
         <div className="margin-fill-item">
           <div className="margin-fill-number"><strong>{margin}</strong><span>%</span></div>
@@ -1467,8 +1467,8 @@ function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number
 function Stat({ label, value }: { label: string; value: string }) {
   const isMoney = value.endsWith(' DKK');
   return (
-    <div className="stat-card">
-      <div className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</div>
+    <div className="ds-card stat-card">
+      <div className="ds-label">{label}</div>
       <div className="mt-1.5 truncate text-xl font-black tracking-[-.05em] md:text-2xl">{isMoney ? <MoneyString text={value} /> : value.includes('%') ? <PercentString text={value} /> : value}</div>
     </div>
   );
@@ -1476,7 +1476,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <div className="mini-panel">
+    <div className="ds-section mini-panel">
       <h3 className="font-black tracking-[-.03em]">{title}</h3>
       <div className="mt-2 space-y-1 text-sm opacity-75">
         {lines.map((line) => <p key={line}>{line}</p>)}
@@ -1487,11 +1487,11 @@ function MiniPanel({ title, lines }: { title: string; lines: string[] }) {
 
 function ForecastInfoCard({ title, rows }: { title: string; rows: [string, string][] }) {
   return (
-    <div className="forecast-info-card">
+    <div className="ds-card forecast-info-card">
       <h3>{title}</h3>
       <div className="mt-3 grid gap-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="forecast-info-row">
+          <div key={label} className="ds-section forecast-info-row">
             <span>{label}</span>
             <strong>{value.endsWith(' DKK') ? <MoneyString text={value} /> : value}</strong>
           </div>
@@ -1530,12 +1530,12 @@ function TypeScaleControl({ label, value, valueLabel, min, max, step, onChange }
     onChange(Math.min(max, Math.max(min, next)));
   };
   return (
-    <div className="grid gap-1">
+    <div className="ds-field-wrap event-field">
       <span className="ui-label">{label}</span>
       <div className="ui-stepper">
-        <button onClick={() => change(-1)} className="passport-button rounded-soft font-black">−</button>
+        <button onClick={() => change(-1)} className="ds-button passport-button font-black">−</button>
         <div className="passport-input grid place-items-center px-3 font-black">{valueLabel}</div>
-        <button onClick={() => change(1)} className="passport-button rounded-soft font-black">+</button>
+        <button onClick={() => change(1)} className="ds-button passport-button font-black">+</button>
       </div>
     </div>
   );
@@ -1558,12 +1558,12 @@ function TypeRoleControl({ title, description, size, weight, lineHeight, letterS
           step={0.05}
           onChange={onSize}
         />
-        <div className="grid gap-1">
+        <div className="ds-field-wrap event-field">
           <span className="ui-label">Weight · {weight}</span>
           <div className="ui-stepper">
-            <button onClick={() => onWeight(Math.max(300, weight - 100))} className="passport-button rounded-soft font-black">−</button>
+            <button onClick={() => onWeight(Math.max(300, weight - 100))} className="ds-button passport-button font-black">−</button>
             <div className="passport-input grid place-items-center px-3 font-black">{weight}</div>
-            <button onClick={() => onWeight(Math.min(950, weight + 100))} className="passport-button rounded-soft font-black">+</button>
+            <button onClick={() => onWeight(Math.min(950, weight + 100))} className="ds-button passport-button font-black">+</button>
           </div>
         </div>
         <TypeScaleControl
@@ -1591,8 +1591,8 @@ function TypeRoleControl({ title, description, size, weight, lineHeight, letterS
 
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
-    <label className="grid gap-1">
-      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
+    <label className="ds-field-wrap event-field">
+      <span className="ds-label">{label}</span>
       <div className="color-field passport-input min-h-12 px-3">
         <input type="color" value={value} onChange={(event) => onChange(event.target.value)} className="h-8 w-10 cursor-pointer border-0 bg-transparent p-0" />
         <input value={value} onChange={(event) => onChange(event.target.value)} className="w-full bg-transparent text-sm font-bold outline-none" />
@@ -1603,86 +1603,86 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
 
 function Collapsible({ title, subtitle, open, onToggle, action, onAction, featured, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; featured?: boolean; children: ReactNode }) {
   return (
-    <section className={`passport-card rounded-passport ${featured ? 'p-4 md:p-5' : 'p-3 md:p-4'}`}>
+    <section className={`ds-card event-section-card ${featured ? 'event-section-featured' : ''}`}>
       {!(featured && title === 'Forecast') && (
-        <div className="flex items-center justify-between gap-3">
-          <button onClick={onToggle} className="min-w-0 flex-1 text-left">
-            <h2 className={`${featured ? 'text-[2.15rem]' : 'text-[1.75rem]'} font-black leading-none tracking-[-.055em]`}>{title} <span className="text-base align-middle opacity-70">{open ? '−' : '+'}</span></h2>
-            {subtitle && <p className="mt-1 text-sm opacity-70">{subtitle}</p>}
+        <div className="event-section-head">
+          <button onClick={onToggle} className="event-section-title-button">
+            <h2 className="ds-heading event-section-title">{title} <span>{open ? '−' : '+'}</span></h2>
+            {subtitle && <p className="ds-body event-section-subtitle">{subtitle}</p>}
           </button>
-          {action && onAction && <button onClick={onAction} className="passport-button min-h-11 rounded-full px-4 text-sm font-bold">{action}</button>}
+          {action && onAction && <button onClick={onAction} className="ds-button ds-button-primary passport-button event-section-action">{action}</button>}
         </div>
       )}
-      {(open || (featured && title === 'Forecast')) && <div className={featured && title === 'Forecast' ? '' : 'mt-3'}>{children}</div>}
+      {(open || (featured && title === 'Forecast')) && <div className={featured && title === 'Forecast' ? 'event-section-body event-section-body-featured' : 'event-section-body'}>{children}</div>}
     </section>
   );
 }
 
 function Field({ label, value, onChange, type = 'text', placeholder }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string }) {
   return (
-    <label className="grid gap-1">
-      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <input type={type} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} className="passport-input compact-input w-full px-3" />
+    <label className="ds-field-wrap event-field">
+      <span className="ds-label">{label}</span>
+      <input type={type} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} className="ds-field passport-input compact-input w-full px-3" />
     </label>
   );
 }
 
 function AreaField({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
   return (
-    <label className="grid gap-1">
-      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <textarea value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} rows={3} className="passport-input w-full resize-none px-3 py-2.5" />
+    <label className="ds-field-wrap event-field">
+      <span className="ds-label">{label}</span>
+      <textarea value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} rows={3} className="ds-field passport-input w-full resize-none px-3 py-2.5" />
     </label>
   );
 }
 
 function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <label className="grid gap-1">
-      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <input inputMode="decimal" value={String(value)} onChange={(event) => onChange(numberOrZero(event.target.value))} className="passport-input min-h-12 w-full px-3 text-right font-black" />
+    <label className="ds-field-wrap event-field">
+      <span className="ds-label">{label}</span>
+      <input inputMode="decimal" value={String(value)} onChange={(event) => onChange(numberOrZero(event.target.value))} className="ds-field passport-input min-h-12 w-full px-3 text-right font-black" />
     </label>
   );
 }
 
 function StepperField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <div className="grid gap-1">
-      <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">{label}</span>
-      <div className="grid grid-cols-[42px_1fr_42px] gap-1">
-        <button onClick={() => onChange(Math.max(0, value - 1))} className="passport-button min-h-12 rounded-soft font-black">−</button>
-        <input inputMode="numeric" value={String(value)} onChange={(event) => onChange(Math.max(0, Math.round(numberOrZero(event.target.value))))} className="passport-input min-h-12 w-full px-2 text-center font-black" />
-        <button onClick={() => onChange(value + 1)} className="passport-button min-h-12 rounded-soft font-black">+</button>
+    <div className="ds-field-wrap event-field">
+      <span className="ds-label">{label}</span>
+      <div className="event-stepper">
+        <button onClick={() => onChange(Math.max(0, value - 1))} className="ds-button passport-button">−</button>
+        <input inputMode="numeric" value={String(value)} onChange={(event) => onChange(Math.max(0, Math.round(numberOrZero(event.target.value))))} className="ds-field passport-input text-center font-black" />
+        <button onClick={() => onChange(value + 1)} className="ds-button passport-button">+</button>
       </div>
     </div>
   );
 }
 
 function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: { lines: MoneyLine[]; ticketRevenue: number; totalSold: number; patchLine: (id: string, patch: Partial<MoneyLine>) => void; removeLine: (id: string) => void }) {
-  if (!lines.length) return <div className="rounded-soft border-[1.5px] border-dashed border-[var(--ink)] p-4 text-center text-sm opacity-70">No rows yet.</div>;
+  if (!lines.length) return <div className="ds-section event-empty-state">No rows yet.</div>;
   return (
     <div className="grid gap-3">
       {lines.map((line) => {
         const total = lineTotal(line, ticketRevenue, totalSold);
         return (
-          <div key={line.id} className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+          <div key={line.id} className="ds-section event-row-card">
             <div className="grid gap-2 md:grid-cols-[1.3fr_.8fr_.7fr_1fr_auto] md:items-end">
               <Field label="Name" value={line.name} onChange={(value) => patchLine(line.id, { name: value })} />
               <NumberField label={line.mode === 'percentageOfTickets' ? 'Percent' : 'Amount'} value={line.amount} onChange={(value) => patchLine(line.id, { amount: value })} />
               <StepperField label="Quantity" value={line.quantity} onChange={(value) => patchLine(line.id, { quantity: value })} />
-              <label className="grid gap-1">
-                <span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Mode</span>
-                <select value={line.mode} onChange={(event) => patchLine(line.id, { mode: event.target.value as LineMode })} className="passport-input min-h-12 w-full px-3">
+              <label className="ds-field-wrap event-field">
+                <span className="ds-label">Mode</span>
+                <select value={line.mode} onChange={(event) => patchLine(line.id, { mode: event.target.value as LineMode })} className="ds-field passport-input">
                   <option value="fixed">Fixed</option>
                   <option value="perTicketHolder">Per ticket holder</option>
                   <option value="percentageOfTickets">% of ticket revenue</option>
                 </select>
               </label>
-              <button onClick={() => removeLine(line.id)} className="passport-button h-12 rounded-soft px-3 text-sm">Remove</button>
+              <button onClick={() => removeLine(line.id)} className="ds-button passport-button">Remove</button>
             </div>
             <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto] md:items-center">
               <Field label="Notes" value={line.notes} onChange={(value) => patchLine(line.id, { notes: value })} />
-              <div className="rounded-soft border-[1.5px] border-[var(--ink)] px-3 py-2 text-right">
+              <div className="ds-section event-inline-total text-right">
                 <div className="text-xs uppercase tracking-[.14em] opacity-70">Row total</div>
                 <MoneyValue value={total} className="text-2xl font-black tracking-[-.04em]" />
               </div>
@@ -1698,19 +1698,19 @@ function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWo
   const [draft, setDraft] = useState(workspace);
   return (
     <div className="grid gap-3 text-sm">
-      <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+      <div className="ds-section event-row-card">
         <p className="text-xs font-bold uppercase tracking-[.16em] opacity-70">Current workspace</p>
         <p className="mt-1 text-xl font-black">{workspace}</p>
         <p className="mt-2 opacity-75">Use this link on another device to see and edit the same events.</p>
       </div>
-      <label className="grid gap-1"><span className="text-[10px] font-bold uppercase tracking-[.16em] opacity-70">Share link</span><div className="passport-input min-h-12 w-full break-all px-3 py-3 text-sm">{workspaceLink}</div></label>
+      <label className="ds-field-wrap event-field"><span className="ds-label">Share link</span><div className="passport-input min-h-12 w-full break-all px-3 py-3 text-sm">{workspaceLink}</div></label>
       <div className="grid grid-cols-2 gap-2">
-        <button onClick={() => void navigator.clipboard.writeText(workspaceLink)} className="passport-button min-h-12 rounded-soft px-3 font-bold">Copy link</button>
-        <button onClick={onReload} className="passport-button min-h-12 rounded-soft px-3 font-bold">Reload sync</button>
+        <button onClick={() => void navigator.clipboard.writeText(workspaceLink)} className="ds-button ds-button-primary passport-button">Copy link</button>
+        <button onClick={onReload} className="ds-button ds-button-primary passport-button">Reload sync</button>
       </div>
-      <div className="rounded-soft border-[1.5px] border-[var(--ink)] p-3">
+      <div className="ds-section event-row-card">
         <Field label="Change workspace" value={draft} onChange={setDraft} />
-        <button onClick={() => onChangeWorkspace(draft)} className="passport-button mt-2 min-h-12 w-full rounded-soft px-3 font-bold">Open workspace</button>
+        <button onClick={() => onChangeWorkspace(draft)} className="ds-button ds-button-primary passport-button mt-2 w-full">Open workspace</button>
       </div>
       <p className="opacity-75">Sync status: {status}</p>
     </div>
@@ -1719,7 +1719,7 @@ function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWo
 
 function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--paper)] p-3 pt-[calc(var(--safe-top)+58px)]" onMouseDown={onClose}>
+    <div className="fixed inset-0 z-50 p-3 pt-[calc(var(--safe-top)+58px)]" onMouseDown={onClose}>
       <div className="passport-card mx-auto max-h-[82dvh] w-full max-w-2xl overflow-auto rounded-passport p-4 scrollbar-none" onMouseDown={(event) => event.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-3xl font-black tracking-[-.05em]">{title}</h2>

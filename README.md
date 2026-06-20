@@ -384,3 +384,31 @@ The build adds `.ds-*` classes to module JSX where practical and applies unified
 - fields
 - buttons
 - list cards
+
+
+## v62 Unified Visual Expression Fix
+
+This version fixes remaining visual inconsistencies after v61.
+
+It forces Event Planner and the other modules into the same black/off-white/yellow pill-app design system and fixes invisible text in primary top-nav pills.
+
+
+## v63 Event Planner Design-System Completion
+
+This version completes the Event Planner cleanup.
+
+Event Planner is now wired into the same design-system contracts as the rest of the modules and is prepared for the next big redesign.
+
+
+## v64 Mono Editorial Grid Redesign
+
+v64 applies the uploaded Mono reference system-wide:
+- black/white/charcoal only
+- editorial grid
+- vertical side rails
+- zero radius
+- square form fields
+- black primary blocks
+- no shadows or gradients
+
+Functionality is unchanged.

@@ -5620,3 +5620,1556 @@ textarea::placeholder{
     min-height:1.72rem;
   }
 }
+
+
+/* =========================================================
+   v62 UNIFIED VISUAL EXPRESSION FIX
+   Final hard bridge so every module visibly uses the same
+   pill-app system, including Event Planner legacy internals.
+   ========================================================= */
+
+:root{
+  --app-color-ink:#101010 !important;
+  --app-color-ink-rgb:16 16 16 !important;
+  --app-color-paper:#fbfbf6 !important;
+  --app-color-paper-rgb:251 251 246 !important;
+  --app-color-primary:#101010 !important;
+  --app-color-primary-rgb:16 16 16 !important;
+  --app-color-on-primary:#fbfbf6 !important;
+  --app-color-accent:#eef35b !important;
+  --app-color-accent-rgb:238 243 91 !important;
+  --app-color-on-accent:#101010 !important;
+  --app-color-border:rgb(16 16 16 / .34) !important;
+  --app-color-border-strong:rgb(16 16 16 / .56) !important;
+  --app-color-muted:rgb(16 16 16 / .58) !important;
+
+  --ink:#101010 !important;
+  --ink-rgb:16 16 16 !important;
+  --paper:#fbfbf6 !important;
+  --ds-ink:#101010 !important;
+  --ds-ink-rgb:16 16 16 !important;
+  --ds-paper:#fbfbf6 !important;
+}
+
+/* Stop old red UI Studio / legacy styles from leaking into modules */
+.ds-page,
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page,
+.module-event-planner,
+.module-dashboard,
+.module-artist-booking,
+.module-artist-management,
+.module-calendar,
+.module-bar-planner,
+.module-project-management{
+  background:
+    radial-gradient(circle at 50% -10%, rgb(238 243 91 / .18), transparent 32%),
+    var(--app-color-paper) !important;
+  color:var(--app-color-ink) !important;
+}
+
+/* Force all text primitives into the same black/gray expression */
+.ds-title,
+.ds-heading,
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1,
+.bar-forecast-top-row h1,
+.module-event-planner h1,
+.module-event-planner h2,
+.module-event-planner h3,
+.module-event-planner strong,
+.module-event-planner .font-black,
+.module-event-planner .font-bold,
+.module-event-planner .text-\[var\(--ink\)\],
+.system-card strong,
+.module-card strong,
+.artist-submission-card strong,
+.calendar-event-card strong,
+.bar-panel strong,
+.project-panel strong{
+  color:var(--app-color-ink) !important;
+}
+
+.ds-label,
+.system-kicker,
+.public-artist-kicker,
+.module-event-planner .system-kicker,
+.module-event-planner span,
+.module-event-planner label,
+.module-event-planner .opacity-65,
+.module-event-planner .opacity-70,
+.booking-overview-card span,
+.stat-card span,
+.forecast-info-row span,
+.bar-product-total-card span,
+.module-compact-summary span,
+.artist-compact-summary span{
+  color:var(--app-color-muted) !important;
+}
+
+/* Unified card borders: remove remaining brown/red borders */
+.ds-card,
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34,
+.system-module-card,
+.module-card,
+.module-event-planner .passport-card,
+.module-event-planner .rounded-soft,
+.module-event-planner .stat-card,
+.module-event-planner .forecast-info-row{
+  border-color:var(--app-color-border) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  box-shadow:none !important;
+}
+
+/* Unified section/list cards */
+.ds-section,
+.public-artist-section,
+.artist-form-section,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card,
+.bar-product-total-card,
+.task-settings-section,
+.calendar-date-block,
+.module-event-planner input,
+.module-event-planner select,
+.module-event-planner textarea{
+  border-color:var(--app-color-border) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+}
+
+/* Top nav: no empty black pills; text always visible */
+.top-nav-pill,
+.passport-button,
+.module-event-planner .passport-button,
+.module-event-planner .top-nav-pill{
+  border-color:var(--app-color-border-strong) !important;
+  background:rgb(255 255 255 / .30) !important;
+  color:var(--app-color-ink) !important;
+}
+
+.top-nav-pill span,
+.passport-button span,
+.top-nav-pill strong,
+.passport-button strong,
+.module-event-planner .passport-button span,
+.module-event-planner .passport-button strong{
+  color:var(--app-color-ink) !important;
+  opacity:1 !important;
+}
+
+.top-nav-pill span,
+.passport-button span{
+  color:var(--app-color-muted) !important;
+}
+
+/* All primary/top final actions are black, with visible off-white text */
+.project-top-nav button:last-child,
+.bar-top-nav button:last-child,
+.calendar-top-nav button:last-child,
+.artist-management-top-nav button:last-child,
+.system-top-nav button:last-child,
+.module-event-planner header button:last-child,
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.public-artist-submit,
+.artist-submit,
+.artist-add-event-box button,
+.artist-admin-actions button:first-child{
+  background:var(--app-color-primary) !important;
+  border-color:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+}
+
+.project-top-nav button:last-child *,
+.bar-top-nav button:last-child *,
+.calendar-top-nav button:last-child *,
+.artist-management-top-nav button:last-child *,
+.system-top-nav button:last-child *,
+.module-event-planner header button:last-child *,
+.bar-collapsible-head > button:not(.bar-section-toggle-icon) *,
+.project-collapsible-head > button:not(.project-section-toggle-icon) *,
+.project-panel-actions button:first-child *,
+.bar-panel-head button:not(.bar-section-toggle-icon) *,
+.task-settings-actions button:last-child *,
+.public-artist-submit *,
+.artist-submit *,
+.artist-add-event-box button *,
+.artist-admin-actions button:first-child *{
+  color:var(--app-color-on-primary) !important;
+  opacity:1 !important;
+}
+
+/* Exception: empty/unstyled black button must still show if only text node */
+.bar-top-nav button:last-child,
+.module-event-planner header button:last-child{
+  font-size:.75rem !important;
+  font-weight:650 !important;
+  line-height:1 !important;
+}
+
+/* Force Event Planner old red panels into the new visual expression */
+.module-event-planner .border-\[var\(--ink\)\],
+.module-event-planner .border-\[var\(--ink-soft\)\],
+.module-event-planner .border-\[rgb\(var\(--ink-rgb\)_\/_\.22\)\],
+.module-event-planner .border-\[rgb\(var\(--ink-rgb\)_\/_\.16\)\]{
+  border-color:var(--app-color-border) !important;
+}
+
+.module-event-planner .text-\[var\(--ink\)\],
+.module-event-planner .text-\[rgb\(var\(--ink-rgb\)_\/_\.75\)\],
+.module-event-planner .text-\[rgb\(var\(--ink-rgb\)_\/_\.55\)\]{
+  color:var(--app-color-ink) !important;
+}
+
+.module-event-planner .bg-\[var\(--paper\)\],
+.module-event-planner .bg-\[rgb\(var\(--ink-rgb\)_\/_\.04\)\],
+.module-event-planner .bg-\[rgb\(var\(--ink-rgb\)_\/_\.02\)\]{
+  background:transparent !important;
+}
+
+/* Event Planner stat cards should match Bar Planner cards */
+.module-event-planner .stat-card,
+.module-event-planner .forecast-info-row,
+.module-event-planner .booking-overview-card{
+  border:var(--app-line-width) solid var(--app-color-border) !important;
+  border-radius:var(--app-radius-section) !important;
+  background:transparent !important;
+}
+
+.module-event-planner .stat-card strong,
+.module-event-planner .forecast-info-row strong,
+.module-event-planner .booking-overview-card strong{
+  color:var(--app-color-ink) !important;
+  font-weight:520 !important;
+}
+
+.module-event-planner .stat-card span,
+.module-event-planner .forecast-info-row span,
+.module-event-planner .booking-overview-card span{
+  color:var(--app-color-muted) !important;
+}
+
+/* Yellow accent selected states consistent across all modules */
+.ds-accent,
+.project-list-card.active,
+.task-check.checked,
+.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
+.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
+.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em,
+.calendar-collapse-head .calendar-date-block,
+.calendar-event-card-v51.is-collapsed .calendar-date-block,
+.task-status-row select,
+.bar-warning-row span,
+.calendar-warning-row span,
+.module-event-planner .rounded-full[aria-pressed="true"],
+.module-event-planner button[aria-pressed="true"]{
+  background:var(--app-color-accent) !important;
+  color:var(--app-color-on-accent) !important;
+  border-color:var(--app-color-ink) !important;
+}
+
+/* Event Planner projected profit card should not stay old red */
+.module-event-planner .forecast-profit-card,
+.module-event-planner .profit-card,
+.module-event-planner [class*="profit"]{
+  border-color:var(--app-color-border) !important;
+}
+
+/* App URL bar overlap cannot be controlled by CSS, but keep module bottom padding safe */
+.ds-page,
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  padding-bottom:calc(var(--safe-bottom) + 5.5rem) !important;
+}
+
+/* More consistent module hero scale */
+.module-artist-management .system-hero h1,
+.module-calendar .system-hero h1,
+.module-project-management .project-hero h1,
+.module-bar-planner .bar-forecast-top-row h1,
+.module-event-planner h1{
+  font-weight:520 !important;
+  letter-spacing:-.06em !important;
+}
+
+/* Mobile tightening */
+@media (max-width:640px){
+  .top-nav-pill,
+  .passport-button,
+  .module-event-planner .passport-button{
+    min-height:44px !important;
+  }
+
+  .module-event-planner header{
+    gap:.45rem !important;
+  }
+
+  .module-event-planner h1{
+    font-size:clamp(2.1rem, 10vw, 3.35rem) !important;
+  }
+}
+
+
+/* =========================================================
+   v63 EVENT PLANNER DESIGN-SYSTEM COMPLETION
+   Event Planner no longer depends on its old red/brown
+   utility-driven visual layer. It is bridged into the same
+   ds-* component contracts as the rest of the system.
+   ========================================================= */
+
+/* Event Planner root contract */
+.event-planner-v63{
+  --event-card:var(--app-color-border);
+  --event-muted:var(--app-color-muted);
+  --event-accent:var(--app-color-accent);
+  width:100%;
+  max-width:100vw;
+  overflow-x:hidden;
+}
+
+/* Event Planner wrap and nav */
+.event-planner-wrap{
+  width:min(100%, var(--app-page-max)) !important;
+  max-width:var(--app-page-max) !important;
+  margin-inline:auto !important;
+  display:grid !important;
+  gap:var(--app-page-gap) !important;
+}
+
+.event-top-nav{
+  position:sticky !important;
+  top:calc(var(--safe-top) + .48rem) !important;
+  z-index:50 !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:.45rem !important;
+}
+
+/* Event Planner sections now use canonical ds-card rhythm */
+.event-section-card,
+.event-planner-v63 .passport-card,
+.event-planner-v63 .forecast-info-card,
+.event-planner-v63 .stat-card,
+.event-planner-v63 .margin-fill-card,
+.event-planner-v63 .mini-panel{
+  border:var(--app-line-width) solid var(--app-color-border) !important;
+  border-radius:var(--app-radius-card) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-card-pad) !important;
+  box-shadow:none !important;
+}
+
+.event-row-card,
+.event-empty-state,
+.event-note-card,
+.event-inline-total,
+.event-planner-v63 .forecast-info-row,
+.event-planner-v63 .event-schedule-card,
+.event-planner-v63 .event-artist-card,
+.event-planner-v63 .artist-empty-inline,
+.event-planner-v63 .supabase-error-card{
+  border:var(--app-line-width) solid var(--app-color-border) !important;
+  border-radius:var(--app-radius-section) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-section-pad) !important;
+  box-shadow:none !important;
+}
+
+/* Event Planner section headers */
+.event-section-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:.55rem;
+  align-items:center;
+}
+
+.event-section-title-button{
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:0;
+  text-align:left;
+  min-width:0;
+}
+
+.event-section-title{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  color:var(--app-color-ink) !important;
+}
+
+.event-section-title span{
+  width:1.8rem;
+  height:1.8rem;
+  min-width:1.8rem;
+  display:inline-grid;
+  place-items:center;
+  border:var(--app-line-width) solid var(--app-color-border-strong);
+  border-radius:999px;
+  color:var(--app-color-ink) !important;
+  font-size:1rem;
+  line-height:1;
+}
+
+.event-section-subtitle{
+  margin:.22rem 0 0;
+  color:var(--app-color-muted) !important;
+}
+
+.event-section-action{
+  white-space:nowrap;
+}
+
+/* Forecast becomes canonical hero/card group */
+.event-planner-v63 .forecast-top{
+  display:grid;
+  gap:var(--app-page-gap);
+}
+
+.event-planner-v63 .forecast-title-row{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:.65rem;
+  border:0;
+  background:transparent;
+  color:var(--app-color-ink);
+  padding:0;
+  text-align:left;
+}
+
+.event-planner-v63 .forecast-title-text{
+  font-size:var(--app-heading-size);
+  line-height:var(--app-heading-line);
+  letter-spacing:var(--app-heading-tracking);
+  font-weight:var(--app-heading-weight);
+  color:var(--app-color-ink);
+}
+
+.event-planner-v63 .forecast-status-pill,
+.event-status-chip{
+  display:inline-grid;
+  place-items:center;
+  min-height:34px;
+  border:var(--app-line-width) solid var(--app-color-border-strong);
+  border-radius:var(--app-radius-pill);
+  padding:.2rem .75rem;
+  color:var(--app-color-ink);
+  background:transparent;
+  font-size:var(--app-label-size);
+  letter-spacing:var(--app-label-tracking);
+  text-transform:uppercase;
+  font-weight:var(--app-label-weight);
+}
+
+.event-planner-v63 .forecast-main-block{
+  display:grid;
+  gap:var(--app-page-gap);
+}
+
+.event-planner-v63 .forecast-event-name{
+  font-size:var(--app-title-size);
+  line-height:var(--app-title-line);
+  letter-spacing:var(--app-title-tracking);
+  font-weight:var(--app-title-weight);
+  color:var(--app-color-ink);
+  margin:0;
+}
+
+.event-planner-v63 .forecast-meta-profit-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(170px,.42fr);
+  gap:var(--app-page-gap);
+  align-items:stretch;
+}
+
+.event-planner-v63 .forecast-meta-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:.55rem;
+}
+
+.event-planner-v63 .forecast-meta-pill,
+.event-planner-v63 .forecast-terms-card{
+  border:var(--app-line-width) solid var(--app-color-border);
+  border-radius:var(--app-radius-section);
+  background:transparent;
+  padding:var(--app-section-pad);
+}
+
+.event-planner-v63 .forecast-meta-pill span,
+.event-planner-v63 .forecast-terms-card .ds-label{
+  display:block;
+  color:var(--app-color-muted) !important;
+  font-size:var(--app-label-size);
+  letter-spacing:var(--app-label-tracking);
+  text-transform:uppercase;
+  font-weight:var(--app-label-weight);
+}
+
+.event-planner-v63 .forecast-meta-pill strong{
+  display:block;
+  color:var(--app-color-ink);
+  font-size:clamp(1.15rem, 5vw, 1.7rem);
+  line-height:1;
+  letter-spacing:-.04em;
+  font-weight:520;
+}
+
+.event-planner-v63 .profit-orb{
+  display:grid;
+  place-items:center;
+  text-align:center;
+  border:var(--app-line-width) solid var(--app-color-ink);
+  border-radius:var(--app-radius-card);
+  background:var(--app-color-primary);
+  color:var(--app-color-on-primary);
+  padding:1rem;
+  min-height:180px;
+}
+
+.event-planner-v63 .profit-orb *{
+  color:var(--app-color-on-primary) !important;
+}
+
+.event-planner-v63 .profit-kicker,
+.event-planner-v63 .profit-sub{
+  display:block;
+  font-size:var(--app-label-size);
+  letter-spacing:var(--app-label-tracking);
+  text-transform:uppercase;
+  font-weight:var(--app-label-weight);
+  opacity:.68;
+}
+
+.event-planner-v63 .profit-orb strong{
+  font-size:var(--app-number-size);
+  line-height:var(--app-number-line);
+  letter-spacing:var(--app-number-tracking);
+  font-weight:var(--app-number-weight);
+}
+
+/* Stats use the same card/number system */
+.event-planner-v63 .stat-card{
+  min-height:124px;
+  display:grid;
+  align-content:center;
+  gap:.35rem;
+}
+
+.event-planner-v63 .stat-card .ds-label,
+.event-planner-v63 .stat-card div:first-child,
+.event-planner-v63 .forecast-info-row span,
+.event-planner-v63 .mini-panel h3{
+  color:var(--app-color-muted) !important;
+  font-size:var(--app-label-size) !important;
+  line-height:var(--app-label-line) !important;
+  letter-spacing:var(--app-label-tracking) !important;
+  text-transform:uppercase !important;
+  font-weight:var(--app-label-weight) !important;
+}
+
+.event-planner-v63 .stat-card div:last-child,
+.event-planner-v63 .forecast-info-row strong{
+  color:var(--app-color-ink) !important;
+  font-size:var(--app-number-size) !important;
+  line-height:var(--app-number-line) !important;
+  letter-spacing:var(--app-number-tracking) !important;
+  font-weight:var(--app-number-weight) !important;
+}
+
+/* Fields and controls */
+.ds-field-wrap,
+.event-field{
+  display:grid !important;
+  gap:.28rem !important;
+  min-width:0 !important;
+}
+
+.event-planner-v63 .passport-input,
+.event-planner-v63 .compact-input,
+.event-planner-v63 input,
+.event-planner-v63 select,
+.event-planner-v63 textarea{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  min-height:var(--app-field-height) !important;
+  border:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .24) !important;
+  border-radius:var(--app-radius-field) !important;
+  background:rgb(255 255 255 / .30) !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-field-pad-y) var(--app-field-pad-x) !important;
+  box-shadow:none !important;
+}
+
+.event-planner-v63 textarea{
+  border-radius:var(--app-radius-section) !important;
+}
+
+.event-stepper,
+.event-planner-v63 .ui-stepper{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 42px;
+  gap:.35rem;
+  align-items:center;
+}
+
+.event-planner-v63 .passport-button,
+.event-planner-v63 button{
+  border-color:var(--app-color-border-strong) !important;
+  border-radius:var(--app-radius-pill) !important;
+  box-shadow:none !important;
+}
+
+.event-planner-v63 .ds-button-primary,
+.event-planner-v63 header button:last-child,
+.event-planner-v63 .event-section-action{
+  background:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+  border-color:var(--app-color-primary) !important;
+}
+
+.event-planner-v63 .ds-button-primary *,
+.event-planner-v63 header button:last-child *{
+  color:var(--app-color-on-primary) !important;
+}
+
+/* Modal/library/settings now use same system */
+.event-modal-backdrop{
+  background:rgb(16 16 16 / .20) !important;
+  backdrop-filter:blur(18px);
+}
+
+.event-planner-v63 .event-library-card,
+.event-planner-v63 .event-template-card{
+  display:block;
+  width:100%;
+  text-align:left;
+}
+
+.event-tab-button{
+  min-height:40px;
+}
+
+.event-tab-button.ds-button-primary{
+  background:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+}
+
+/* Remaining Event Planner legacy utility bridge */
+.event-planner-v63 .font-black,
+.event-planner-v63 .font-bold{
+  font-weight:520 !important;
+}
+
+.event-planner-v63 .text-2xl,
+.event-planner-v63 .text-xl,
+.event-planner-v63 .text-lg{
+  color:var(--app-color-ink) !important;
+  letter-spacing:-.04em;
+}
+
+.event-planner-v63 .opacity-70,
+.event-planner-v63 .opacity-75,
+.event-planner-v63 .opacity-85{
+  opacity:1 !important;
+  color:var(--app-color-muted) !important;
+}
+
+.event-planner-v63 .money-number,
+.event-planner-v63 .percent-number{
+  color:var(--app-color-ink) !important;
+}
+
+.event-planner-v63 .money-currency,
+.event-planner-v63 .percent-light{
+  color:var(--app-color-muted) !important;
+}
+
+/* The event planner is now prepared for redesign through tokens only */
+.event-planner-v63 .border-\[1\.5px\],
+.event-planner-v63 .border,
+.event-planner-v63 .border-dashed{
+  border-color:var(--app-color-border) !important;
+}
+
+/* Mobile Event Planner */
+@media (max-width:640px){
+  .event-top-nav{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:.45rem !important;
+  }
+
+  .event-planner-v63 .forecast-meta-profit-row{
+    grid-template-columns:1fr !important;
+  }
+
+  .event-planner-v63 .profit-orb{
+    min-height:150px;
+  }
+
+  .event-section-head{
+    grid-template-columns:minmax(0,1fr) auto;
+  }
+
+  .event-section-title{
+    font-size:var(--app-heading-size) !important;
+  }
+}
+
+
+/* =========================================================
+   v64 MONO EDITORIAL GRID REDESIGN
+   Source inspiration: mono.frm.fm / supplied mono tokens.
+   Functionality unchanged.
+   System-wide style:
+   - strict black / white / charcoal only
+   - zero radius
+   - visible editorial grid lines
+   - vertical side rails
+   - flat surfaces, no shadows, no gradients
+   - typographic hierarchy replaces color hierarchy
+   ========================================================= */
+
+:root{
+  --color-paper-white:#ffffff;
+  --color-charcoal-ink:#292929;
+  --color-carbon-black:#000000;
+
+  --font-nh:'NH', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-s-condensed:'S-Condensed', "Arial Narrow", "Helvetica Neue Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-ev:'EV', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-s-works:'S-Works', Impact, "Arial Black", ui-sans-serif, system-ui, sans-serif;
+
+  --text-caption:12px;
+  --leading-caption:1.34;
+  --tracking-caption:1.2px;
+  --text-body-sm:14px;
+  --leading-body-sm:1.34;
+  --tracking-body-sm:2.8px;
+  --text-body:16px;
+  --leading-body:1.5;
+  --tracking-body:-0.32px;
+  --text-subheading:25px;
+  --leading-subheading:1.34;
+  --tracking-subheading:-0.5px;
+  --text-heading-sm:32px;
+  --leading-heading-sm:1.27;
+  --tracking-heading-sm:-0.64px;
+  --text-heading:40px;
+  --leading-heading:1.25;
+  --tracking-heading:-0.8px;
+  --text-heading-lg:43px;
+  --leading-heading-lg:1.2;
+  --tracking-heading-lg:-0.86px;
+
+  --font-weight-thin:100;
+  --font-weight-light:300;
+  --font-weight-w350:350;
+  --font-weight-regular:400;
+  --font-weight-medium:500;
+
+  --spacing-unit:4px;
+  --spacing-4:4px;
+  --spacing-5:5px;
+  --spacing-8:8px;
+  --spacing-12:12px;
+  --spacing-20:20px;
+  --spacing-23:23px;
+  --spacing-25:25px;
+  --spacing-43:43px;
+  --spacing-45:45px;
+  --spacing-50:50px;
+
+  --page-max-width:1200px;
+  --section-gap:50px;
+  --card-padding:20px;
+  --element-gap:8px;
+  --radius-all:0px;
+  --surface-paper:#ffffff;
+  --surface-charcoal-block:#292929;
+  --surface-carbon:#000000;
+
+  --app-color-ink:var(--color-charcoal-ink);
+  --app-color-ink-rgb:41 41 41;
+  --app-color-paper:var(--color-paper-white);
+  --app-color-paper-rgb:255 255 255;
+  --app-color-primary:var(--color-carbon-black);
+  --app-color-primary-rgb:0 0 0;
+  --app-color-on-primary:var(--color-paper-white);
+  --app-color-accent:var(--color-charcoal-ink);
+  --app-color-accent-rgb:41 41 41;
+  --app-color-on-accent:var(--color-paper-white);
+  --app-color-surface:var(--color-paper-white);
+  --app-color-surface-soft:var(--color-paper-white);
+  --app-color-border:var(--color-charcoal-ink);
+  --app-color-border-strong:var(--color-carbon-black);
+  --app-color-muted:rgb(41 41 41 / .58);
+
+  --app-line-width:1.5px;
+  --app-radius-card:0px;
+  --app-radius-section:0px;
+  --app-radius-field:0px;
+  --app-radius-pill:0px;
+
+  --app-page-max:900px;
+  --app-page-gap:0px;
+  --app-page-pad-x:46px;
+  --app-page-pad-top:calc(var(--safe-top) + 48px);
+  --app-page-pad-bottom:calc(var(--safe-bottom) + 64px);
+  --app-card-pad:20px;
+  --app-section-pad:16px;
+
+  --app-font-body:var(--font-nh);
+  --app-title-size:clamp(40px, 11vw, 72px);
+  --app-title-line:.94;
+  --app-title-tracking:-1.4px;
+  --app-title-weight:300;
+
+  --app-heading-size:clamp(25px, 7vw, 43px);
+  --app-heading-line:1.06;
+  --app-heading-tracking:-.86px;
+  --app-heading-weight:300;
+
+  --app-label-size:12px;
+  --app-label-line:1.34;
+  --app-label-tracking:2.8px;
+  --app-label-weight:400;
+  --app-label-case:uppercase;
+
+  --app-body-size:16px;
+  --app-body-line:1.5;
+  --app-body-weight:400;
+
+  --app-number-size:clamp(32px, 9vw, 52px);
+  --app-number-line:.95;
+  --app-number-tracking:-1px;
+  --app-number-weight:300;
+
+  --app-control-height:50px;
+  --app-field-height:50px;
+  --app-control-pad-x:20px;
+  --app-field-pad-y:12px;
+  --app-field-pad-x:12px;
+
+  --ink:var(--app-color-ink);
+  --ink-rgb:var(--app-color-ink-rgb);
+  --paper:var(--app-color-paper);
+  --line:var(--app-line-width);
+  --ds-ink:var(--app-color-ink);
+  --ds-ink-rgb:var(--app-color-ink-rgb);
+  --ds-paper:var(--app-color-paper);
+  --ds-line:var(--app-line-width);
+  --ds-page-max:var(--app-page-max);
+  --ds-page-gap:var(--app-page-gap);
+  --ds-card-radius:0px;
+  --ds-card-radius-sm:0px;
+  --ds-card-padding:var(--app-card-pad);
+  --ds-field-radius:0px;
+  --ds-pill-radius:0px;
+  --ds-negative-bg:var(--app-color-primary);
+  --ds-negative-text:var(--app-color-on-primary);
+}
+
+html,
+body{
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+}
+
+body{
+  font-family:var(--font-nh) !important;
+  letter-spacing:var(--tracking-body);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+
+.ds-page,
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page,
+.event-planner-v63{
+  position:relative;
+  min-height:100dvh;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+  padding:var(--app-page-pad-top) max(var(--app-page-pad-x), env(safe-area-inset-right)) var(--app-page-pad-bottom) max(var(--app-page-pad-x), env(safe-area-inset-left)) !important;
+  overflow-x:hidden !important;
+}
+
+.ds-page::before,
+.system-shell::before,
+.public-artist-page::before,
+.project-page::before,
+.bar-planner-page::before{
+  content:"Event Operations System · Planning · Booking · Bar · Calendar · Projects";
+  position:fixed;
+  left:0;
+  top:calc(var(--safe-top) + 0px);
+  bottom:0;
+  width:42px;
+  z-index:2;
+  pointer-events:none;
+  background:var(--color-charcoal-ink);
+  color:var(--color-paper-white);
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  padding:16px 7px;
+  font-family:var(--font-nh);
+  font-size:22px;
+  line-height:1.1;
+  letter-spacing:.4px;
+  white-space:nowrap;
+}
+
+.ds-page::after,
+.system-shell::after,
+.public-artist-page::after,
+.project-page::after,
+.bar-planner-page::after{
+  content:"MODULE";
+  position:fixed;
+  right:0;
+  top:calc(var(--safe-top) + 132px);
+  bottom:calc(var(--safe-bottom) + 80px);
+  width:42px;
+  z-index:2;
+  pointer-events:none;
+  background:var(--color-charcoal-ink);
+  color:var(--color-paper-white);
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  display:grid;
+  place-items:center;
+  font-family:var(--font-s-condensed);
+  font-size:24px;
+  line-height:1;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+}
+
+.module-dashboard::after{ content:"DASHBOARD"; }
+.module-event-planner::after{ content:"EVENT"; }
+.module-artist-booking::after{ content:"SUBMIT"; }
+.module-artist-management::after{ content:"ARTISTS"; }
+.module-calendar::after{ content:"SCHEDULE"; }
+.module-bar-planner::after{ content:"BAR"; }
+.module-project-management::after{ content:"PROJECTS"; }
+
+.ds-wrap,
+.system-wrap,
+.public-artist-wrap,
+.artist-public-wrap,
+.event-planner-wrap{
+  width:min(100%, var(--app-page-max)) !important;
+  max-width:var(--app-page-max) !important;
+  margin-inline:auto !important;
+  display:grid !important;
+  gap:0 !important;
+  border-left:var(--app-line-width) solid var(--color-charcoal-ink);
+  border-right:var(--app-line-width) solid var(--color-charcoal-ink);
+}
+
+.bar-top-nav,
+.project-top-nav,
+.calendar-top-nav,
+.artist-management-top-nav,
+.system-top-nav,
+.event-top-nav,
+header{
+  position:sticky !important;
+  top:calc(var(--safe-top) + 0px) !important;
+  z-index:60 !important;
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(0,1fr)) !important;
+  gap:0 !important;
+  border:var(--app-line-width) solid var(--color-charcoal-ink);
+  background:var(--color-paper-white);
+}
+
+.top-nav-pill,
+.passport-button,
+.ds-button,
+.back-pill,
+.bar-panel-head button,
+.project-panel-head button,
+.project-panel-actions button,
+.task-status-row button,
+.task-settings-head button,
+.task-settings-actions button,
+.task-add-inline button,
+.subtask-row button,
+.task-image-row button,
+.calendar-small-button,
+.artist-admin-actions button,
+.artist-add-event-box button,
+.bar-product-actions button,
+.bar-staff-total button,
+.event-planner-v63 .passport-button{
+  min-height:var(--app-control-height) !important;
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+  box-shadow:none !important;
+  padding:8px 12px !important;
+  font-family:var(--font-s-condensed) !important;
+  font-size:20px !important;
+  line-height:1.05 !important;
+  letter-spacing:-.4px !important;
+  font-weight:400 !important;
+  text-transform:none !important;
+  backdrop-filter:none !important;
+}
+
+.top-nav-pill span,
+.passport-button span,
+.ds-button span{
+  display:block;
+  font-family:var(--font-s-condensed) !important;
+  font-size:11px !important;
+  line-height:1.1 !important;
+  letter-spacing:2.2px !important;
+  text-transform:uppercase !important;
+  color:rgb(41 41 41 / .55) !important;
+  font-weight:400 !important;
+}
+
+.top-nav-pill strong,
+.passport-button strong,
+.ds-button strong{
+  display:block;
+  font-family:var(--font-s-condensed) !important;
+  font-size:20px !important;
+  line-height:1 !important;
+  letter-spacing:-.4px !important;
+  color:var(--color-charcoal-ink) !important;
+  font-weight:400 !important;
+}
+
+.ds-button-primary,
+.project-top-nav button:last-child,
+.bar-top-nav button:last-child,
+.calendar-top-nav button:last-child,
+.artist-management-top-nav button:last-child,
+.system-top-nav button:last-child,
+.event-top-nav button:last-child,
+header button:last-child,
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.public-artist-submit,
+.artist-submit,
+.artist-add-event-box button,
+.artist-admin-actions button:first-child{
+  background:var(--color-charcoal-ink) !important;
+  border-color:var(--color-charcoal-ink) !important;
+  color:var(--color-paper-white) !important;
+}
+
+.ds-button-primary *,
+.project-top-nav button:last-child *,
+.bar-top-nav button:last-child *,
+.calendar-top-nav button:last-child *,
+.artist-management-top-nav button:last-child *,
+.system-top-nav button:last-child *,
+.event-top-nav button:last-child *,
+header button:last-child *{
+  color:var(--color-paper-white) !important;
+}
+
+.ds-card,
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34,
+.system-module-card,
+.module-card,
+.event-section-card,
+.event-planner-v63 .forecast-info-card,
+.event-planner-v63 .stat-card,
+.event-planner-v63 .margin-fill-card,
+.event-planner-v63 .mini-panel{
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+  box-shadow:none !important;
+  padding:var(--card-padding) !important;
+}
+
+.ds-section,
+.public-artist-section,
+.artist-form-section,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card,
+.bar-product-total-card,
+.task-settings-section,
+.calendar-date-block,
+.event-row-card,
+.event-empty-state,
+.event-note-card,
+.event-inline-total,
+.event-planner-v63 .forecast-info-row,
+.event-planner-v63 .event-schedule-card,
+.event-planner-v63 .event-artist-card,
+.event-planner-v63 .artist-empty-inline,
+.event-planner-v63 .supabase-error-card{
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+  box-shadow:none !important;
+  padding:16px !important;
+}
+
+.ds-title,
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1,
+.bar-forecast-top-row h1,
+.event-planner-v63 .forecast-event-name,
+.event-planner-v63 h1{
+  font-family:var(--font-nh) !important;
+  font-size:var(--app-title-size) !important;
+  line-height:var(--app-title-line) !important;
+  letter-spacing:var(--app-title-tracking) !important;
+  font-weight:var(--font-weight-light) !important;
+  color:var(--color-charcoal-ink) !important;
+  text-transform:none !important;
+}
+
+.ds-heading,
+.bar-panel-head h2,
+.project-panel-head h2,
+.booked-overview-head h2,
+.public-section-heading h2,
+.artist-section-title,
+.calendar-event-head h2,
+.project-section-title,
+.bar-section-title,
+.event-section-title,
+.event-planner-v63 .forecast-title-text{
+  font-family:var(--font-nh) !important;
+  font-size:var(--app-heading-size) !important;
+  line-height:var(--app-heading-line) !important;
+  letter-spacing:var(--app-heading-tracking) !important;
+  font-weight:var(--font-weight-light) !important;
+  color:var(--color-charcoal-ink) !important;
+  text-transform:none !important;
+}
+
+.ds-label,
+.system-kicker,
+.public-artist-kicker,
+.booking-overview-card span,
+.module-compact-summary span,
+.artist-compact-summary span,
+.project-status-pill span,
+.system-status-pill span,
+.bar-status-pill span,
+.bar-profit-orb span,
+.bar-profit-orb em,
+.bar-meta-pill span,
+.artist-data-grid span,
+.artist-meta-card span,
+.artist-add-field > span,
+.artist-field span,
+.public-artist-field span,
+.project-field span,
+.task-field-grid span,
+.bar-product-fields span,
+.bar-staff-fields span,
+.bar-menu-edit-row span,
+.calendar-meta-row span,
+.calendar-warning-row span,
+.task-status-row label span,
+.task-settings-section-head span,
+.stat-card span,
+.forecast-info-row span,
+.bar-product-total-card span,
+.event-planner-v63 .forecast-status-pill,
+.event-planner-v63 .profit-kicker,
+.event-planner-v63 .profit-sub{
+  font-family:var(--font-s-condensed) !important;
+  font-size:var(--text-caption) !important;
+  line-height:var(--leading-caption) !important;
+  letter-spacing:var(--tracking-caption) !important;
+  font-weight:var(--font-weight-regular) !important;
+  text-transform:uppercase !important;
+  color:rgb(41 41 41 / .58) !important;
+}
+
+.ds-body,
+.system-intro,
+.project-hero p,
+.public-artist-lead,
+.artist-public-hero p,
+.task-simple-main span,
+.project-empty{
+  font-family:var(--font-nh) !important;
+  font-size:var(--text-body) !important;
+  line-height:var(--leading-body) !important;
+  letter-spacing:var(--tracking-body) !important;
+  font-weight:var(--font-weight-regular) !important;
+  color:var(--color-charcoal-ink) !important;
+}
+
+.ds-number,
+.booking-overview-card strong,
+.module-compact-summary strong,
+.artist-compact-summary strong,
+.project-status-pill strong,
+.system-status-pill strong,
+.bar-status-pill strong,
+.bar-profit-orb strong,
+.bar-meta-pill strong,
+.money-number,
+.stat-card strong,
+.forecast-info-row strong,
+.bar-product-total-card strong,
+.event-planner-v63 .stat-card div:last-child,
+.event-planner-v63 .forecast-info-row strong{
+  font-family:var(--font-s-condensed) !important;
+  font-size:var(--app-number-size) !important;
+  line-height:var(--app-number-line) !important;
+  letter-spacing:var(--app-number-tracking) !important;
+  font-weight:var(--font-weight-light) !important;
+  color:var(--color-charcoal-ink) !important;
+}
+
+.ds-field,
+input,
+select,
+textarea,
+.public-artist-field input,
+.public-artist-field textarea,
+.artist-field input,
+.artist-field textarea,
+.project-field input,
+.project-field select,
+.project-field textarea,
+.task-card input,
+.task-card select,
+.task-card textarea,
+.bar-product-card input,
+.bar-product-card select,
+.bar-staff-card input,
+.bar-menu-edit-row textarea,
+.bar-notes,
+.artist-add-field select,
+.artist-add-field input,
+.event-planner-v63 .passport-input,
+.event-planner-v63 .compact-input,
+.event-planner-v63 input,
+.event-planner-v63 select,
+.event-planner-v63 textarea{
+  width:100% !important;
+  min-height:var(--app-field-height) !important;
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+  padding:12px !important;
+  font-family:var(--font-nh) !important;
+  font-size:var(--text-body) !important;
+  line-height:1.2 !important;
+  letter-spacing:var(--tracking-body) !important;
+  box-shadow:none !important;
+}
+
+.ds-hero,
+.system-hero,
+.project-hero,
+.public-artist-hero,
+.artist-public-hero,
+.bar-forecast-card{
+  text-align:left !important;
+  display:grid !important;
+  gap:20px !important;
+  min-height:220px;
+  align-content:start;
+}
+
+.bar-planner-page .bar-profit-orb,
+.event-planner-v63 .profit-orb,
+.ds-invert{
+  background:var(--color-charcoal-ink) !important;
+  color:var(--color-paper-white) !important;
+  border-color:var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+}
+
+.bar-planner-page .bar-profit-orb *,
+.event-planner-v63 .profit-orb *,
+.ds-invert *{
+  color:var(--color-paper-white) !important;
+}
+
+.ds-accent,
+.project-list-card.active,
+.task-check.checked,
+.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
+.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
+.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em,
+.calendar-collapse-head .calendar-date-block,
+.calendar-event-card-v51.is-collapsed .calendar-date-block,
+.task-status-row select,
+.bar-warning-row span,
+.calendar-warning-row span,
+.event-planner-v63 button[aria-pressed="true"]{
+  background:var(--color-charcoal-ink) !important;
+  color:var(--color-paper-white) !important;
+  border-color:var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+}
+
+.ds-accent *,
+.project-list-card.active *,
+.calendar-collapse-head .calendar-date-block *,
+.calendar-event-card-v51.is-collapsed .calendar-date-block *{
+  color:var(--color-paper-white) !important;
+}
+
+.ds-compact-summary,
+.module-compact-summary,
+.artist-compact-summary,
+.project-compact-summary,
+.calendar-compact-summary{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:0 !important;
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  padding:0 !important;
+}
+
+.module-compact-summary > div,
+.artist-compact-summary > div,
+.ds-compact-summary > div{
+  padding:12px !important;
+  border-right:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+}
+
+.module-compact-summary > div:last-child,
+.artist-compact-summary > div:last-child,
+.ds-compact-summary > div:last-child{
+  border-right:0 !important;
+}
+
+.event-planner-v63 .forecast-meta-profit-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(180px,.42fr) !important;
+  gap:0 !important;
+  border:var(--app-line-width) solid var(--color-charcoal-ink);
+}
+
+.event-planner-v63 .forecast-meta-grid{
+  display:grid !important;
+  gap:0 !important;
+}
+
+.event-planner-v63 .forecast-meta-pill,
+.event-planner-v63 .forecast-terms-card{
+  border:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  margin:0 !important;
+}
+
+.event-planner-v63 .profit-orb{
+  min-height:100% !important;
+  border:0 !important;
+}
+
+.bar-collapsible-head,
+.project-collapsible-head,
+.event-section-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto auto !important;
+  align-items:center !important;
+  gap:0 !important;
+  border-bottom:var(--app-line-width) solid var(--color-charcoal-ink);
+  margin:-20px -20px 20px;
+}
+
+.event-section-head{
+  margin:-20px -20px 20px !important;
+}
+
+.bar-collapsible-head > *,
+.project-collapsible-head > *,
+.event-section-head > *{
+  min-height:50px;
+  border-right:var(--app-line-width) solid var(--color-charcoal-ink);
+  padding:12px;
+}
+
+.bar-collapsible-head > *:last-child,
+.project-collapsible-head > *:last-child,
+.event-section-head > *:last-child{
+  border-right:0;
+}
+
+.bar-section-toggle-icon,
+.project-section-toggle-icon,
+.calendar-collapse-head > em,
+.bar-product-collapse-head em,
+.task-collapse-head > em,
+.event-section-title span{
+  width:50px !important;
+  height:50px !important;
+  min-width:50px !important;
+  min-height:50px !important;
+  border:0 !important;
+  border-left:var(--app-line-width) solid var(--color-charcoal-ink) !important;
+  border-radius:0 !important;
+  background:var(--color-paper-white) !important;
+  color:var(--color-charcoal-ink) !important;
+}
+
+.artist-booking-scale-fixed .public-artist-submit,
+.artist-booking-scale-fixed .artist-submit{
+  min-height:58px !important;
+  border-radius:0 !important;
+  background:var(--color-carbon-black) !important;
+  color:var(--color-paper-white) !important;
+  font-family:var(--font-s-condensed) !important;
+  font-size:25px !important;
+  text-transform:uppercase !important;
+}
+
+@media (max-width:640px){
+  :root{
+    --app-page-pad-x:42px;
+    --app-page-pad-top:calc(var(--safe-top) + 44px);
+    --app-card-pad:18px;
+    --app-section-pad:14px;
+    --app-title-size:clamp(38px, 12vw, 58px);
+    --app-heading-size:clamp(25px, 7.5vw, 38px);
+    --app-number-size:clamp(30px, 9vw, 48px);
+  }
+
+  .ds-page::before,
+  .system-shell::before,
+  .public-artist-page::before,
+  .project-page::before,
+  .bar-planner-page::before{
+    width:38px;
+    font-size:21px;
+    padding:14px 6px;
+  }
+
+  .ds-page::after,
+  .system-shell::after,
+  .public-artist-page::after,
+  .project-page::after,
+  .bar-planner-page::after{
+    width:38px;
+    font-size:22px;
+  }
+
+  .event-planner-v63 .forecast-meta-profit-row{
+    grid-template-columns:1fr !important;
+  }
+
+  .ds-stat-grid,
+  .bar-summary-grid,
+  .project-summary-grid,
+  .calendar-stats-grid,
+  .booking-overview-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:0 !important;
+  }
+
+  .top-nav-pill strong,
+  .passport-button strong,
+  .ds-button strong{
+    font-size:18px !important;
+  }
+
+  .top-nav-pill span,
+  .passport-button span,
+  .ds-button span{
+    font-size:10px !important;
+  }
+}
+
+@media (max-width:380px){
+  :root{ --app-page-pad-x:38px; --app-card-pad:14px; }
+  .ds-page::before,
+  .system-shell::before,
+  .public-artist-page::before,
+  .project-page::before,
+  .bar-planner-page::before,
+  .ds-page::after,
+  .system-shell::after,
+  .public-artist-page::after,
+  .project-page::after,
+  .bar-planner-page::after{
+    width:34px;
+    font-size:18px;
+  }
+}
