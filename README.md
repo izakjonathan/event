@@ -301,3 +301,43 @@ This version adds selective negative colors across the site:
 - stronger app-like hierarchy
 
 Used for primary actions, compact summaries, selected states, collapsed controls, projected profit, date tiles, task status controls and modal actions.
+
+
+## v56 Design System Ready
+
+This version prepares the whole app for a future full redesign.
+
+A master `--app-*` token layer has been added at the end of `app/globals.css`, and old `--ds-*` / module classes now point back to those controls.
+
+New future modules should use the `.ds-*` classes documented in `DESIGN_SYSTEM.md`.
+
+
+## v57 Design-system audit
+
+This version audits and hardens the v56 design-system setup.
+
+Important:
+- UI Studio now updates the master `--app-*` tokens.
+- Node engine is set to `24.x`.
+- `DESIGN_AUDIT.md` documents the readiness check.
+- The app is ready for the planned full redesign.
+
+
+## v58 Pill App Redesign
+
+This version applies a full visual redesign inspired by the uploaded mobile reference:
+- black primary action bars/buttons
+- off-white canvas
+- yellow selected/highlight pills
+- softer cards
+- rounded pill controls
+- calmer typography
+
+Functionality is unchanged.
+
+
+## v59 verified pill redesign
+
+A review found that the v58 redesign CSS was missing from `app/globals.css`.
+
+v59 fixes this by adding the verified pill-app redesign layer to the actual CSS source.

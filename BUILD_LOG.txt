@@ -28,9 +28,9 @@ You can learn more, including how to opt-out if you'd not like to participate in
 ├ ○ /_not-found                          873 B          [37m[1m88.2 kB[22m[39m
 ├ ○ /artist-booking                      2.62 kB         [37m[1m124 kB[22m[39m
 ├ ○ /artists                             4.31 kB         [37m[1m135 kB[22m[39m
-├ ○ /bar-planner                         4.69 kB         [37m[1m135 kB[22m[39m
+├ ○ /bar-planner                         4.7 kB          [37m[1m135 kB[22m[39m
 ├ ○ /calendar                            2.55 kB         [37m[1m133 kB[22m[39m
-├ ○ /event-planner                       14.3 kB         [37m[1m136 kB[22m[39m
+├ ○ /event-planner                       14.6 kB         [37m[1m136 kB[22m[39m
 └ ○ /project-management                  4.26 kB         [37m[1m135 kB[22m[39m
 + First Load JS shared by all            [37m[1m87.4 kB[22m[39m
   ├ chunks/117-14dd35a9dd2203e1.js       31.7 kB

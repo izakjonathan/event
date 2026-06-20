@@ -1,29 +1,30 @@
-# Event Operations System v55
+# Event Operations System v59
 
-Base: v54
+Base: v58
 
-## App-like negative color polish
+## Pill redesign verification + fix
 
-This build adds a second design polish pass with selective negative-color treatment:
-- red backgrounds
-- beige text
-- stronger app-like hierarchy
-- clearer primary actions
-- selected/active states
+A code audit found that the v58 build report described the pill redesign, but the actual `app/globals.css` did not contain the v58 redesign layer.
+
+This build fixes that.
 
 Changes:
-- primary top-nav actions use dark red with beige text
-- main add/save/copy actions use dark red with beige text
-- compact summaries in Artist Management, Calendar and Project Management use dark red treatment
-- Bar Planner projected profit tile uses dark red treatment
-- Calendar date tiles use dark red treatment
-- task status dropdown uses dark red treatment
-- task settings close/save actions use app-like negative color
-- collapse icons become dark when collapsed
-- selected project cards use dark red treatment
-- dashboard cards have app-like active/touch states
-- subtle dark left accents on product/task/calendar cards
-- destructive/remove actions remain outlined instead of filled
+- Verified and inserted the pill-app redesign CSS into `app/globals.css`.
+- Added explicit marker:
+  - `v59 VERIFIED PILL APP REDESIGN`
+- Preserved all functionality.
+- Preserved all routes/components.
+- Preserved Supabase schema.
+- Kept the v57 design-system readiness work.
+- Applied the actual visual direction:
+  - off-white canvas
+  - black primary actions
+  - yellow selected/highlight pills
+  - lighter cards
+  - rounded outline pills
+  - calmer typography
+  - less heavy red UI
 
-Build validation:
-- `npm run build` passed.
+Audit result:
+- v58 design was not truly present in the CSS.
+- v59 design is present and verifiable in the source.

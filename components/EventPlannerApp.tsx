@@ -153,7 +153,7 @@ const STORAGE_KEY = 'event-planner-calculator-v2';
 const LEGACY_STORAGE_KEY = 'event-planner-calculator-v1';
 const WORKSPACE_STORAGE_KEY = 'event-planner-workspace-v2';
 const DEFAULT_WORKSPACE = 'main-workspace';
-const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v2-red-default';
+const UI_STUDIO_STORAGE_KEY = 'event-planner-ui-studio-v3-design-system-ready';
 const TYPE_PRESET_LABELS: Record<UiStudioSettings['typePreset'], string> = { system: 'System', rounded: 'Rounded', serif: 'Serif', unbounded: 'Unbounded' };
 
 const fmt = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
@@ -221,7 +221,7 @@ function rgbaFromHex(hex: string, alpha: number) {
 
 function defaultUiStudio(): UiStudioSettings {
   return {
-    paper: '#efe9dc',
+    paper: '#f4efe3',
     ink: '#5c0701',
     fontScale: 1,
     typePreset: 'system',
@@ -485,13 +485,58 @@ export default function EventPlannerApp() {
 
   useEffect(() => {
     const root = document.documentElement;
+    const inkRgb = hexToRgb(uiStudio.ink);
+    const paperRgb = hexToRgb(uiStudio.paper);
+    const inkRgbValue = `${inkRgb.r} ${inkRgb.g} ${inkRgb.b}`;
+    const paperRgbValue = `${paperRgb.r} ${paperRgb.g} ${paperRgb.b}`;
+    const headingMin = 1.35 * uiStudio.headingSize;
+    const headingPreferred = 6 * uiStudio.headingSize;
+    const headingMax = 2 * uiStudio.headingSize;
+    const numberMin = 1.4 * uiStudio.numberSize;
+    const numberPreferred = 7 * uiStudio.numberSize;
+    const numberMax = 2.6 * uiStudio.numberSize;
+    const labelSize = 0.6 * uiStudio.labelSize;
+    const bodySize = 0.96 * uiStudio.bodySize;
+
+    root.style.setProperty('--app-color-paper', uiStudio.paper);
+    root.style.setProperty('--app-color-paper-rgb', paperRgbValue);
+    root.style.setProperty('--app-color-ink', uiStudio.ink);
+    root.style.setProperty('--app-color-ink-rgb', inkRgbValue);
+    root.style.setProperty('--app-color-primary', uiStudio.ink);
+    root.style.setProperty('--app-color-primary-rgb', inkRgbValue);
+    root.style.setProperty('--app-color-on-primary', uiStudio.paper);
+
     root.style.setProperty('--paper', uiStudio.paper);
     root.style.setProperty('--ink', uiStudio.ink);
     root.style.setProperty('--ink-soft', rgbaFromHex(uiStudio.ink, 0.16));
-    const inkRgb = hexToRgb(uiStudio.ink);
-    root.style.setProperty('--ink-rgb', `${inkRgb.r} ${inkRgb.g} ${inkRgb.b}`);
+    root.style.setProperty('--ink-rgb', inkRgbValue);
+    root.style.setProperty('--ds-paper', uiStudio.paper);
+    root.style.setProperty('--ds-ink', uiStudio.ink);
+    root.style.setProperty('--ds-ink-rgb', inkRgbValue);
+
     root.style.setProperty('--app-font', fontStackForPreset(uiStudio.typePreset));
+    root.style.setProperty('--app-font-body', fontStackForPreset(uiStudio.typePreset));
     root.style.setProperty('--app-scale', String(uiStudio.fontScale));
+
+    root.style.setProperty('--app-heading-size', `clamp(${headingMin}rem, ${headingPreferred}vw, ${headingMax}rem)`);
+    root.style.setProperty('--app-heading-weight', String(uiStudio.headingWeight));
+    root.style.setProperty('--app-heading-line', String(uiStudio.headingLineHeight));
+    root.style.setProperty('--app-heading-tracking', `${uiStudio.headingLetterSpacing}em`);
+
+    root.style.setProperty('--app-number-size', `clamp(${numberMin}rem, ${numberPreferred}vw, ${numberMax}rem)`);
+    root.style.setProperty('--app-number-weight', String(uiStudio.numberWeight));
+    root.style.setProperty('--app-number-line', String(uiStudio.numberLineHeight));
+    root.style.setProperty('--app-number-tracking', `${uiStudio.numberLetterSpacing}em`);
+
+    root.style.setProperty('--app-label-size', `${labelSize}rem`);
+    root.style.setProperty('--app-label-weight', String(uiStudio.labelWeight));
+    root.style.setProperty('--app-label-line', String(uiStudio.labelLineHeight));
+    root.style.setProperty('--app-label-tracking', `${uiStudio.labelLetterSpacing}em`);
+
+    root.style.setProperty('--app-body-size', `${bodySize}rem`);
+    root.style.setProperty('--app-body-weight', String(uiStudio.bodyWeight));
+    root.style.setProperty('--app-body-line', String(uiStudio.bodyLineHeight));
+
     root.style.setProperty('--heading-size', String(uiStudio.headingSize));
     root.style.setProperty('--heading-weight', String(uiStudio.headingWeight));
     root.style.setProperty('--heading-line-height', String(uiStudio.headingLineHeight));

@@ -6813,3 +6813,1173 @@ button{
     min-height:38px !important;
   }
 }
+
+
+
+/* =========================================================
+   v56 DESIGN SYSTEM READY LAYER
+   This is the redesign-prep layer.
+   Future full redesigns should change the tokens below first,
+   then only add layout-specific CSS where unavoidable.
+
+   Rule:
+   - tokens control appearance
+   - ds-* classes are canonical
+   - old module classes are mapped into the same controls
+   ========================================================= */
+
+/* 1. MASTER DESIGN TOKENS */
+:root{
+  /* Brand */
+  --app-color-ink:#5c0701;
+  --app-color-ink-rgb:92 7 1;
+  --app-color-paper:#f4efe3;
+  --app-color-paper-rgb:244 239 227;
+
+  /* Functional colors */
+  --app-color-primary:var(--app-color-ink);
+  --app-color-primary-rgb:var(--app-color-ink-rgb);
+  --app-color-on-primary:var(--app-color-paper);
+  --app-color-surface:rgb(255 255 255 / .065);
+  --app-color-surface-soft:rgb(var(--app-color-ink-rgb) / .018);
+  --app-color-surface-strong:rgb(var(--app-color-ink-rgb) / .045);
+  --app-color-border:rgb(var(--app-color-ink-rgb) / .18);
+  --app-color-border-strong:rgb(var(--app-color-ink-rgb) / .30);
+  --app-color-muted:rgb(var(--app-color-ink-rgb) / .62);
+
+  /* Radius */
+  --app-radius-page:0px;
+  --app-radius-card:28px;
+  --app-radius-section:22px;
+  --app-radius-field:18px;
+  --app-radius-pill:999px;
+  --app-radius-media:18px;
+
+  /* Lines */
+  --app-line-width:1.5px;
+  --app-line:var(--app-line-width) solid var(--app-color-border);
+  --app-line-strong:var(--app-line-width) solid var(--app-color-border-strong);
+  --app-line-primary:var(--app-line-width) solid var(--app-color-primary);
+
+  /* Spacing scale */
+  --app-space-1:.25rem;
+  --app-space-2:.4rem;
+  --app-space-3:.6rem;
+  --app-space-4:.8rem;
+  --app-space-5:1rem;
+  --app-space-6:1.25rem;
+  --app-page-gap:var(--app-space-4);
+  --app-card-pad:var(--app-space-4);
+  --app-section-pad:var(--app-space-3);
+
+  /* Layout */
+  --app-page-max:1040px;
+  --app-page-pad-x:.62rem;
+  --app-page-pad-top:calc(var(--safe-top) + .65rem);
+  --app-page-pad-bottom:calc(var(--safe-bottom) + 1.4rem);
+
+  /* Typography */
+  --app-font-body:inherit;
+  --app-title-size:clamp(2.15rem, 10vw, 4.8rem);
+  --app-title-line:.86;
+  --app-title-tracking:-.075em;
+  --app-title-weight:900;
+
+  --app-heading-size:clamp(1.35rem, 6vw, 2rem);
+  --app-heading-line:.9;
+  --app-heading-tracking:-.055em;
+  --app-heading-weight:900;
+
+  --app-label-size:.6rem;
+  --app-label-line:1.05;
+  --app-label-tracking:.13em;
+  --app-label-weight:900;
+  --app-label-case:uppercase;
+
+  --app-body-size:.96rem;
+  --app-body-line:1.34;
+  --app-body-weight:500;
+
+  --app-number-size:clamp(1.4rem, 7vw, 2.6rem);
+  --app-number-line:.88;
+  --app-number-tracking:-.065em;
+  --app-number-weight:900;
+
+  /* Controls */
+  --app-control-height:42px;
+  --app-field-height:50px;
+  --app-control-pad-x:.72rem;
+  --app-field-pad-y:.66rem;
+  --app-field-pad-x:.72rem;
+
+  /* Effects */
+  --app-shadow:none;
+  --app-shadow-active:0 8px 24px rgb(var(--app-color-ink-rgb) / .10);
+  --app-transition:160ms ease;
+}
+
+/* 2. LEGACY TOKEN SYNC
+   Existing module CSS still references --ds-* and older variables.
+   Keep them all wired to the master app tokens. */
+:root{
+  --ds-ink:var(--app-color-ink);
+  --ds-ink-rgb:var(--app-color-ink-rgb);
+  --ds-paper:var(--app-color-paper);
+  --ds-line:var(--app-line-width);
+  --ds-page-max:var(--app-page-max);
+  --ds-page-gap:var(--app-page-gap);
+  --ds-card-radius:var(--app-radius-card);
+  --ds-card-radius-sm:var(--app-radius-section);
+  --ds-card-padding:var(--app-card-pad);
+  --ds-card-bg:var(--app-color-surface);
+  --ds-card-soft-bg:var(--app-color-surface-soft);
+  --ds-title-size:var(--app-title-size);
+  --ds-title-line:var(--app-title-line);
+  --ds-title-spacing:var(--app-title-tracking);
+  --ds-title-weight:var(--app-title-weight);
+  --ds-heading-size:var(--app-heading-size);
+  --ds-heading-line:var(--app-heading-line);
+  --ds-heading-spacing:var(--app-heading-tracking);
+  --ds-heading-weight:var(--app-heading-weight);
+  --ds-label-size:var(--app-label-size);
+  --ds-label-line:var(--app-label-line);
+  --ds-label-spacing:var(--app-label-tracking);
+  --ds-label-weight:var(--app-label-weight);
+  --ds-label-opacity:.62;
+  --ds-body-size:var(--app-body-size);
+  --ds-body-line:var(--app-body-line);
+  --ds-number-size:var(--app-number-size);
+  --ds-number-line:var(--app-number-line);
+  --ds-number-spacing:var(--app-number-tracking);
+  --ds-number-weight:var(--app-number-weight);
+  --ds-pill-height:var(--app-control-height);
+  --ds-pill-radius:var(--app-radius-pill);
+  --ds-pill-padding-x:var(--app-control-pad-x);
+  --ds-field-height:var(--app-field-height);
+  --ds-field-radius:var(--app-radius-field);
+  --ds-field-padding-y:var(--app-field-pad-y);
+  --ds-field-padding-x:var(--app-field-pad-x);
+  --ds-gap-xs:var(--app-space-1);
+  --ds-gap-sm:var(--app-space-2);
+  --ds-gap-md:var(--app-space-3);
+  --ds-gap-lg:var(--app-space-4);
+  --ds-soft-line:var(--app-color-border);
+  --ds-mid-line:var(--app-color-border-strong);
+  --ds-soft-fill:var(--app-color-surface-soft);
+  --ds-input-fill:rgb(255 255 255 / .20);
+  --ds-negative-bg:var(--app-color-primary);
+  --ds-negative-text:var(--app-color-on-primary);
+  --ds-negative-muted:rgb(var(--app-color-paper-rgb) / .68);
+  --ds-negative-line:rgb(var(--app-color-paper-rgb) / .22);
+
+  --ink:var(--app-color-ink);
+  --ink-rgb:var(--app-color-ink-rgb);
+  --paper:var(--app-color-paper);
+  --line:var(--app-line-width);
+}
+
+/* 3. CANONICAL DESIGN SYSTEM CLASSES
+   Future JSX should use these first. */
+.ds-app,
+.ds-page,
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  width:100%;
+  max-width:100vw;
+  min-height:100dvh;
+  overflow-x:hidden;
+  color:var(--app-color-ink);
+  background:var(--app-color-paper);
+  font-family:var(--app-font-body);
+}
+
+.ds-page,
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  padding:var(--app-page-pad-top) max(var(--app-page-pad-x), env(safe-area-inset-left)) var(--app-page-pad-bottom) max(var(--app-page-pad-x), env(safe-area-inset-right)) !important;
+}
+
+.ds-wrap,
+.system-wrap,
+.public-artist-wrap,
+.artist-public-wrap{
+  width:min(100%, var(--app-page-max)) !important;
+  margin-inline:auto !important;
+  display:grid !important;
+  gap:var(--app-page-gap) !important;
+}
+
+.ds-card,
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34{
+  border:var(--app-line) !important;
+  border-radius:var(--app-radius-card) !important;
+  background:var(--app-color-surface) !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-card-pad) !important;
+  box-shadow:var(--app-shadow) !important;
+}
+
+.ds-section,
+.public-artist-section,
+.artist-form-section,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card,
+.bar-product-total-card,
+.task-settings-section{
+  border:var(--app-line) !important;
+  border-radius:var(--app-radius-section) !important;
+  background:var(--app-color-surface-soft) !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-section-pad) !important;
+  box-shadow:var(--app-shadow) !important;
+}
+
+.ds-title,
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1,
+.bar-forecast-top-row h1{
+  margin:0 !important;
+  font-size:var(--app-title-size) !important;
+  line-height:var(--app-title-line) !important;
+  letter-spacing:var(--app-title-tracking) !important;
+  font-weight:var(--app-title-weight) !important;
+  color:var(--app-color-ink) !important;
+  max-width:100% !important;
+}
+
+.ds-heading,
+.bar-panel-head h2,
+.project-panel-head h2,
+.booked-overview-head h2,
+.public-section-heading h2,
+.artist-section-title,
+.calendar-event-head h2,
+.project-section-title,
+.bar-section-title{
+  margin:0 !important;
+  font-size:var(--app-heading-size) !important;
+  line-height:var(--app-heading-line) !important;
+  letter-spacing:var(--app-heading-tracking) !important;
+  font-weight:var(--app-heading-weight) !important;
+  color:var(--app-color-ink) !important;
+}
+
+.ds-label,
+.system-kicker,
+.public-artist-kicker,
+.booking-overview-card span,
+.module-compact-summary span,
+.artist-compact-summary span,
+.project-status-pill span,
+.system-status-pill span,
+.bar-status-pill span,
+.bar-profit-orb span,
+.bar-profit-orb em,
+.bar-meta-pill span,
+.bar-event-selector-inline label span,
+.artist-data-grid span,
+.artist-meta-card span,
+.artist-add-field > span,
+.artist-field span,
+.public-artist-field span,
+.project-field span,
+.task-field-grid span,
+.bar-product-fields span,
+.bar-staff-fields span,
+.bar-menu-edit-row span,
+.calendar-meta-row span,
+.calendar-warning-row span,
+.task-status-row label span,
+.task-settings-section-head span{
+  font-size:var(--app-label-size) !important;
+  line-height:var(--app-label-line) !important;
+  letter-spacing:var(--app-label-tracking) !important;
+  font-weight:var(--app-label-weight) !important;
+  text-transform:var(--app-label-case) !important;
+  color:var(--app-color-muted) !important;
+}
+
+.ds-body,
+.system-intro,
+.project-hero p,
+.public-artist-lead,
+.artist-public-hero p,
+.task-simple-main span,
+.project-empty{
+  font-size:var(--app-body-size) !important;
+  line-height:var(--app-body-line) !important;
+  font-weight:var(--app-body-weight) !important;
+}
+
+.ds-number,
+.booking-overview-card strong,
+.module-compact-summary strong,
+.artist-compact-summary strong,
+.project-status-pill strong,
+.system-status-pill strong,
+.bar-status-pill strong,
+.bar-profit-orb strong,
+.bar-meta-pill strong,
+.money-number{
+  font-size:var(--app-number-size) !important;
+  line-height:var(--app-number-line) !important;
+  letter-spacing:var(--app-number-tracking) !important;
+  font-weight:var(--app-number-weight) !important;
+  color:var(--app-color-ink) !important;
+}
+
+/* Controls */
+.ds-button,
+.ds-pill,
+.top-nav-pill,
+.passport-button,
+.back-pill,
+.bar-panel-head button,
+.project-panel-head button,
+.project-panel-actions button,
+.task-status-row button,
+.task-settings-head button,
+.task-settings-actions button,
+.task-add-inline button,
+.subtask-row button,
+.task-image-row button,
+.calendar-small-button,
+.artist-admin-actions button,
+.artist-add-event-box button,
+.bar-product-actions button,
+.bar-staff-total button{
+  min-height:var(--app-control-height) !important;
+  border:var(--app-line) !important;
+  border-radius:var(--app-radius-pill) !important;
+  background:rgb(255 255 255 / .10) !important;
+  color:var(--app-color-ink) !important;
+  padding-inline:var(--app-control-pad-x) !important;
+  box-shadow:var(--app-shadow) !important;
+  font-weight:900 !important;
+}
+
+.ds-button-primary,
+.project-top-nav button:last-child,
+.bar-top-nav button:last-child,
+.calendar-top-nav button:last-child,
+.artist-management-top-nav button:last-child,
+.system-top-nav button:last-child,
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.public-artist-submit,
+.artist-submit,
+.artist-add-event-box button,
+.artist-admin-actions button:first-child{
+  background:var(--app-color-primary) !important;
+  border-color:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+}
+
+.ds-button-primary *,
+.project-top-nav button:last-child *,
+.bar-top-nav button:last-child *,
+.calendar-top-nav button:last-child *,
+.artist-management-top-nav button:last-child *,
+.system-top-nav button:last-child *{
+  color:var(--app-color-on-primary) !important;
+}
+
+.ds-button-ghost,
+.ds-button-danger,
+.project-panel-actions button:last-child,
+.bar-product-actions button,
+.bar-staff-total button,
+.task-image-row button,
+.subtask-row button{
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  border-color:var(--app-color-ink) !important;
+}
+
+/* Fields */
+.ds-field,
+input,
+select,
+textarea,
+.public-artist-field input,
+.public-artist-field textarea,
+.artist-field input,
+.artist-field textarea,
+.project-field input,
+.project-field select,
+.project-field textarea,
+.task-card input,
+.task-card select,
+.task-card textarea,
+.bar-product-card input,
+.bar-product-card select,
+.bar-staff-card input,
+.bar-menu-edit-row textarea,
+.bar-notes,
+.artist-add-field select,
+.artist-add-field input{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  min-height:var(--app-field-height) !important;
+  border:var(--app-line) !important;
+  border-radius:var(--app-radius-field) !important;
+  background:rgb(255 255 255 / .20) !important;
+  color:var(--app-color-ink) !important;
+  padding:var(--app-field-pad-y) var(--app-field-pad-x) !important;
+  box-shadow:var(--app-shadow) !important;
+  font:inherit !important;
+}
+
+.ds-invert,
+.project-compact-summary,
+.calendar-compact-summary,
+.artist-compact-summary,
+.bar-planner-page .bar-profit-orb{
+  background:var(--app-color-primary) !important;
+  border-color:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+}
+
+.ds-invert *,
+.project-compact-summary *,
+.calendar-compact-summary *,
+.artist-compact-summary *,
+.bar-planner-page .bar-profit-orb *{
+  color:var(--app-color-on-primary) !important;
+}
+
+.ds-compact-summary,
+.module-compact-summary,
+.artist-compact-summary{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:var(--app-space-2) !important;
+  border-radius:var(--app-radius-section) !important;
+  padding:var(--app-space-2) var(--app-space-3) !important;
+}
+
+/* 4. REDESIGN SAFETY / OVERFLOW RULES */
+*,
+*::before,
+*::after{
+  box-sizing:border-box !important;
+}
+
+html,
+body,
+#__next{
+  max-width:100vw !important;
+  overflow-x:hidden !important;
+}
+
+img,
+svg,
+video,
+canvas{
+  max-width:100%;
+}
+
+/* 5. FUTURE-READY MOBILE TOKEN ADJUSTMENTS */
+@media (max-width:640px){
+  :root{
+    --app-page-gap:.62rem;
+    --app-card-pad:.66rem;
+    --app-section-pad:.55rem;
+    --app-radius-card:26px;
+    --app-radius-section:18px;
+    --app-title-size:clamp(2rem, 10vw, 3.1rem);
+    --app-heading-size:clamp(1.25rem, 5.8vw, 1.72rem);
+    --app-label-size:.56rem;
+    --app-body-size:.94rem;
+    --app-number-size:clamp(1.25rem, 6.6vw, 1.9rem);
+    --app-control-height:40px;
+    --app-field-height:49px;
+    --app-page-pad-x:.5rem;
+  }
+}
+
+@media (max-width:380px){
+  :root{
+    --app-page-pad-x:.42rem;
+    --app-card-pad:.58rem;
+    --app-section-pad:.5rem;
+    --app-label-size:.52rem;
+  }
+}
+
+/* 6. DEPRECATED CLASS WARNING MAP
+   These still work but should not be used in new components:
+   - booking-overview-card -> use ds-card + ds-number/ds-label
+   - passport-card -> use ds-card
+   - system-kicker -> use ds-label
+   - top-nav-pill/passport-button -> use ds-button/ds-pill
+   - module-specific card names should use ds-card/ds-section plus layout class
+*/
+
+
+/* =========================================================
+   v57 AUDIT READINESS PATCH
+   Ensures dynamic UI Studio values and legacy module classes
+   resolve through the same --app-* master controls.
+   ========================================================= */
+
+:root{
+  --ds-paper:var(--app-color-paper);
+  --ds-ink:var(--app-color-ink);
+  --ds-ink-rgb:var(--app-color-ink-rgb);
+  --paper:var(--app-color-paper);
+  --ink:var(--app-color-ink);
+  --ink-rgb:var(--app-color-ink-rgb);
+}
+
+/* Any old stat/card classes now explicitly resolve to canonical controls */
+.stat-card,
+.forecast-info-row,
+.booking-overview-card,
+.module-compact-summary,
+.artist-compact-summary,
+.bar-product-total-card,
+.calendar-date-block,
+.project-status-pill,
+.system-status-pill,
+.bar-status-pill{
+  border-color:var(--app-color-border) !important;
+  border-radius:var(--app-radius-section) !important;
+}
+
+.stat-card strong,
+.forecast-info-row strong,
+.booking-overview-card strong,
+.module-compact-summary strong,
+.artist-compact-summary strong,
+.bar-product-total-card strong,
+.project-status-pill strong,
+.system-status-pill strong,
+.bar-status-pill strong{
+  font-size:var(--app-number-size) !important;
+  line-height:var(--app-number-line) !important;
+  letter-spacing:var(--app-number-tracking) !important;
+  font-weight:var(--app-number-weight) !important;
+}
+
+.stat-card span,
+.forecast-info-row span,
+.booking-overview-card span,
+.module-compact-summary span,
+.artist-compact-summary span,
+.bar-product-total-card span,
+.project-status-pill span,
+.system-status-pill span,
+.bar-status-pill span{
+  font-size:var(--app-label-size) !important;
+  line-height:var(--app-label-line) !important;
+  letter-spacing:var(--app-label-tracking) !important;
+  font-weight:var(--app-label-weight) !important;
+  text-transform:var(--app-label-case) !important;
+}
+
+/* Force future redesign safety: no component should create page-wide horizontal scroll */
+main,
+section,
+article,
+div,
+form,
+label{
+  min-width:0;
+}
+
+
+/* =========================================================
+   v59 VERIFIED PILL APP REDESIGN
+   This layer is intentionally placed last.
+   It verifies the reference-inspired redesign is actually
+   present in the compiled source.
+   ========================================================= */
+
+:root{
+  --app-color-ink:#101010;
+  --app-color-ink-rgb:16 16 16;
+  --app-color-paper:#fbfbf6;
+  --app-color-paper-rgb:251 251 246;
+
+  --app-color-primary:#101010;
+  --app-color-primary-rgb:16 16 16;
+  --app-color-on-primary:#fbfbf6;
+
+  --app-color-accent:#eef35b;
+  --app-color-accent-rgb:238 243 91;
+  --app-color-on-accent:#101010;
+
+  --app-color-surface:rgb(255 255 255 / .62);
+  --app-color-surface-soft:rgb(16 16 16 / .018);
+  --app-color-surface-strong:rgb(16 16 16 / .045);
+  --app-color-border:rgb(16 16 16 / .34);
+  --app-color-border-strong:rgb(16 16 16 / .55);
+  --app-color-muted:rgb(16 16 16 / .58);
+
+  --app-radius-card:34px;
+  --app-radius-section:24px;
+  --app-radius-field:999px;
+  --app-radius-pill:999px;
+
+  --app-line-width:1.35px;
+  --app-page-max:760px;
+  --app-page-gap:.78rem;
+  --app-card-pad:1rem;
+  --app-section-pad:.7rem;
+
+  --app-title-size:clamp(2.25rem, 11vw, 4.2rem);
+  --app-title-line:.94;
+  --app-title-tracking:-.055em;
+  --app-title-weight:430;
+
+  --app-heading-size:clamp(1.35rem, 6.5vw, 2.1rem);
+  --app-heading-line:.96;
+  --app-heading-tracking:-.045em;
+  --app-heading-weight:650;
+
+  --app-label-size:.62rem;
+  --app-label-tracking:.17em;
+  --app-label-weight:650;
+
+  --app-body-size:1rem;
+  --app-body-line:1.28;
+  --app-body-weight:400;
+
+  --app-number-size:clamp(1.35rem, 7vw, 2.3rem);
+  --app-number-line:.92;
+  --app-number-tracking:-.04em;
+  --app-number-weight:520;
+
+  --app-control-height:46px;
+  --app-field-height:52px;
+  --app-control-pad-x:1rem;
+  --app-field-pad-y:.64rem;
+  --app-field-pad-x:1rem;
+
+  --ds-ink:var(--app-color-ink);
+  --ds-ink-rgb:var(--app-color-ink-rgb);
+  --ds-paper:var(--app-color-paper);
+  --ds-negative-bg:var(--app-color-primary);
+  --ds-negative-text:var(--app-color-on-primary);
+  --ink:var(--app-color-ink);
+  --ink-rgb:var(--app-color-ink-rgb);
+  --paper:var(--app-color-paper);
+}
+
+html,
+body{
+  background:var(--app-color-paper) !important;
+  color:var(--app-color-ink) !important;
+}
+
+body{
+  letter-spacing:-.018em;
+}
+
+/* App canvas */
+.system-shell,
+.public-artist-page,
+.project-page,
+.bar-planner-page{
+  background:
+    radial-gradient(circle at 50% -10%, rgb(238 243 91 / .18), transparent 32%),
+    var(--app-color-paper) !important;
+  color:var(--app-color-ink) !important;
+  padding-left:.62rem !important;
+  padding-right:.62rem !important;
+}
+
+/* Light card system */
+.ds-card,
+.passport-card,
+.system-card,
+.system-hero,
+.system-hero-card,
+.public-artist-hero,
+.artist-public-hero,
+.public-artist-form,
+.artist-form,
+.artist-form-public,
+.bar-forecast-card,
+.bar-panel,
+.calendar-event-card,
+.project-hero,
+.project-panel,
+.booking-overview-card,
+.booked-overview,
+.artist-submission-card,
+.artist-submission-card-v34{
+  border:var(--app-line-width) solid var(--app-color-border) !important;
+  border-radius:var(--app-radius-card) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  box-shadow:none !important;
+}
+
+.ds-section,
+.public-artist-section,
+.artist-form-section,
+.artist-info-section,
+.artist-meta-card,
+.bar-product-card,
+.bar-staff-card,
+.task-card,
+.task-column,
+.project-list-card,
+.bar-product-total-card,
+.task-settings-section{
+  border:var(--app-line-width) solid var(--app-color-border) !important;
+  border-radius:var(--app-radius-section) !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  box-shadow:none !important;
+}
+
+/* Calm onboarding-like hero */
+.system-hero,
+.project-hero,
+.public-artist-hero,
+.artist-public-hero{
+  text-align:center !important;
+  padding:2.2rem 1.1rem !important;
+  border-color:transparent !important;
+  background:transparent !important;
+}
+
+.system-hero h1,
+.project-hero h1,
+.public-artist-hero h1,
+.artist-public-hero h1{
+  margin-inline:auto !important;
+  max-width:11ch !important;
+  font-weight:430 !important;
+  letter-spacing:-.06em !important;
+}
+
+.bar-forecast-card{
+  padding:1rem !important;
+  background:transparent !important;
+}
+
+.bar-forecast-top-row h1{
+  font-weight:430 !important;
+  letter-spacing:-.06em !important;
+}
+
+.system-intro,
+.project-hero p,
+.public-artist-lead,
+.artist-public-hero p{
+  max-width:26rem !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  color:rgb(var(--app-color-ink-rgb) / .62) !important;
+  font-weight:400 !important;
+}
+
+/* Pill controls */
+.ds-button,
+.ds-pill,
+.top-nav-pill,
+.passport-button,
+.back-pill,
+.bar-panel-head button,
+.project-panel-head button,
+.project-panel-actions button,
+.task-status-row button,
+.task-settings-head button,
+.task-settings-actions button,
+.task-add-inline button,
+.subtask-row button,
+.task-image-row button,
+.calendar-small-button,
+.artist-admin-actions button,
+.artist-add-event-box button,
+.bar-product-actions button,
+.bar-staff-total button{
+  min-height:var(--app-control-height) !important;
+  border:var(--app-line-width) solid var(--app-color-border-strong) !important;
+  border-radius:999px !important;
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  padding-inline:var(--app-control-pad-x) !important;
+  box-shadow:none !important;
+  font-weight:500 !important;
+  letter-spacing:-.025em !important;
+}
+
+.top-nav-pill,
+.passport-button{
+  background:rgb(255 255 255 / .30) !important;
+  backdrop-filter:blur(14px) !important;
+}
+
+/* Black primary actions */
+.ds-button-primary,
+.project-top-nav button:last-child,
+.bar-top-nav button:last-child,
+.calendar-top-nav button:last-child,
+.artist-management-top-nav button:last-child,
+.system-top-nav button:last-child,
+.bar-collapsible-head > button:not(.bar-section-toggle-icon),
+.project-collapsible-head > button:not(.project-section-toggle-icon),
+.project-panel-actions button:first-child,
+.bar-panel-head button:not(.bar-section-toggle-icon),
+.task-settings-actions button:last-child,
+.public-artist-submit,
+.artist-submit,
+.artist-add-event-box button,
+.artist-admin-actions button:first-child{
+  background:var(--app-color-primary) !important;
+  border-color:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+}
+
+.ds-button-primary *,
+.project-top-nav button:last-child *,
+.bar-top-nav button:last-child *,
+.calendar-top-nav button:last-child *,
+.artist-management-top-nav button:last-child *,
+.system-top-nav button:last-child *{
+  color:var(--app-color-on-primary) !important;
+  opacity:1 !important;
+}
+
+/* Yellow selected/highlight language */
+.project-list-card.active,
+.task-check.checked,
+.bar-collapsible-panel.is-collapsed .bar-section-toggle-icon,
+.project-collapsible-panel.is-collapsed .project-section-toggle-icon,
+.calendar-event-card-v51.is-collapsed .calendar-collapse-head > em,
+.bar-product-card-v50.is-open::before,
+.calendar-event-card-v51.is-open::before,
+.task-card-v52.task-status-doing::before{
+  background:var(--app-color-accent) !important;
+  color:var(--app-color-on-accent) !important;
+  border-color:var(--app-color-ink) !important;
+}
+
+.project-list-card.active *,
+.project-list-card.active span,
+.project-list-card.active strong,
+.project-list-card.active em{
+  color:var(--app-color-on-accent) !important;
+}
+
+/* Summary rows as pill-like information */
+.module-compact-summary,
+.artist-compact-summary,
+.project-compact-summary,
+.calendar-compact-summary{
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  border-color:var(--app-color-border) !important;
+  border-radius:999px !important;
+  padding:.38rem .5rem !important;
+}
+
+.module-compact-summary > div,
+.artist-compact-summary > div{
+  border-right-color:rgb(var(--app-color-ink-rgb) / .22) !important;
+}
+
+.module-compact-summary span,
+.artist-compact-summary span,
+.project-compact-summary span,
+.calendar-compact-summary span{
+  color:rgb(var(--app-color-ink-rgb) / .55) !important;
+}
+
+.module-compact-summary strong,
+.artist-compact-summary strong,
+.project-compact-summary strong,
+.calendar-compact-summary strong{
+  color:var(--app-color-ink) !important;
+  font-weight:520 !important;
+}
+
+/* Bar projected profit as black app tile */
+.bar-planner-page .bar-profit-orb{
+  background:var(--app-color-primary) !important;
+  border-color:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+  border-radius:34px !important;
+}
+
+.bar-planner-page .bar-profit-orb *{
+  color:var(--app-color-on-primary) !important;
+}
+
+.bar-planner-page .bar-profit-orb span,
+.bar-planner-page .bar-profit-orb em,
+.bar-planner-page .bar-profit-orb .money-currency{
+  opacity:.68 !important;
+}
+
+/* Input fields as pills */
+.ds-field,
+input,
+select,
+textarea,
+.public-artist-field input,
+.public-artist-field textarea,
+.artist-field input,
+.artist-field textarea,
+.project-field input,
+.project-field select,
+.project-field textarea,
+.task-card input,
+.task-card select,
+.task-card textarea,
+.bar-product-card input,
+.bar-product-card select,
+.bar-staff-card input,
+.bar-menu-edit-row textarea,
+.bar-notes,
+.artist-add-field select,
+.artist-add-field input{
+  border:var(--app-line-width) solid rgb(var(--app-color-ink-rgb) / .24) !important;
+  border-radius:999px !important;
+  background:rgb(255 255 255 / .30) !important;
+  color:var(--app-color-ink) !important;
+  min-height:var(--app-field-height) !important;
+  box-shadow:none !important;
+}
+
+textarea,
+.public-artist-field textarea,
+.artist-field textarea,
+.project-field textarea,
+.bar-menu-edit-row textarea,
+.bar-notes{
+  border-radius:24px !important;
+}
+
+/* Calendar date tiles as yellow pills */
+.calendar-collapse-head .calendar-date-block,
+.calendar-event-card-v51.is-collapsed .calendar-date-block{
+  background:var(--app-color-accent) !important;
+  border-color:var(--app-color-ink) !important;
+  color:var(--app-color-ink) !important;
+  border-radius:999px !important;
+}
+
+.calendar-collapse-head .calendar-date-block *,
+.calendar-event-card-v51.is-collapsed .calendar-date-block *{
+  color:var(--app-color-ink) !important;
+}
+
+/* Project board reminders feel */
+.task-board-v52 .task-column{
+  border-radius:28px !important;
+  background:transparent !important;
+  border-color:var(--app-color-border) !important;
+}
+
+.task-card-v52{
+  background:transparent !important;
+  border-bottom-color:rgb(var(--app-color-ink-rgb) / .18) !important;
+}
+
+.task-simple-main strong{
+  font-weight:520 !important;
+}
+
+.task-status-row select{
+  background:var(--app-color-accent) !important;
+  border-color:var(--app-color-ink) !important;
+  color:var(--app-color-ink) !important;
+  font-weight:520 !important;
+}
+
+/* Bar product totals as tags */
+.bar-product-total-row{
+  gap:.42rem !important;
+}
+
+.bar-product-total-card{
+  border-radius:999px !important;
+  padding:.52rem .72rem !important;
+}
+
+.bar-product-total-card > strong{
+  font-weight:520 !important;
+}
+
+/* Warnings as yellow tags */
+.bar-warning-row span,
+.calendar-warning-row span{
+  background:var(--app-color-accent) !important;
+  color:var(--app-color-ink) !important;
+  border-color:var(--app-color-ink) !important;
+  border-radius:999px !important;
+}
+
+/* Dashboard/app cards */
+.system-module-card,
+.module-card,
+.system-card{
+  border-radius:32px !important;
+  background:transparent !important;
+  border-color:var(--app-color-border) !important;
+}
+
+.system-module-card:active,
+.module-card:active,
+.system-module-card:hover,
+.module-card:hover{
+  background:var(--app-color-accent) !important;
+  color:var(--app-color-ink) !important;
+  border-color:var(--app-color-ink) !important;
+  transform:none !important;
+}
+
+.system-module-card:active *,
+.module-card:active *,
+.system-module-card:hover *,
+.module-card:hover *{
+  color:var(--app-color-ink) !important;
+}
+
+/* Modal as clean iOS-style sheet */
+.task-settings-backdrop{
+  background:rgb(16 16 16 / .36) !important;
+  backdrop-filter:blur(24px) !important;
+}
+
+.task-settings-modal{
+  background:var(--app-color-paper) !important;
+  border-color:var(--app-color-ink) !important;
+  border-radius:34px !important;
+}
+
+.task-settings-head h2{
+  font-weight:430 !important;
+  letter-spacing:-.06em !important;
+}
+
+.task-settings-head button{
+  background:transparent !important;
+  color:var(--app-color-ink) !important;
+  border-color:var(--app-color-border-strong) !important;
+}
+
+.task-settings-actions button:last-child{
+  background:var(--app-color-primary) !important;
+  color:var(--app-color-on-primary) !important;
+  border-color:var(--app-color-primary) !important;
+}
+
+/* Remove previous accent bars */
+.bar-product-card-v50::before,
+.task-card-v52::before,
+.calendar-event-card-v51::before{
+  width:0 !important;
+  display:none !important;
+}
+
+/* Public artist submit as black bottom button */
+.artist-booking-scale-fixed .public-artist-submit,
+.artist-booking-scale-fixed .artist-submit{
+  border-radius:999px !important;
+  min-height:56px !important;
+  font-weight:430 !important;
+  font-size:1.15rem !important;
+}
+
+@media (max-width:640px){
+  :root{
+    --app-page-max:100%;
+    --app-page-gap:.72rem;
+    --app-card-pad:.72rem;
+    --app-section-pad:.58rem;
+    --app-radius-card:30px;
+    --app-radius-section:24px;
+    --app-title-size:clamp(2.1rem, 10vw, 3.35rem);
+    --app-heading-size:clamp(1.28rem, 6vw, 1.85rem);
+    --app-control-height:44px;
+    --app-field-height:50px;
+  }
+
+  .system-shell,
+  .public-artist-page,
+  .project-page,
+  .bar-planner-page{
+    padding-left:.6rem !important;
+    padding-right:.6rem !important;
+  }
+
+  .system-hero,
+  .project-hero,
+  .public-artist-hero,
+  .artist-public-hero{
+    padding:1.85rem .8rem !important;
+  }
+
+  .top-nav-pill,
+  .passport-button{
+    border-radius:999px !important;
+  }
+
+  .module-compact-summary,
+  .artist-compact-summary,
+  .project-compact-summary,
+  .calendar-compact-summary{
+    padding:.34rem .42rem !important;
+  }
+
+  .bar-product-total-row{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .bar-product-total-card{
+    border-radius:24px !important;
+  }
+}
+
+@media (max-width:380px){
+  .system-hero,
+  .project-hero,
+  .public-artist-hero,
+  .artist-public-hero{
+    padding:1.45rem .6rem !important;
+  }
+
+  .module-compact-summary span,
+  .artist-compact-summary span{
+    font-size:.38rem !important;
+  }
+}
