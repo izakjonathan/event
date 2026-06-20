@@ -71,3 +71,13 @@ Main polish:
 - landing hero composition fixed
 - Event Planner forecast/meta/profit balance improved
 - Safari bottom spacing improved
+
+
+## v67 mobile hard fix
+
+v67 fixes the visible mobile issues in the neo-brutalist phase 1 design:
+- landing CTA collision
+- clipped Event Planner headings
+- overlapping add-action panels
+- overly large stat cards
+- mobile Safari bottom overlap

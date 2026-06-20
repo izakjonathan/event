@@ -1,10 +1,10 @@
-# Event Operations System v66
+# Event Operations System v67
 
-Base: v65
+Base: v66
 
-## Neo-brutalist Phase 1 Polish
+## Neo-brutalist Mobile Hard Fix
 
-This build fixes visible issues from the v65 screenshots.
+Fixes based on latest screenshots.
 
 Scope:
 - Landing page
@@ -13,14 +13,17 @@ Scope:
 Functionality unchanged.
 
 Fixes:
-- Landing hero title no longer collides with / gets covered by the module rows.
-- Landing hero keeps the oversized neo-brutalist feeling but becomes readable.
-- Module list starts cleanly after the hero.
-- Event Planner forecast meta rows now clearly show label + value.
-- Event Planner profit block is better balanced on mobile.
-- Event Planner forecast title/event title spacing is tightened.
-- Terms block has stronger readability.
-- Added safer bottom padding for Safari address bar.
+- Landing hero CTA panel no longer covers the giant title/body.
+- Landing hero keeps big-type style but is readable.
+- Module rows are shorter and less obstructed by Safari bar.
+- Event Planner top nav is more stable.
+- Forecast title and section headings no longer get clipped.
+- Section add buttons are contained as square plus controls.
+- Add-action panels no longer overlap from the right.
+- Event Planner stat cards are less oversized and more readable.
+- Currency/number styling is more consistent.
+- Profit panel is more balanced.
+- Stronger bottom spacing for Safari address bar.
 
 Status:
 - Build passed.

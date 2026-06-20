@@ -424,3 +424,8 @@ Functionality unchanged.
 ## v66 Neo-brutalist Phase 1 Polish
 
 Refines the Landing page and Event Planner based on mobile screenshots.
+
+
+## v67 Neo-brutalist mobile hard fix
+
+Polishes the Landing page and Event Planner based on screenshots.
