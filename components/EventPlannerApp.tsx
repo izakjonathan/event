@@ -774,7 +774,7 @@ export default function EventPlannerApp() {
   return (
     <main className="ds-page module-event-planner event-planner-v63 no-callout min-h-dvh overflow-x-hidden px-3 pb-[calc(var(--safe-bottom)+28px)] pt-[calc(var(--safe-top)+10px)]">
       <div className="ds-wrap event-planner-wrap mx-auto flex w-full max-w-6xl flex-col gap-3">
-        <header className="event-top-nav sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
+        <header className="nb-event-topbar event-top-nav sticky top-[calc(var(--safe-top)+6px)] z-40 grid grid-cols-3 gap-2">
           <button
             onClick={() => { window.location.href = '/'; }}
             className="ds-button passport-button top-nav-pill min-h-[46px] rounded-full px-2 text-center backdrop-blur"
@@ -797,7 +797,7 @@ export default function EventPlannerApp() {
 
 
         <Collapsible title="Forecast" subtitle="Live event overview" open={openSections.forecast} onToggle={() => toggleSection('forecast')} featured>
-          <div className="forecast-top">
+          <div className="nb-forecast forecast-top">
             <button onClick={() => toggleSection('forecast')} className="forecast-title-row forecast-title-button">
               <span className="forecast-title-text">Forecast {openSections.forecast ? '−' : '+'}</span>
               <span className="forecast-status-pill">{statusLabel(active.meta.status)}</span>
@@ -805,9 +805,9 @@ export default function EventPlannerApp() {
 
             {openSections.forecast && (
               <>
-                <div className="forecast-main-block">
-                  <h2 className="forecast-event-name">{active.meta.name || 'Untitled event'}</h2>
-                  <div className="forecast-meta-profit-row">
+                <div className="nb-forecast-main forecast-main-block">
+                  <h2 className="nb-forecast-title forecast-event-name">{active.meta.name || 'Untitled event'}</h2>
+                  <div className="nb-forecast-grid forecast-meta-profit-row">
                     <div className="forecast-meta-grid">
                       <div className="forecast-meta-pill">
                         <span>Date</span>
@@ -822,7 +822,7 @@ export default function EventPlannerApp() {
                         <strong>{shortText(active.meta.location) || 'Add location'}</strong>
                       </div>
                     </div>
-                    <div className="profit-orb">
+                    <div className="nb-profit-block profit-orb">
                       <span className="profit-kicker">Projected profit</span>
                       <strong><MoneyValue value={totals.profit} /></strong>
                       <em className="profit-sub">after costs</em>
@@ -880,7 +880,7 @@ export default function EventPlannerApp() {
         </Collapsible>
 
         <Collapsible title="Event details" subtitle="Edit event info, schedule, location and terms." open={openSections.details} onToggle={() => toggleSection('details')}>
-          <div className="event-details-grid">
+          <div className="nb-form-grid event-details-grid">
             <Field label="Event name" value={active.meta.name} onChange={(value) => patchMeta('name', value)} />
 
             <div className="event-schedule-card">
@@ -895,7 +895,7 @@ export default function EventPlannerApp() {
 
             <Field label="Location" value={active.meta.location} onChange={(value) => patchMeta('location', value)} />
 
-            <label className="ds-field-wrap event-field">
+            <label className="nb-field ds-field-wrap event-field">
               <span className="ds-label">Status</span>
               <select value={active.meta.status} onChange={(event) => patchMeta('status', event.target.value)} className="ds-field passport-input compact-input">
                 <option value="idea">Idea</option>
@@ -930,7 +930,7 @@ export default function EventPlannerApp() {
                     <Field label="Start time" type="time" value={artist.startTime || ''} onChange={(value) => patchArtist(artist.id, { startTime: value })} />
                     <Field label="End time" type="time" value={artist.endTime || ''} onChange={(value) => patchArtist(artist.id, { endTime: value })} />
                     <NumberField label="Fee" value={artist.fee} onChange={(value) => patchArtist(artist.id, { fee: value })} />
-                    <label className="ds-field-wrap event-field">
+                    <label className="nb-field ds-field-wrap event-field">
                       <span className="ds-label">Status</span>
                       <select value={artist.status} onChange={(event) => patchArtist(artist.id, { status: event.target.value as EventArtist['status'] })} className="ds-field passport-input compact-input">
                         <option value="proposed">Proposed</option>
@@ -956,7 +956,7 @@ export default function EventPlannerApp() {
             {active.scenarios.map((scenario) => {
               const row = scenarioResult(scenario, active.bar.costPercent);
               return (
-                <div key={scenario.id} className="ds-section event-row-card">
+                <div key={scenario.id} className="nb-row ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1.1fr_.7fr_.8fr_.8fr_.8fr_auto] md:items-end">
                     <Field label="Scenario" value={scenario.name} onChange={(value) => patchScenario(scenario.id, { name: value })} />
                     <StepperField label="Tickets" value={scenario.ticketsSold} onChange={(value) => patchScenario(scenario.id, { ticketsSold: value })} />
@@ -983,7 +983,7 @@ export default function EventPlannerApp() {
             {active.tickets.map((ticket) => {
               const total = ticket.price * ticket.sold;
               return (
-                <div key={ticket.id} className="ds-section event-row-card">
+                <div key={ticket.id} className="nb-row ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1.3fr_.8fr_.8fr_.8fr_auto] md:items-end">
                     <Field label="Name" value={ticket.name} onChange={(value) => patchTicket(ticket.id, { name: value })} />
                     <NumberField label="Ticket price" value={ticket.price} onChange={(value) => patchTicket(ticket.id, { price: value })} />
@@ -1006,7 +1006,7 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Bar calculator" subtitle="Estimate bar revenue, stock cost and bar profit." open={openSections.bar} onToggle={() => toggleSection('bar')}>
           <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
-            <div className="ds-section event-row-card">
+            <div className="nb-row ds-section event-row-card">
               <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
                 Include bar calculator
                 <input type="checkbox" checked={active.bar.enabled} onChange={(event) => patchActive({ bar: { ...active.bar, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
@@ -1034,7 +1034,7 @@ export default function EventPlannerApp() {
         <Collapsible title="Staff cost calculator" subtitle="Auto-calculate wage cost including extra percentage." open={openSections.staff} onToggle={() => toggleSection('staff')} action="Add staff" onAction={() => patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] })}>
           <div className="grid gap-3">
             {active.staff.map((line) => (
-              <div key={line.id} className="ds-section event-row-card">
+              <div key={line.id} className="nb-row ds-section event-row-card">
                 <div className="grid gap-2 md:grid-cols-[1.2fr_.6fr_.6fr_.8fr_.7fr_auto] md:items-end">
                   <Field label="Role" value={line.role} onChange={(value) => patchStaff(line.id, { role: value })} />
                   <StepperField label="People" value={line.people} onChange={(value) => patchStaff(line.id, { people: value })} />
@@ -1066,7 +1066,7 @@ export default function EventPlannerApp() {
 
         <Collapsible title="Venue terms / profit split" subtitle="Calculate organizer and venue outcome." open={openSections.terms} onToggle={() => toggleSection('terms')}>
           <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
-            <div className="ds-section event-row-card">
+            <div className="nb-row ds-section event-row-card">
               <label className="mb-3 flex items-center justify-between gap-3 text-sm font-bold">
                 Use terms calculator
                 <input type="checkbox" checked={active.termsPlan.enabled} onChange={(event) => patchActive({ termsPlan: { ...active.termsPlan, enabled: event.target.checked } })} className="h-6 w-6 accent-black" />
@@ -1097,11 +1097,11 @@ export default function EventPlannerApp() {
               <input type="file" multiple onChange={(event) => void addFilesToEvent(event.target.files)} className="sr-only" />
             </label>
             {!active.files.length && (
-              <div className="ds-section event-empty-state">No files uploaded yet.</div>
+              <div className="nb-row ds-section event-empty-state">No files uploaded yet.</div>
             )}
             <div className="grid gap-2">
               {active.files.map((file) => (
-                <div key={file.id} className="ds-section event-row-card">
+                <div key={file.id} className="nb-row ds-section event-row-card">
                   <div className="grid gap-2 md:grid-cols-[1fr_auto_auto] md:items-end">
                     <Field label="File name" value={file.name} onChange={(value) => patchFile(file.id, { name: value })} />
                     <button onClick={() => openFile(file)} className="ds-button ds-button-primary passport-button">Open</button>
@@ -1182,7 +1182,7 @@ export default function EventPlannerApp() {
       {showQuickAdd && (
         <Modal title="Quick add" onClose={() => setShowQuickAdd(false)}>
           <div className="grid gap-3">
-            <div className="ds-section event-row-card">
+            <div className="nb-row ds-section event-row-card">
               <p className="ds-label mb-2">Fast rows</p>
               <div className="grid grid-cols-2 gap-2">
                 <button onClick={() => { patchActive({ lines: [...active.lines, { id: uid(), kind: 'income', name: 'Income', amount: 0, quantity: 1, mode: 'fixed', notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Income</button>
@@ -1191,7 +1191,7 @@ export default function EventPlannerApp() {
                 <button onClick={() => { patchActive({ staff: [...active.staff, { id: uid(), role: 'Staff', people: 1, hours: 5, hourlyWage: 165, extraPercent: 12.5, notes: '' }] }); setShowQuickAdd(false); }} className="ds-button ds-button-primary passport-button">+ Staff</button>
               </div>
             </div>
-            <div className="ds-section event-row-card">
+            <div className="nb-row ds-section event-row-card">
               <p className="ds-label mb-2">Common event expenses</p>
               <div className="grid gap-2">
                 {[
@@ -1220,7 +1220,7 @@ export default function EventPlannerApp() {
               <button onClick={() => void loadFromSupabase()} className="ds-button ds-button-primary passport-button">Reload sync</button>
             </div>
 
-            <div className="ds-section event-row-card">
+            <div className="nb-row ds-section event-row-card">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
                   <p className="ds-label">Storage</p>
@@ -1250,7 +1250,7 @@ export default function EventPlannerApp() {
                 <ColorField label="Background" value={uiStudio.paper} onChange={(value) => setUiStudio((current) => ({ ...current, paper: value }))} />
                 <ColorField label="Accent" value={uiStudio.ink} onChange={(value) => setUiStudio((current) => ({ ...current, ink: value }))} />
 
-                <label className="ds-field-wrap event-field">
+                <label className="nb-field ds-field-wrap event-field">
                   <span className="ui-label">Type preset</span>
                   <select value={uiStudio.typePreset} onChange={(event) => setUiStudio((current) => ({ ...current, typePreset: event.target.value as UiStudioSettings['typePreset'] }))} className="ds-field passport-input">
                     <option value="system">System</option>
@@ -1448,7 +1448,7 @@ function statusLabel(status: EventStatus) {
 
 function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number }) {
   return (
-    <div className="ds-card stat-card margin-fill-card">
+    <div className="nb-stat-card ds-card stat-card margin-fill-card">
       <div className="ds-label">Margin / Fill</div>
       <div className="margin-fill-values">
         <div className="margin-fill-item">
@@ -1467,7 +1467,7 @@ function MarginFillCard({ margin, fillRate }: { margin: number; fillRate: number
 function Stat({ label, value }: { label: string; value: string }) {
   const isMoney = value.endsWith(' DKK');
   return (
-    <div className="ds-card stat-card">
+    <div className="nb-stat-card ds-card stat-card">
       <div className="ds-label">{label}</div>
       <div className="mt-1.5 truncate text-xl font-black tracking-[-.05em] md:text-2xl">{isMoney ? <MoneyString text={value} /> : value.includes('%') ? <PercentString text={value} /> : value}</div>
     </div>
@@ -1530,7 +1530,7 @@ function TypeScaleControl({ label, value, valueLabel, min, max, step, onChange }
     onChange(Math.min(max, Math.max(min, next)));
   };
   return (
-    <div className="ds-field-wrap event-field">
+    <div className="nb-field ds-field-wrap event-field">
       <span className="ui-label">{label}</span>
       <div className="ui-stepper">
         <button onClick={() => change(-1)} className="ds-button passport-button font-black">−</button>
@@ -1558,7 +1558,7 @@ function TypeRoleControl({ title, description, size, weight, lineHeight, letterS
           step={0.05}
           onChange={onSize}
         />
-        <div className="ds-field-wrap event-field">
+        <div className="nb-field ds-field-wrap event-field">
           <span className="ui-label">Weight · {weight}</span>
           <div className="ui-stepper">
             <button onClick={() => onWeight(Math.max(300, weight - 100))} className="ds-button passport-button font-black">−</button>
@@ -1591,7 +1591,7 @@ function TypeRoleControl({ title, description, size, weight, lineHeight, letterS
 
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
-    <label className="ds-field-wrap event-field">
+    <label className="nb-field ds-field-wrap event-field">
       <span className="ds-label">{label}</span>
       <div className="color-field passport-input min-h-12 px-3">
         <input type="color" value={value} onChange={(event) => onChange(event.target.value)} className="h-8 w-10 cursor-pointer border-0 bg-transparent p-0" />
@@ -1603,7 +1603,7 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
 
 function Collapsible({ title, subtitle, open, onToggle, action, onAction, featured, children }: { title: string; subtitle?: string; open: boolean; onToggle: () => void; action?: string; onAction?: () => void; featured?: boolean; children: ReactNode }) {
   return (
-    <section className={`ds-card event-section-card ${featured ? 'event-section-featured' : ''}`}>
+    <section className={`nb-section ds-card event-section-card ${featured ? 'event-section-featured' : ''}`}>
       {!(featured && title === 'Forecast') && (
         <div className="event-section-head">
           <button onClick={onToggle} className="event-section-title-button">
@@ -1620,7 +1620,7 @@ function Collapsible({ title, subtitle, open, onToggle, action, onAction, featur
 
 function Field({ label, value, onChange, type = 'text', placeholder }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string }) {
   return (
-    <label className="ds-field-wrap event-field">
+    <label className="nb-field ds-field-wrap event-field">
       <span className="ds-label">{label}</span>
       <input type={type} value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} className="ds-field passport-input compact-input w-full px-3" />
     </label>
@@ -1629,7 +1629,7 @@ function Field({ label, value, onChange, type = 'text', placeholder }: { label: 
 
 function AreaField({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
   return (
-    <label className="ds-field-wrap event-field">
+    <label className="nb-field ds-field-wrap event-field">
       <span className="ds-label">{label}</span>
       <textarea value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} rows={3} className="ds-field passport-input w-full resize-none px-3 py-2.5" />
     </label>
@@ -1638,7 +1638,7 @@ function AreaField({ label, value, onChange, placeholder }: { label: string; val
 
 function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <label className="ds-field-wrap event-field">
+    <label className="nb-field ds-field-wrap event-field">
       <span className="ds-label">{label}</span>
       <input inputMode="decimal" value={String(value)} onChange={(event) => onChange(numberOrZero(event.target.value))} className="ds-field passport-input min-h-12 w-full px-3 text-right font-black" />
     </label>
@@ -1647,7 +1647,7 @@ function NumberField({ label, value, onChange }: { label: string; value: number;
 
 function StepperField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <div className="ds-field-wrap event-field">
+    <div className="nb-field ds-field-wrap event-field">
       <span className="ds-label">{label}</span>
       <div className="event-stepper">
         <button onClick={() => onChange(Math.max(0, value - 1))} className="ds-button passport-button">−</button>
@@ -1659,18 +1659,18 @@ function StepperField({ label, value, onChange }: { label: string; value: number
 }
 
 function MoneyLines({ lines, ticketRevenue, totalSold, patchLine, removeLine }: { lines: MoneyLine[]; ticketRevenue: number; totalSold: number; patchLine: (id: string, patch: Partial<MoneyLine>) => void; removeLine: (id: string) => void }) {
-  if (!lines.length) return <div className="ds-section event-empty-state">No rows yet.</div>;
+  if (!lines.length) return <div className="nb-row ds-section event-empty-state">No rows yet.</div>;
   return (
     <div className="grid gap-3">
       {lines.map((line) => {
         const total = lineTotal(line, ticketRevenue, totalSold);
         return (
-          <div key={line.id} className="ds-section event-row-card">
+          <div key={line.id} className="nb-row ds-section event-row-card">
             <div className="grid gap-2 md:grid-cols-[1.3fr_.8fr_.7fr_1fr_auto] md:items-end">
               <Field label="Name" value={line.name} onChange={(value) => patchLine(line.id, { name: value })} />
               <NumberField label={line.mode === 'percentageOfTickets' ? 'Percent' : 'Amount'} value={line.amount} onChange={(value) => patchLine(line.id, { amount: value })} />
               <StepperField label="Quantity" value={line.quantity} onChange={(value) => patchLine(line.id, { quantity: value })} />
-              <label className="ds-field-wrap event-field">
+              <label className="nb-field ds-field-wrap event-field">
                 <span className="ds-label">Mode</span>
                 <select value={line.mode} onChange={(event) => patchLine(line.id, { mode: event.target.value as LineMode })} className="ds-field passport-input">
                   <option value="fixed">Fixed</option>
@@ -1698,17 +1698,17 @@ function WorkspacePanel({ workspace, workspaceLink, status, onReload, onChangeWo
   const [draft, setDraft] = useState(workspace);
   return (
     <div className="grid gap-3 text-sm">
-      <div className="ds-section event-row-card">
+      <div className="nb-row ds-section event-row-card">
         <p className="text-xs font-bold uppercase tracking-[.16em] opacity-70">Current workspace</p>
         <p className="mt-1 text-xl font-black">{workspace}</p>
         <p className="mt-2 opacity-75">Use this link on another device to see and edit the same events.</p>
       </div>
-      <label className="ds-field-wrap event-field"><span className="ds-label">Share link</span><div className="passport-input min-h-12 w-full break-all px-3 py-3 text-sm">{workspaceLink}</div></label>
+      <label className="nb-field ds-field-wrap event-field"><span className="ds-label">Share link</span><div className="passport-input min-h-12 w-full break-all px-3 py-3 text-sm">{workspaceLink}</div></label>
       <div className="grid grid-cols-2 gap-2">
         <button onClick={() => void navigator.clipboard.writeText(workspaceLink)} className="ds-button ds-button-primary passport-button">Copy link</button>
         <button onClick={onReload} className="ds-button ds-button-primary passport-button">Reload sync</button>
       </div>
-      <div className="ds-section event-row-card">
+      <div className="nb-row ds-section event-row-card">
         <Field label="Change workspace" value={draft} onChange={setDraft} />
         <button onClick={() => onChangeWorkspace(draft)} className="ds-button ds-button-primary passport-button mt-2 w-full">Open workspace</button>
       </div>

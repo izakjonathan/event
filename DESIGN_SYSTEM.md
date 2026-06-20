@@ -1,44 +1,56 @@
-# Event Operations System Design System — v64 Mono Editorial Grid
+# Event Operations System Design System — v65 Neo Brutalist Phase 1
 
-v64 uses the uploaded Mono reference as the system-wide design direction.
+v65 starts a new big redesign from v64.
 
-## Source resources
+## Scope
 
-- `variables.css.txt`
-- `DESIGN(1).md`
-- mono.frm.fm screenshots/reference
+Only these modules were redesigned in phase 1:
 
-## Visual rules
+- Landing page / Dashboard
+- Event Planner
 
-- Only black, white and charcoal.
-- No red.
-- No yellow.
-- No gradients.
-- No shadows.
-- No rounded corners.
-- Borders and gridlines carry structure.
-- Typography carries hierarchy.
-- Primary actions are black blocks.
-- Inputs are square editorial form cells.
-- Compact summaries behave like table rows.
-- Pages use vertical side rails.
+Other modules are intentionally left for later phases.
 
-## Core tokens
+## Visual direction
 
-```css
---color-paper-white: #ffffff;
---color-charcoal-ink: #292929;
---color-carbon-black: #000000;
-```
+- monochrome
+- black / off-white
+- no color accents
+- strong negative space
+- large typography
+- hard square UI
+- no radius
+- no shadows
+- no gradients
+- brutal list rows
+- high contrast app controls
 
-These are mapped into the app system through `--app-*` variables.
+## Landing page
 
-All radii are `0px`.
+The landing page is now a neo-brutalist app home with:
 
-## Typography
+- oversized dark hero
+- large uppercase title
+- simple CTA
+- full-width module navigation rows
 
-The uploaded font tokens are preserved as variables, but the app uses safe fallbacks unless the custom fonts are added privately in the project. Do not distribute font files unless licensing allows it.
+## Event Planner
 
-## Redesign readiness
+The Event Planner now uses:
 
-Future redesigns should still happen through the same master `--app-*` tokens, but v64 proves the design system can now support a completely different visual direction across all modules.
+- square app tabs
+- huge forecast title
+- black projected profit panel
+- grid-like stat cells
+- square input controls
+- simplified hierarchy
+
+## Next phase
+
+Apply the same redesign to:
+
+- Bar Planner
+- Artist Management
+- Calendar
+- Project Management
+- Artist Booking

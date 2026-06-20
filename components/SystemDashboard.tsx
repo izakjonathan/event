@@ -60,41 +60,39 @@ export default function SystemDashboard() {
   return (
     <main className="ds-page module-dashboard system-shell no-callout min-h-dvh bg-[var(--paper)] text-[var(--ink)]">
       <div className="ds-wrap system-wrap">
-        <header className="ds-card ds-hero system-hero passport-card">
-          <div>
-            <p className="system-kicker">Event system</p>
-            <h1>Event operations</h1>
-            <p className="system-intro">
-              A modular workspace for planning events, collecting artist submissions and building future event tools.
+        <header className="nb-landing-hero ds-card">
+          <div className="nb-landing-meta">
+            <span>EVENT OPS</span>
+            <span>COPENHAGEN</span>
+            <span>LIVE SYSTEM</span>
+          </div>
+          <div className="nb-landing-title-wrap">
+            <h1>OPERATIONS<br />SYSTEM</h1>
+            <p>
+              A clear workspace for events, artists, bars, schedules and projects.
             </p>
           </div>
+          <Link href="/event-planner" className="nb-primary-link">
+            Open planner
+          </Link>
         </header>
 
-        <section className="ds-module-grid module-grid">
-          {modules.map((module) => (
-            <Link key={module.title} href={module.href} className={`module-card passport-card ${module.active ? 'module-card-active' : ''}`}>
-              <div className="module-card-top">
+        <section className="nb-module-list">
+          {modules.map((module, index) => (
+            <Link key={module.title} href={module.href} className={`nb-module-row ${module.active ? 'is-active' : ''}`}>
+              <span className="nb-module-index">{String(index + 1).padStart(2, '0')}</span>
+              <div className="nb-module-main">
                 <span>{module.label}</span>
-                <em>{module.status}</em>
+                <strong>{module.title}</strong>
               </div>
-              <h2>{module.title}</h2>
-              <p>{module.description}</p>
-              <div className="module-items">
-                {module.items.map((item) => <span key={item}>{item}</span>)}
-              </div>
-              <div className="module-open">Open</div>
+              <em>{module.status}</em>
             </Link>
           ))}
         </section>
 
-        <section className="system-note passport-card">
-          <p className="system-kicker">Future modules</p>
-          <div className="future-list">
-            <span>Staff planner</span>
-            <span>Contracts</span>
-            <span>Supplier list</span>
-            <span>Budget reports</span>
-          </div>
+        <section className="nb-footer-note">
+          <span>Future modules</span>
+          <p>Staff planner · Contracts · Supplier list · Budget reports</p>
         </section>
       </div>
     </main>

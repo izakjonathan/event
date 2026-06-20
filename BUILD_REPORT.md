@@ -1,36 +1,47 @@
-# Event Operations System v64
+# Event Operations System v65
 
-Base: v63
+Base: v64
 
-## Mono Editorial Grid Redesign
+## Neo-brutalist Redesign Phase 1
 
-Resources used:
-- `variables.css.txt`
-- `DESIGN(1).md`
-- supplied mono.frm.fm screenshots / reference
-
-This build applies the uploaded Mono design reference across the whole event operations system.
-
-Design direction:
-- black / white / charcoal only
-- no yellow or red accents
-- no gradients
-- no shadows
-- no rounded corners
-- editorial grid structure
-- strict borders and visible structural lines
-- vertical side rails
-- condensed / editorial typography feel using safe font fallbacks
-- table-like compact summaries
-- black block primary actions
-- square inputs and form controls
+Scope:
+- Landing page
+- Event Planner
 
 Functionality unchanged.
 
-System integration:
-- The v63 Event Planner design-system cleanup remains active.
-- v64 remaps all master `--app-*` tokens to the uploaded Mono variables.
-- All modules use the same mono editorial grid layer.
+Design direction:
+- monochromatic
+- simple clear app feel
+- negative space
+- large typography
+- strong black/white blocks
+- square brutalist controls
+- list-row navigation
+- reduced decorative grid rails from v64 in these two modules
+- oversized landing title
+- Event Planner restructured visually through CSS into a sharper app interface
 
-Build status:
-- `npm run build` passed.
+References used:
+- dark portfolio menu layouts
+- oversized type portfolio pages
+- black/white agency menus
+- brutal list rows
+- résumé/editorial layout references
+
+Changes:
+- Landing page rebuilt into a neo-brutalist app home:
+  - dark hero block
+  - huge type
+  - simple primary CTA
+  - full-width module rows
+- Event Planner restyled:
+  - top nav as hard square app tabs
+  - forecast section as main product screen
+  - large event title
+  - black projected profit panel
+  - sharp stat cells
+  - square fields
+  - simplified visual hierarchy
+- All functionality preserved.
+- Build passed.

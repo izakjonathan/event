@@ -412,3 +412,10 @@ v64 applies the uploaded Mono reference system-wide:
 - no shadows or gradients
 
 Functionality is unchanged.
+
+
+## v65 Neo-brutalist redesign phase 1
+
+Landing page and Event Planner redesigned in a monochrome neo-brutalist app style.
+
+Functionality unchanged.
