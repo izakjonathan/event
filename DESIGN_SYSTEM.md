@@ -81,3 +81,8 @@ v67 fixes the visible mobile issues in the neo-brutalist phase 1 design:
 - overlapping add-action panels
 - overly large stat cards
 - mobile Safari bottom overlap
+
+
+## v68 Neo-brutalist structure fix
+
+Hard fixes landing CTA overlap and Event Planner horizontal overflow.

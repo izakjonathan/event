@@ -8355,3 +8355,305 @@ textarea,
     font-size:clamp(37px, 12vw, 60px) !important;
   }
 }
+
+
+/* =========================================================
+   v68 STRUCTURAL HARD FIX
+   Screenshot-driven correction:
+   - landing CTA must not be an overlay slab
+   - Event Planner action panels must not create horizontal scroll
+   - mobile headers must fit within viewport
+   ========================================================= */
+
+.module-dashboard,
+.module-dashboard *,
+.event-planner-v63,
+.event-planner-v63 *{
+  max-width:100vw !important;
+  box-sizing:border-box !important;
+}
+
+.module-dashboard,
+.event-planner-v63{
+  overflow-x:hidden !important;
+}
+
+/* LANDING: stable non-overlapping hero */
+.nb-landing-hero{
+  min-height:calc(100dvh - 112px) !important;
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) auto !important;
+  grid-template-columns:1fr !important;
+  padding:18px !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+}
+
+.nb-landing-title-wrap{
+  position:relative !important;
+  z-index:1 !important;
+  align-self:center !important;
+  justify-self:stretch !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:0 !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:18px !important;
+  overflow:hidden !important;
+}
+
+.nb-landing-title-wrap h1{
+  position:relative !important;
+  z-index:1 !important;
+  width:100% !important;
+  max-width:100% !important;
+  transform:none !important;
+  font-size:clamp(50px, 15vw, 92px) !important;
+  line-height:.82 !important;
+  letter-spacing:-.08em !important;
+  white-space:normal !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+}
+
+.nb-landing-title-wrap p{
+  position:relative !important;
+  z-index:1 !important;
+  width:min(100%, 14ch) !important;
+  max-width:14ch !important;
+  overflow:hidden !important;
+  font-size:clamp(22px, 5.8vw, 32px) !important;
+  line-height:1 !important;
+  letter-spacing:-.055em !important;
+}
+
+/* CTA is a bottom bar, never overlay */
+.nb-primary-link{
+  position:relative !important;
+  inset:auto !important;
+  z-index:4 !important;
+  justify-self:stretch !important;
+  align-self:end !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:58px !important;
+  max-height:none !important;
+  border:var(--nb-border) !important;
+  background:var(--nb-white) !important;
+  color:var(--nb-black) !important;
+  padding:0 18px !important;
+  display:grid !important;
+  place-items:center start !important;
+  text-align:left !important;
+  font-size:22px !important;
+  line-height:1 !important;
+  letter-spacing:-.04em !important;
+  transform:none !important;
+}
+
+.nb-module-list{
+  position:relative !important;
+  z-index:5 !important;
+  background:var(--nb-paper) !important;
+  padding-bottom:calc(var(--safe-bottom) + 110px) !important;
+}
+
+.nb-module-row{
+  min-height:90px !important;
+}
+
+.nb-module-main strong{
+  font-size:clamp(24px, 6.8vw, 40px) !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* EVENT PLANNER: hard no horizontal overflow */
+.event-planner-v63,
+.event-planner-wrap,
+.event-planner-v63 .event-section-card,
+.event-planner-v63 .event-section-body,
+.event-planner-v63 .nb-section{
+  width:100% !important;
+  max-width:100vw !important;
+  overflow-x:hidden !important;
+}
+
+.nb-event-topbar{
+  width:100vw !important;
+  max-width:100vw !important;
+  min-width:0 !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  overflow:hidden !important;
+}
+
+.nb-event-topbar .passport-button,
+.nb-event-topbar .top-nav-pill{
+  min-width:0 !important;
+  overflow:hidden !important;
+  padding:8px 4px !important;
+}
+
+.nb-event-topbar strong{
+  white-space:normal !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+}
+
+/* No right-side add-action column on mobile/phase 1 */
+.event-planner-v63 .event-section-head{
+  grid-template-columns:minmax(0,1fr) 56px !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  margin:0 !important;
+}
+
+.event-planner-v63 .event-section-head > *{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .event-section-action{
+  grid-column:auto !important;
+  position:relative !important;
+  right:auto !important;
+  transform:none !important;
+  width:56px !important;
+  min-width:56px !important;
+  max-width:56px !important;
+}
+
+/* Body grids must not create side panels */
+.event-planner-v63 .event-section-body > .grid{
+  grid-template-columns:1fr !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .event-section-body > .grid > *{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+/* Hide standalone add buttons in body; header plus remains */
+.event-planner-v63 .event-section-body > .grid > button,
+.event-planner-v63 .event-section-body > button.passport-button{
+  display:none !important;
+}
+
+/* Section titles fit; no clipped off-screen words */
+.event-planner-v63 .event-section-title{
+  display:block !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  font-size:clamp(26px, 8.2vw, 40px) !important;
+  line-height:.9 !important;
+  letter-spacing:-.07em !important;
+}
+
+.event-planner-v63 .event-section-title span{
+  display:none !important;
+}
+
+/* Forecast no overflow */
+.event-planner-v63 .forecast-title-row,
+.event-planner-v63 .nb-forecast-title,
+.event-planner-v63 .nb-forecast-grid,
+.event-planner-v63 .forecast-meta-grid,
+.event-planner-v63 .forecast-meta-pill,
+.event-planner-v63 .profit-orb{
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .forecast-title-text{
+  font-size:clamp(38px, 11.5vw, 60px) !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+}
+
+.event-planner-v63 .nb-forecast-title{
+  font-size:clamp(36px, 10.8vw, 58px) !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .booking-overview-grid,
+.event-planner-v63 .ds-stat-grid,
+.event-planner-v63 .stat-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:0 !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .stat-card{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .stat-card div:last-child{
+  font-size:clamp(24px, 7.2vw, 40px) !important;
+  white-space:normal !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63 .mini-panel,
+.event-planner-v63 .event-row-card,
+.event-planner-v63 .event-note-card{
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.event-planner-v63{
+  padding-bottom:calc(var(--safe-bottom) + 190px) !important;
+}
+
+@media (max-width:640px){
+  .nb-landing-hero{
+    min-height:calc(100dvh - 104px) !important;
+  }
+
+  .nb-landing-title-wrap h1{
+    font-size:clamp(48px, 14.8vw, 84px) !important;
+  }
+
+  .nb-landing-title-wrap p{
+    font-size:clamp(21px, 5.6vw, 30px) !important;
+  }
+
+  .nb-primary-link{
+    min-height:56px !important;
+  }
+
+  .event-planner-v63 .event-section-title{
+    font-size:clamp(24px, 7.8vw, 38px) !important;
+  }
+}
+
+@media (max-width:380px){
+  .nb-landing-title-wrap h1{
+    font-size:clamp(44px, 14vw, 76px) !important;
+  }
+
+  .event-planner-v63 .event-section-title{
+    font-size:clamp(22px, 7.1vw, 34px) !important;
+  }
+
+  .event-planner-v63 .forecast-title-text,
+  .event-planner-v63 .nb-forecast-title{
+    font-size:clamp(32px, 9.8vw, 50px) !important;
+  }
+}

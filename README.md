@@ -429,3 +429,8 @@ Refines the Landing page and Event Planner based on mobile screenshots.
 ## v67 Neo-brutalist mobile hard fix
 
 Polishes the Landing page and Event Planner based on screenshots.
+
+
+## v68 Neo-brutalist structure fix
+
+Hard fixes landing CTA overlap and Event Planner horizontal overflow.
