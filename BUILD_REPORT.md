@@ -1,29 +1,38 @@
-# Event Operations System v69
+# Event Operations System v70
 
-Base: v68
+Base: v69
 
-## Event Planner Compact Simplification
+## Reference-aligned Product UI Redesign
 
 Scope:
-- Event Planner only
+- Landing page
+- Event Planner
 
 Functionality unchanged.
 
-Changes:
-- Reduced top nav height.
-- Reduced Forecast heading size and spacing.
-- Reduced event title height.
-- Converted date/time/location into compact scan rows.
-- Reduced projected profit block height and dominance.
-- Made stat cards much smaller and easier to scan.
-- Converted lower sections into compact accordion rows.
-- Reduced open-section padding.
-- Reduced field/input height.
-- Kept right-side Add panels hidden in compact mode.
-- Added tighter mobile spacing.
+Design change:
+- Moves away from oversized neo-brutalist poster sections.
+- Moves toward neutral shadcn/Rhea-like product UI.
+- Uses rounded cards, subtle borders, compact controls and restrained hierarchy.
+- Keeps monochrome / neutral feel.
+- Builds the Landing and Event Planner from reusable app-style cards.
 
-Goal:
-- Event Planner should feel like a fast working tool, not a poster layout.
+Landing changes:
+- Clean app shell.
+- Compact intro card.
+- Stacked module cards.
+- Active module card uses black surface.
+- Footer note as a small neutral card.
+
+Event Planner changes:
+- Compact sticky tab controls.
+- Forecast as a rounded app card.
+- Date/time/location as compact neutral cards.
+- Projected profit as smaller black card.
+- Stats as compact two-column cards.
+- Lower sections as compact accordion cards.
+- Rounded inputs and quieter forms.
+- Removed poster-like oversized section bands.
 
 Status:
 - Build passed.

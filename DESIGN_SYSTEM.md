@@ -1,99 +1,49 @@
-# Event Operations System Design System — v65 Neo Brutalist Phase 1
+# Event Operations System Design System — v70 Product UI Direction
 
-v65 starts a new big redesign from v64.
+v70 changes the redesign direction for Landing and Event Planner.
+
+## Direction
+
+Reference-aligned neutral product UI:
+- rounded cards
+- subtle borders
+- soft shadows
+- compact controls
+- quiet hierarchy
+- monochrome / neutral
+- clear app feel
+- shadcn/Rhea-like components
 
 ## Scope
 
-Only these modules were redesigned in phase 1:
-
-- Landing page / Dashboard
+Implemented in:
+- Landing page
 - Event Planner
 
-Other modules are intentionally left for later phases.
-
-## Visual direction
-
-- monochrome
-- black / off-white
-- no color accents
-- strong negative space
-- large typography
-- hard square UI
-- no radius
-- no shadows
-- no gradients
-- brutal list rows
-- high contrast app controls
-
-## Landing page
-
-The landing page is now a neo-brutalist app home with:
-
-- oversized dark hero
-- large uppercase title
-- simple CTA
-- full-width module navigation rows
-
-## Event Planner
-
-The Event Planner now uses:
-
-- square app tabs
-- huge forecast title
-- black projected profit panel
-- grid-like stat cells
-- square input controls
-- simplified hierarchy
-
-## Next phase
-
-Apply the same redesign to:
-
+Not yet implemented in:
 - Bar Planner
 - Artist Management
 - Calendar
 - Project Management
 - Artist Booking
 
+## Core component language
 
-## v66 Phase 1 polish
+- app shell
+- sticky tabs
+- intro card
+- module card
+- stat card
+- neutral form field
+- compact accordion
+- black primary action/card
+- muted badges
 
-v66 refines the Landing page and Event Planner after real iPhone screenshots.
+## Next phase
 
-The design direction is unchanged:
-- monochrome
-- neo-brutalist
-- simple app feel
-- strong negative space
-- large typography
-
-Main polish:
-- landing hero composition fixed
-- Event Planner forecast/meta/profit balance improved
-- Safari bottom spacing improved
-
-
-## v67 mobile hard fix
-
-v67 fixes the visible mobile issues in the neo-brutalist phase 1 design:
-- landing CTA collision
-- clipped Event Planner headings
-- overlapping add-action panels
-- overly large stat cards
-- mobile Safari bottom overlap
-
-
-## v68 Neo-brutalist structure fix
-
-Hard fixes landing CTA overlap and Event Planner horizontal overflow.
-
-
-## v69 Event Planner compact simplification
-
-v69 makes Event Planner more compact and tool-like:
-- smaller forecast header
-- compact event info rows
-- smaller profit card
-- dense stats
-- compact accordion rows
-- smaller fields
+Apply this same product UI language to:
+1. Bar Planner
+2. Artist Management
+3. Calendar
+4. Project Management
+5. Artist Booking

@@ -439,3 +439,8 @@ Hard fixes landing CTA overlap and Event Planner horizontal overflow.
 ## v69 Event Planner compact simplification
 
 Makes Event Planner more compact, simpler and more operational.
+
+
+## v70 Product UI redesign
+
+Landing and Event Planner redesigned toward a compact neutral shadcn/Rhea-inspired product UI.
