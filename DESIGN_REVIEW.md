@@ -1,35 +1,20 @@
-# v59 Design Review
+# v72 Design Review
 
-## Result
+## Verdict
 
-The reference-inspired redesign is now actually present in the code.
+v72 is a better cleanup baseline than v71.
 
-## Important finding
+The app now has:
+- a small minimal base
+- retained legacy module structure where still needed
+- one active product UI design layer
 
-The previous v58 ZIP contained the v58 build report, but the CSS file did not include the v58 redesign layer. That meant the design direction was documented but not actually applied to the source.
+This is the right point to continue product UI module redesigns.
 
-## Fix
+## Next recommended build
 
-A verified final CSS layer was added to `app/globals.css`:
-
-```css
-/* v59 VERIFIED PILL APP REDESIGN */
+```txt
+v73 — Product UI Bar Planner + Artist Management
 ```
 
-## Visual direction now active
-
-- off-white app canvas
-- black primary action buttons
-- rounded outline pills
-- yellow selected/highlight pills
-- lighter cards
-- calmer typography
-- inputs as pill fields
-- Calendar dates as yellow pills
-- Project status dropdowns as yellow pills
-- Bar Planner totals as pill tags
-- fewer heavy nested-card visual effects
-
-## Functionality
-
-No functionality was intentionally changed.
+After those modules are rebuilt, more old CSS can be removed safely.

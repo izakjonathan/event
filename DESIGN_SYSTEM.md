@@ -1,49 +1,86 @@
-# Event Operations System Design System — v70 Product UI Direction
+# Event Operations System Design System — v72
 
-v70 changes the redesign direction for Landing and Event Planner.
+v72 is the current design-system cleanup baseline.
 
-## Direction
+## CSS structure
 
-Reference-aligned neutral product UI:
+`app/globals.css` now contains:
+
+1. Tailwind imports
+2. `v72 MINIMAL BASE`
+3. retained v27+ legacy module structure
+4. `v71 CONSOLIDATED PRODUCT DESIGN SYSTEM`
+
+## Active design direction
+
+Neutral product UI:
+
 - rounded cards
 - subtle borders
 - soft shadows
 - compact controls
 - quiet hierarchy
 - monochrome / neutral
-- clear app feel
-- shadcn/Rhea-like components
+- shadcn/Rhea-inspired app components
 
-## Scope
+## Active tokens
 
-Implemented in:
+Use the product tokens inside the consolidated layer:
+
+```css
+--product-bg
+--product-surface
+--product-surface-soft
+--product-ink
+--product-muted
+--product-border
+--product-border-strong
+--product-black
+--product-white
+--product-radius-xl
+--product-radius-lg
+--product-radius-md
+--product-shadow-soft
+```
+
+## Canonical classes
+
+Use these for all new/rebuilt UI:
+
+```css
+.ds-page
+.ds-wrap
+.ds-card
+.ds-section
+.ds-title
+.ds-heading
+.ds-label
+.ds-body
+.ds-number
+.ds-button
+.ds-button-primary
+.ds-field
+.ds-compact-summary
+```
+
+## Current redesigned modules
+
 - Landing page
 - Event Planner
 
-Not yet implemented in:
+## Modules still requiring product UI rebuild
+
 - Bar Planner
 - Artist Management
-- Calendar
+- Calendar / Schedule
 - Project Management
 - Artist Booking
 
-## Core component language
+## Cleanup rule
 
-- app shell
-- sticky tabs
-- intro card
-- module card
-- stat card
-- neutral form field
-- compact accordion
-- black primary action/card
-- muted badges
+Do not add stacked visual experiments again.
 
-## Next phase
-
-Apply this same product UI language to:
-1. Bar Planner
-2. Artist Management
-3. Calendar
-4. Project Management
-5. Artist Booking
+For the next redesign:
+- build with canonical classes
+- add only module-specific layout CSS
+- keep visual styling controlled by product tokens

@@ -1,38 +1,49 @@
-# Event Operations System v70
+# Event Operations System v72
 
-Base: v69
+Base: v71
 
-## Reference-aligned Product UI Redesign
+## Deeper Design Cleanup
 
-Scope:
-- Landing page
-- Event Planner
+This is a second cleanup/consolidation pass after v71.
 
 Functionality unchanged.
 
-Design change:
-- Moves away from oversized neo-brutalist poster sections.
-- Moves toward neutral shadcn/Rhea-like product UI.
-- Uses rounded cards, subtle borders, compact controls and restrained hierarchy.
-- Keeps monochrome / neutral feel.
-- Builds the Landing and Event Planner from reusable app-style cards.
+## What changed
 
-Landing changes:
-- Clean app shell.
-- Compact intro card.
-- Stacked module cards.
-- Active module card uses black surface.
-- Footer note as a small neutral card.
+- Removed the old pre-v27 Event Planner / early experimental CSS block.
+- Replaced it with a small `v72 MINIMAL BASE` layer.
+- Kept the v27+ legacy module structural CSS for modules that have not yet been rebuilt.
+- Kept the active consolidated product design layer:
+  - `v71 CONSOLIDATED PRODUCT DESIGN SYSTEM`
+- Cleaned old build logs before rebuilding.
+- Updated design docs.
 
-Event Planner changes:
-- Compact sticky tab controls.
-- Forecast as a rounded app card.
-- Date/time/location as compact neutral cards.
-- Projected profit as smaller black card.
-- Stats as compact two-column cards.
-- Lower sections as compact accordion cards.
-- Rounded inputs and quieter forms.
-- Removed poster-like oversized section bands.
+## CSS cleanup result
 
-Status:
-- Build passed.
+Compared to v71:
+
+- CSS before: 130,426 characters
+- CSS after: 101,894 characters
+- Removed: 28,532 characters
+- `!important` before: 1,100
+- `!important` after: 882
+- Removed: 218 `!important` rules
+
+Compared to v70 before cleanup:
+
+- CSS before v71 cleanup: 234,213 characters
+- CSS after v72 cleanup: 101,894 characters
+- Total removed: 132,319 characters
+
+## Current structure
+
+`app/globals.css` now has three main parts:
+
+1. Tailwind imports
+2. `v72 MINIMAL BASE`
+3. v27+ legacy module structure retained for unreworked modules
+4. `v71 CONSOLIDATED PRODUCT DESIGN SYSTEM`
+
+## Status
+
+Build passed.
