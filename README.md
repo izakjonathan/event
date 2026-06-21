@@ -434,3 +434,8 @@ Polishes the Landing page and Event Planner based on screenshots.
 ## v68 Neo-brutalist structure fix
 
 Hard fixes landing CTA overlap and Event Planner horizontal overflow.
+
+
+## v69 Event Planner compact simplification
+
+Makes Event Planner more compact, simpler and more operational.

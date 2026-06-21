@@ -8657,3 +8657,369 @@ textarea,
     font-size:clamp(32px, 9.8vw, 50px) !important;
   }
 }
+
+
+/* =========================================================
+   v69 EVENT PLANNER COMPACT SIMPLIFICATION
+   Goal: operational app tool, not poster layout.
+   Scope: Event Planner only.
+   ========================================================= */
+
+/* Overall Event Planner density */
+.event-planner-v63{
+  --ep-pad-x:14px;
+  --ep-line:1.5px solid #111;
+  --ep-small:10px;
+  --ep-label:11px;
+  --ep-body:18px;
+  --ep-title:clamp(34px, 10vw, 52px);
+  --ep-section:clamp(24px, 7vw, 34px);
+  background:#f4f3ef !important;
+  padding-bottom:calc(var(--safe-bottom) + 150px) !important;
+}
+
+.event-planner-wrap{
+  gap:0 !important;
+}
+
+/* Top tabs: smaller working-app header */
+.nb-event-topbar,
+.event-top-nav{
+  min-height:54px !important;
+  height:54px !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.nb-event-topbar .passport-button,
+.nb-event-topbar .top-nav-pill,
+.event-top-nav .passport-button,
+.event-top-nav .top-nav-pill{
+  min-height:54px !important;
+  height:54px !important;
+  padding:5px 6px !important;
+  display:grid !important;
+  place-items:center !important;
+  align-content:center !important;
+}
+
+.nb-event-topbar span,
+.event-top-nav span{
+  font-size:9px !important;
+  letter-spacing:.12em !important;
+  line-height:1 !important;
+}
+
+.nb-event-topbar strong,
+.event-top-nav strong{
+  font-size:15px !important;
+  line-height:.95 !important;
+  letter-spacing:-.045em !important;
+}
+
+/* Forecast card: compact header */
+.nb-section,
+.event-section-card{
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .forecast-title-row{
+  min-height:auto !important;
+  height:auto !important;
+  padding:16px var(--ep-pad-x) 14px !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  gap:10px !important;
+  align-items:start !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .forecast-title-text{
+  font-size:var(--ep-title) !important;
+  line-height:.86 !important;
+  letter-spacing:-.075em !important;
+  max-width:100% !important;
+}
+
+.event-planner-v63 .forecast-status-pill{
+  min-width:64px !important;
+  min-height:34px !important;
+  padding:6px 9px !important;
+  font-size:10px !important;
+  letter-spacing:.1em !important;
+}
+
+/* Event title: compact */
+.nb-forecast-title{
+  padding:18px var(--ep-pad-x) 20px !important;
+  font-size:clamp(36px, 10.5vw, 58px) !important;
+  line-height:.9 !important;
+  letter-spacing:-.075em !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+/* Event info rows: compact scan rows */
+.event-planner-v63 .forecast-meta-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:0 !important;
+}
+
+.event-planner-v63 .forecast-meta-pill{
+  min-height:62px !important;
+  padding:11px var(--ep-pad-x) !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:4px !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .forecast-meta-pill span{
+  font-size:10px !important;
+  letter-spacing:.14em !important;
+  line-height:1 !important;
+  color:rgb(17 17 17 / .45) !important;
+}
+
+.event-planner-v63 .forecast-meta-pill strong{
+  margin:0 !important;
+  font-size:clamp(22px, 6vw, 32px) !important;
+  line-height:.96 !important;
+  letter-spacing:-.055em !important;
+}
+
+/* Profit block: smaller operational stat */
+.nb-profit-block,
+.event-planner-v63 .profit-orb{
+  min-height:128px !important;
+  padding:14px var(--ep-pad-x) !important;
+  border-top:var(--ep-line) !important;
+  display:grid !important;
+  align-content:center !important;
+  justify-items:start !important;
+  gap:8px !important;
+  text-align:left !important;
+}
+
+.event-planner-v63 .profit-kicker,
+.event-planner-v63 .profit-sub{
+  font-size:10px !important;
+  letter-spacing:.14em !important;
+  line-height:1.15 !important;
+}
+
+.event-planner-v63 .profit-orb strong{
+  margin:4px 0 !important;
+  font-size:clamp(34px, 9vw, 54px) !important;
+  line-height:.9 !important;
+  letter-spacing:-.07em !important;
+}
+
+/* Terms compact */
+.event-planner-v63 .forecast-terms-card{
+  padding:12px var(--ep-pad-x) !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .forecast-terms-card p:last-child{
+  margin-top:5px !important;
+  font-size:clamp(19px, 5.2vw, 26px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.045em !important;
+}
+
+/* Stat grid: compact two-column tool grid */
+.event-planner-v63 .booking-overview-grid,
+.event-planner-v63 .ds-stat-grid,
+.event-planner-v63 .stat-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:0 !important;
+}
+
+.event-planner-v63 .stat-card,
+.nb-stat-card{
+  min-height:92px !important;
+  padding:11px var(--ep-pad-x) !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:8px !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .stat-card div:first-child,
+.event-planner-v63 .stat-card .ds-label{
+  font-size:10px !important;
+  letter-spacing:.13em !important;
+  line-height:1.1 !important;
+}
+
+.event-planner-v63 .stat-card div:last-child{
+  margin:0 !important;
+  font-size:clamp(24px, 6.5vw, 36px) !important;
+  line-height:.92 !important;
+  letter-spacing:-.065em !important;
+}
+
+/* Sections below forecast: compact accordions */
+.event-planner-v63 .event-section-head{
+  min-height:62px !important;
+  grid-template-columns:minmax(0,1fr) 46px !important;
+  border-bottom:var(--ep-line) !important;
+}
+
+.event-planner-v63 .event-section-head > *{
+  min-height:62px !important;
+  padding:10px var(--ep-pad-x) !important;
+}
+
+.event-planner-v63 .event-section-action{
+  width:46px !important;
+  min-width:46px !important;
+  max-width:46px !important;
+  min-height:62px !important;
+}
+
+.event-planner-v63 .event-section-action::before{
+  font-size:22px !important;
+}
+
+.event-planner-v63 .event-section-title{
+  font-size:var(--ep-section) !important;
+  line-height:.9 !important;
+  letter-spacing:-.065em !important;
+}
+
+.event-section-subtitle{
+  margin-top:5px !important;
+  font-size:10px !important;
+  letter-spacing:.13em !important;
+  line-height:1.25 !important;
+}
+
+/* Section body compact spacing */
+.event-section-body{
+  padding:10px var(--ep-pad-x) !important;
+}
+
+.event-section-body-featured{
+  padding:0 !important;
+}
+
+/* Form fields compact */
+.event-planner-v63 .ds-field-wrap,
+.event-planner-v63 .event-field{
+  gap:4px !important;
+}
+
+.event-planner-v63 .ds-label{
+  font-size:10px !important;
+  letter-spacing:.13em !important;
+}
+
+.event-planner-v63 input,
+.event-planner-v63 select,
+.event-planner-v63 textarea,
+.event-planner-v63 .passport-input{
+  min-height:42px !important;
+  padding:8px 10px !important;
+  font-size:17px !important;
+  line-height:1.05 !important;
+  letter-spacing:-.035em !important;
+}
+
+.event-stepper{
+  grid-template-columns:42px minmax(0,1fr) 42px !important;
+}
+
+/* Rows/cards inside open sections */
+.event-planner-v63 .event-row-card,
+.event-planner-v63 .event-note-card,
+.event-planner-v63 .mini-panel,
+.event-planner-v63 .forecast-info-card,
+.event-planner-v63 .event-schedule-card,
+.event-planner-v63 .event-artist-card{
+  padding:10px !important;
+  min-height:auto !important;
+}
+
+/* Reduce huge old utility type inside open sections */
+.event-planner-v63 .text-2xl,
+.event-planner-v63 .text-xl,
+.event-planner-v63 .text-lg{
+  font-size:clamp(20px, 5.2vw, 28px) !important;
+  line-height:.95 !important;
+}
+
+/* Keep all right-side add panels removed in compact mode */
+.event-planner-v63 .event-section-body > .grid > button,
+.event-planner-v63 .event-section-body > button.passport-button{
+  display:none !important;
+}
+
+/* Mobile-specific tightening */
+@media (max-width:640px){
+  .event-planner-v63{
+    --ep-pad-x:12px;
+    --ep-title:clamp(32px, 9.4vw, 48px);
+    --ep-section:clamp(22px, 6.6vw, 32px);
+  }
+
+  .nb-event-topbar,
+  .event-top-nav{
+    min-height:52px !important;
+    height:52px !important;
+  }
+
+  .nb-event-topbar .passport-button,
+  .nb-event-topbar .top-nav-pill{
+    min-height:52px !important;
+    height:52px !important;
+  }
+
+  .nb-forecast-title{
+    font-size:clamp(32px, 9.6vw, 48px) !important;
+  }
+
+  .event-planner-v63 .forecast-meta-pill{
+    min-height:58px !important;
+  }
+
+  .nb-profit-block,
+  .event-planner-v63 .profit-orb{
+    min-height:118px !important;
+  }
+
+  .event-planner-v63 .stat-card,
+  .nb-stat-card{
+    min-height:86px !important;
+  }
+
+  .event-planner-v63 .event-section-head{
+    min-height:58px !important;
+  }
+
+  .event-planner-v63 .event-section-head > *{
+    min-height:58px !important;
+  }
+
+  .event-planner-v63 .event-section-action{
+    min-height:58px !important;
+  }
+}
+
+@media (max-width:380px){
+  .event-planner-v63{
+    --ep-pad-x:10px;
+    --ep-title:clamp(30px, 9vw, 42px);
+    --ep-section:clamp(20px, 6.2vw, 29px);
+  }
+
+  .event-planner-v63 .stat-card,
+  .nb-stat-card{
+    min-height:80px !important;
+  }
+
+  .event-planner-v63 .stat-card div:last-child{
+    font-size:clamp(21px, 6vw, 31px) !important;
+  }
+}

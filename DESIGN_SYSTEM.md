@@ -86,3 +86,14 @@ v67 fixes the visible mobile issues in the neo-brutalist phase 1 design:
 ## v68 Neo-brutalist structure fix
 
 Hard fixes landing CTA overlap and Event Planner horizontal overflow.
+
+
+## v69 Event Planner compact simplification
+
+v69 makes Event Planner more compact and tool-like:
+- smaller forecast header
+- compact event info rows
+- smaller profit card
+- dense stats
+- compact accordion rows
+- smaller fields
