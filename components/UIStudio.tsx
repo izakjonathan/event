@@ -179,7 +179,7 @@ export default function UIStudio() {
               }`}
             >
               <span className="block text-lg font-medium tracking-[-0.04em]">Night</span>
-              <span className="mt-1 block text-xs opacity-70">Dark background, light text and light borders.</span>
+              <span className="mt-1 block text-xs opacity-70">Dark background, light text and muted borders.</span>
             </button>
             <button
               type="button"
@@ -189,7 +189,7 @@ export default function UIStudio() {
               }`}
             >
               <span className="block text-lg font-medium tracking-[-0.04em]">Day</span>
-              <span className="mt-1 block text-xs opacity-70">Light background, black text and dark borders.</span>
+              <span className="mt-1 block text-xs opacity-70">Light background, black text and muted borders.</span>
             </button>
           </div>
         </Card>

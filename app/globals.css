@@ -7,11 +7,11 @@
   --eos-text: #ffffff;
   --eos-muted: #8e8e93;
   --eos-accent: #ffffff;
-  --line: #ffffff;
-  --line-strong: #ffffff;
+  --line: rgba(255,255,255,0.18);
+  --line-strong: rgba(255,255,255,0.32);
   --text: var(--eos-text);
   --muted: var(--eos-muted);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  --shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
   --dock-active-bg: #2c2c2e;
   --dock-icon-bg: #2c2c2e;
 }
@@ -23,9 +23,9 @@ html[data-eos-mode='day'] {
   --eos-text: #000000;
   --eos-muted: #6e6e73;
   --eos-accent: #000000;
-  --line: #000000;
-  --line-strong: #000000;
-  --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --line: rgba(0,0,0,0.14);
+  --line-strong: rgba(0,0,0,0.28);
+  --shadow: 0 10px 22px rgba(0, 0, 0, 0.07);
   --dock-active-bg: #dedede;
   --dock-icon-bg: #dedede;
 }
