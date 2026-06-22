@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cx } from '@/lib/utils';
 
 const nav = [
@@ -56,7 +56,7 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
 
   return (
     <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
-      <section key={path} className="eos-page-content eos-page-enter relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+      <section key={path} className="eos-page-content eos-page-shell relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
         {children}
       </section>
 
@@ -177,17 +177,47 @@ export function Section({
   openDefault?: boolean;
   right?: ReactNode;
 }) {
+  const [open, setOpen] = useState(openDefault);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
+
+    const updateHeight = () => setHeight(element.scrollHeight);
+    updateHeight();
+
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [children, open]);
+
   return (
-    <details open={openDefault} className="eos-section eos-card group rounded-[30px] border p-1.5">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5">
+    <div className="eos-section eos-card rounded-[30px] border p-1.5">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className="eos-accordion-trigger flex w-full cursor-pointer list-none items-center justify-between gap-3 rounded-[24px] px-4 py-3.5 text-left"
+      >
         <span className="text-xl font-medium tracking-[-0.05em]">{title}</span>
         <span className="eos-muted flex items-center gap-2 text-xs">
           {right}
-          <span className="eos-chevron text-base transition group-open:rotate-180">⌄</span>
+          <span className={cx('eos-chevron text-base', open && 'rotate-180')}>⌄</span>
         </span>
-      </summary>
-      <div className="eos-section-content space-y-3 px-3 pb-3">{children}</div>
-    </details>
+      </button>
+      <div
+        className="eos-accordion-panel"
+        data-open={open ? 'true' : 'false'}
+        style={{ '--accordion-height': `${height}px` } as CSSProperties}
+      >
+        <div ref={contentRef} className="space-y-3 px-3 pb-3">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 

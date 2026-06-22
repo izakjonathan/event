@@ -1,40 +1,19 @@
-# EventOS
+# EventOS v20 — Navigation animation fix
 
-Mobile-first Next.js + Tailwind event operations workspace.
+This build reviews and fixes the navigation animation layer from v19.
 
-## Deploy on Vercel
+## What changed
 
-1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
-2. Import the repo in Vercel.
-3. Vercel will use:
-   - Install Command: `npm install --no-audit --no-fund --progress=false`
-   - Build Command: `npm run build`
-   - Node: `20.x`
-4. Add environment variables if using Supabase:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-5. Run `SUPABASE_SCHEMA.sql` in Supabase SQL editor.
+- Replaced the old very subtle animation layer with stronger, visible motion.
+- Page route changes now animate with a clearer fade, slide and slight scale.
+- Page cards now stagger in correctly by targeting the real page structure.
+- Dock active state is now visibly animated with lift, scale, icon motion and an active dot.
+- Press/tap feedback is applied consistently to buttons, links, cards and accordion headers.
+- Replaced native `<details>` sections with a controlled accordion component so open/close animation works reliably.
+- Accordion panels now animate height, opacity and position.
+- Kept reduced-motion support.
+- Production build confirmed with `npm run build`.
 
-The app has a local fallback mode if Supabase is not configured.
+## Notes
 
-## Latest changes
-
-- Added restrained site navigation animations.
-- Added route fade/slide transitions.
-- Added dock active-state motion.
-- Added consistent press/tap feedback.
-- Added staggered page/card entrance motion.
-- Added smooth accordion open motion.
-
-## Local setup
-
-```bash
-npm install
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
+If iOS Reduce Motion is enabled, the app intentionally disables most motion.
