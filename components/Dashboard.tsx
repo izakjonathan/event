@@ -18,18 +18,18 @@ const modules = [
 const future = ['Staff planner', 'Contracts', 'Supplier list', 'Budget reports'];
 
 export default function Dashboard() {
-  const { events, artists, tasks, alert, usingLocal } = useEventStore();
+  const { events, artists, tasks } = useEventStore();
   const upcoming = events.filter((e) => e.meta.date).sort((a, b) => a.meta.date.localeCompare(b.meta.date))[0];
   const totals = upcoming ? eventTotals(upcoming) : null;
 
   return (
-    <AppShell title="Operations" actions={<Badge tone={usingLocal ? 'warn' : 'ok'}>{usingLocal ? 'Local' : 'Live'}</Badge>}>
+    <AppShell title="Operations">
       <div className="space-y-5">
         <Card className="overflow-hidden">
           <div className="flex items-start justify-between gap-4">
             <div className="max-w-[75%]">
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Connected workspace</p>
-              <h1 className="mt-4 text-balance text-[54px] font-medium leading-[0.93] tracking-[-0.085em] text-white">
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Connected workspace</p>
+              <h1 className="mt-4 text-balance text-[54px] font-medium leading-[0.93] tracking-[-0.085em] eos-text">
                 EventOS
               </h1>
             </div>
@@ -43,32 +43,27 @@ export default function Dashboard() {
 
 
           <Link href="/ui-studio" className="mt-5 block">
-            <div className="eos-primary rounded-[24px] border px-4 py-4 text-black transition active:scale-[.99]">
+            <div className="eos-primary rounded-[24px] border px-4 py-4  transition active:scale-[.99]">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="font-mono text-[11px] uppercase tracking-[0.08em] opacity-70">Design controls</p>
                   <h2 className="mt-1 text-2xl font-medium tracking-[-0.055em]">Open UI Studio</h2>
                   <p className="mt-1 text-sm opacity-70">Change background, content, text, muted and accent colors.</p>
                 </div>
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-black/10 text-xl">◐</div>
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full eos-panel text-xl">◐</div>
               </div>
             </div>
           </Link>
 
-          {alert && (
-            <p className="mt-4 rounded-[22px] border border-amber-300/20 bg-amber-300/10 p-3 text-sm text-amber-100">
-              {alert}
-            </p>
-          )}
         </Card>
 
         {upcoming && (
           <Card>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Next review</p>
-                <h2 className="mt-3 text-3xl font-medium tracking-[-0.06em] text-white">{upcoming.meta.name}</h2>
-                <p className="mt-2 text-sm text-zinc-500">
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Next review</p>
+                <h2 className="mt-3 text-3xl font-medium tracking-[-0.06em] eos-text">{upcoming.meta.name}</h2>
+                <p className="mt-2 text-sm eos-muted">
                   {upcoming.meta.date} {upcoming.meta.time} · {upcoming.meta.location || 'No location'}
                 </p>
               </div>
@@ -102,8 +97,8 @@ export default function Dashboard() {
 
         <div className="space-y-3">
           <div className="flex items-end justify-between gap-3">
-            <h2 className="text-[38px] font-medium tracking-[-0.075em] text-white">Modules</h2>
-            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Workspace</p>
+            <h2 className="text-[38px] font-medium tracking-[-0.075em] eos-text">Modules</h2>
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Workspace</p>
           </div>
 
           {modules.map(([href, name, desc, status]) => (
@@ -111,13 +106,13 @@ export default function Dashboard() {
               <Card className="transition active:scale-[.99]">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] text-white">{name}</h3>
-                    <p className="mt-2 text-sm leading-5 text-zinc-400">{desc}</p>
+                    <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] eos-text">{name}</h3>
+                    <p className="mt-2 text-sm leading-5 eos-muted">{desc}</p>
                     <div className="mt-4 flex items-center gap-2">
-                      <span className="pill border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em] text-zinc-500">{status}</span>
+                      <span className="pill border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em] eos-muted">{status}</span>
                     </div>
                   </div>
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.03] text-lg text-zinc-400">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border eos-border eos-panel text-lg eos-muted">
                     →
                   </div>
                 </div>
@@ -128,8 +123,8 @@ export default function Dashboard() {
 
         <Card>
           <div className="flex items-end justify-between gap-3">
-            <h3 className="text-[30px] font-medium tracking-[-0.06em] text-white">Future modules</h3>
-            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Roadmap</p>
+            <h3 className="text-[30px] font-medium tracking-[-0.06em] eos-text">Future modules</h3>
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Roadmap</p>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {future.map((x) => (

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cx } from '@/lib/utils';
+import { applyTheme, readSavedTheme } from '@/lib/theme';
 
 const nav = [
   ['/', 'Main', '◥'],
@@ -13,38 +14,8 @@ const nav = [
   ['/ui-studio', 'Studio', '◐'],
 ] as const;
 
-const themeKeys = [
-  'background',
-  'content',
-  'text',
-  'muted',
-  'accent',
-  'border',
-  'border-strong',
-  'surface',
-  'dock-active',
-  'success',
-  'warning',
-  'danger',
-  'shadow',
-] as const;
-
 function applySavedTheme() {
-  if (typeof window === 'undefined') return;
-  try {
-    const saved = JSON.parse(localStorage.getItem('eos-ui-theme') || '{}');
-    const mode = saved.mode === 'day' ? 'day' : 'night';
-    document.documentElement.dataset.eosMode = mode;
-    document.documentElement.style.colorScheme = mode === 'day' ? 'light' : 'dark';
-    themeKeys.forEach((key) => {
-      const value = saved[key];
-      if (typeof value === 'string' && value.length > 0) {
-        document.documentElement.style.setProperty(`--eos-${key}`, value);
-      }
-    });
-  } catch {
-    localStorage.removeItem('eos-ui-theme');
-  }
+  applyTheme(readSavedTheme());
 }
 
 export function AppShell({ children }: { title?: string; children: ReactNode; actions?: ReactNode }) {
@@ -110,7 +81,7 @@ export function Button({
         'eos-pressable focus-ring rounded-[22px] border px-4 py-3 text-sm font-medium tracking-[-0.02em] transition disabled:opacity-40',
         kind === 'primary' && 'eos-primary',
         kind === 'ghost' && 'eos-surface',
-        kind === 'danger' && 'border-red-300/20 bg-red-300/10 text-red-100',
+        kind === 'danger' && 'eos-danger',
         kind === 'soft' && 'eos-panel',
         className,
       )}
@@ -156,9 +127,9 @@ export function Badge({
       className={cx(
         'pill inline-flex items-center gap-1 border px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.05em]',
         tone === 'neutral' && 'eos-surface',
-        tone === 'ok' && 'border-emerald-300/20 bg-emerald-300/10 text-emerald-200',
-        tone === 'warn' && 'border-amber-300/20 bg-amber-300/10 text-amber-200',
-        tone === 'bad' && 'border-red-300/20 bg-red-300/10 text-red-200',
+        tone === 'ok' && 'eos-ok',
+        tone === 'warn' && 'eos-warn',
+        tone === 'bad' && 'eos-danger',
       )}
     >
       {children}
