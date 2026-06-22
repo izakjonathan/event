@@ -7,12 +7,80 @@ import { cx } from '@/lib/utils';
 import { applyTheme, readSavedTheme } from '@/lib/theme';
 
 const nav = [
-  ['/', 'Main', '◥'],
-  ['/event-planner', 'Planner', '◌'],
-  ['/artists', 'Artists', '⌘'],
-  ['/calendar', 'Calendar', '▣'],
-  ['/ui-studio', 'Studio', '◐'],
+  ['/', 'Main', 'home'],
+  ['/event-planner', 'Planner', 'planner'],
+  ['/artists', 'Artists', 'artists'],
+  ['/calendar', 'Calendar', 'calendar'],
+  ['/ui-studio', 'Studio', 'studio'],
 ] as const;
+
+type NavIconName = typeof nav[number][2];
+
+function NavIcon({ name }: { name: NavIconName }) {
+  const common = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.9,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  };
+
+  if (name === 'home') {
+    return (
+      <svg {...common}>
+        <path d="M4.5 11.2 12 4.8l7.5 6.4" />
+        <path d="M6.8 10.5v8.2h10.4v-8.2" />
+        <path d="M10 18.7v-5h4v5" />
+      </svg>
+    );
+  }
+
+  if (name === 'planner') {
+    return (
+      <svg {...common}>
+        <path d="M7 5.2h10" />
+        <path d="M7 12h10" />
+        <path d="M7 18.8h6" />
+        <path d="M4.5 5.2h.01" />
+        <path d="M4.5 12h.01" />
+        <path d="M4.5 18.8h.01" />
+      </svg>
+    );
+  }
+
+  if (name === 'artists') {
+    return (
+      <svg {...common}>
+        <path d="M8.2 18.2a3.2 3.2 0 0 1 6.4 0" />
+        <path d="M11.4 12.8a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4Z" />
+        <path d="M16.3 14.1a2.4 2.4 0 0 1 3.2 2.3" />
+        <path d="M15.8 8.1a2.1 2.1 0 0 1 0 4" />
+      </svg>
+    );
+  }
+
+  if (name === 'calendar') {
+    return (
+      <svg {...common}>
+        <path d="M7.5 4.5v3" />
+        <path d="M16.5 4.5v3" />
+        <path d="M5.2 8.2h13.6" />
+        <rect x="5" y="6.2" width="14" height="13.2" rx="3" />
+        <path d="M8.2 12.2h.01M12 12.2h.01M15.8 12.2h.01M8.2 15.6h.01M12 15.6h.01" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <path d="M12 4.8v14.4" />
+      <path d="M12 19.2a7.2 7.2 0 0 0 0-14.4" />
+      <path d="M12 4.8a7.2 7.2 0 0 0 0 14.4" opacity="0.38" />
+    </svg>
+  );
+}
 
 function applySavedTheme() {
   applyTheme(readSavedTheme());
@@ -74,8 +142,8 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
                   active ? 'eos-dock-active' : 'eos-muted',
                 )}
               >
-                <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border text-[12px]', active && 'eos-dock-active')}>
-                  {icon}
+                <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]', active && 'eos-dock-active')}>
+                  <NavIcon name={icon} />
                 </div>
                 {label}
               </Link>

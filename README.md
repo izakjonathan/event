@@ -1,48 +1,24 @@
-# EventOS
+# EventOS v26 — Supabase UI Studio presets + dock cleanup
 
-Mobile-first Next.js + Tailwind event operations workspace.
+## What changed
 
-## UI Studio
+- UI Studio custom presets now save to Supabase in `ui_studio_presets` and load by `owner_key`, so saved presets can be reused from other devices using the same workspace key.
+- UI Studio keeps a local fallback only when Supabase is not configured or unavailable.
+- Removed UI Studio from the Main page modules and removed the Main page UI Studio callout card. UI Studio is now only accessible from the floating dock.
+- Touched up the dock icons with cleaner inline SVG icons for Main, Planner, Artists, Calendar and Studio.
+- Kept the existing fast dock fade navigation.
+- Production build confirmed with `npm run build`.
 
-Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the first module on the Dashboard.
+## Supabase update required
 
-## Deploy on Vercel
+Run the updated `SUPABASE_SCHEMA.sql` in Supabase SQL editor. It adds:
 
-1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
-2. Import the repo in Vercel.
-3. Vercel will use:
-   - Install Command: `npm install --no-audit --no-fund --progress=false`
-   - Build Command: `npm run build`
-   - Node: `20.x`
-4. Add environment variables if using Supabase:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-5. Run `SUPABASE_SCHEMA.sql` in Supabase SQL editor.
+- `public.ui_studio_presets`
+- owner/date index
+- prototype anonymous RLS policies matching the rest of this prototype app
 
-The app has a local fallback mode if Supabase is not configured.
+If the table has not been created yet, UI Studio will show a Supabase preset error and fall back to local presets on the current device.
 
-## Local setup
+## Deploy
 
-```bash
-npm install
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-
-## v21
-- Removed the active dock pseudo-element dot so active navigation is shown only through the pill/icon state.
-- Production build confirmed.
-
-
-## v25 Metric spacing and UI Studio presets
-- Added visible spacing between metric numbers and `DKK` / `%` units.
-- Added custom UI Studio presets saved to localStorage under `eos-ui-custom-presets`.
-- UI Studio can save the current theme as a reusable named preset and delete saved custom presets.
-- Built-in presets remain available.
-- Production build verified with `npm run build`.
+Upload/commit this ZIP as the full project root. The ZIP excludes `node_modules`, `.next`, and `package-lock.json`.

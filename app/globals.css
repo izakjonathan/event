@@ -193,3 +193,8 @@ a:active { transform: scale(.975); }
   from { opacity: 1; transform: translateY(0) scale(1); }
   to { opacity: 0; transform: translateY(-3px) scale(.998); }
 }
+
+/* Dock icon polish */
+.eos-nav-icon svg { width: 100%; height: 100%; display: block; }
+.eos-nav-icon { color: currentColor; }
+.eos-nav-item.eos-dock-active .eos-nav-icon { border-color: var(--eos-border-strong); }

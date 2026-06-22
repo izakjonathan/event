@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { AppShell, Badge, Button, Card, Field, Stat } from './ui/AppShell';
+import { useEventStore } from './EventStore';
+import { supabase, supabaseReady } from '@/lib/supabaseClient';
 import {
   applyTheme,
   DAY_THEME,
@@ -14,10 +16,11 @@ import {
 } from '@/lib/theme';
 
 type ColorKey = ThemeKey;
-type NamedTheme = Theme & { name: string; custom?: boolean };
+type NamedTheme = Theme & { id?: string; name: string; custom?: boolean; synced?: boolean };
 
 const DEFAULT_THEME = NIGHT_THEME;
-const CUSTOM_PRESETS_KEY = 'eos-ui-custom-presets';
+const LOCAL_PRESETS_KEY = 'eos-ui-custom-presets';
+const THEME_STORAGE_KEY = 'eos-ui-theme';
 
 const BUILT_IN_PRESETS: NamedTheme[] = [
   { name: 'Night mode', ...NIGHT_THEME },
@@ -71,44 +74,103 @@ const BUILT_IN_PRESETS: NamedTheme[] = [
   },
 ];
 
-function readCustomPresets(): NamedTheme[] {
+function fallbackId() {
+  return typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
+}
+
+function dbRowToPreset(row: any): NamedTheme | null {
+  if (!row || typeof row.name !== 'string') return null;
+  return {
+    ...normalizeTheme(row.payload || {}),
+    id: row.id,
+    name: row.name.trim() || 'Saved preset',
+    custom: true,
+    synced: true,
+  };
+}
+
+function readLocalPresets(): NamedTheme[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = JSON.parse(localStorage.getItem(CUSTOM_PRESETS_KEY) || '[]');
+    const raw = JSON.parse(localStorage.getItem(LOCAL_PRESETS_KEY) || '[]');
     if (!Array.isArray(raw)) return [];
-
     return raw
       .map((item) => {
         if (!item || typeof item.name !== 'string') return null;
         return {
           ...normalizeTheme(item),
+          id: item.id || fallbackId(),
           name: item.name.trim() || 'Saved preset',
           custom: true,
+          synced: false,
         } satisfies NamedTheme;
       })
       .filter(Boolean) as NamedTheme[];
   } catch {
-    localStorage.removeItem(CUSTOM_PRESETS_KEY);
+    localStorage.removeItem(LOCAL_PRESETS_KEY);
     return [];
   }
 }
 
-function writeCustomPresets(presets: NamedTheme[]) {
-  localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(presets));
+function writeLocalPresets(presets: NamedTheme[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(LOCAL_PRESETS_KEY, JSON.stringify(presets));
 }
 
 export default function UIStudio() {
+  const { ownerKey } = useEventStore();
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const [saved, setSaved] = useState(false);
   const [customPresets, setCustomPresets] = useState<NamedTheme[]>([]);
   const [presetName, setPresetName] = useState('');
+  const [presetStatus, setPresetStatus] = useState(supabaseReady ? 'Loading shared presets…' : 'Supabase not configured. Presets are local on this device.');
 
   useEffect(() => {
     const stored = readSavedTheme();
     setTheme(stored);
     applyTheme(stored);
-    setCustomPresets(readCustomPresets());
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPresets() {
+      if (!supabase) {
+        const localPresets = readLocalPresets();
+        if (!cancelled) {
+          setCustomPresets(localPresets);
+          setPresetStatus('Supabase not configured. Presets are local on this device.');
+        }
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('ui_studio_presets')
+          .select('*')
+          .eq('owner_key', ownerKey)
+          .order('updated_at', { ascending: false });
+
+        if (error) throw error;
+        const syncedPresets = (data || []).map(dbRowToPreset).filter(Boolean) as NamedTheme[];
+        if (!cancelled) {
+          setCustomPresets(syncedPresets);
+          setPresetStatus(syncedPresets.length ? 'Shared presets loaded from Supabase.' : 'No shared presets saved yet.');
+        }
+      } catch (error: any) {
+        const localPresets = readLocalPresets();
+        if (!cancelled) {
+          setCustomPresets(localPresets);
+          setPresetStatus(`Supabase presets unavailable. Using local fallback. ${error?.message || ''}`.trim());
+        }
+      }
+    }
+
+    loadPresets();
+    return () => {
+      cancelled = true;
+    };
+  }, [ownerKey]);
 
   const tokens = useMemo(
     () =>
@@ -141,7 +203,7 @@ export default function UIStudio() {
     const next = normalizeTheme(nextTheme);
     setTheme(next);
     applyTheme(next);
-    localStorage.setItem('eos-ui-theme', JSON.stringify(next));
+    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(next));
     flashSaved();
   };
 
@@ -155,21 +217,49 @@ export default function UIStudio() {
 
   const reset = () => commit(DEFAULT_THEME);
 
-  const saveCurrentPreset = () => {
+  const saveCurrentPreset = async () => {
     const name = presetName.trim() || `Preset ${customPresets.length + 1}`;
-    const nextPreset: NamedTheme = { ...normalizeTheme(theme), name, custom: true };
-    const nextPresets = [nextPreset, ...customPresets.filter((preset) => preset.name.toLowerCase() !== name.toLowerCase())].slice(0, 20);
+    const id = fallbackId();
+    const nextPreset: NamedTheme = { ...normalizeTheme(theme), id, name, custom: true, synced: Boolean(supabase) };
+
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('ui_studio_presets').upsert({
+          id,
+          owner_key: ownerKey,
+          name,
+          payload: normalizeTheme(theme),
+          updated_at: new Date().toISOString(),
+        });
+        if (error) throw error;
+        const synced = dbRowToPreset(Array.isArray(data) ? data[0] : data) || nextPreset;
+        setCustomPresets((current) => [synced, ...current.filter((preset) => preset.name.toLowerCase() !== name.toLowerCase())].slice(0, 30));
+        setPresetStatus('Preset saved to Supabase and available on all devices.');
+        setPresetName('');
+        flashSaved();
+        return;
+      } catch (error: any) {
+        setPresetStatus(`Supabase save failed. Saved locally as fallback. ${error?.message || ''}`.trim());
+      }
+    }
+
+    const nextPresets = [nextPreset, ...customPresets.filter((preset) => preset.name.toLowerCase() !== name.toLowerCase())].slice(0, 30);
     setCustomPresets(nextPresets);
-    writeCustomPresets(nextPresets);
+    writeLocalPresets(nextPresets);
     setPresetName('');
     flashSaved();
   };
 
-  const deleteCustomPreset = (name: string) => {
-    const nextPresets = customPresets.filter((preset) => preset.name !== name);
-    setCustomPresets(nextPresets);
-    writeCustomPresets(nextPresets);
-    flashSaved();
+  const deleteCustomPreset = async (preset: NamedTheme) => {
+    setCustomPresets((current) => current.filter((item) => item.id !== preset.id && item.name !== preset.name));
+    if (supabase && preset.id) {
+      const { error } = await supabase.from('ui_studio_presets').delete().eq('id', preset.id);
+      setPresetStatus(error ? `Delete failed in Supabase. ${error.message || ''}`.trim() : 'Preset deleted from Supabase.');
+      return;
+    }
+    const nextLocal = readLocalPresets().filter((item) => item.id !== preset.id && item.name !== preset.name);
+    writeLocalPresets(nextLocal);
+    setPresetStatus('Local preset deleted.');
   };
 
   return (
@@ -181,7 +271,7 @@ export default function UIStudio() {
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Design system</p>
               <h1 className="mt-4 text-[54px] font-medium leading-[0.93] tracking-[-0.085em] eos-text">UI Studio</h1>
               <p className="mt-4 max-w-[28ch] text-base leading-6 eos-muted">
-                Change every shared color token used across the app. Changes are saved on this device.
+                Change every shared color token used across the app. Shared presets save to Supabase.
               </p>
             </div>
             <Badge tone={saved ? 'ok' : 'neutral'}>{saved ? 'Saved' : 'Live'}</Badge>
@@ -267,10 +357,11 @@ export default function UIStudio() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Presets</p>
-              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Saved themes</h2>
+              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Shared themes</h2>
             </div>
-            <Badge tone="neutral">{customPresets.length} saved</Badge>
+            <Badge tone="neutral">{customPresets.length} shared</Badge>
           </div>
+          <p className="mt-3 text-sm leading-5 eos-muted">{presetStatus}</p>
 
           <div className="eos-panel mt-4 rounded-[24px] border p-3">
             <Field label="Preset name">
@@ -280,12 +371,12 @@ export default function UIStudio() {
                 onChange={(event) => setPresetName(event.target.value)}
               />
             </Field>
-            <Button className="mt-3 w-full" kind="primary" onClick={saveCurrentPreset}>Save current theme as preset</Button>
+            <Button className="mt-3 w-full" kind="primary" onClick={saveCurrentPreset}>Save current theme to Supabase</Button>
           </div>
 
           <div className="mt-4 space-y-2">
             {presets.map((preset) => (
-              <div key={`${preset.custom ? 'custom' : 'built-in'}-${preset.name}`} className="eos-panel rounded-[24px] border p-3">
+              <div key={`${preset.custom ? 'custom' : 'built-in'}-${preset.id || preset.name}`} className="eos-panel rounded-[24px] border p-3">
                 <button
                   type="button"
                   onClick={() => commit(normalizeTheme(preset))}
@@ -294,7 +385,7 @@ export default function UIStudio() {
                   <span>
                     <span className="block text-lg font-medium tracking-[-0.04em] eos-text">{preset.name}</span>
                     <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.06em] eos-muted">
-                      {preset.custom ? 'saved' : 'built in'} · {preset.mode} · {preset.background}
+                      {preset.custom ? (preset.synced ? 'supabase' : 'local fallback') : 'built in'} · {preset.mode} · {preset.background}
                     </span>
                   </span>
                   <span className="flex shrink-0 gap-1.5">
@@ -306,7 +397,7 @@ export default function UIStudio() {
                 {preset.custom && (
                   <button
                     type="button"
-                    onClick={() => deleteCustomPreset(preset.name)}
+                    onClick={() => deleteCustomPreset(preset)}
                     className="eos-danger mt-3 rounded-full border px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.06em]"
                   >
                     Delete preset

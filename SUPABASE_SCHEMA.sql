@@ -118,3 +118,26 @@ create policy if not exists "prototype artist image read" on storage.objects for
 create policy if not exists "prototype artist image upload" on storage.objects for insert to anon with check (bucket_id = 'artist-images');
 create policy if not exists "prototype artist image update" on storage.objects for update to anon using (bucket_id = 'artist-images') with check (bucket_id = 'artist-images');
 create policy if not exists "prototype artist image delete" on storage.objects for delete to anon using (bucket_id = 'artist-images');
+
+-- UI Studio shared presets. These make saved design themes available across devices
+-- for the same workspace key.
+create table if not exists public.ui_studio_presets (
+  id uuid primary key default gen_random_uuid(),
+  owner_key text not null default 'default-workspace',
+  name text not null default 'Saved preset',
+  payload jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_ui_studio_presets_owner_updated on public.ui_studio_presets(owner_key, updated_at desc);
+alter table public.ui_studio_presets enable row level security;
+
+drop policy if exists "prototype select ui presets" on public.ui_studio_presets;
+create policy "prototype select ui presets" on public.ui_studio_presets for select to anon using (true);
+drop policy if exists "prototype insert ui presets" on public.ui_studio_presets;
+create policy "prototype insert ui presets" on public.ui_studio_presets for insert to anon with check (true);
+drop policy if exists "prototype update ui presets" on public.ui_studio_presets;
+create policy "prototype update ui presets" on public.ui_studio_presets for update to anon using (true) with check (true);
+drop policy if exists "prototype delete ui presets" on public.ui_studio_presets;
+create policy "prototype delete ui presets" on public.ui_studio_presets for delete to anon using (true);
