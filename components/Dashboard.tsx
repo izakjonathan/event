@@ -6,6 +6,7 @@ import { useEventStore } from './EventStore';
 import { eventTotals } from '@/lib/calculations';
 
 const modules = [
+  ['/ui-studio', 'UI Studio', 'Change background, content, muted and accent colors.', 'Studio'],
   ['/event-planner', 'Event Planner', 'Forecast tickets, costs, staff, bar and venue terms.', 'Active'],
   ['/artist-booking', 'Artist Booking', 'Public artist submission form with image upload.', 'Public'],
   ['/artists', 'Artist Management', 'Review submissions and connect artists to events.', 'Active'],
@@ -48,6 +49,19 @@ export default function Dashboard() {
             <Badge tone={usingLocal ? 'warn' : 'ok'}>{usingLocal ? 'Local mode' : 'Supabase connected'}</Badge>
             <Badge>Mobile-first</Badge>
           </div>
+
+          <Link href="/ui-studio" className="mt-5 block">
+            <div className="eos-primary rounded-[24px] border px-4 py-4 text-black transition active:scale-[.99]">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.08em] opacity-70">Design controls</p>
+                  <h2 className="mt-1 text-2xl font-medium tracking-[-0.055em]">Open UI Studio</h2>
+                  <p className="mt-1 text-sm opacity-70">Change background, content, muted and accent colors.</p>
+                </div>
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-black/10 text-xl">◐</div>
+              </div>
+            </div>
+          </Link>
 
           {alert && (
             <p className="mt-4 rounded-[22px] border border-amber-300/20 bg-amber-300/10 p-3 text-sm text-amber-100">
@@ -106,7 +120,7 @@ export default function Dashboard() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="mb-3 flex items-center gap-2">
-                      <Badge tone={status === 'Public' ? 'warn' : 'ok'}>{status}</Badge>
+                      <Badge tone={status === 'Public' || status === 'Studio' ? 'warn' : 'ok'}>{status}</Badge>
                     </div>
                     <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] text-white">{name}</h3>
                     <p className="mt-2 text-sm leading-6 text-zinc-400">{desc}</p>

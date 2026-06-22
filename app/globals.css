@@ -2,16 +2,20 @@
 
 :root {
   color-scheme: dark;
-  --bg: #000000;
+  --eos-background: #000000;
+  --eos-content: #0b0b0d;
+  --eos-muted: #8b8b94;
+  --eos-accent: #ffffff;
+  --bg: var(--eos-background);
   --bg-soft: #050506;
-  --panel: #0b0b0d;
+  --panel: var(--eos-content);
   --panel-elevated: #111114;
   --surface: rgba(255,255,255,0.025);
   --surface-strong: rgba(255,255,255,0.055);
   --line: rgba(255,255,255,0.09);
   --line-strong: rgba(255,255,255,0.14);
   --text: #f5f5f7;
-  --muted: #8b8b94;
+  --muted: var(--eos-muted);
   --muted-strong: #b5b5bd;
   --ok: #8ad9ab;
   --warn: #f4d27c;
@@ -29,8 +33,8 @@ body {
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(circle at top center, rgba(255,255,255,0.045), transparent 32%),
-    linear-gradient(180deg, #020203 0%, #000 42%, #000 100%);
+    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 10%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 92%, var(--eos-content)) 0%, var(--eos-background) 42%, var(--eos-background) 100%);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -64,8 +68,8 @@ select {
   appearance: none;
   -webkit-appearance: none;
   border-radius: 20px;
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.018));
+  border: 1px solid color-mix(in srgb, var(--eos-accent) 12%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 94%, var(--eos-accent) 6%), var(--eos-content));
   color: var(--text);
   padding: 14px 16px;
   outline: none;
@@ -74,7 +78,7 @@ select {
 
 input::placeholder,
 textarea::placeholder {
-  color: #5f6168;
+  color: color-mix(in srgb, var(--eos-muted) 70%, transparent);
 }
 
 input[type='date'],
@@ -88,7 +92,7 @@ input[type='checkbox'] {
   min-width: 18px;
   border-radius: 6px;
   padding: 0;
-  background: rgba(255,255,255,0.045);
+  background: color-mix(in srgb, var(--eos-content) 86%, var(--eos-accent) 14%);
 }
 
 input[type='file'] {
@@ -115,7 +119,7 @@ select {
 label {
   display: block;
   margin: 0 0 8px;
-  color: var(--muted);
+  color: var(--eos-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 11px;
   letter-spacing: 0.06em;
@@ -135,8 +139,8 @@ summary::-webkit-details-marker {
 }
 
 .glass {
-  background: linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.018));
-  border: 1px solid var(--line);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
+  border: 1px solid color-mix(in srgb, var(--eos-accent) 13%, transparent);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
 }
@@ -155,4 +159,69 @@ select:focus {
 
 .text-balance {
   text-wrap: balance;
+}
+
+
+.eos-root {
+  background: var(--eos-background);
+}
+
+.eos-fade {
+  background: radial-gradient(circle at top, color-mix(in srgb, var(--eos-accent) 12%, transparent), transparent 72%);
+}
+
+.eos-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
+  border-color: color-mix(in srgb, var(--eos-accent) 13%, transparent);
+}
+
+.eos-stat,
+.eos-surface {
+  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-accent) 12%) !important;
+  border-color: color-mix(in srgb, var(--eos-accent) 10%, transparent) !important;
+}
+
+.eos-muted,
+.text-zinc-500,
+.text-zinc-400,
+.text-zinc-300 {
+  color: var(--eos-muted) !important;
+}
+
+.eos-dock {
+  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-background) 12%);
+  border-color: color-mix(in srgb, var(--eos-accent) 12%, transparent);
+}
+
+.eos-dock-active {
+  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
+  color: var(--eos-accent) !important;
+}
+
+.eos-primary {
+  background: var(--eos-accent) !important;
+  border-color: var(--eos-accent) !important;
+  color: var(--eos-background) !important;
+}
+
+.eos-accent-text {
+  color: var(--eos-accent) !important;
+}
+
+.eos-accent-border {
+  border-color: color-mix(in srgb, var(--eos-accent) 40%, transparent) !important;
+}
+
+.eos-color-input {
+  height: 52px;
+  padding: 6px;
+}
+
+.eos-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.eos-color-input::-webkit-color-swatch {
+  border: 0;
+  border-radius: 14px;
 }
