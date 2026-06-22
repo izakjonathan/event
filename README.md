@@ -1,24 +1,40 @@
-# EventOS v22 — cleanup and reliability fix
+# EventOS
 
-This build cleans up the v21 codebase and fixes the review issues found after the animation pass.
+Mobile-first Next.js + Tailwind event operations workspace.
 
-## What changed
+## UI Studio
 
-- Removed the Dashboard Supabase alert/pill output so sync messages do not reappear in the Main hero.
-- Added a shared `lib/theme.ts` file so UI Studio and AppShell use the same theme defaults, validation and application logic.
-- UI Studio now normalizes saved theme values before applying them, preventing broken localStorage values from becoming invalid CSS variables.
-- Replaced old hardcoded Tailwind color utility usage in components with EventOS token classes.
-- Simplified `globals.css` and removed the old compatibility override block for legacy Tailwind colors.
-- Kept only reliable animation behavior: dock active animation, press feedback and controlled accordion open/close.
-- Removed weak route/card stagger animations that were not reliably visible on iOS/Safari.
-- Replaced native `prompt`, `confirm` and `alert` usage in app modules.
-- Reduced localStorage risk by stripping large base64 file data from persisted event payloads; file metadata remains, but large files should use Supabase Storage for long-term storage.
-- Kept the Vercel-friendly setup: Next.js app router, no lockfile requirement, and `npm install` as the Vercel install command.
+Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the first module on the Dashboard.
 
-## Build check
+## Deploy on Vercel
 
-`npm run build` passes.
+1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
+2. Import the repo in Vercel.
+3. Vercel will use:
+   - Install Command: `npm install --no-audit --no-fund --progress=false`
+   - Build Command: `npm run build`
+   - Node: `20.x`
+4. Add environment variables if using Supabase:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Run `SUPABASE_SCHEMA.sql` in Supabase SQL editor.
 
-## Deploy
+The app has a local fallback mode if Supabase is not configured.
 
-Upload the ZIP contents to GitHub/Working Copy with `package.json` at the repository root, then deploy through Vercel.
+## Local setup
+
+```bash
+npm install
+npm run dev
+```
+
+Production build:
+
+```bash
+npm run build
+```
+
+
+## v21
+- Removed the active dock pseudo-element dot so active navigation is shown only through the pill/icon state.
+- Production build confirmed.

@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { CSSProperties, MouseEvent, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cx } from '@/lib/utils';
 import { applyTheme, readSavedTheme } from '@/lib/theme';
 
@@ -20,14 +20,42 @@ function applySavedTheme() {
 
 export function AppShell({ children }: { title?: string; children: ReactNode; actions?: ReactNode }) {
   const path = usePathname();
+  const router = useRouter();
+  const [isLeaving, setIsLeaving] = useState(false);
+  const transitionTimer = useRef<number | null>(null);
 
   useEffect(() => {
     applySavedTheme();
   }, []);
 
+  useEffect(() => {
+    setIsLeaving(false);
+    if (transitionTimer.current) {
+      window.clearTimeout(transitionTimer.current);
+      transitionTimer.current = null;
+    }
+  }, [path]);
+
+  useEffect(() => () => {
+    if (transitionTimer.current) window.clearTimeout(transitionTimer.current);
+  }, []);
+
+  const navigateWithFade = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === path) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+
+    event.preventDefault();
+    if (transitionTimer.current) window.clearTimeout(transitionTimer.current);
+
+    setIsLeaving(true);
+    transitionTimer.current = window.setTimeout(() => {
+      router.push(href);
+    }, 115);
+  };
+
   return (
     <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
-      <section key={path} className="eos-page-content eos-page-shell relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+      <section key={path} data-leaving={isLeaving ? 'true' : 'false'} className="eos-page-content eos-page-shell relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
         {children}
       </section>
 
@@ -39,6 +67,8 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
               <Link
                 key={href}
                 href={href}
+                onClick={(event) => navigateWithFade(event, href)}
+                aria-current={active ? 'page' : undefined}
                 className={cx(
                   'eos-nav-item rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition active:scale-[.96]',
                   active ? 'eos-dock-active' : 'eos-muted',

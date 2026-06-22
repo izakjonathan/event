@@ -168,3 +168,25 @@ a:active { transform: scale(.975); }
     transition-duration: .001ms !important;
   }
 }
+
+/* Swift dock route transition: current page fades out, next page fades in. */
+.eos-page-shell {
+  animation: eos-page-enter 155ms cubic-bezier(.2,.8,.2,1) both;
+  transform-origin: 50% 24px;
+  will-change: opacity, transform;
+}
+
+.eos-page-shell[data-leaving='true'] {
+  animation: eos-page-exit 115ms cubic-bezier(.4,0,.2,1) both;
+  pointer-events: none;
+}
+
+@keyframes eos-page-enter {
+  from { opacity: 0; transform: translateY(5px) scale(.998); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes eos-page-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-3px) scale(.998); }
+}
