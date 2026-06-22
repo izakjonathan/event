@@ -53,3 +53,8 @@ Events are saved in `event_plans`. The main event object is stored as JSON in `p
 ## Production notes
 
 The included Supabase policies are intentionally open for a shared-link prototype. Replace them with authenticated, workspace-scoped policies before using with private or commercial data.
+
+
+## Vercel deployment note
+
+This project includes both `build` and `vercel-build` scripts. If Vercel is configured to run `npm run vercel-build`, it will execute `next build`. You can also set the Vercel Build Command to `npm run build`.
