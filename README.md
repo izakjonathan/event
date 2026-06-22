@@ -2,14 +2,9 @@
 
 Mobile-first Next.js + Tailwind event operations workspace.
 
-## v13 changes
+## UI Studio
 
-- Improved UI Studio day/night mode contrast.
-- Day mode now uses light backgrounds with black text and stronger dark borders.
-- Night mode keeps dark backgrounds with light text and light borders.
-- Text color is part of UI Studio and is applied across headings, body text, fields and dock labels.
-- Studio badges and status pills are more readable in day mode.
-- Floating dock is slightly smaller and page bottom spacing is larger so content is not hidden behind the dock/Safari bar.
+Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the first module on the Dashboard.
 
 ## Deploy on Vercel
 

@@ -3,25 +3,31 @@
 :root {
   color-scheme: dark;
   --eos-background: #000000;
-  --eos-content: #0b0b0d;
-  --eos-text: #f5f5f7;
-  --eos-muted: #8b8b94;
+  --eos-content: #000000;
+  --eos-text: #ffffff;
+  --eos-muted: #8e8e93;
   --eos-accent: #ffffff;
-  --bg: var(--eos-background);
-  --bg-soft: #050506;
-  --panel: var(--eos-content);
-  --panel-elevated: #111114;
-  --surface: rgba(255,255,255,0.025);
-  --surface-strong: rgba(255,255,255,0.055);
-  --line: color-mix(in srgb, var(--eos-text) 12%, transparent);
-  --line-strong: color-mix(in srgb, var(--eos-text) 18%, transparent);
+  --line: #ffffff;
+  --line-strong: #ffffff;
   --text: var(--eos-text);
   --muted: var(--eos-muted);
-  --muted-strong: color-mix(in srgb, var(--eos-muted) 70%, var(--eos-text));
-  --ok: #8ad9ab;
-  --warn: #f4d27c;
-  --bad: #f3a3a3;
-  --shadow: 0 24px 80px rgba(0,0,0,0.48);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  --dock-active-bg: #2c2c2e;
+  --dock-icon-bg: #2c2c2e;
+}
+
+html[data-eos-mode='day'] {
+  color-scheme: light;
+  --eos-background: #ffffff;
+  --eos-content: #ffffff;
+  --eos-text: #000000;
+  --eos-muted: #6e6e73;
+  --eos-accent: #000000;
+  --line: #000000;
+  --line-strong: #000000;
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --dock-active-bg: #dedede;
+  --dock-icon-bg: #dedede;
 }
 
 * {
@@ -33,10 +39,8 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  background:
-    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 10%, transparent), transparent 32%),
-    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 92%, var(--eos-content)) 0%, var(--eos-background) 42%, var(--eos-background) 100%);
-  color: var(--text);
+  background: var(--eos-background);
+  color: var(--eos-text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -69,17 +73,17 @@ select {
   appearance: none;
   -webkit-appearance: none;
   border-radius: 20px;
-  border: 1px solid color-mix(in srgb, var(--eos-accent) 12%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 94%, var(--eos-accent) 6%), var(--eos-content));
-  color: var(--text);
+  border: 1px solid var(--line);
+  background: var(--eos-content);
+  color: var(--eos-text);
   padding: 14px 16px;
   outline: none;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--eos-text) 4%, transparent);
+  box-shadow: none;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: color-mix(in srgb, var(--eos-muted) 70%, transparent);
+  color: var(--eos-muted);
 }
 
 input[type='date'],
@@ -93,7 +97,7 @@ input[type='checkbox'] {
   min-width: 18px;
   border-radius: 6px;
   padding: 0;
-  background: color-mix(in srgb, var(--eos-content) 86%, var(--eos-accent) 14%);
+  background: var(--eos-content);
 }
 
 input[type='file'] {
@@ -123,7 +127,7 @@ label {
   color: var(--eos-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 11px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -139,19 +143,20 @@ summary::-webkit-details-marker {
   scrollbar-width: none;
 }
 
-.glass {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
-  border: 1px solid color-mix(in srgb, var(--eos-accent) 13%, transparent);
+.glass,
+.eos-card {
+  background: var(--eos-content);
+  border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .focus-ring:focus-visible,
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: color-mix(in srgb, var(--eos-accent) 45%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--eos-accent) 14%, transparent);
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 1px var(--line-strong);
 }
 
 .pill {
@@ -162,24 +167,18 @@ select:focus {
   text-wrap: balance;
 }
 
-
 .eos-root {
   background: var(--eos-background);
 }
 
 .eos-fade {
-  background: radial-gradient(circle at top, color-mix(in srgb, var(--eos-accent) 12%, transparent), transparent 72%);
-}
-
-.eos-card {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
-  border-color: color-mix(in srgb, var(--eos-accent) 13%, transparent);
+  background: transparent;
 }
 
 .eos-stat,
 .eos-surface {
-  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-accent) 12%) !important;
-  border-color: color-mix(in srgb, var(--eos-accent) 10%, transparent) !important;
+  background: var(--eos-content) !important;
+  border-color: var(--line) !important;
 }
 
 .eos-muted,
@@ -204,7 +203,7 @@ select:focus {
 .border-white\/12,
 .border-white\/15,
 .border-white\/20 {
-  border-color: color-mix(in srgb, var(--eos-text) 14%, transparent) !important;
+  border-color: var(--line) !important;
 }
 
 .bg-white\/\[\.02\],
@@ -215,17 +214,19 @@ select:focus {
 .bg-white\/\[\.06\],
 .bg-white\/\[\.075\],
 .bg-white\/\[\.08\] {
-  background-color: color-mix(in srgb, var(--eos-content) 88%, var(--eos-text) 12%) !important;
+  background: var(--eos-content) !important;
 }
 
 .eos-dock {
-  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-background) 12%);
-  border-color: color-mix(in srgb, var(--eos-accent) 12%, transparent);
+  background: var(--eos-content);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
 }
 
 .eos-dock-active {
-  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
-  color: var(--eos-accent) !important;
+  background: var(--dock-active-bg) !important;
+  color: var(--eos-text) !important;
 }
 
 .eos-primary {
@@ -239,7 +240,7 @@ select:focus {
 }
 
 .eos-accent-border {
-  border-color: color-mix(in srgb, var(--eos-accent) 40%, transparent) !important;
+  border-color: var(--line) !important;
 }
 
 .eos-color-input {
@@ -252,180 +253,44 @@ select:focus {
 }
 
 .eos-color-input::-webkit-color-swatch {
-  border: 0;
+  border: 1px solid var(--line);
   border-radius: 14px;
 }
 
-
-[data-eos-mode='day'] {
-  color-scheme: light;
-  --shadow: 0 22px 58px rgba(0,0,0,0.08);
+/* Status helpers */
+.text-amber-100,
+.text-amber-200 {
+  color: #c78b00 !important;
+}
+.bg-amber-300\/10 {
+  background: transparent !important;
+}
+.border-amber-300\/20 {
+  border-color: #c78b00 !important;
 }
 
-[data-eos-mode='day'] body,
-[data-eos-mode='day'] .eos-root {
-  background: var(--eos-background);
+.text-emerald-200 {
+  color: #23c483 !important;
+}
+.bg-emerald-300\/10 {
+  background: transparent !important;
+}
+.border-emerald-300\/20 {
+  border-color: #23c483 !important;
 }
 
-[data-eos-mode='day'] .eos-card,
-[data-eos-mode='day'] .glass {
-  box-shadow: 0 18px 48px rgba(0,0,0,0.06);
+.text-red-100,
+.text-red-200 {
+  color: #ff6b6b !important;
 }
-
-[data-eos-mode='day'] .eos-dock {
-  box-shadow: 0 20px 60px rgba(0,0,0,0.14);
+.bg-red-300\/10,
+.bg-red-300\/12,
+.bg-red-400\/15 {
+  background: transparent !important;
 }
-
-[data-eos-mode='day'] input,
-[data-eos-mode='day'] textarea,
-[data-eos-mode='day'] select {
-  background: color-mix(in srgb, var(--eos-content) 96%, var(--eos-text) 4%);
-}
-
-
-/* UI Studio v13: stronger day/night contrast and safer mobile spacing */
-html[data-eos-mode='day'] {
-  color-scheme: light;
-  --line: color-mix(in srgb, var(--eos-text) 16%, transparent);
-  --line-strong: color-mix(in srgb, var(--eos-text) 24%, transparent);
-  --shadow: 0 20px 58px rgba(0,0,0,0.10);
-}
-
-html[data-eos-mode='night'] {
-  color-scheme: dark;
-  --line: color-mix(in srgb, var(--eos-text) 13%, transparent);
-  --line-strong: color-mix(in srgb, var(--eos-text) 20%, transparent);
-}
-
-html[data-eos-mode='day'] body,
-html[data-eos-mode='day'] .eos-root {
-  background:
-    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 5%, transparent), transparent 34%),
-    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 96%, #ffffff) 0%, var(--eos-background) 100%);
-  color: var(--eos-text);
-}
-
-html[data-eos-mode='night'] body,
-html[data-eos-mode='night'] .eos-root {
-  background:
-    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 10%, transparent), transparent 32%),
-    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 92%, var(--eos-content)) 0%, var(--eos-background) 42%, var(--eos-background) 100%);
-  color: var(--eos-text);
-}
-
-html[data-eos-mode='day'] .glass,
-html[data-eos-mode='day'] .eos-card {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 98%, var(--eos-background) 2%), var(--eos-content));
-  border-color: color-mix(in srgb, var(--eos-text) 16%, transparent) !important;
-  box-shadow: 0 18px 48px rgba(0,0,0,0.08);
-}
-
-html[data-eos-mode='night'] .glass,
-html[data-eos-mode='night'] .eos-card {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
-  border-color: color-mix(in srgb, var(--eos-text) 14%, transparent) !important;
-}
-
-html[data-eos-mode='day'] input,
-html[data-eos-mode='day'] textarea,
-html[data-eos-mode='day'] select {
-  background: color-mix(in srgb, var(--eos-content) 97%, var(--eos-background) 3%) !important;
-  border-color: color-mix(in srgb, var(--eos-text) 18%, transparent) !important;
-  color: var(--eos-text) !important;
-}
-
-html[data-eos-mode='night'] input,
-html[data-eos-mode='night'] textarea,
-html[data-eos-mode='night'] select {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 94%, var(--eos-accent) 6%), var(--eos-content)) !important;
-  border-color: color-mix(in srgb, var(--eos-text) 16%, transparent) !important;
-  color: var(--eos-text) !important;
-}
-
-html[data-eos-mode='day'] .eos-surface,
-html[data-eos-mode='day'] .eos-stat,
-html[data-eos-mode='day'] .bg-white\/\[\.02\],
-html[data-eos-mode='day'] .bg-white\/\[\.025\],
-html[data-eos-mode='day'] .bg-white\/\[\.03\],
-html[data-eos-mode='day'] .bg-white\/\[\.04\],
-html[data-eos-mode='day'] .bg-white\/\[\.055\],
-html[data-eos-mode='day'] .bg-white\/\[\.06\],
-html[data-eos-mode='day'] .bg-white\/\[\.075\],
-html[data-eos-mode='day'] .bg-white\/\[\.08\] {
-  background-color: color-mix(in srgb, var(--eos-content) 91%, var(--eos-text) 9%) !important;
-  border-color: color-mix(in srgb, var(--eos-text) 15%, transparent) !important;
-}
-
-html[data-eos-mode='night'] .eos-surface,
-html[data-eos-mode='night'] .eos-stat {
-  background-color: color-mix(in srgb, var(--eos-content) 88%, var(--eos-text) 12%) !important;
-  border-color: color-mix(in srgb, var(--eos-text) 13%, transparent) !important;
-}
-
-html[data-eos-mode='day'] .eos-primary {
-  background: var(--eos-accent) !important;
-  border-color: var(--eos-accent) !important;
-  color: var(--eos-background) !important;
-}
-
-html[data-eos-mode='night'] .eos-primary {
-  background: var(--eos-accent) !important;
-  border-color: var(--eos-accent) !important;
-  color: var(--eos-background) !important;
-}
-
-html[data-eos-mode='day'] .text-amber-100,
-html[data-eos-mode='day'] .text-amber-200 {
-  color: #6b4400 !important;
-}
-html[data-eos-mode='day'] .bg-amber-300\/10 {
-  background-color: rgba(255, 183, 0, 0.18) !important;
-}
-html[data-eos-mode='day'] .border-amber-300\/20 {
-  border-color: rgba(122, 82, 0, 0.24) !important;
-}
-html[data-eos-mode='day'] .text-emerald-200 {
-  color: #00693f !important;
-}
-html[data-eos-mode='day'] .bg-emerald-300\/10 {
-  background-color: rgba(31, 178, 111, 0.14) !important;
-}
-html[data-eos-mode='day'] .border-emerald-300\/20 {
-  border-color: rgba(0, 105, 63, 0.22) !important;
-}
-html[data-eos-mode='day'] .text-red-100,
-html[data-eos-mode='day'] .text-red-200 {
-  color: #9a1b1b !important;
-}
-html[data-eos-mode='day'] .bg-red-300\/10,
-html[data-eos-mode='day'] .bg-red-300\/12,
-html[data-eos-mode='day'] .bg-red-400\/15 {
-  background-color: rgba(220, 38, 38, 0.12) !important;
-}
-html[data-eos-mode='day'] .border-red-300\/18,
-html[data-eos-mode='day'] .border-red-300\/20 {
-  border-color: rgba(154, 27, 27, 0.24) !important;
-}
-
-html[data-eos-mode='day'] .eos-dock {
-  background: color-mix(in srgb, var(--eos-content) 92%, transparent);
-  border-color: color-mix(in srgb, var(--eos-text) 14%, transparent);
-  box-shadow: 0 18px 55px rgba(0,0,0,0.16);
-}
-
-html[data-eos-mode='night'] .eos-dock {
-  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-background) 12%);
-  border-color: color-mix(in srgb, var(--eos-text) 13%, transparent);
-}
-
-html[data-eos-mode='day'] .eos-dock-active {
-  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
-  color: var(--eos-text) !important;
-}
-
-html[data-eos-mode='night'] .eos-dock-active {
-  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
-  color: var(--eos-accent) !important;
+.border-red-300\/18,
+.border-red-300\/20 {
+  border-color: #ff6b6b !important;
 }
 
 .eos-page-content {

@@ -6,7 +6,7 @@ import { AppShell, Badge, Button, Card, Field, Stat } from './ui/AppShell';
 const NIGHT_THEME = {
   mode: 'night',
   background: '#000000',
-  content: '#0b0b0d',
+  content: '#000000',
   text: '#f5f5f7',
   muted: '#8b8b94',
   accent: '#ffffff',
@@ -35,8 +35,8 @@ const PRESETS = [
   {
     name: 'Graphite blue',
     mode: 'night',
-    background: '#05070d',
-    content: '#10141d',
+    background: '#000000',
+    content: '#000000',
     text: '#f3f6ff',
     muted: '#8a95a8',
     accent: '#7aa2ff',
@@ -44,8 +44,8 @@ const PRESETS = [
   {
     name: 'Warm operations',
     mode: 'night',
-    background: '#080604',
-    content: '#15110c',
+    background: '#000000',
+    content: '#000000',
     text: '#fff8ed',
     muted: '#a09584',
     accent: '#f2c36b',
@@ -53,7 +53,7 @@ const PRESETS = [
   {
     name: 'Clean daylight',
     mode: 'day',
-    background: '#f8f7f3',
+    background: '#ffffff',
     content: '#ffffff',
     text: '#111111',
     muted: '#66645f',
@@ -62,8 +62,8 @@ const PRESETS = [
   {
     name: 'Green room',
     mode: 'night',
-    background: '#020806',
-    content: '#0b1712',
+    background: '#000000',
+    content: '#000000',
     text: '#f2fff7',
     muted: '#789487',
     accent: '#75f0a6',
