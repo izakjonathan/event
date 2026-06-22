@@ -30,10 +30,9 @@ export default function Dashboard() {
             <div className="max-w-[75%]">
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Connected workspace</p>
               <h1 className="mt-4 text-balance text-[54px] font-medium leading-[0.93] tracking-[-0.085em] text-white">
-                Event Operations System
+                EventOS
               </h1>
             </div>
-            <div className="grid h-12 w-12 place-items-center rounded-full border border-white/10 bg-white/[.03] text-2xl text-white">＋</div>
           </div>
 
           <div className="mt-6 grid grid-cols-3 gap-2">

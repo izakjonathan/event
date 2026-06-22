@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next';
 import { EventStoreProvider } from '@/components/EventStore';
 
 export const metadata: Metadata = {
-  title: 'Event Operations System',
-  description: 'Mobile planning workspace for events, artists, bar planning and tasks',
+  title: 'EventOS',
+  description: 'EventOS mobile planning workspace for events, artists, bar planning and tasks',
 };
 
 export const viewport: Viewport = {

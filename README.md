@@ -1,4 +1,4 @@
-# Event Operations System
+# EventOS
 
 Mobile-first Next.js + Tailwind event operations workspace.
 

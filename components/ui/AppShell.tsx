@@ -60,8 +60,8 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
         {children}
       </section>
 
-      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+18px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[28px] border p-1.5">
-        <div className="grid grid-cols-5 gap-1.5">
+      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+8px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[26px] border p-1">
+        <div className="grid grid-cols-5 gap-1">
           {nav.map(([href, label, icon]) => {
             const active = path === href;
             return (
@@ -69,11 +69,11 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
                 key={href}
                 href={href}
                 className={cx(
-                  'rounded-[22px] px-1.5 py-1.5 text-center text-[11px] leading-tight transition active:scale-[.98]',
+                  'rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition active:scale-[.98]',
                   active ? 'eos-dock-active' : 'eos-muted',
                 )}
               >
-                <div className={cx('eos-panel mx-auto mb-1 grid h-7 w-7 place-items-center rounded-full border text-sm', active && 'eos-dock-active')}>
+                <div className={cx('eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border text-[12px]', active && 'eos-dock-active')}>
                   {icon}
                 </div>
                 {label}
