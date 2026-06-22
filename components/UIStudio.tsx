@@ -3,87 +3,149 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AppShell, Badge, Button, Card, Field, Stat } from './ui/AppShell';
 
-const NIGHT_THEME = {
+type Mode = 'day' | 'night';
+type Theme = {
+  mode: Mode;
+  background: string;
+  content: string;
+  text: string;
+  muted: string;
+  accent: string;
+  border: string;
+  'border-strong': string;
+  surface: string;
+  'dock-active': string;
+  success: string;
+  warning: string;
+  danger: string;
+  shadow: string;
+};
+
+type ColorKey = Exclude<keyof Theme, 'mode'>;
+
+const COLOR_KEYS: ColorKey[] = [
+  'background',
+  'content',
+  'text',
+  'muted',
+  'accent',
+  'border',
+  'border-strong',
+  'surface',
+  'dock-active',
+  'success',
+  'warning',
+  'danger',
+  'shadow',
+];
+
+const NIGHT_THEME: Theme = {
   mode: 'night',
   background: '#000000',
   content: '#000000',
-  text: '#f5f5f7',
-  muted: '#8b8b94',
+  text: '#ffffff',
+  muted: '#8e8e93',
   accent: '#ffffff',
+  border: '#2e2e2e',
+  'border-strong': '#4a4a4a',
+  surface: '#111111',
+  'dock-active': '#2c2c2e',
+  success: '#23c483',
+  warning: '#c78b00',
+  danger: '#ff6b6b',
+  shadow: '#000000',
 };
 
-const DAY_THEME = {
+const DAY_THEME: Theme = {
   mode: 'day',
-  background: '#f4f4f2',
+  background: '#ffffff',
   content: '#ffffff',
-  text: '#0a0a0a',
-  muted: '#62646b',
+  text: '#000000',
+  muted: '#6e6e73',
   accent: '#000000',
+  border: '#d9d9d9',
+  'border-strong': '#b8b8b8',
+  surface: '#f2f2f2',
+  'dock-active': '#dedede',
+  success: '#008c5a',
+  warning: '#a86c00',
+  danger: '#d92d20',
+  shadow: '#000000',
 };
 
 const DEFAULT_THEME = NIGHT_THEME;
 
-const PRESETS = [
+const PRESETS: Array<Theme & { name: string }> = [
+  { name: 'Night mode', ...NIGHT_THEME },
+  { name: 'Day mode', ...DAY_THEME },
   {
-    name: 'Night mode',
+    name: 'Vercel dark blue',
     ...NIGHT_THEME,
-  },
-  {
-    name: 'Day mode',
-    ...DAY_THEME,
-  },
-  {
-    name: 'Graphite blue',
-    mode: 'night',
-    background: '#000000',
-    content: '#000000',
     text: '#f3f6ff',
     muted: '#8a95a8',
     accent: '#7aa2ff',
+    border: '#273142',
+    'border-strong': '#40506a',
+    surface: '#070b12',
+    'dock-active': '#14213d',
   },
   {
     name: 'Warm operations',
-    mode: 'night',
-    background: '#000000',
-    content: '#000000',
+    ...NIGHT_THEME,
     text: '#fff8ed',
     muted: '#a09584',
     accent: '#f2c36b',
+    border: '#3a3022',
+    'border-strong': '#5a4930',
+    surface: '#100d08',
+    'dock-active': '#2c2418',
   },
   {
     name: 'Clean daylight',
-    mode: 'day',
-    background: '#ffffff',
+    ...DAY_THEME,
+    background: '#fafafa',
     content: '#ffffff',
     text: '#111111',
     muted: '#66645f',
     accent: '#111111',
+    border: '#e1e1df',
+    'border-strong': '#c9c9c5',
+    surface: '#f4f4f2',
+    'dock-active': '#e4e4e2',
   },
   {
     name: 'Green room',
-    mode: 'night',
-    background: '#000000',
-    content: '#000000',
+    ...NIGHT_THEME,
     text: '#f2fff7',
     muted: '#789487',
     accent: '#75f0a6',
+    border: '#1d3529',
+    'border-strong': '#2c5642',
+    surface: '#06110c',
+    'dock-active': '#10251a',
+    success: '#75f0a6',
   },
 ];
 
-type Theme = typeof DEFAULT_THEME;
-type ColorKey = Exclude<keyof Theme, 'mode'>;
+function isHex(value: unknown): value is string {
+  return typeof value === 'string' && /^#[0-9a-fA-F]{6}$/.test(value);
+}
 
 function normalizeTheme(raw: Partial<Theme>): Theme {
   const mode = raw.mode === 'day' ? 'day' : 'night';
   const base = mode === 'day' ? DAY_THEME : NIGHT_THEME;
-  return { ...base, ...raw, mode };
+  const next = { ...base, ...raw, mode } as Theme;
+  COLOR_KEYS.forEach((key) => {
+    if (!isHex(next[key])) next[key] = base[key];
+  });
+  return next;
 }
 
 function applyTheme(themeInput: Theme) {
   const theme = normalizeTheme(themeInput);
   document.documentElement.dataset.eosMode = theme.mode;
   document.documentElement.style.colorScheme = theme.mode === 'day' ? 'light' : 'dark';
-  (['background', 'content', 'text', 'muted', 'accent'] as ColorKey[]).forEach((key) => {
+  COLOR_KEYS.forEach((key) => {
     document.documentElement.style.setProperty(`--eos-${key}`, theme[key]);
   });
 }
@@ -110,11 +172,19 @@ export default function UIStudio() {
   const tokens = useMemo(
     () =>
       [
-        ['background', 'Background color', 'The full app canvas behind every module.'],
-        ['content', 'Content color', 'Cards, panels, stat blocks, dock and inputs.'],
-        ['text', 'Text color', 'Main text, titles, field text and readable foreground color.'],
-        ['muted', 'Muted color', 'Secondary text, labels, helper text and inactive navigation.'],
-        ['accent', 'Accent color', 'Primary buttons, active dock item, highlights and previews.'],
+        ['background', 'Background color', 'Full app canvas behind every module.'],
+        ['content', 'Content color', 'Main cards, panels, dock and inputs.'],
+        ['surface', 'Surface color', 'Stat blocks, inactive dock icons and nested panels.'],
+        ['text', 'Text color', 'Main titles, body text and field text.'],
+        ['muted', 'Muted color', 'Labels, helper text and inactive navigation.'],
+        ['accent', 'Accent color', 'Primary buttons and highlighted actions.'],
+        ['border', 'Border color', 'Default muted borders across the app.'],
+        ['border-strong', 'Focus border color', 'Stronger border used for focused inputs.'],
+        ['dock-active', 'Dock active color', 'Selected item background in the floating dock.'],
+        ['success', 'Success color', 'Ready and positive status badges.'],
+        ['warning', 'Warning color', 'Warnings and missing information.'],
+        ['danger', 'Danger color', 'Delete, archive and overdue states.'],
+        ['shadow', 'Shadow color', 'Subtle elevation behind cards and dock.'],
       ] as const,
     [],
   );
@@ -132,7 +202,7 @@ export default function UIStudio() {
     commit({ ...theme, [key]: value });
   };
 
-  const setMode = (mode: 'day' | 'night') => {
+  const setMode = (mode: Mode) => {
     commit(mode === 'day' ? DAY_THEME : NIGHT_THEME);
   };
 
@@ -147,7 +217,7 @@ export default function UIStudio() {
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Design system</p>
               <h1 className="mt-4 text-[54px] font-medium leading-[0.93] tracking-[-0.085em] text-white">UI Studio</h1>
               <p className="mt-4 max-w-[28ch] text-base leading-6 text-zinc-400">
-                Change the live color tokens used across the app. Changes are saved on this device.
+                Change every shared color token used across the app. Changes are saved on this device.
               </p>
             </div>
             <Badge tone={saved ? 'ok' : 'neutral'}>{saved ? 'Saved' : 'Live'}</Badge>
@@ -155,9 +225,9 @@ export default function UIStudio() {
 
           <div className="mt-6 grid grid-cols-2 gap-2">
             <Stat label="Mode" value={theme.mode} />
-            <Stat label="Text" value={theme.text} />
-            <Stat label="Background" value={theme.background} />
-            <Stat label="Content" value={theme.content} />
+            <Stat label="Accent" value={theme.accent} />
+            <Stat label="Border" value={theme.border} />
+            <Stat label="Surface" value={theme.surface} />
           </div>
         </Card>
 
@@ -170,7 +240,7 @@ export default function UIStudio() {
             <Button kind="ghost" onClick={reset}>Reset</Button>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-2 rounded-[26px] border border-current/10 bg-current/[.02] p-2">
+          <div className="eos-panel mt-5 grid grid-cols-2 gap-2 rounded-[26px] border p-2">
             <button
               type="button"
               onClick={() => setMode('night')}
@@ -179,7 +249,7 @@ export default function UIStudio() {
               }`}
             >
               <span className="block text-lg font-medium tracking-[-0.04em]">Night</span>
-              <span className="mt-1 block text-xs opacity-70">Dark background, light text and muted borders.</span>
+              <span className="mt-1 block text-xs opacity-70">Dark canvas, light text and muted borders.</span>
             </button>
             <button
               type="button"
@@ -189,7 +259,7 @@ export default function UIStudio() {
               }`}
             >
               <span className="block text-lg font-medium tracking-[-0.04em]">Day</span>
-              <span className="mt-1 block text-xs opacity-70">Light background, black text and muted borders.</span>
+              <span className="mt-1 block text-xs opacity-70">Light canvas, dark text and muted borders.</span>
             </button>
           </div>
         </Card>
@@ -204,7 +274,7 @@ export default function UIStudio() {
 
           <div className="mt-5 space-y-4">
             {tokens.map(([key, label, description]) => (
-              <div key={key} className="eos-surface rounded-[26px] border p-3">
+              <div key={key} className="eos-panel rounded-[26px] border p-3">
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div>
                     <h3 className="text-xl font-medium tracking-[-0.045em] text-white">{label}</h3>
@@ -237,7 +307,7 @@ export default function UIStudio() {
                 key={preset.name}
                 type="button"
                 onClick={() => commit(normalizeTheme(preset))}
-                className="eos-surface flex w-full items-center justify-between gap-3 rounded-[24px] border p-3 text-left transition active:scale-[.99]"
+                className="eos-panel flex w-full items-center justify-between gap-3 rounded-[24px] border p-3 text-left transition active:scale-[.99]"
               >
                 <span>
                   <span className="block text-lg font-medium tracking-[-0.04em] text-white">{preset.name}</span>
@@ -246,7 +316,7 @@ export default function UIStudio() {
                   </span>
                 </span>
                 <span className="flex gap-1.5">
-                  {(['background', 'content', 'text', 'muted', 'accent'] as ColorKey[]).map((key) => (
+                  {(['background', 'content', 'surface', 'border', 'accent'] as ColorKey[]).map((key) => (
                     <span key={key} className="h-7 w-7 rounded-full border border-current/15" style={{ background: preset[key] }} />
                   ))}
                 </span>
@@ -259,7 +329,7 @@ export default function UIStudio() {
           <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-zinc-500">Preview</p>
           <h2 className="mt-3 text-[36px] font-medium leading-none tracking-[-0.075em] text-white">Operational event card</h2>
           <p className="mt-3 text-sm leading-6 text-zinc-500">
-            This preview uses the same shared card, stat, badge, text, muted and accent styles as the app.
+            This preview uses the same shared text, muted, accent, border, surface, status and shadow colors as the app.
           </p>
           <div className="mt-5 grid grid-cols-2 gap-2">
             <Stat label="Profit" value="12.450 kr." />
@@ -267,7 +337,8 @@ export default function UIStudio() {
           </div>
           <div className="mt-4 flex gap-2">
             <Badge tone="ok">Ready</Badge>
-            <Badge>Draft</Badge>
+            <Badge tone="warn">Warning</Badge>
+            <Badge tone="bad">Risk</Badge>
           </div>
           <Button className="mt-4 w-full">Primary action</Button>
         </Card>

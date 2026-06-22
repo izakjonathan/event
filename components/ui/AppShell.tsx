@@ -11,9 +11,23 @@ const nav = [
   ['/artists', 'Artists', '⌘'],
   ['/calendar', 'Calendar', '▣'],
   ['/ui-studio', 'Studio', '◐'],
-];
+] as const;
 
-const themeKeys = ['background', 'content', 'text', 'muted', 'accent'] as const;
+const themeKeys = [
+  'background',
+  'content',
+  'text',
+  'muted',
+  'accent',
+  'border',
+  'border-strong',
+  'surface',
+  'dock-active',
+  'success',
+  'warning',
+  'danger',
+  'shadow',
+] as const;
 
 function applySavedTheme() {
   if (typeof window === 'undefined') return;
@@ -24,7 +38,7 @@ function applySavedTheme() {
     document.documentElement.style.colorScheme = mode === 'day' ? 'light' : 'dark';
     themeKeys.forEach((key) => {
       const value = saved[key];
-      if (typeof value === 'string' && value.startsWith('#')) {
+      if (typeof value === 'string' && value.length > 0) {
         document.documentElement.style.setProperty(`--eos-${key}`, value);
       }
     });
@@ -41,32 +55,26 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
   }, []);
 
   return (
-    <main className="safe eos-root mx-auto min-h-screen max-w-[430px] bg-transparent">
-      <div className="eos-fade pointer-events-none fixed inset-x-0 top-0 z-0 mx-auto h-48 max-w-[430px]" />
+    <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
       <section className="eos-page-content relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
         {children}
       </section>
 
-      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+18px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[28px] border p-1.5 shadow-[0_24px_80px_rgba(0,0,0,0.52)] backdrop-blur-2xl">
+      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+18px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[28px] border p-1.5">
         <div className="grid grid-cols-5 gap-1.5">
-          {nav.map(([href, label, ico]) => {
+          {nav.map(([href, label, icon]) => {
             const active = path === href;
             return (
               <Link
                 key={href}
                 href={href}
                 className={cx(
-                  'rounded-[22px] px-1.5 py-1.5 text-center text-[11px] leading-tight text-zinc-500 transition active:scale-[.98]',
-                  active && 'eos-dock-active',
+                  'rounded-[22px] px-1.5 py-1.5 text-center text-[11px] leading-tight transition active:scale-[.98]',
+                  active ? 'eos-dock-active' : 'eos-muted',
                 )}
               >
-                <div
-                  className={cx(
-                    'mx-auto mb-1 grid h-7 w-7 place-items-center rounded-full border border-white/10 bg-white/[.02] text-sm',
-                    active && 'eos-dock-active eos-accent-border',
-                  )}
-                >
-                  {ico}
+                <div className={cx('eos-panel mx-auto mb-1 grid h-7 w-7 place-items-center rounded-full border text-sm', active && 'eos-dock-active')}>
+                  {icon}
                 </div>
                 {label}
               </Link>
@@ -100,10 +108,10 @@ export function Button({
       onClick={onClick}
       className={cx(
         'focus-ring rounded-[22px] border px-4 py-3 text-sm font-medium tracking-[-0.02em] transition active:scale-[.985] disabled:opacity-40',
-        kind === 'primary' && 'eos-primary shadow-[0_8px_24px_rgba(255,255,255,0.12)]',
-        kind === 'ghost' && 'border-white/10 bg-white/[.03] text-white',
-        kind === 'danger' && 'border-red-300/18 bg-red-300/12 text-red-100',
-        kind === 'soft' && 'eos-surface text-white',
+        kind === 'primary' && 'eos-primary',
+        kind === 'ghost' && 'eos-surface',
+        kind === 'danger' && 'border-red-300/20 bg-red-300/10 text-red-100',
+        kind === 'soft' && 'eos-panel',
         className,
       )}
     >
@@ -113,7 +121,7 @@ export function Button({
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={cx('glass eos-card rounded-[28px] p-4 sm:p-5', className)}>{children}</div>;
+  return <div className={cx('eos-card rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
 }
 
 export function Stat({
@@ -129,9 +137,9 @@ export function Stat({
 }) {
   return (
     <div className={cx('eos-stat min-w-0 overflow-hidden rounded-[22px] border p-3.5', className)}>
-      <div className="truncate font-mono text-[11px] uppercase tracking-[0.06em] text-zinc-500">{label}</div>
+      <div className="eos-muted truncate font-mono text-[11px] uppercase tracking-[0.06em]">{label}</div>
       <div className="mt-3 truncate text-[28px] font-medium leading-none tracking-[-0.06em]">{value}</div>
-      {sub && <div className="mt-1 truncate text-xs text-zinc-500">{sub}</div>}
+      {sub && <div className="eos-muted mt-1 truncate text-xs">{sub}</div>}
     </div>
   );
 }
@@ -147,7 +155,7 @@ export function Badge({
     <span
       className={cx(
         'pill inline-flex items-center gap-1 border px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.05em]',
-        tone === 'neutral' && 'eos-surface text-zinc-300',
+        tone === 'neutral' && 'eos-surface',
         tone === 'ok' && 'border-emerald-300/20 bg-emerald-300/10 text-emerald-200',
         tone === 'warn' && 'border-amber-300/20 bg-amber-300/10 text-amber-200',
         tone === 'bad' && 'border-red-300/20 bg-red-300/10 text-red-200',
@@ -170,10 +178,10 @@ export function Section({
   right?: ReactNode;
 }) {
   return (
-    <details open={openDefault} className="eos-card group rounded-[30px] border p-1.5 shadow-[0_18px_46px_rgba(0,0,0,0.28)]">
+    <details open={openDefault} className="eos-card group rounded-[30px] border p-1.5">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5">
-        <span className="text-xl font-medium tracking-[-0.05em] text-white">{title}</span>
-        <span className="flex items-center gap-2 text-xs text-zinc-500">
+        <span className="text-xl font-medium tracking-[-0.05em]">{title}</span>
+        <span className="eos-muted flex items-center gap-2 text-xs">
           {right}
           <span className="text-base transition group-open:rotate-180">⌄</span>
         </span>

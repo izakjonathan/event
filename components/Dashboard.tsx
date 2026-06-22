@@ -32,9 +32,6 @@ export default function Dashboard() {
               <h1 className="mt-4 text-balance text-[54px] font-medium leading-[0.93] tracking-[-0.085em] text-white">
                 Event Operations System
               </h1>
-              <p className="mt-4 max-w-[26ch] text-base leading-6 text-zinc-400">
-                Plan events, book artists, manage schedules, bar operations and tasks from one mobile-first workspace.
-              </p>
             </div>
             <div className="grid h-12 w-12 place-items-center rounded-full border border-white/10 bg-white/[.03] text-2xl text-white">＋</div>
           </div>
@@ -45,10 +42,6 @@ export default function Dashboard() {
             <Stat label="Open tasks" value={tasks.filter((t) => !['done', 'archived'].includes(t.status)).length} />
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Badge tone={usingLocal ? 'warn' : 'ok'}>{usingLocal ? 'Local mode' : 'Supabase connected'}</Badge>
-            <Badge>Mobile-first</Badge>
-          </div>
 
           <Link href="/ui-studio" className="mt-5 block">
             <div className="eos-primary rounded-[24px] border px-4 py-4 text-black transition active:scale-[.99]">
@@ -119,11 +112,11 @@ export default function Dashboard() {
               <Card className="transition active:scale-[.99]">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <div className="mb-3 flex items-center gap-2">
-                      <Badge tone={status === 'Public' ? 'warn' : status === 'Studio' ? 'neutral' : 'ok'}>{status}</Badge>
-                    </div>
                     <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] text-white">{name}</h3>
-                    <p className="mt-2 text-sm leading-6 text-zinc-400">{desc}</p>
+                    <p className="mt-2 text-sm leading-5 text-zinc-400">{desc}</p>
+                    <div className="mt-4 flex items-center gap-2">
+                      <span className="pill border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em] text-zinc-500">{status}</span>
+                    </div>
                   </div>
                   <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.03] text-lg text-zinc-400">
                     →
