@@ -1,3 +1,0 @@
-npm warn using --force Recommended protections disabled.
-
-added 121 packages in 14s
