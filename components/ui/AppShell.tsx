@@ -56,7 +56,7 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
 
   return (
     <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
-      <section className="eos-page-content relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+      <section key={path} className="eos-page-content eos-page-enter relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
         {children}
       </section>
 
@@ -69,11 +69,11 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
                 key={href}
                 href={href}
                 className={cx(
-                  'rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition active:scale-[.98]',
+                  'eos-nav-item rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition active:scale-[.96]',
                   active ? 'eos-dock-active' : 'eos-muted',
                 )}
               >
-                <div className={cx('eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border text-[12px]', active && 'eos-dock-active')}>
+                <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border text-[12px]', active && 'eos-dock-active')}>
                   {icon}
                 </div>
                 {label}
@@ -107,7 +107,7 @@ export function Button({
       disabled={disabled}
       onClick={onClick}
       className={cx(
-        'focus-ring rounded-[22px] border px-4 py-3 text-sm font-medium tracking-[-0.02em] transition active:scale-[.985] disabled:opacity-40',
+        'eos-pressable focus-ring rounded-[22px] border px-4 py-3 text-sm font-medium tracking-[-0.02em] transition disabled:opacity-40',
         kind === 'primary' && 'eos-primary',
         kind === 'ghost' && 'eos-surface',
         kind === 'danger' && 'border-red-300/20 bg-red-300/10 text-red-100',
@@ -121,7 +121,7 @@ export function Button({
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={cx('eos-card rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
+  return <div className={cx('eos-card eos-pressable rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
 }
 
 export function Stat({
@@ -178,15 +178,15 @@ export function Section({
   right?: ReactNode;
 }) {
   return (
-    <details open={openDefault} className="eos-card group rounded-[30px] border p-1.5">
+    <details open={openDefault} className="eos-section eos-card group rounded-[30px] border p-1.5">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5">
         <span className="text-xl font-medium tracking-[-0.05em]">{title}</span>
         <span className="eos-muted flex items-center gap-2 text-xs">
           {right}
-          <span className="text-base transition group-open:rotate-180">⌄</span>
+          <span className="eos-chevron text-base transition group-open:rotate-180">⌄</span>
         </span>
       </summary>
-      <div className="space-y-3 px-3 pb-3">{children}</div>
+      <div className="eos-section-content space-y-3 px-3 pb-3">{children}</div>
     </details>
   );
 }

@@ -2,10 +2,6 @@
 
 Mobile-first Next.js + Tailwind event operations workspace.
 
-## UI Studio
-
-Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the first module on the Dashboard.
-
 ## Deploy on Vercel
 
 1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
@@ -20,6 +16,15 @@ Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the 
 5. Run `SUPABASE_SCHEMA.sql` in Supabase SQL editor.
 
 The app has a local fallback mode if Supabase is not configured.
+
+## Latest changes
+
+- Added restrained site navigation animations.
+- Added route fade/slide transitions.
+- Added dock active-state motion.
+- Added consistent press/tap feedback.
+- Added staggered page/card entrance motion.
+- Added smooth accordion open motion.
 
 ## Local setup
 
