@@ -6,6 +6,18 @@ Mobile-first Next.js + Tailwind event operations workspace.
 
 Open `/ui-studio` or tap **Studio** in the bottom dock. It is also shown as the first module on the Dashboard.
 
+UI Studio now includes:
+
+- Day / night mode toggle
+- Background color
+- Content color
+- Text color
+- Muted color
+- Accent color
+- Presets and reset
+
+Night mode uses a dark background with light text and light borders. Day mode uses a light background with black text and darker borders. Changes are saved locally on the device with `localStorage`.
+
 ## Deploy on Vercel
 
 1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.

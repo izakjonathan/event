@@ -13,12 +13,15 @@ const nav = [
   ['/ui-studio', 'Studio', '◐'],
 ];
 
-const themeKeys = ['background', 'content', 'muted', 'accent'] as const;
+const themeKeys = ['background', 'content', 'text', 'muted', 'accent'] as const;
 
 function applySavedTheme() {
   if (typeof window === 'undefined') return;
   try {
     const saved = JSON.parse(localStorage.getItem('eos-ui-theme') || '{}');
+    const mode = saved.mode === 'day' ? 'day' : 'night';
+    document.documentElement.dataset.eosMode = mode;
+    document.documentElement.style.colorScheme = mode === 'day' ? 'light' : 'dark';
     themeKeys.forEach((key) => {
       const value = saved[key];
       if (typeof value === 'string' && value.startsWith('#')) {
