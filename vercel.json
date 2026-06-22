@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "installCommand": "npm install --no-audit --no-fund --no-package-lock",
+  "installCommand": "npm install --no-audit --no-fund --progress=false",
   "buildCommand": "npm run build"
 }

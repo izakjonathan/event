@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "next build --turbopack"
+    "vercel-build": "next build"
   },
   "dependencies": {
     "next": "16.2.9",
@@ -16,14 +16,15 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.18",
+    "@types/node": "24.10.1",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "tailwindcss": "4.1.18",
-    "typescript": "5.9.3",
-    "@types/node": "20.17.32"
+    "typescript": "5.9.3"
   },
   "engines": {
-    "node": "20.x"
+    "node": "20.x",
+    "npm": "10.x"
   },
   "packageManager": "npm@10.9.4"
 }
