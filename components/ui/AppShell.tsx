@@ -43,11 +43,11 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
   return (
     <main className="safe eos-root mx-auto min-h-screen max-w-[430px] bg-transparent">
       <div className="eos-fade pointer-events-none fixed inset-x-0 top-0 z-0 mx-auto h-48 max-w-[430px]" />
-      <section className="relative z-10 px-4 pb-44 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+      <section className="eos-page-content relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
         {children}
       </section>
 
-      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+18px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[30px] border p-2 shadow-[0_24px_80px_rgba(0,0,0,0.52)] backdrop-blur-2xl">
+      <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+18px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[28px] border p-1.5 shadow-[0_24px_80px_rgba(0,0,0,0.52)] backdrop-blur-2xl">
         <div className="grid grid-cols-5 gap-1.5">
           {nav.map(([href, label, ico]) => {
             const active = path === href;
@@ -56,13 +56,13 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
                 key={href}
                 href={href}
                 className={cx(
-                  'rounded-[24px] px-1.5 py-2 text-center text-[11px] leading-tight text-zinc-500 transition active:scale-[.98]',
+                  'rounded-[22px] px-1.5 py-1.5 text-center text-[11px] leading-tight text-zinc-500 transition active:scale-[.98]',
                   active && 'eos-dock-active',
                 )}
               >
                 <div
                   className={cx(
-                    'mx-auto mb-1.5 grid h-8 w-8 place-items-center rounded-full border border-white/10 bg-white/[.02] text-sm',
+                    'mx-auto mb-1 grid h-7 w-7 place-items-center rounded-full border border-white/10 bg-white/[.02] text-sm',
                     active && 'eos-dock-active eos-accent-border',
                   )}
                 >

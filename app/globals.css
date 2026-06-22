@@ -45,7 +45,7 @@ body {
 }
 
 .safe {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 176px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 260px);
 }
 
 img {
@@ -280,4 +280,154 @@ select:focus {
 [data-eos-mode='day'] textarea,
 [data-eos-mode='day'] select {
   background: color-mix(in srgb, var(--eos-content) 96%, var(--eos-text) 4%);
+}
+
+
+/* UI Studio v13: stronger day/night contrast and safer mobile spacing */
+html[data-eos-mode='day'] {
+  color-scheme: light;
+  --line: color-mix(in srgb, var(--eos-text) 16%, transparent);
+  --line-strong: color-mix(in srgb, var(--eos-text) 24%, transparent);
+  --shadow: 0 20px 58px rgba(0,0,0,0.10);
+}
+
+html[data-eos-mode='night'] {
+  color-scheme: dark;
+  --line: color-mix(in srgb, var(--eos-text) 13%, transparent);
+  --line-strong: color-mix(in srgb, var(--eos-text) 20%, transparent);
+}
+
+html[data-eos-mode='day'] body,
+html[data-eos-mode='day'] .eos-root {
+  background:
+    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 5%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 96%, #ffffff) 0%, var(--eos-background) 100%);
+  color: var(--eos-text);
+}
+
+html[data-eos-mode='night'] body,
+html[data-eos-mode='night'] .eos-root {
+  background:
+    radial-gradient(circle at top center, color-mix(in srgb, var(--eos-accent) 10%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb, var(--eos-background) 92%, var(--eos-content)) 0%, var(--eos-background) 42%, var(--eos-background) 100%);
+  color: var(--eos-text);
+}
+
+html[data-eos-mode='day'] .glass,
+html[data-eos-mode='day'] .eos-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 98%, var(--eos-background) 2%), var(--eos-content));
+  border-color: color-mix(in srgb, var(--eos-text) 16%, transparent) !important;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.08);
+}
+
+html[data-eos-mode='night'] .glass,
+html[data-eos-mode='night'] .eos-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 92%, var(--eos-accent) 8%), var(--eos-content));
+  border-color: color-mix(in srgb, var(--eos-text) 14%, transparent) !important;
+}
+
+html[data-eos-mode='day'] input,
+html[data-eos-mode='day'] textarea,
+html[data-eos-mode='day'] select {
+  background: color-mix(in srgb, var(--eos-content) 97%, var(--eos-background) 3%) !important;
+  border-color: color-mix(in srgb, var(--eos-text) 18%, transparent) !important;
+  color: var(--eos-text) !important;
+}
+
+html[data-eos-mode='night'] input,
+html[data-eos-mode='night'] textarea,
+html[data-eos-mode='night'] select {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--eos-content) 94%, var(--eos-accent) 6%), var(--eos-content)) !important;
+  border-color: color-mix(in srgb, var(--eos-text) 16%, transparent) !important;
+  color: var(--eos-text) !important;
+}
+
+html[data-eos-mode='day'] .eos-surface,
+html[data-eos-mode='day'] .eos-stat,
+html[data-eos-mode='day'] .bg-white\/\[\.02\],
+html[data-eos-mode='day'] .bg-white\/\[\.025\],
+html[data-eos-mode='day'] .bg-white\/\[\.03\],
+html[data-eos-mode='day'] .bg-white\/\[\.04\],
+html[data-eos-mode='day'] .bg-white\/\[\.055\],
+html[data-eos-mode='day'] .bg-white\/\[\.06\],
+html[data-eos-mode='day'] .bg-white\/\[\.075\],
+html[data-eos-mode='day'] .bg-white\/\[\.08\] {
+  background-color: color-mix(in srgb, var(--eos-content) 91%, var(--eos-text) 9%) !important;
+  border-color: color-mix(in srgb, var(--eos-text) 15%, transparent) !important;
+}
+
+html[data-eos-mode='night'] .eos-surface,
+html[data-eos-mode='night'] .eos-stat {
+  background-color: color-mix(in srgb, var(--eos-content) 88%, var(--eos-text) 12%) !important;
+  border-color: color-mix(in srgb, var(--eos-text) 13%, transparent) !important;
+}
+
+html[data-eos-mode='day'] .eos-primary {
+  background: var(--eos-accent) !important;
+  border-color: var(--eos-accent) !important;
+  color: var(--eos-background) !important;
+}
+
+html[data-eos-mode='night'] .eos-primary {
+  background: var(--eos-accent) !important;
+  border-color: var(--eos-accent) !important;
+  color: var(--eos-background) !important;
+}
+
+html[data-eos-mode='day'] .text-amber-100,
+html[data-eos-mode='day'] .text-amber-200 {
+  color: #6b4400 !important;
+}
+html[data-eos-mode='day'] .bg-amber-300\/10 {
+  background-color: rgba(255, 183, 0, 0.18) !important;
+}
+html[data-eos-mode='day'] .border-amber-300\/20 {
+  border-color: rgba(122, 82, 0, 0.24) !important;
+}
+html[data-eos-mode='day'] .text-emerald-200 {
+  color: #00693f !important;
+}
+html[data-eos-mode='day'] .bg-emerald-300\/10 {
+  background-color: rgba(31, 178, 111, 0.14) !important;
+}
+html[data-eos-mode='day'] .border-emerald-300\/20 {
+  border-color: rgba(0, 105, 63, 0.22) !important;
+}
+html[data-eos-mode='day'] .text-red-100,
+html[data-eos-mode='day'] .text-red-200 {
+  color: #9a1b1b !important;
+}
+html[data-eos-mode='day'] .bg-red-300\/10,
+html[data-eos-mode='day'] .bg-red-300\/12,
+html[data-eos-mode='day'] .bg-red-400\/15 {
+  background-color: rgba(220, 38, 38, 0.12) !important;
+}
+html[data-eos-mode='day'] .border-red-300\/18,
+html[data-eos-mode='day'] .border-red-300\/20 {
+  border-color: rgba(154, 27, 27, 0.24) !important;
+}
+
+html[data-eos-mode='day'] .eos-dock {
+  background: color-mix(in srgb, var(--eos-content) 92%, transparent);
+  border-color: color-mix(in srgb, var(--eos-text) 14%, transparent);
+  box-shadow: 0 18px 55px rgba(0,0,0,0.16);
+}
+
+html[data-eos-mode='night'] .eos-dock {
+  background: color-mix(in srgb, var(--eos-content) 88%, var(--eos-background) 12%);
+  border-color: color-mix(in srgb, var(--eos-text) 13%, transparent);
+}
+
+html[data-eos-mode='day'] .eos-dock-active {
+  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
+  color: var(--eos-text) !important;
+}
+
+html[data-eos-mode='night'] .eos-dock-active {
+  background: color-mix(in srgb, var(--eos-accent) 14%, transparent) !important;
+  color: var(--eos-accent) !important;
+}
+
+.eos-page-content {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 220px);
 }
