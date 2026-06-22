@@ -15,6 +15,25 @@
   --eos-warning: #c78b00;
   --eos-danger: #ff6b6b;
   --eos-shadow: #000000;
+
+  /* Typography reference: Ventriloc / PolySans + Inter */
+  --font-polysans: 'Space Grotesk', 'General Sans', 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --text-body: 16px;
+  --leading-body: 1.38;
+  --text-body-lg: 18px;
+  --leading-body-lg: 1.33;
+  --text-subheading: 32px;
+  --leading-subheading: 1.19;
+  --tracking-subheading: -0.64px;
+  --text-heading: 40px;
+  --leading-heading: 1.13;
+  --tracking-heading: -0.8px;
+  --text-display: 66px;
+  --leading-display: 0.91;
+  --tracking-display: -1.32px;
 }
 
 html[data-eos-mode='day'] {
@@ -45,7 +64,7 @@ body {
   min-height: 100%;
   background: var(--eos-background);
   color: var(--eos-text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-inter);
 }
 
 body {
@@ -161,10 +180,12 @@ select {
 label,
 .eos-kicker {
   color: var(--eos-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-inter);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: var(--leading-caption);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 label {
@@ -172,22 +193,66 @@ label {
   margin: 0 0 8px;
 }
 
+.eos-display-title,
+.eos-heading,
+.eos-subheading,
+.eos-section-title,
+.eos-card-heading,
+.eos-module-heading {
+  font-family: var(--font-polysans);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--eos-text);
+}
+
+.eos-display-title {
+  font-size: clamp(54px, 16vw, var(--text-display));
+  line-height: var(--leading-display);
+}
+
+.eos-heading {
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+}
+
+.eos-subheading,
+.eos-card-heading,
+.eos-module-heading {
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+}
+
 .eos-section-title {
-  font-size: 1.25rem;
-  font-weight: 500;
-  letter-spacing: -0.05em;
-  line-height: 1.05;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.eos-body {
+  font-family: var(--font-inter);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: 400;
+}
+
+.eos-body-lg {
+  font-family: var(--font-inter);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-body-lg);
+  font-weight: 400;
 }
 
 .eos-button-label {
-  font-size: 0.875rem;
+  font-family: var(--font-inter);
+  font-size: 15px;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  letter-spacing: 0;
 }
 
 .eos-copy-sm {
-  font-size: 0.75rem;
-  line-height: 1.35;
+  font-family: var(--font-inter);
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
 }
 
 .focus-ring:focus-visible,
@@ -245,14 +310,16 @@ select:focus {
 }
 
 .eos-metric-number {
-  font-weight: 650;
-  letter-spacing: -0.065em;
+  font-family: var(--font-polysans);
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .eos-metric-unit {
+  font-family: var(--font-inter);
   font-size: 0.52em;
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  letter-spacing: 0;
   opacity: 0.82;
 }
 

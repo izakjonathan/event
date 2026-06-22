@@ -62,7 +62,7 @@ export default function ArtistManagement() {
       <div className="space-y-5">
         <Card>
           <p className="text-sm eos-muted">Artist submissions</p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Review and book</h2>
+          <h2 className="eos-heading mt-2">Review and book</h2>
 
           <div className="mt-4 flex gap-2 overflow-x-auto scrollbar-none">
             {STATUSES.map((status) => (
@@ -105,7 +105,7 @@ export default function ArtistManagement() {
                   )}
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-xl font-semibold tracking-[-.04em]">{draft.artist_name}</h3>
+                    <h3 className="eos-card-heading truncate">{draft.artist_name}</h3>
                     <p className="text-sm eos-muted">{draft.genre || 'No genre'} · {dkk(draft.preferred_fee)}</p>
                     <p className="mt-1 text-xs eos-muted">{draft.email} {draft.phone}</p>
                   </div>

@@ -82,7 +82,7 @@ Warnings: ${warnings.join(', ') || 'None'}`;
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-sm eos-muted">Current plan</p>
-              <h2 className="mt-1 text-3xl font-semibold tracking-[-.06em]">{draft.meta.name}</h2>
+              <h2 className="eos-subheading mt-1">{draft.meta.name}</h2>
               <p className="text-sm eos-muted">{draft.meta.date || 'No date'} · {draft.meta.location || 'No location'}</p>
             </div>
             <Badge tone={warnings.length ? 'warn' : 'ok'}>{warnings.length ? `${warnings.length} warnings` : 'Ready'}</Badge>

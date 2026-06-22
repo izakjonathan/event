@@ -72,7 +72,7 @@ export default function BarPlanner() {
       <div className="space-y-5">
         <Card>
           <p className="text-sm eos-muted">Attached to event</p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Bar plan</h2>
+          <h2 className="eos-heading mt-2">Bar plan</h2>
 
           <div className="mt-4">
             <Field label="Select event">

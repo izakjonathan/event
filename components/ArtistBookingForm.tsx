@@ -73,7 +73,7 @@ export default function ArtistBookingForm() {
       <form onSubmit={submit} className="space-y-5">
         <Card>
           <p className="text-sm eos-muted">Public submission form</p>
-          <h2 className="mt-2 text-4xl font-semibold leading-none tracking-[-.075em]">Apply to play</h2>
+          <h2 className="eos-heading mt-2">Apply to play</h2>
           <p className="mt-3 text-sm eos-muted">Send artist details, links, image, availability, technical needs and preferred fee.</p>
           {message && <p className="mt-4 rounded-2xl border eos-border eos-panel p-3 text-sm">{message}</p>}
         </Card>
@@ -101,7 +101,7 @@ export default function ArtistBookingForm() {
         </Card>
 
         <Card className="space-y-3">
-          <h3 className="text-xl font-semibold tracking-[-.04em]">Links</h3>
+          <h3 className="eos-card-heading">Links</h3>
           {LINK_FIELDS.map((key) => (
             <Field key={key} label={key}>
               <input value={(form.links as any)[key] || ''} onChange={(event) => setLink(key, event.target.value)} />
@@ -110,7 +110,7 @@ export default function ArtistBookingForm() {
         </Card>
 
         <Card className="space-y-3">
-          <h3 className="text-xl font-semibold tracking-[-.04em]">Availability and needs</h3>
+          <h3 className="eos-card-heading">Availability and needs</h3>
           {input('Availability date/text', 'availability')}
           <Row>
             {input('Start time', 'availability_start_time', 'time')}

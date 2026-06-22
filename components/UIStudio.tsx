@@ -269,7 +269,7 @@ export default function UIStudio() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Design system</p>
-              <h1 className="mt-4 text-[54px] font-medium leading-[0.93] tracking-[-0.085em] eos-text">UI Studio</h1>
+              <h1 className="eos-display-title mt-4">UI Studio</h1>
               <p className="mt-4 max-w-[28ch] text-base leading-6 eos-muted">
                 Change every shared color token used across the app. Shared presets save to Supabase.
               </p>
@@ -289,7 +289,7 @@ export default function UIStudio() {
           <div className="flex items-end justify-between gap-3">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Appearance</p>
-              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Day / night mode</h2>
+              <h2 className="eos-subheading mt-2">Day / night mode</h2>
             </div>
             <Button kind="ghost" onClick={reset}>Reset</Button>
           </div>
@@ -302,7 +302,7 @@ export default function UIStudio() {
                 theme.mode === 'night' ? 'eos-primary' : 'eos-surface'
               }`}
             >
-              <span className="block text-lg font-medium tracking-[-0.04em]">Night</span>
+              <span className="eos-body-lg block font-medium">Night</span>
               <span className="mt-1 block text-xs opacity-70">Dark canvas, light text and muted borders.</span>
             </button>
             <button
@@ -312,7 +312,7 @@ export default function UIStudio() {
                 theme.mode === 'day' ? 'eos-primary' : 'eos-surface'
               }`}
             >
-              <span className="block text-lg font-medium tracking-[-0.04em]">Day</span>
+              <span className="eos-body-lg block font-medium">Day</span>
               <span className="mt-1 block text-xs opacity-70">Light canvas, dark text and muted borders.</span>
             </button>
           </div>
@@ -322,7 +322,7 @@ export default function UIStudio() {
           <div className="flex items-end justify-between gap-3">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Editable tokens</p>
-              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Colors</h2>
+              <h2 className="eos-subheading mt-2">Colors</h2>
             </div>
           </div>
 
@@ -331,7 +331,7 @@ export default function UIStudio() {
               <div key={key} className="eos-panel rounded-[26px] border p-3">
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-xl font-medium tracking-[-0.045em] eos-text">{label}</h3>
+                    <h3 className="eos-card-heading">{label}</h3>
                     <p className="mt-1 text-sm leading-5 eos-muted">{description}</p>
                   </div>
                   <div className="h-10 w-10 shrink-0 rounded-full border eos-border" style={{ background: theme[key] }} />
@@ -357,7 +357,7 @@ export default function UIStudio() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Presets</p>
-              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Shared themes</h2>
+              <h2 className="eos-subheading mt-2">Shared themes</h2>
             </div>
             <Badge tone="neutral">{customPresets.length} shared</Badge>
           </div>
@@ -383,7 +383,7 @@ export default function UIStudio() {
                   className="flex w-full items-center justify-between gap-3 text-left"
                 >
                   <span>
-                    <span className="block text-lg font-medium tracking-[-0.04em] eos-text">{preset.name}</span>
+                    <span className="eos-body-lg block font-medium eos-text">{preset.name}</span>
                     <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.06em] eos-muted">
                       {preset.custom ? (preset.synced ? 'supabase' : 'local fallback') : 'built in'} · {preset.mode} · {preset.background}
                     </span>
@@ -410,7 +410,7 @@ export default function UIStudio() {
 
         <Card>
           <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Preview</p>
-          <h2 className="mt-3 text-[36px] font-medium leading-none tracking-[-0.075em] eos-text">Operational event card</h2>
+          <h2 className="eos-heading mt-3">Operational event card</h2>
           <p className="mt-3 text-sm leading-6 eos-muted">
             This preview uses the same shared text, muted, accent, border, surface, status and shadow colors as the app.
           </p>

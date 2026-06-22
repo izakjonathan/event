@@ -97,7 +97,7 @@ export default function ProjectManagement() {
       <div className="fixed inset-0 z-50 flex items-end justify-center eos-overlay p-3">
         <Card className="max-h-[88vh] w-full max-w-[430px] overflow-y-auto">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold tracking-[-.05em]">Task settings</h3>
+            <h3 className="eos-subheading">Task settings</h3>
             <Button kind="ghost" onClick={() => setTaskDraft(null)}>
               Close
             </Button>
@@ -210,7 +210,7 @@ export default function ProjectManagement() {
       <div className="space-y-5">
         <Card>
           <p className="text-sm eos-muted">Operational projects and tasks</p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Project board</h2>
+          <h2 className="eos-heading mt-2">Project board</h2>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Stat label="Projects" value={projects.length} />
             <Stat label="Pending" value={counts.pending} />
@@ -245,7 +245,7 @@ export default function ProjectManagement() {
                 <Card key={task.id} className="eos-panel">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-lg font-semibold tracking-[-.04em]">{task.title}</h3>
+                      <h3 className="eos-card-heading">{task.title}</h3>
                       <p className="text-sm eos-muted">{task.owner || 'No owner'} · {task.due_date || 'No deadline'}</p>
                     </div>
                     <Badge tone={isOverdue(task) ? 'bad' : task.priority === 'urgent' ? 'bad' : task.priority === 'high' ? 'warn' : 'neutral'}>

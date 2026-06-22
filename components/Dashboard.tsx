@@ -28,7 +28,7 @@ export default function Dashboard() {
           <div className="flex items-start justify-between gap-4">
             <div className="max-w-[75%]">
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Connected workspace</p>
-              <h1 className="mt-4 text-balance text-[54px] font-medium leading-[0.93] tracking-[-0.085em] eos-text">
+              <h1 className="eos-display-title mt-4 text-balance">
                 EventOS
               </h1>
             </div>
@@ -48,7 +48,7 @@ export default function Dashboard() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Next review</p>
-                <h2 className="mt-3 text-3xl font-medium tracking-[-0.06em] eos-text">{upcoming.meta.name}</h2>
+                <h2 className="eos-subheading mt-3">{upcoming.meta.name}</h2>
                 <p className="mt-2 text-sm eos-muted">
                   {upcoming.meta.date} {upcoming.meta.time} · {upcoming.meta.location || 'No location'}
                 </p>
@@ -83,7 +83,7 @@ export default function Dashboard() {
 
         <div className="space-y-3">
           <div className="flex items-end justify-between gap-3">
-            <h2 className="text-[38px] font-medium tracking-[-0.075em] eos-text">Modules</h2>
+            <h2 className="eos-heading">Modules</h2>
             <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Workspace</p>
           </div>
 
@@ -92,8 +92,8 @@ export default function Dashboard() {
               <Card className="transition">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] eos-text">{name}</h3>
-                    <p className="mt-2 text-sm leading-5 eos-muted">{desc}</p>
+                    <h3 className="eos-module-heading">{name}</h3>
+                    <p className="eos-body mt-2 eos-muted">{desc}</p>
                     <div className="mt-4 flex items-center gap-2">
                       <span className="pill border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em] eos-muted">{status}</span>
                     </div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
 
         <Card>
           <div className="flex items-end justify-between gap-3">
-            <h3 className="text-[30px] font-medium tracking-[-0.06em] eos-text">Future modules</h3>
+            <h3 className="eos-subheading">Future modules</h3>
             <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Roadmap</p>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">

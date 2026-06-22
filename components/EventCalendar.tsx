@@ -15,7 +15,7 @@ export default function EventCalendar() {
       <div className="space-y-5">
         <Card>
           <p className="text-sm eos-muted">Readiness layer</p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Upcoming events</h2>
+          <h2 className="eos-heading mt-2">Upcoming events</h2>
         </Card>
 
         {sorted.length === 0 && (
@@ -48,7 +48,7 @@ export default function EventCalendar() {
               <Card className="eos-panel">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-2xl font-semibold tracking-[-.05em]">{event.meta.date || 'No date'}</p>
+                    <p className="eos-subheading">{event.meta.date || 'No date'}</p>
                     <p className="text-sm eos-muted">
                       {event.meta.time || 'No start'}–{event.meta.endTime || 'No end'} · {event.meta.location || 'No location'}
                     </p>
