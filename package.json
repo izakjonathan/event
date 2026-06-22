@@ -24,6 +24,8 @@
     "typescript": "5.9.3"
   },
   "engines": {
-    "node": ">=22.0.0"
-  }
+    "node": "20.x",
+    "npm": "10.x"
+  },
+  "packageManager": "npm@10.9.4"
 }

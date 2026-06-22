@@ -4,54 +4,28 @@ Mobile-first Next.js + Tailwind event operations workspace.
 
 ## Deploy on Vercel
 
-Import this folder/repository into Vercel.
+1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
+2. Import the repo in Vercel.
+3. Vercel will use:
+   - Install Command: `npm ci --no-audit --no-fund`
+   - Build Command: `npm run build`
+   - Node: `20.x`
+4. Add environment variables if using Supabase:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Run `SUPABASE_SCHEMA.sql` in Supabase SQL editor.
 
-Recommended Vercel settings:
+The app also has local fallback if Supabase is not configured.
 
-- Framework preset: Next.js
-- Install command: `npm install`
-- Build command: `npm run build`
-- Output directory: `.next`
-- Node.js: 22.x or newer
-
-This package also includes `vercel.json`, which sets the install and build commands explicitly.
-
-## Environment variables
-
-Add these in Vercel if you want Supabase persistence:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-The app has local fallback behaviour if Supabase is not configured.
-
-## Supabase
-
-Run `SUPABASE_SCHEMA.sql` in your Supabase SQL editor.
-
-It creates:
-
-- `event_plans`
-- `artist_submissions`
-- `project_management_projects`
-- `project_management_tasks`
-- storage bucket `artist-images`
-- prototype anonymous access policies
-
-## Local development
+## Local setup
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-## Production build
+Production build:
 
 ```bash
-npm install
 npm run build
 ```
-
-Build has been tested successfully.
