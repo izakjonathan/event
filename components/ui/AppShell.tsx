@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { CSSProperties, MouseEvent, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { cx } from '@/lib/utils';
 import { applyTheme, readSavedTheme } from '@/lib/theme';
+import { cx } from '@/lib/utils';
 
 const nav = [
   ['/', 'Main', 'home'],
@@ -14,7 +14,13 @@ const nav = [
   ['/ui-studio', 'Studio', 'studio'],
 ] as const;
 
-type NavIconName = typeof nav[number][2];
+type NavIconName = (typeof nav)[number][2];
+
+type AppShellProps = {
+  title?: string;
+  actions?: ReactNode;
+  children: ReactNode;
+};
 
 function NavIcon({ name }: { name: NavIconName }) {
   const common = {
@@ -82,18 +88,14 @@ function NavIcon({ name }: { name: NavIconName }) {
   );
 }
 
-function applySavedTheme() {
-  applyTheme(readSavedTheme());
-}
-
-export function AppShell({ children }: { title?: string; children: ReactNode; actions?: ReactNode }) {
+export function AppShell({ children }: AppShellProps) {
   const path = usePathname();
   const router = useRouter();
   const [isLeaving, setIsLeaving] = useState(false);
   const transitionTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    applySavedTheme();
+    applyTheme(readSavedTheme());
   }, []);
 
   useEffect(() => {
@@ -104,8 +106,12 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
     }
   }, [path]);
 
-  useEffect(() => () => {
-    if (transitionTimer.current) window.clearTimeout(transitionTimer.current);
+  useEffect(() => {
+    return () => {
+      if (transitionTimer.current) {
+        window.clearTimeout(transitionTimer.current);
+      }
+    };
   }, []);
 
   const navigateWithFade = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -113,7 +119,9 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
 
     event.preventDefault();
-    if (transitionTimer.current) window.clearTimeout(transitionTimer.current);
+    if (transitionTimer.current) {
+      window.clearTimeout(transitionTimer.current);
+    }
 
     setIsLeaving(true);
     transitionTimer.current = window.setTimeout(() => {
@@ -123,7 +131,11 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
 
   return (
     <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
-      <section key={path} data-leaving={isLeaving ? 'true' : 'false'} className="eos-page-content eos-page-shell relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+      <section
+        key={path}
+        data-leaving={isLeaving ? 'true' : 'false'}
+        className="eos-page-content eos-page-shell relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5"
+      >
         {children}
       </section>
 
@@ -131,18 +143,21 @@ export function AppShell({ children }: { title?: string; children: ReactNode; ac
         <div className="grid grid-cols-5 gap-1">
           {nav.map(([href, label, icon]) => {
             const active = path === href;
+
             return (
               <Link
                 key={href}
                 href={href}
                 onClick={(event) => navigateWithFade(event, href)}
                 aria-current={active ? 'page' : undefined}
-                className={cx(
-                  'eos-nav-item rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition active:scale-[.96]',
-                  active ? 'eos-dock-active' : 'eos-muted',
-                )}
+                className={cx('eos-nav-item rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight transition', active ? 'eos-dock-active' : 'eos-muted')}
               >
-                <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]', active && 'eos-dock-active')}>
+                <div
+                  className={cx(
+                    'eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]',
+                    active && 'eos-dock-active',
+                  )}
+                >
                   <NavIcon name={icon} />
                 </div>
                 {label}
@@ -176,7 +191,7 @@ export function Button({
       disabled={disabled}
       onClick={onClick}
       className={cx(
-        'eos-pressable focus-ring rounded-[22px] border px-4 py-3 text-sm font-medium tracking-[-0.02em] transition disabled:opacity-40',
+        'focus-ring eos-button-label rounded-[22px] border px-4 py-3 transition disabled:opacity-40',
         kind === 'primary' && 'eos-primary',
         kind === 'ghost' && 'eos-surface',
         kind === 'danger' && 'eos-danger',
@@ -191,6 +206,10 @@ export function Button({
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <div className={cx('eos-card rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
+}
+
+export function SubCard({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <div className={cx('eos-subcard eos-stack', className)}>{children}</div>;
 }
 
 function MetricValue({ value }: { value: string | number }) {
@@ -232,9 +251,11 @@ export function Stat({
 }) {
   return (
     <div className={cx('eos-stat min-w-0 overflow-hidden rounded-[22px] border p-3.5', className)}>
-      <div className="eos-muted truncate font-mono text-[11px] uppercase tracking-[0.06em]">{label}</div>
-      <div className="mt-3 truncate text-[31px] font-semibold leading-none tracking-[-0.065em]"><MetricValue value={value} /></div>
-      {sub && <div className="eos-muted mt-1 truncate text-xs">{sub}</div>}
+      <div className="eos-kicker truncate">{label}</div>
+      <div className="mt-3 truncate text-[31px] leading-none">
+        <MetricValue value={value} />
+      </div>
+      {sub && <div className="eos-copy-sm mt-1 truncate eos-muted">{sub}</div>}
     </div>
   );
 }
@@ -242,18 +263,21 @@ export function Stat({
 export function Badge({
   children,
   tone = 'neutral',
+  className = '',
 }: {
   children: ReactNode;
   tone?: 'neutral' | 'ok' | 'warn' | 'bad';
+  className?: string;
 }) {
   return (
     <span
       className={cx(
-        'pill inline-flex items-center gap-1 border px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.05em]',
+        'pill eos-kicker inline-flex shrink-0 items-center gap-1 whitespace-nowrap border px-3 py-1.5',
         tone === 'neutral' && 'eos-surface',
         tone === 'ok' && 'eos-ok',
         tone === 'warn' && 'eos-warn',
         tone === 'bad' && 'eos-danger',
+        className,
       )}
     >
       {children}
@@ -297,7 +321,7 @@ export function Section({
         aria-expanded={open}
         className="eos-accordion-trigger flex w-full cursor-pointer list-none items-center justify-between gap-3 rounded-[24px] px-4 py-3.5 text-left"
       >
-        <span className="text-xl font-medium tracking-[-0.05em]">{title}</span>
+        <span className="eos-section-title">{title}</span>
         <span className="eos-muted flex items-center gap-2 text-xs">
           {right}
           <span className={cx('eos-chevron text-base', open && 'rotate-180')}>⌄</span>
@@ -308,7 +332,7 @@ export function Section({
         data-open={open ? 'true' : 'false'}
         style={{ '--accordion-height': `${height}px` } as CSSProperties}
       >
-        <div ref={contentRef} className="space-y-3 px-3 pb-3">
+        <div ref={contentRef} className="space-y-4 px-3 pb-3.5">
           {children}
         </div>
       </div>
@@ -322,6 +346,23 @@ export function Field({ label, children }: { label: string; children: ReactNode 
       <label>{label}</label>
       {children}
     </div>
+  );
+}
+
+export function CheckboxRow({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="eos-checkbox-row">
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
+      <span>{label}</span>
+    </label>
   );
 }
 

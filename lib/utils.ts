@@ -1,5 +1,27 @@
-export const cx=(...v:(string|false|undefined|null)[])=>v.filter(Boolean).join(' ');
-export const cleanUrl=(u:string)=>{const s=(u||'').trim();if(!s)return '';return /^https?:\/\//i.test(s)?s:`https://${s}`};
-export const publicArtistFormLink=()=> typeof window==='undefined'?'/artist-booking':`${window.location.origin}/artist-booking`;
-export async function fileToDataUrl(file:File):Promise<string>{return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=rej;r.readAsDataURL(file)})}
-export const dateSort=(a?:string,b?:string)=>(a||'9999').localeCompare(b||'9999');
+export function cx(...values: Array<string | false | undefined | null>) {
+  return values.filter(Boolean).join(' ');
+}
+
+export function cleanUrl(value: string) {
+  const trimmed = (value || '').trim();
+  if (!trimmed) return '';
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
+export function publicArtistFormLink() {
+  if (typeof window === 'undefined') return '/artist-booking';
+  return `${window.location.origin}/artist-booking`;
+}
+
+export function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+export function dateSort(a?: string, b?: string) {
+  return (a || '9999').localeCompare(b || '9999');
+}

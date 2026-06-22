@@ -1,12 +1,279 @@
 'use client';
+
 import { useState } from 'react';
-import { AppShell, Badge, Button, Card, Field, Row, Section, Stat } from './ui/AppShell';
-import { useEventStore } from './EventStore';
 import { blankProject, blankTask } from '@/lib/defaults';
 import { Priority, Project, ProjectStatus, Task, TaskStatus } from '@/lib/types';
-const ps:ProjectStatus[]=['idea','planning','in-progress','waiting','done','cancelled'];
-const ts:TaskStatus[]=['pending','doing','done','archived'];
-const pr:Priority[]=['low','medium','high','urgent'];
-const overdue=(t:Task)=>t.due_date&&new Date(t.due_date)<new Date()&&!['done','archived'].includes(t.status);
-export default function ProjectManagement(){const {events,projects,tasks,saveProject,deleteProject,saveTask,deleteTask}=useEventStore();const [taskDraft,setTaskDraft]=useState<Task|null>(null);const counts={pending:tasks.filter(t=>t.status==='pending').length,doing:tasks.filter(t=>t.status==='doing').length,overdue:tasks.filter(overdue).length};const eventSelect=(value:string|null,on:(v:string|null)=>void)=><Field label="Linked event"><select value={value||''} onChange={e=>on(e.target.value||null)}><option value="">No event</option>{events.map(e=><option key={e.id} value={e.id}>{e.meta.name}</option>)}</select></Field>;const ProjectEditor=({p}:{p:Project})=><Section title={p.title} right={<Badge tone={p.priority==='urgent'?'bad':p.priority==='high'?'warn':'neutral'}>{p.status}</Badge>}><Row><Field label="Title"><input value={p.title} onChange={e=>saveProject({...p,title:e.target.value})}/></Field><Field label="Owner"><input value={p.owner} onChange={e=>saveProject({...p,owner:e.target.value})}/></Field></Row><Row><Field label="Status"><select value={p.status} onChange={e=>saveProject({...p,status:e.target.value as ProjectStatus})}>{ps.map(x=><option key={x}>{x}</option>)}</select></Field><Field label="Priority"><select value={p.priority} onChange={e=>saveProject({...p,priority:e.target.value as Priority})}>{pr.map(x=><option key={x}>{x}</option>)}</select></Field></Row><Row><Field label="Due date"><input type="date" value={p.due_date||''} onChange={e=>saveProject({...p,due_date:e.target.value||null})}/></Field>{eventSelect(p.linked_event_id,v=>saveProject({...p,linked_event_id:v}))}</Row><Field label="Description"><textarea value={p.description} onChange={e=>saveProject({...p,description:e.target.value})}/></Field><Field label="Notes"><textarea value={p.notes} onChange={e=>saveProject({...p,notes:e.target.value})}/></Field><Button kind="danger" onClick={()=>deleteProject(p.id)}>Delete project</Button></Section>;function TaskModal(){if(!taskDraft)return null;const t=taskDraft;const set=(patch:Partial<Task>)=>setTaskDraft({...t,...patch});return <div className="fixed inset-0 z-50 flex items-end justify-center eos-overlay p-3"><Card className="max-h-[88vh] w-full max-w-[430px] overflow-y-auto"><div className="flex items-center justify-between"><h3 className="text-2xl font-semibold tracking-[-.05em]">Task settings</h3><Button kind="ghost" onClick={()=>setTaskDraft(null)}>Close</Button></div><div className="mt-4 space-y-3"><Field label="Title"><input value={t.title} onChange={e=>set({title:e.target.value})}/></Field><Row><Field label="Status"><select value={t.status} onChange={e=>set({status:e.target.value as TaskStatus})}>{ts.map(x=><option key={x}>{x}</option>)}</select></Field><Field label="Priority"><select value={t.priority} onChange={e=>set({priority:e.target.value as Priority})}>{pr.map(x=><option key={x}>{x}</option>)}</select></Field></Row><Row><Field label="Owner"><input value={t.owner} onChange={e=>set({owner:e.target.value})}/></Field><Field label="Deadline"><input type="date" value={t.due_date||''} onChange={e=>set({due_date:e.target.value||null})}/></Field></Row><Row><Field label="Project"><select value={t.project_id||''} onChange={e=>set({project_id:e.target.value||null})}><option value="">No project</option>{projects.map(p=><option key={p.id} value={p.id}>{p.title}</option>)}</select></Field>{eventSelect(t.linked_event_id,v=>set({linked_event_id:v}))}</Row><Field label="Notes"><textarea value={t.notes} onChange={e=>set({notes:e.target.value})}/></Field><Section title="Checklist" openDefault>{t.checklist.map((c,i)=><div key={i} className="flex gap-2"><input value={c} onChange={e=>set({checklist:t.checklist.map((x,j)=>j===i?e.target.value:x)})}/><Button kind="danger" onClick={()=>set({checklist:t.checklist.filter((_,j)=>j!==i)})}>×</Button></div>)}<Button kind="ghost" onClick={()=>set({checklist:[...t.checklist,'New subtask']})}>Add subtask</Button></Section><Section title="Image URLs">{t.image_urls.map((u,i)=><div key={i} className="flex gap-2"><input value={u} onChange={e=>set({image_urls:t.image_urls.map((x,j)=>j===i?e.target.value:x)})}/><Button kind="danger" onClick={()=>set({image_urls:t.image_urls.filter((_,j)=>j!==i)})}>×</Button></div>)}<Button kind="ghost" onClick={()=>set({image_urls:[...t.image_urls,'']})}>Add image URL</Button></Section><div className="grid grid-cols-2 gap-2"><Button onClick={()=>{saveTask(t);setTaskDraft(null)}}>Save task</Button><Button kind="danger" onClick={()=>{deleteTask(t.id);setTaskDraft(null)}}>Delete</Button></div></div></Card></div>}
-return <AppShell title="Projects" actions={<Button kind="soft" onClick={()=>saveTask(blankTask())}>Task</Button>}><div className="space-y-5"><Card><p className="text-sm eos-muted">Operational projects and tasks</p><h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Project board</h2><div className="mt-4 grid grid-cols-2 gap-2"><Stat label="Projects" value={projects.length}/><Stat label="Pending" value={counts.pending}/><Stat label="Doing" value={counts.doing}/><Stat label="Overdue" value={counts.overdue}/></div><div className="mt-4 grid grid-cols-2 gap-2"><Button onClick={()=>saveProject(blankProject())}>New project</Button><Button kind="ghost" onClick={()=>setTaskDraft(blankTask())}>New task</Button></div></Card><Section title="Projects" openDefault>{projects.length===0&&<p className="text-sm eos-muted">No projects yet.</p>}{projects.map(p=><ProjectEditor key={p.id} p={p}/>)}</Section>{ts.map(status=><Section key={status} title={status[0].toUpperCase()+status.slice(1)} openDefault={status!=='archived'} right={<Badge>{tasks.filter(t=>t.status===status).length}</Badge>}>{tasks.filter(t=>t.status===status).map(t=><Card key={t.id} className="eos-panel"><div className="flex items-start justify-between gap-3"><div><h3 className="text-lg font-semibold tracking-[-.04em]">{t.title}</h3><p className="text-sm eos-muted">{t.owner||'No owner'} · {t.due_date||'No deadline'}</p></div><Badge tone={overdue(t)?'bad':t.priority==='urgent'?'bad':t.priority==='high'?'warn':'neutral'}>{overdue(t)?'overdue':t.priority}</Badge></div><div className="mt-3 flex flex-wrap gap-2"><Button kind="ghost" onClick={()=>setTaskDraft(t)}>Settings</Button><Button kind="ghost" onClick={()=>saveTask({...t,status:t.status==='done'?'pending':'done'})}>{t.status==='done'?'Uncomplete':'Complete'}</Button><Button kind="ghost" onClick={()=>saveTask({...t,status:t.status==='doing'?'pending':'doing'})}>Doing</Button><Button kind="danger" onClick={()=>saveTask({...t,status:'archived'})}>Archive</Button></div></Card>)}</Section>)}<TaskModal/></div></AppShell>}
+import { useEventStore } from './EventStore';
+import { AppShell, Badge, Button, Card, Field, Row, Section, Stat } from './ui/AppShell';
+
+const PROJECT_STATUSES: ProjectStatus[] = ['idea', 'planning', 'in-progress', 'waiting', 'done', 'cancelled'];
+const TASK_STATUSES: TaskStatus[] = ['pending', 'doing', 'done', 'archived'];
+const PRIORITIES: Priority[] = ['low', 'medium', 'high', 'urgent'];
+
+const isOverdue = (task: Task) => task.due_date && new Date(task.due_date) < new Date() && !['done', 'archived'].includes(task.status);
+
+export default function ProjectManagement() {
+  const { events, projects, tasks, saveProject, deleteProject, saveTask, deleteTask } = useEventStore();
+  const [taskDraft, setTaskDraft] = useState<Task | null>(null);
+
+  const counts = {
+    pending: tasks.filter((task) => task.status === 'pending').length,
+    doing: tasks.filter((task) => task.status === 'doing').length,
+    overdue: tasks.filter(isOverdue).length,
+  };
+
+  const eventSelect = (value: string | null, onChange: (value: string | null) => void) => (
+    <Field label="Linked event">
+      <select value={value || ''} onChange={(event) => onChange(event.target.value || null)}>
+        <option value="">No event</option>
+        {events.map((event) => (
+          <option key={event.id} value={event.id}>
+            {event.meta.name}
+          </option>
+        ))}
+      </select>
+    </Field>
+  );
+
+  function ProjectEditor({ project }: { project: Project }) {
+    return (
+      <Section
+        title={project.title}
+        right={<Badge tone={project.priority === 'urgent' ? 'bad' : project.priority === 'high' ? 'warn' : 'neutral'}>{project.status}</Badge>}
+      >
+        <Row>
+          <Field label="Title">
+            <input value={project.title} onChange={(event) => saveProject({ ...project, title: event.target.value })} />
+          </Field>
+          <Field label="Owner">
+            <input value={project.owner} onChange={(event) => saveProject({ ...project, owner: event.target.value })} />
+          </Field>
+        </Row>
+
+        <Row>
+          <Field label="Status">
+            <select value={project.status} onChange={(event) => saveProject({ ...project, status: event.target.value as ProjectStatus })}>
+              {PROJECT_STATUSES.map((status) => (
+                <option key={status}>{status}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Priority">
+            <select value={project.priority} onChange={(event) => saveProject({ ...project, priority: event.target.value as Priority })}>
+              {PRIORITIES.map((priority) => (
+                <option key={priority}>{priority}</option>
+              ))}
+            </select>
+          </Field>
+        </Row>
+
+        <Row>
+          <Field label="Due date">
+            <input type="date" value={project.due_date || ''} onChange={(event) => saveProject({ ...project, due_date: event.target.value || null })} />
+          </Field>
+          {eventSelect(project.linked_event_id, (linkedEventId) => saveProject({ ...project, linked_event_id: linkedEventId }))}
+        </Row>
+
+        <Field label="Description">
+          <textarea value={project.description} onChange={(event) => saveProject({ ...project, description: event.target.value })} />
+        </Field>
+        <Field label="Notes">
+          <textarea value={project.notes} onChange={(event) => saveProject({ ...project, notes: event.target.value })} />
+        </Field>
+        <Button kind="danger" onClick={() => deleteProject(project.id)}>
+          Delete project
+        </Button>
+      </Section>
+    );
+  }
+
+  function TaskModal() {
+    if (!taskDraft) return null;
+
+    const task = taskDraft;
+    const setDraft = (patch: Partial<Task>) => setTaskDraft({ ...task, ...patch });
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-end justify-center eos-overlay p-3">
+        <Card className="max-h-[88vh] w-full max-w-[430px] overflow-y-auto">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold tracking-[-.05em]">Task settings</h3>
+            <Button kind="ghost" onClick={() => setTaskDraft(null)}>
+              Close
+            </Button>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <Field label="Title">
+              <input value={task.title} onChange={(event) => setDraft({ title: event.target.value })} />
+            </Field>
+
+            <Row>
+              <Field label="Status">
+                <select value={task.status} onChange={(event) => setDraft({ status: event.target.value as TaskStatus })}>
+                  {TASK_STATUSES.map((status) => (
+                    <option key={status}>{status}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Priority">
+                <select value={task.priority} onChange={(event) => setDraft({ priority: event.target.value as Priority })}>
+                  {PRIORITIES.map((priority) => (
+                    <option key={priority}>{priority}</option>
+                  ))}
+                </select>
+              </Field>
+            </Row>
+
+            <Row>
+              <Field label="Owner">
+                <input value={task.owner} onChange={(event) => setDraft({ owner: event.target.value })} />
+              </Field>
+              <Field label="Deadline">
+                <input type="date" value={task.due_date || ''} onChange={(event) => setDraft({ due_date: event.target.value || null })} />
+              </Field>
+            </Row>
+
+            <Row>
+              <Field label="Project">
+                <select value={task.project_id || ''} onChange={(event) => setDraft({ project_id: event.target.value || null })}>
+                  <option value="">No project</option>
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.title}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              {eventSelect(task.linked_event_id, (linkedEventId) => setDraft({ linked_event_id: linkedEventId }))}
+            </Row>
+
+            <Field label="Notes">
+              <textarea value={task.notes} onChange={(event) => setDraft({ notes: event.target.value })} />
+            </Field>
+
+            <Section title="Checklist" openDefault>
+              {task.checklist.map((item, index) => (
+                <div key={index} className="flex gap-2">
+                  <input value={item} onChange={(event) => setDraft({ checklist: task.checklist.map((current, i) => (i === index ? event.target.value : current)) })} />
+                  <Button kind="danger" onClick={() => setDraft({ checklist: task.checklist.filter((_, i) => i !== index) })}>
+                    ×
+                  </Button>
+                </div>
+              ))}
+              <Button kind="ghost" onClick={() => setDraft({ checklist: [...task.checklist, 'New subtask'] })}>
+                Add subtask
+              </Button>
+            </Section>
+
+            <Section title="Image URLs">
+              {task.image_urls.map((url, index) => (
+                <div key={index} className="flex gap-2">
+                  <input value={url} onChange={(event) => setDraft({ image_urls: task.image_urls.map((current, i) => (i === index ? event.target.value : current)) })} />
+                  <Button kind="danger" onClick={() => setDraft({ image_urls: task.image_urls.filter((_, i) => i !== index) })}>
+                    ×
+                  </Button>
+                </div>
+              ))}
+              <Button kind="ghost" onClick={() => setDraft({ image_urls: [...task.image_urls, ''] })}>
+                Add image URL
+              </Button>
+            </Section>
+
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                onClick={() => {
+                  saveTask(task);
+                  setTaskDraft(null);
+                }}
+              >
+                Save task
+              </Button>
+              <Button
+                kind="danger"
+                onClick={() => {
+                  deleteTask(task.id);
+                  setTaskDraft(null);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <AppShell title="Projects" actions={<Button kind="soft" onClick={() => saveTask(blankTask())}>Task</Button>}>
+      <div className="space-y-5">
+        <Card>
+          <p className="text-sm eos-muted">Operational projects and tasks</p>
+          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Project board</h2>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Stat label="Projects" value={projects.length} />
+            <Stat label="Pending" value={counts.pending} />
+            <Stat label="Doing" value={counts.doing} />
+            <Stat label="Overdue" value={counts.overdue} />
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Button onClick={() => saveProject(blankProject())}>New project</Button>
+            <Button kind="ghost" onClick={() => setTaskDraft(blankTask())}>
+              New task
+            </Button>
+          </div>
+        </Card>
+
+        <Section title="Projects" openDefault>
+          {projects.length === 0 && <p className="text-sm eos-muted">No projects yet.</p>}
+          {projects.map((project) => (
+            <ProjectEditor key={project.id} project={project} />
+          ))}
+        </Section>
+
+        {TASK_STATUSES.map((status) => (
+          <Section
+            key={status}
+            title={status[0].toUpperCase() + status.slice(1)}
+            openDefault={status !== 'archived'}
+            right={<Badge>{tasks.filter((task) => task.status === status).length}</Badge>}
+          >
+            {tasks
+              .filter((task) => task.status === status)
+              .map((task) => (
+                <Card key={task.id} className="eos-panel">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-semibold tracking-[-.04em]">{task.title}</h3>
+                      <p className="text-sm eos-muted">{task.owner || 'No owner'} · {task.due_date || 'No deadline'}</p>
+                    </div>
+                    <Badge tone={isOverdue(task) ? 'bad' : task.priority === 'urgent' ? 'bad' : task.priority === 'high' ? 'warn' : 'neutral'}>
+                      {isOverdue(task) ? 'overdue' : task.priority}
+                    </Badge>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button kind="ghost" onClick={() => setTaskDraft(task)}>
+                      Settings
+                    </Button>
+                    <Button kind="ghost" onClick={() => saveTask({ ...task, status: task.status === 'done' ? 'pending' : 'done' })}>
+                      {task.status === 'done' ? 'Uncomplete' : 'Complete'}
+                    </Button>
+                    <Button kind="ghost" onClick={() => saveTask({ ...task, status: task.status === 'doing' ? 'pending' : 'doing' })}>
+                      Doing
+                    </Button>
+                    <Button kind="danger" onClick={() => saveTask({ ...task, status: 'archived' })}>
+                      Archive
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+          </Section>
+        ))}
+
+        <TaskModal />
+      </div>
+    </AppShell>
+  );
+}

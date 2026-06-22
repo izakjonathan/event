@@ -1,24 +1,61 @@
-# EventOS v26 — Supabase UI Studio presets + dock cleanup
+# EventOS
 
-## What changed
+Mobile-first Next.js + Tailwind event operations workspace.
 
-- UI Studio custom presets now save to Supabase in `ui_studio_presets` and load by `owner_key`, so saved presets can be reused from other devices using the same workspace key.
-- UI Studio keeps a local fallback only when Supabase is not configured or unavailable.
-- Removed UI Studio from the Main page modules and removed the Main page UI Studio callout card. UI Studio is now only accessible from the floating dock.
-- Touched up the dock icons with cleaner inline SVG icons for Main, Planner, Artists, Calendar and Studio.
-- Kept the existing fast dock fade navigation.
-- Production build confirmed with `npm run build`.
+## Current baseline
 
-## Supabase update required
+This cleanup build focuses on making the codebase easier to maintain and easier to do a dedicated typography pass on next.
 
-Run the updated `SUPABASE_SCHEMA.sql` in Supabase SQL editor. It adds:
+Included in this cleanup run:
+- cleaned and reformatted shared utilities and smaller feature modules
+- cleaned route entry files
+- added a `.gitignore` for deployment-friendly repos
+- changed `lint` to TypeScript checking and added `typecheck`
+- cleaned shared UI shell / CSS structure to make typography edits more centralized
+- updated `SUPABASE_SCHEMA.sql` so storage policies use valid Supabase/Postgres syntax
+- ready to continue from this version for the next typography run
 
-- `public.ui_studio_presets`
-- owner/date index
-- prototype anonymous RLS policies matching the rest of this prototype app
+## Main routes
 
-If the table has not been created yet, UI Studio will show a Supabase preset error and fall back to local presets on the current device.
+- `/` — Dashboard
+- `/event-planner` — Event planner
+- `/artists` — Artist management
+- `/artist-booking` — Public artist submission form
+- `/calendar` — Calendar view
+- `/ui-studio` — UI Studio
+- `/project-management` — Project board
+- `/bar-planner` — Bar planner
 
-## Deploy
+## UI Studio
 
-Upload/commit this ZIP as the full project root. The ZIP excludes `node_modules`, `.next`, and `package-lock.json`.
+UI Studio is available from the dock and through `/ui-studio`.
+Saved presets are intended to sync through Supabase using the `ui_studio_presets` table.
+
+## Deploy on Vercel
+
+1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
+2. Import the repo in Vercel.
+3. Vercel will use:
+   - Install Command: `npm install --no-audit --no-fund --progress=false`
+   - Build Command: `npm run build`
+   - Node: `20.x`
+4. Add environment variables if using Supabase:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Run `SUPABASE_SCHEMA.sql` in the Supabase SQL editor.
+
+The app has a local fallback mode if Supabase is not configured.
+
+## Local setup
+
+```bash
+npm install
+npm run dev
+```
+
+## Verification
+
+```bash
+npm run typecheck
+npm run build
+```

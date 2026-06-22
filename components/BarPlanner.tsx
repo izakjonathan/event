@@ -1,9 +1,267 @@
 'use client';
+
 import { useEffect, useMemo, useState } from 'react';
-import { AppShell, Badge, Button, Card, Field, Row, Section, Stat } from './ui/AppShell';
+import { AppShell, Badge, Button, Card, CheckboxRow, Field, Row, Section, Stat, SubCard } from './ui/AppShell';
 import { useEventStore } from './EventStore';
 import { defaultBarPlanner, id } from '@/lib/defaults';
 import { BarPlannerPayload, BarProduct, BarStaffLine, ProductCategory } from '@/lib/types';
 import { barProductTotal, barStaffCost, dkk } from '@/lib/calculations';
-const cats:ProductCategory[]=['Beer','Wine','Cocktail','Shot','Soft drink','Coffee','Other'];
-export default function BarPlanner(){const {events,current,saveEvent,setCurrentId}=useEventStore();const [plan,setPlan]=useState<BarPlannerPayload>(current?.barPlanner||defaultBarPlanner());useEffect(()=>setPlan(current?.barPlanner||defaultBarPlanner()),[current?.id]);const totals=useMemo(()=>{const p=plan.products.map(barProductTotal);const revenue=p.reduce((s,x)=>s+x.revenue,0),stock=p.reduce((s,x)=>s+x.stockCost,0),gross=revenue-stock,staff=plan.staff.reduce((s,x)=>s+barStaffCost(x),0);return{revenue,stock,gross,staff,profit:gross-staff,margin:revenue?(gross-staff)/revenue*100:0,warnings:plan.staff.filter(s=>!s.startTime||!s.endTime).length}},[plan]);const save=()=>current&&saveEvent({...current,barPlanner:plan});const updateP=(idv:string,patch:Partial<BarProduct>)=>setPlan(p=>({...p,products:p.products.map(x=>x.id===idv?{...x,...patch}:x)}));const updateS=(idv:string,patch:Partial<BarStaffLine>)=>setPlan(p=>({...p,staff:p.staff.map(x=>x.id===idv?{...x,...patch}:x)}));const menu= cats.map(c=>{const items=plan.products.filter(p=>p.menuVisible&&p.category===c);return items.length?`${c}\n${items.map(i=>`- ${i.name} ${i.menuDescription?`— ${i.menuDescription}`:''} ${dkk(i.sellPrice)}`).join('\n')}`:''}).filter(Boolean).join('\n\n');return <AppShell title="Bar Planner" actions={<Button kind="soft" onClick={save}>Save</Button>}><div className="space-y-5"><Card><p className="text-sm eos-muted">Attached to event</p><h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Bar plan</h2><div className="mt-4"><Field label="Select event"><select value={current?.id||''} onChange={e=>setCurrentId(e.target.value)}>{events.map(e=><option key={e.id} value={e.id}>{e.meta.name}</option>)}</select></Field></div><div className="mt-4 grid grid-cols-2 gap-2"><Stat label="Revenue" value={dkk(totals.revenue)}/><Stat label="Stock cost" value={dkk(totals.stock)}/><Stat label="After staff" value={dkk(totals.profit)}/><Stat label="Margin" value={`${Math.round(totals.margin)}%`}/></div>{totals.warnings>0&&<div className="mt-4"><Badge tone="warn">{totals.warnings} staff shift warnings</Badge></div>}</Card>{!current&&<Card><p className="eos-muted">No selected event. Create or select an event first.</p></Card>}<Section title="Products" openDefault>{plan.products.map(p=>{const t=barProductTotal(p);return <Section key={p.id} title={p.name||'Product'} right={<Badge>{dkk(t.profit)}</Badge>}><Row><Field label="Name"><input value={p.name} onChange={e=>updateP(p.id,{name:e.target.value})}/></Field><Field label="Category"><select value={p.category} onChange={e=>updateP(p.id,{category:e.target.value as ProductCategory})}>{cats.map(c=><option key={c}>{c}</option>)}</select></Field></Row><Row><Field label="Supplier"><input value={p.supplier} onChange={e=>updateP(p.id,{supplier:e.target.value})}/></Field><Field label="Unit type"><input value={p.unitType} onChange={e=>updateP(p.id,{unitType:e.target.value})}/></Field></Row><Row><Field label="Unit size"><input value={p.unitSize} onChange={e=>updateP(p.id,{unitSize:e.target.value})}/></Field><Field label="Expected qty"><input type="number" value={p.expectedQty} onChange={e=>updateP(p.id,{expectedQty:Number(e.target.value)})}/></Field></Row><Row><Field label="Buy price"><input type="number" value={p.buyPrice} onChange={e=>updateP(p.id,{buyPrice:Number(e.target.value)})}/></Field><Field label="Sell price"><input type="number" value={p.sellPrice} onChange={e=>updateP(p.id,{sellPrice:Number(e.target.value)})}/></Field></Row><div className="grid grid-cols-2 gap-2"><Stat label="Revenue" value={dkk(t.revenue)}/><Stat label="Cost" value={dkk(t.stockCost)}/><Stat label="Profit" value={dkk(t.profit)}/><Stat label="Margin" value={`${Math.round(t.margin)}%`}/></div><label className="flex items-center gap-3 rounded-2xl eos-panel p-3 text-sm eos-text"><input className="w-auto" type="checkbox" checked={p.menuVisible} onChange={e=>updateP(p.id,{menuVisible:e.target.checked})}/> Show on menu</label><Field label="Menu description"><textarea value={p.menuDescription} onChange={e=>updateP(p.id,{menuDescription:e.target.value})}/></Field><Button kind="danger" onClick={()=>setPlan(x=>({...x,products:x.products.filter(i=>i.id!==p.id)}))}>Remove product</Button></Section>})}<Button kind="ghost" onClick={()=>setPlan(p=>({...p,products:[...p.products,{id:id(),name:'New product',category:'Other',supplier:'',unitType:'',unitSize:'',buyPrice:0,sellPrice:0,expectedQty:0,menuVisible:false,menuDescription:''}]}))}>Add product</Button></Section><Section title="Staff plan" right={dkk(totals.staff)}>{plan.staff.map(s=><Card key={s.id} className="eos-panel"><Row><Field label="Role"><input value={s.role} onChange={e=>updateS(s.id,{role:e.target.value})}/></Field><Field label="Staff count"><input type="number" value={s.staffCount} onChange={e=>updateS(s.id,{staffCount:Number(e.target.value)})}/></Field></Row><Row><Field label="Start"><input type="time" value={s.startTime} onChange={e=>updateS(s.id,{startTime:e.target.value})}/></Field><Field label="End"><input type="time" value={s.endTime} onChange={e=>updateS(s.id,{endTime:e.target.value})}/></Field></Row><Field label="Hourly wage"><input type="number" value={s.hourlyWage} onChange={e=>updateS(s.id,{hourlyWage:Number(e.target.value)})}/></Field><Badge>{dkk(barStaffCost(s))}</Badge><Button kind="danger" onClick={()=>setPlan(p=>({...p,staff:p.staff.filter(x=>x.id!==s.id)}))}>Remove staff</Button></Card>)}<Button kind="ghost" onClick={()=>setPlan(p=>({...p,staff:[...p.staff,{id:id(),role:'Bartender',staffCount:1,startTime:'',endTime:'',hourlyWage:160}]}))}>Add staff line</Button></Section><Section title="Menu builder"><textarea readOnly value={menu||'No menu-visible products yet.'}/><Button kind="ghost" onClick={()=>navigator.clipboard.writeText(menu)}>Copy menu text</Button></Section><Section title="Bar notes"><textarea value={plan.notes} onChange={e=>setPlan(p=>({...p,notes:e.target.value}))}/></Section></div></AppShell>}
+
+const categories: ProductCategory[] = ['Beer', 'Wine', 'Cocktail', 'Shot', 'Soft drink', 'Coffee', 'Other'];
+
+export default function BarPlanner() {
+  const { events, current, saveEvent, setCurrentId } = useEventStore();
+  const [plan, setPlan] = useState<BarPlannerPayload>(current?.barPlanner || defaultBarPlanner());
+
+  useEffect(() => {
+    setPlan(current?.barPlanner || defaultBarPlanner());
+  }, [current?.id]);
+
+  const totals = useMemo(() => {
+    const productTotals = plan.products.map(barProductTotal);
+    const revenue = productTotals.reduce((sum, item) => sum + item.revenue, 0);
+    const stock = productTotals.reduce((sum, item) => sum + item.stockCost, 0);
+    const gross = revenue - stock;
+    const staff = plan.staff.reduce((sum, item) => sum + barStaffCost(item), 0);
+
+    return {
+      revenue,
+      stock,
+      gross,
+      staff,
+      profit: gross - staff,
+      margin: revenue ? ((gross - staff) / revenue) * 100 : 0,
+      warnings: plan.staff.filter((item) => !item.startTime || !item.endTime).length,
+    };
+  }, [plan]);
+
+  const save = async () => {
+    if (current) {
+      await saveEvent({ ...current, barPlanner: plan });
+    }
+  };
+
+  const updateProduct = (productId: string, patch: Partial<BarProduct>) => {
+    setPlan((currentPlan) => ({
+      ...currentPlan,
+      products: currentPlan.products.map((item) => (item.id === productId ? { ...item, ...patch } : item)),
+    }));
+  };
+
+  const updateStaff = (staffId: string, patch: Partial<BarStaffLine>) => {
+    setPlan((currentPlan) => ({
+      ...currentPlan,
+      staff: currentPlan.staff.map((item) => (item.id === staffId ? { ...item, ...patch } : item)),
+    }));
+  };
+
+  const menu = categories
+    .map((category) => {
+      const items = plan.products.filter((product) => product.menuVisible && product.category === category);
+      return items.length
+        ? `${category}\n${items
+            .map((item) => `- ${item.name} ${item.menuDescription ? `— ${item.menuDescription}` : ''} ${dkk(item.sellPrice)}`)
+            .join('\n')}`
+        : '';
+    })
+    .filter(Boolean)
+    .join('\n\n');
+
+  return (
+    <AppShell title="Bar Planner" actions={<Button kind="soft" onClick={save}>Save</Button>}>
+      <div className="space-y-5">
+        <Card>
+          <p className="text-sm eos-muted">Attached to event</p>
+          <h2 className="mt-2 text-4xl font-semibold tracking-[-.075em]">Bar plan</h2>
+
+          <div className="mt-4">
+            <Field label="Select event">
+              <select value={current?.id || ''} onChange={(event) => setCurrentId(event.target.value)}>
+                {events.map((event) => (
+                  <option key={event.id} value={event.id}>
+                    {event.meta.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Stat label="Revenue" value={dkk(totals.revenue)} />
+            <Stat label="Stock cost" value={dkk(totals.stock)} />
+            <Stat label="After staff" value={dkk(totals.profit)} />
+            <Stat label="Margin" value={`${Math.round(totals.margin)}%`} />
+          </div>
+
+          {totals.warnings > 0 && (
+            <div className="mt-4">
+              <Badge tone="warn">{totals.warnings} staff shift warnings</Badge>
+            </div>
+          )}
+        </Card>
+
+        {!current && (
+          <Card>
+            <p className="eos-muted">No selected event. Create or select an event first.</p>
+          </Card>
+        )}
+
+        <Section title="Products" openDefault>
+          <div className="space-y-3">
+            {plan.products.map((product) => {
+              const totalsForProduct = barProductTotal(product);
+              return (
+                <Section key={product.id} title={product.name || 'Product'} right={<Badge>{dkk(totalsForProduct.profit)}</Badge>}>
+                  <Row>
+                    <Field label="Name">
+                      <input value={product.name} onChange={(event) => updateProduct(product.id, { name: event.target.value })} />
+                    </Field>
+                    <Field label="Category">
+                      <select value={product.category} onChange={(event) => updateProduct(product.id, { category: event.target.value as ProductCategory })}>
+                        {categories.map((category) => (
+                          <option key={category}>{category}</option>
+                        ))}
+                      </select>
+                    </Field>
+                  </Row>
+
+                  <Row>
+                    <Field label="Supplier">
+                      <input value={product.supplier} onChange={(event) => updateProduct(product.id, { supplier: event.target.value })} />
+                    </Field>
+                    <Field label="Unit type">
+                      <input value={product.unitType} onChange={(event) => updateProduct(product.id, { unitType: event.target.value })} />
+                    </Field>
+                  </Row>
+
+                  <Row>
+                    <Field label="Unit size">
+                      <input value={product.unitSize} onChange={(event) => updateProduct(product.id, { unitSize: event.target.value })} />
+                    </Field>
+                    <Field label="Expected qty">
+                      <input type="number" value={product.expectedQty} onChange={(event) => updateProduct(product.id, { expectedQty: Number(event.target.value) })} />
+                    </Field>
+                  </Row>
+
+                  <Row>
+                    <Field label="Buy price">
+                      <input type="number" value={product.buyPrice} onChange={(event) => updateProduct(product.id, { buyPrice: Number(event.target.value) })} />
+                    </Field>
+                    <Field label="Sell price">
+                      <input type="number" value={product.sellPrice} onChange={(event) => updateProduct(product.id, { sellPrice: Number(event.target.value) })} />
+                    </Field>
+                  </Row>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Stat label="Revenue" value={dkk(totalsForProduct.revenue)} />
+                    <Stat label="Cost" value={dkk(totalsForProduct.stockCost)} />
+                    <Stat label="Profit" value={dkk(totalsForProduct.profit)} />
+                    <Stat label="Margin" value={`${Math.round(totalsForProduct.margin)}%`} />
+                  </div>
+
+                  <CheckboxRow label="Show on menu" checked={product.menuVisible} onChange={(checked) => updateProduct(product.id, { menuVisible: checked })} />
+
+                  <Field label="Menu description">
+                    <textarea value={product.menuDescription} onChange={(event) => updateProduct(product.id, { menuDescription: event.target.value })} />
+                  </Field>
+
+                  <Button kind="danger" className="w-fit" onClick={() => setPlan((currentPlan) => ({ ...currentPlan, products: currentPlan.products.filter((item) => item.id !== product.id) }))}>
+                    Remove product
+                  </Button>
+                </Section>
+              );
+            })}
+          </div>
+
+          <Button
+            kind="ghost"
+            className="w-fit"
+            onClick={() =>
+              setPlan((currentPlan) => ({
+                ...currentPlan,
+                products: [
+                  ...currentPlan.products,
+                  {
+                    id: id(),
+                    name: 'New product',
+                    category: 'Other',
+                    supplier: '',
+                    unitType: '',
+                    unitSize: '',
+                    buyPrice: 0,
+                    sellPrice: 0,
+                    expectedQty: 0,
+                    menuVisible: false,
+                    menuDescription: '',
+                  },
+                ],
+              }))
+            }
+          >
+            Add product
+          </Button>
+        </Section>
+
+        <Section title="Staff plan" right={dkk(totals.staff)}>
+          <div className="space-y-3">
+            {plan.staff.map((staffLine) => (
+              <SubCard key={staffLine.id}>
+                <Row>
+                  <Field label="Role">
+                    <input value={staffLine.role} onChange={(event) => updateStaff(staffLine.id, { role: event.target.value })} />
+                  </Field>
+                  <Field label="Staff count">
+                    <input type="number" value={staffLine.staffCount} onChange={(event) => updateStaff(staffLine.id, { staffCount: Number(event.target.value) })} />
+                  </Field>
+                </Row>
+
+                <Row>
+                  <Field label="Start">
+                    <input type="time" value={staffLine.startTime} onChange={(event) => updateStaff(staffLine.id, { startTime: event.target.value })} />
+                  </Field>
+                  <Field label="End">
+                    <input type="time" value={staffLine.endTime} onChange={(event) => updateStaff(staffLine.id, { endTime: event.target.value })} />
+                  </Field>
+                </Row>
+
+                <Field label="Hourly wage">
+                  <input type="number" value={staffLine.hourlyWage} onChange={(event) => updateStaff(staffLine.id, { hourlyWage: Number(event.target.value) })} />
+                </Field>
+
+                <Badge>{dkk(barStaffCost(staffLine))}</Badge>
+
+                <Button kind="danger" className="w-fit" onClick={() => setPlan((currentPlan) => ({ ...currentPlan, staff: currentPlan.staff.filter((item) => item.id !== staffLine.id) }))}>
+                  Remove staff
+                </Button>
+              </SubCard>
+            ))}
+          </div>
+
+          <Button
+            kind="ghost"
+            className="w-fit"
+            onClick={() =>
+              setPlan((currentPlan) => ({
+                ...currentPlan,
+                staff: [...currentPlan.staff, { id: id(), role: 'Bartender', staffCount: 1, startTime: '', endTime: '', hourlyWage: 160 }],
+              }))
+            }
+          >
+            Add staff line
+          </Button>
+        </Section>
+
+        <Section title="Menu builder">
+          <textarea readOnly value={menu || 'No menu-visible products yet.'} />
+          <Button kind="ghost" className="w-fit" onClick={() => navigator.clipboard.writeText(menu)}>
+            Copy menu text
+          </Button>
+        </Section>
+
+        <Section title="Bar notes">
+          <textarea value={plan.notes} onChange={(event) => setPlan((currentPlan) => ({ ...currentPlan, notes: event.target.value }))} />
+        </Section>
+      </div>
+    </AppShell>
+  );
+}
