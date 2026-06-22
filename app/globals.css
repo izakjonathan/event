@@ -121,6 +121,9 @@ select:focus {
 .eos-panel { background: var(--eos-surface); border-color: var(--eos-border); color: var(--eos-text); }
 .eos-card, .glass { background: var(--eos-content); border-color: var(--eos-border); color: var(--eos-text); box-shadow: 0 10px 22px color-mix(in srgb, var(--eos-shadow) 12%, transparent); backdrop-filter: none; }
 .eos-stat { background: var(--eos-surface); border-color: var(--eos-border); color: var(--eos-text); }
+.eos-metric-value { display: inline-flex; align-items: baseline; min-width: 0; max-width: 100%; }
+.eos-metric-number { font-weight: 650; }
+.eos-metric-unit { font-size: .52em; font-weight: 300; letter-spacing: -0.02em; opacity: .82; }
 .eos-primary { background: var(--eos-accent); border-color: var(--eos-accent); color: var(--eos-background); }
 .eos-dock { background: var(--eos-content); border-color: var(--eos-border); color: var(--eos-text); box-shadow: 0 10px 22px color-mix(in srgb, var(--eos-shadow) 12%, transparent); }
 .eos-dock-active { background: var(--eos-dock-active); color: var(--eos-text); }

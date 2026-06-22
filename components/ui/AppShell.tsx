@@ -122,7 +122,33 @@ export function Button({
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={cx('eos-card eos-pressable rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
+  return <div className={cx('eos-card rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
+}
+
+function MetricValue({ value }: { value: string | number }) {
+  const raw = String(value).replace(/\u00a0/g, ' ').replace(/kr\.?$/i, 'DKK').trim();
+  const moneyMatch = raw.match(/^(.+?)\s*(DKK)$/i);
+  const percentMatch = raw.match(/^(.+?)(%)$/);
+
+  if (moneyMatch) {
+    return (
+      <span className="eos-metric-value">
+        <span className="eos-metric-number">{moneyMatch[1].trim()}</span>
+        <span className="eos-metric-unit"> DKK</span>
+      </span>
+    );
+  }
+
+  if (percentMatch) {
+    return (
+      <span className="eos-metric-value">
+        <span className="eos-metric-number">{percentMatch[1].trim()}</span>
+        <span className="eos-metric-unit">%</span>
+      </span>
+    );
+  }
+
+  return <span className="eos-metric-number">{value}</span>;
 }
 
 export function Stat({
@@ -139,7 +165,7 @@ export function Stat({
   return (
     <div className={cx('eos-stat min-w-0 overflow-hidden rounded-[22px] border p-3.5', className)}>
       <div className="eos-muted truncate font-mono text-[11px] uppercase tracking-[0.06em]">{label}</div>
-      <div className="mt-3 truncate text-[28px] font-medium leading-none tracking-[-0.06em]">{value}</div>
+      <div className="mt-3 truncate text-[31px] font-semibold leading-none tracking-[-0.065em]"><MetricValue value={value} /></div>
       {sub && <div className="eos-muted mt-1 truncate text-xs">{sub}</div>}
     </div>
   );

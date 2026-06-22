@@ -248,7 +248,7 @@ export default function UIStudio() {
             This preview uses the same shared text, muted, accent, border, surface, status and shadow colors as the app.
           </p>
           <div className="mt-5 grid grid-cols-2 gap-2">
-            <Stat label="Profit" value="12.450 kr." />
+            <Stat label="Profit" value="12.450 DKK" />
             <Stat label="Readiness" value="86%" />
           </div>
           <div className="mt-4 flex gap-2">

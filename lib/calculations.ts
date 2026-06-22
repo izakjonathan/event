@@ -1,6 +1,6 @@
 import { PlannerEvent, MoneyLine, StaffLine, BarProduct, BarStaffLine, Scenario } from './types';
 export const num=(v:any)=>Number.isFinite(Number(v))?Number(v):0;
-export const dkk=(v:any)=>new Intl.NumberFormat('da-DK',{style:'currency',currency:'DKK',maximumFractionDigits:0}).format(num(v));
+export const dkk=(v:any)=>`${new Intl.NumberFormat('da-DK',{maximumFractionDigits:0}).format(num(v))} DKK`;
 export const pct=(v:any)=>`${Math.round(num(v)*10)/10}%`;
 export function ticketTotals(e:PlannerEvent){const sold=e.tickets.reduce((s,t)=>s+num(t.sold),0);const cap=e.tickets.reduce((s,t)=>s+num(t.capacity),0);const rev=e.tickets.reduce((s,t)=>s+num(t.sold)*num(t.price),0);return{sold,cap,rev,fill:cap?sold/cap*100:0,avg:sold?rev/sold:0};}
 export function lineTotal(l:MoneyLine,e:PlannerEvent){const t=ticketTotals(e);if(l.mode==='perTicketHolder')return num(l.amount)*t.sold*num(l.quantity);if(l.mode==='percentageOfTickets')return t.rev*(num(l.amount)/100);return num(l.amount)*num(l.quantity)}

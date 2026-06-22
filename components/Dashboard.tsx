@@ -43,7 +43,7 @@ export default function Dashboard() {
 
 
           <Link href="/ui-studio" className="mt-5 block">
-            <div className="eos-primary rounded-[24px] border px-4 py-4  transition active:scale-[.99]">
+            <div className="eos-primary rounded-[24px] border px-4 py-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="font-mono text-[11px] uppercase tracking-[0.08em] opacity-70">Design controls</p>
@@ -103,7 +103,7 @@ export default function Dashboard() {
 
           {modules.map(([href, name, desc, status]) => (
             <Link key={href} href={href} className="block">
-              <Card className="transition active:scale-[.99]">
+              <Card className="transition">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <h3 className="text-[28px] font-medium leading-[1.02] tracking-[-0.065em] eos-text">{name}</h3>
