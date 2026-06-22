@@ -134,7 +134,7 @@ function MetricValue({ value }: { value: string | number }) {
     return (
       <span className="eos-metric-value">
         <span className="eos-metric-number">{moneyMatch[1].trim()}</span>
-        <span className="eos-metric-unit"> DKK</span>
+        <span className="eos-metric-unit">DKK</span>
       </span>
     );
   }

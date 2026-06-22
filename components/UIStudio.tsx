@@ -2,24 +2,24 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { AppShell, Badge, Button, Card, Field, Stat } from './ui/AppShell';
-
 import {
   applyTheme,
   DAY_THEME,
   NIGHT_THEME,
   normalizeTheme,
   readSavedTheme,
-  THEME_KEYS,
   Theme,
   ThemeKey,
   ThemeMode,
 } from '@/lib/theme';
 
 type ColorKey = ThemeKey;
+type NamedTheme = Theme & { name: string; custom?: boolean };
 
 const DEFAULT_THEME = NIGHT_THEME;
+const CUSTOM_PRESETS_KEY = 'eos-ui-custom-presets';
 
-const PRESETS: Array<Theme & { name: string }> = [
+const BUILT_IN_PRESETS: NamedTheme[] = [
   { name: 'Night mode', ...NIGHT_THEME },
   { name: 'Day mode', ...DAY_THEME },
   {
@@ -71,18 +71,43 @@ const PRESETS: Array<Theme & { name: string }> = [
   },
 ];
 
-function readTheme(): Theme {
-  return readSavedTheme();
+function readCustomPresets(): NamedTheme[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = JSON.parse(localStorage.getItem(CUSTOM_PRESETS_KEY) || '[]');
+    if (!Array.isArray(raw)) return [];
+
+    return raw
+      .map((item) => {
+        if (!item || typeof item.name !== 'string') return null;
+        return {
+          ...normalizeTheme(item),
+          name: item.name.trim() || 'Saved preset',
+          custom: true,
+        } satisfies NamedTheme;
+      })
+      .filter(Boolean) as NamedTheme[];
+  } catch {
+    localStorage.removeItem(CUSTOM_PRESETS_KEY);
+    return [];
+  }
+}
+
+function writeCustomPresets(presets: NamedTheme[]) {
+  localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(presets));
 }
 
 export default function UIStudio() {
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const [saved, setSaved] = useState(false);
+  const [customPresets, setCustomPresets] = useState<NamedTheme[]>([]);
+  const [presetName, setPresetName] = useState('');
 
   useEffect(() => {
-    const stored = readTheme();
+    const stored = readSavedTheme();
     setTheme(stored);
     applyTheme(stored);
+    setCustomPresets(readCustomPresets());
   }, []);
 
   const tokens = useMemo(
@@ -105,13 +130,19 @@ export default function UIStudio() {
     [],
   );
 
+  const presets = useMemo(() => [...BUILT_IN_PRESETS, ...customPresets], [customPresets]);
+
+  const flashSaved = () => {
+    setSaved(true);
+    window.setTimeout(() => setSaved(false), 900);
+  };
+
   const commit = (nextTheme: Theme) => {
     const next = normalizeTheme(nextTheme);
     setTheme(next);
     applyTheme(next);
     localStorage.setItem('eos-ui-theme', JSON.stringify(next));
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 900);
+    flashSaved();
   };
 
   const update = (key: ColorKey, value: string) => {
@@ -123,6 +154,23 @@ export default function UIStudio() {
   };
 
   const reset = () => commit(DEFAULT_THEME);
+
+  const saveCurrentPreset = () => {
+    const name = presetName.trim() || `Preset ${customPresets.length + 1}`;
+    const nextPreset: NamedTheme = { ...normalizeTheme(theme), name, custom: true };
+    const nextPresets = [nextPreset, ...customPresets.filter((preset) => preset.name.toLowerCase() !== name.toLowerCase())].slice(0, 20);
+    setCustomPresets(nextPresets);
+    writeCustomPresets(nextPresets);
+    setPresetName('');
+    flashSaved();
+  };
+
+  const deleteCustomPreset = (name: string) => {
+    const nextPresets = customPresets.filter((preset) => preset.name !== name);
+    setCustomPresets(nextPresets);
+    writeCustomPresets(nextPresets);
+    flashSaved();
+  };
 
   return (
     <AppShell title="UI Studio">
@@ -216,27 +264,55 @@ export default function UIStudio() {
         </Card>
 
         <Card>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Presets</p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] eos-muted">Presets</p>
+              <h2 className="mt-2 text-[34px] font-medium tracking-[-0.07em] eos-text">Saved themes</h2>
+            </div>
+            <Badge tone="neutral">{customPresets.length} saved</Badge>
+          </div>
+
+          <div className="eos-panel mt-4 rounded-[24px] border p-3">
+            <Field label="Preset name">
+              <input
+                value={presetName}
+                placeholder={`Preset ${customPresets.length + 1}`}
+                onChange={(event) => setPresetName(event.target.value)}
+              />
+            </Field>
+            <Button className="mt-3 w-full" kind="primary" onClick={saveCurrentPreset}>Save current theme as preset</Button>
+          </div>
+
           <div className="mt-4 space-y-2">
-            {PRESETS.map((preset) => (
-              <button
-                key={preset.name}
-                type="button"
-                onClick={() => commit(normalizeTheme(preset))}
-                className="eos-panel flex w-full items-center justify-between gap-3 rounded-[24px] border p-3 text-left transition active:scale-[.99]"
-              >
-                <span>
-                  <span className="block text-lg font-medium tracking-[-0.04em] eos-text">{preset.name}</span>
-                  <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.06em] eos-muted">
-                    {preset.mode} · {preset.background} · {preset.text}
+            {presets.map((preset) => (
+              <div key={`${preset.custom ? 'custom' : 'built-in'}-${preset.name}`} className="eos-panel rounded-[24px] border p-3">
+                <button
+                  type="button"
+                  onClick={() => commit(normalizeTheme(preset))}
+                  className="flex w-full items-center justify-between gap-3 text-left"
+                >
+                  <span>
+                    <span className="block text-lg font-medium tracking-[-0.04em] eos-text">{preset.name}</span>
+                    <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.06em] eos-muted">
+                      {preset.custom ? 'saved' : 'built in'} · {preset.mode} · {preset.background}
+                    </span>
                   </span>
-                </span>
-                <span className="flex gap-1.5">
-                  {(['background', 'content', 'surface', 'border', 'accent'] as ColorKey[]).map((key) => (
-                    <span key={key} className="h-7 w-7 rounded-full border eos-border" style={{ background: preset[key] }} />
-                  ))}
-                </span>
-              </button>
+                  <span className="flex shrink-0 gap-1.5">
+                    {(['background', 'content', 'surface', 'border', 'accent'] as ColorKey[]).map((key) => (
+                      <span key={key} className="h-7 w-7 rounded-full border eos-border" style={{ background: preset[key] }} />
+                    ))}
+                  </span>
+                </button>
+                {preset.custom && (
+                  <button
+                    type="button"
+                    onClick={() => deleteCustomPreset(preset.name)}
+                    className="eos-danger mt-3 rounded-full border px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.06em]"
+                  >
+                    Delete preset
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         </Card>
