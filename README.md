@@ -46,3 +46,15 @@ Final hardening baseline with a new Event Comparison module.
 - Rounded corners are intact.
 - No-animation baseline is intact.
 - Consolidated typography/theme controls are intact.
+
+
+## v45 icon fix
+
+This build adds explicit iPhone homescreen/browser icon support:
+- `public/apple-touch-icon.png` at 180x180 for iOS Add to Home Screen.
+- `public/icon-192.png` and `public/icon-512.png` for web app manifest/browser thumbnails.
+- `public/favicon-32.png` and `public/favicon-16.png` for browser favicon fallback.
+- `app/icon.png` and `app/apple-icon.png` for Next.js App Router metadata icons.
+- Explicit `<link rel="apple-touch-icon">`, favicon links and `manifest.webmanifest` reference in the root layout.
+
+If iOS still shows the old icon, remove the existing homescreen shortcut, clear Safari website data for the deployment domain if needed, redeploy, then add the site to the homescreen again. iOS caches homescreen icons aggressively.
