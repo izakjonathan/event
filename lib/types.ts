@@ -20,6 +20,24 @@ export type EventMeta = {
   status: EventStatus;
 };
 
+
+export type EventReviewMetrics = {
+  eventType: string;
+  label: string;
+  expectedGuests: number;
+  actualGuests: number;
+  plannedStaff: number;
+  actualStaff: number;
+  totalStaffHours: number;
+  supplierCost: number;
+  equipmentCost: number;
+  otherCost: number;
+  barRevenue: number;
+  ticketRevenue: number;
+  otherRevenue: number;
+  reviewNotes: string;
+};
+
 export type TicketTier = {
   id: string;
   name: string;
@@ -139,6 +157,7 @@ export type PlannerEvent = {
   lines: MoneyLine[];
   staff: StaffLine[];
   bar: BarPlan;
+  review: EventReviewMetrics;
   scenarios: Scenario[];
   termsPlan: TermsPlan;
   files: EventFile[];

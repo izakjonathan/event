@@ -3,6 +3,7 @@ import {
   BarPlan,
   BarPlannerPayload,
   EventMeta,
+  EventReviewMetrics,
   MoneyLine,
   PlannerEvent,
   Project,
@@ -27,6 +28,24 @@ export const defaultMeta = (): EventMeta => ({
   terms: '',
   notes: '',
   status: 'idea',
+});
+
+
+export const defaultReview = (): EventReviewMetrics => ({
+  eventType: '',
+  label: '',
+  expectedGuests: 0,
+  actualGuests: 0,
+  plannedStaff: 0,
+  actualStaff: 0,
+  totalStaffHours: 0,
+  supplierCost: 0,
+  equipmentCost: 0,
+  otherCost: 0,
+  barRevenue: 0,
+  ticketRevenue: 0,
+  otherRevenue: 0,
+  reviewNotes: '',
 });
 
 export const defaultBar = (): BarPlan => ({
@@ -149,6 +168,7 @@ const baseEvent = (): PlannerEvent => ({
   lines: [],
   staff: [],
   bar: defaultBar(),
+  review: defaultReview(),
   scenarios: defaultScenarios(),
   termsPlan: defaultTerms(),
   files: [],
@@ -207,6 +227,7 @@ export function hydrateEvent(raw: any): PlannerEvent {
   next.lines = Array.isArray(raw?.lines) ? raw.lines : [];
   next.staff = Array.isArray(raw?.staff) ? raw.staff : [];
   next.bar = { ...base.bar, ...(raw?.bar || {}) };
+  next.review = { ...base.review, ...(raw?.review || {}) };
   next.scenarios = Array.isArray(raw?.scenarios) && raw.scenarios.length ? raw.scenarios : base.scenarios;
   next.termsPlan = { ...base.termsPlan, ...(raw?.termsPlan || {}) };
   next.files = Array.isArray(raw?.files) ? raw.files : [];

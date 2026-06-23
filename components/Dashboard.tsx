@@ -7,6 +7,7 @@ import { eventTotals } from '@/lib/calculations';
 
 const modules = [
  ['/event-planner', 'Event Planner', 'Forecast tickets, costs, staff, bar and venue terms.', 'Active'],
+ ['/event-comparison', 'Event Comparison', 'Compare all events across guests, costs, revenue and profit.', 'Active'],
  ['/artist-booking', 'Artist Booking', 'Public artist submission form with image upload.', 'Public'],
  ['/artists', 'Artist Management', 'Review submissions and connect artists to events.', 'Active'],
  ['/calendar', 'Calendar / Schedule', 'Review upcoming events, timings and warnings.', 'Active'],

@@ -165,6 +165,35 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  </Section>
 
+ <Section title="Event metrics / review" openDefault>
+ <Row>
+ {input('Event type', draft.review.eventType, (value) => set({ review: { ...draft.review, eventType: String(value) } }))}
+ {input('Label', draft.review.label, (value) => set({ review: { ...draft.review, label: String(value) } }))}
+ </Row>
+ <Row>
+ {input('Expected guests', draft.review.expectedGuests, (value) => set({ review: { ...draft.review, expectedGuests: num(String(value)) } }), 'number')}
+ {input('Actual guests', draft.review.actualGuests, (value) => set({ review: { ...draft.review, actualGuests: num(String(value)) } }), 'number')}
+ </Row>
+ <Row>
+ {input('Planned staff', draft.review.plannedStaff, (value) => set({ review: { ...draft.review, plannedStaff: num(String(value)) } }), 'number')}
+ {input('Actual staff', draft.review.actualStaff, (value) => set({ review: { ...draft.review, actualStaff: num(String(value)) } }), 'number')}
+ </Row>
+ {input('Total staff hours', draft.review.totalStaffHours, (value) => set({ review: { ...draft.review, totalStaffHours: num(String(value)) } }), 'number')}
+ <Row>
+ {input('Supplier cost', draft.review.supplierCost, (value) => set({ review: { ...draft.review, supplierCost: num(String(value)) } }), 'number')}
+ {input('Equipment cost', draft.review.equipmentCost, (value) => set({ review: { ...draft.review, equipmentCost: num(String(value)) } }), 'number')}
+ </Row>
+ {input('Other cost', draft.review.otherCost, (value) => set({ review: { ...draft.review, otherCost: num(String(value)) } }), 'number')}
+ <Row>
+ {input('Ticket revenue', draft.review.ticketRevenue, (value) => set({ review: { ...draft.review, ticketRevenue: num(String(value)) } }), 'number')}
+ {input('Bar revenue', draft.review.barRevenue, (value) => set({ review: { ...draft.review, barRevenue: num(String(value)) } }), 'number')}
+ </Row>
+ {input('Other revenue', draft.review.otherRevenue, (value) => set({ review: { ...draft.review, otherRevenue: num(String(value)) } }), 'number')}
+ <Field label="Review notes">
+ <textarea value={draft.review.reviewNotes} onChange={(event) => set({ review: { ...draft.review, reviewNotes: event.target.value } })} />
+ </Field>
+ </Section>
+
  <Section title="Tickets" right={dkk(totals.tickets.rev)}>
  <div className="grid grid-cols-3 gap-2">
  <Stat label="Sold" value={totals.tickets.sold} />

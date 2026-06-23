@@ -9,6 +9,7 @@ import { cx } from '@/lib/utils';
 const nav = [
  ['/', 'Main', 'home'],
  ['/event-planner', 'Planner', 'planner'],
+ ['/event-comparison', 'Compare', 'compare'],
  ['/artists', 'Artists', 'artists'],
  ['/calendar', 'Calendar', 'calendar'],
  ['/ui-studio', 'Studio', 'studio'],
@@ -50,6 +51,18 @@ function NavIcon({ name }: { name: NavIconName }) {
  <path d="M4.5 5.2h.01" />
  <path d="M4.5 12h.01" />
  <path d="M4.5 18.8h.01" />
+ </svg>
+ );
+ }
+
+
+ if (name === 'compare') {
+ return (
+ <svg {...common}>
+ <path d="M5.2 18.8V9.2" />
+ <path d="M12 18.8V5.2" />
+ <path d="M18.8 18.8v-7.5" />
+ <path d="M4 18.8h16" />
  </svg>
  );
  }
@@ -128,7 +141,7 @@ export function AppShell({ children }: AppShellProps) {
  </section>
 
  <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+8px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[26px] border p-1">
- <div className="grid grid-cols-5 gap-1">
+ <div className="grid grid-cols-6 gap-1">
  {nav.map(([href, label, icon]) => {
  const active = path === href;
 
@@ -138,7 +151,7 @@ export function AppShell({ children }: AppShellProps) {
  href={href}
  prefetch
  aria-current={active ? 'page' : undefined}
- className={cx('eos-nav-item eos-nav-label rounded-[20px] px-1 py-1 text-center', active ? 'eos-dock-active' : 'eos-muted')}
+ className={cx('eos-nav-item eos-nav-label rounded-[20px] px-0.5 py-1 text-center', active ? 'eos-dock-active' : 'eos-muted')}
  >
  <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]', active && 'eos-dock-active')}>
  <NavIcon name={icon} />

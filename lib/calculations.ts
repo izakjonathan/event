@@ -150,3 +150,47 @@ export function hoursBetween(start: string, end: string) {
 export function barStaffCost(line: BarStaffLine) {
   return num(line.staffCount) * hoursBetween(line.startTime, line.endTime) * num(line.hourlyWage);
 }
+
+export function comparisonTotals(event: PlannerEvent) {
+  const totals = eventTotals(event);
+  const plannedGuests = num(event.review.expectedGuests) || totals.tickets.sold || totals.bar.guests;
+  const actualGuests = num(event.review.actualGuests) || totals.tickets.sold || totals.bar.guests || plannedGuests;
+  const plannedStaff = num(event.review.plannedStaff) || event.staff.reduce((sum, line) => sum + num(line.people), 0);
+  const actualStaff = num(event.review.actualStaff) || plannedStaff;
+  const totalStaffHours = num(event.review.totalStaffHours) || event.staff.reduce((sum, line) => sum + num(line.people) * num(line.hours), 0);
+  const ticketRevenue = num(event.review.ticketRevenue) || totals.tickets.rev;
+  const barRevenue = num(event.review.barRevenue) || totals.bar.revenue;
+  const otherRevenue = num(event.review.otherRevenue) || totals.extraIncome;
+  const supplierCost = num(event.review.supplierCost);
+  const equipmentCost = num(event.review.equipmentCost);
+  const otherCost = num(event.review.otherCost) || totals.expenses;
+  const revenue = ticketRevenue + barRevenue + otherRevenue;
+  const cost = totals.staffCost + totals.artistCost + totals.bar.stockCost + supplierCost + equipmentCost + otherCost;
+  const profit = revenue - cost;
+
+  return {
+    plannedGuests,
+    actualGuests,
+    guestDelta: actualGuests - plannedGuests,
+    plannedStaff,
+    actualStaff,
+    totalStaffHours,
+    ticketRevenue,
+    barRevenue,
+    otherRevenue,
+    supplierCost,
+    equipmentCost,
+    otherCost,
+    staffCost: totals.staffCost,
+    artistCost: totals.artistCost,
+    stockCost: totals.bar.stockCost,
+    revenue,
+    cost,
+    profit,
+    margin: revenue ? (profit / revenue) * 100 : 0,
+    revenuePerGuest: actualGuests ? revenue / actualGuests : 0,
+    costPerGuest: actualGuests ? cost / actualGuests : 0,
+    profitPerGuest: actualGuests ? profit / actualGuests : 0,
+    staffCostPercent: revenue ? (totals.staffCost / revenue) * 100 : 0,
+  };
+}
