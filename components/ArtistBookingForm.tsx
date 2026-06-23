@@ -5,12 +5,12 @@ import { blankSubmission, id } from '@/lib/defaults';
 import { supabase } from '@/lib/supabaseClient';
 import { cleanUrl, fileToDataUrl } from '@/lib/utils';
 import { useEventStore } from './EventStore';
-import { AppShell, Badge, Button, Card, Field, Row } from './ui/AppShell';
+import { AppShell, Button, Card, Field, Row } from './ui/AppShell';
 
 const LINK_FIELDS = ['instagram', 'spotify', 'soundcloud', 'youtube', 'website'] as const;
 
 export default function ArtistBookingForm() {
- const { createArtist, usingLocal } = useEventStore();
+ const { createArtist } = useEventStore();
  const [form, setForm] = useState(blankSubmission());
  const [message, setMessage] = useState('');
 
@@ -69,7 +69,7 @@ export default function ArtistBookingForm() {
  );
 
  return (
- <AppShell title="Artist Booking" actions={<Badge tone={usingLocal ? 'warn' : 'ok'}>{usingLocal ? 'Local' : 'Live'}</Badge>}>
+ <AppShell>
  <form onSubmit={submit} className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Public submission form</p>
@@ -96,7 +96,7 @@ export default function ArtistBookingForm() {
  <span>Upload artist image</span>
  <input className="sr-only" type="file" accept="image/*" onChange={(event) => uploadImage(event.target.files?.[0])} />
  </label>
- {form.image_url && <img src={form.image_url} className="mt-3 h-44 w-full rounded-[24px] object-cover" alt="Artist preview" />}
+ {form.image_url && <img src={form.image_url} className="mt-3 h-44 w-full rounded-[24px] object-cover" alt="Artist preview" loading="lazy" decoding="async" />}
  </Field>
  </Card>
 

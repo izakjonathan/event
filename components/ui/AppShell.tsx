@@ -17,8 +17,6 @@ const nav = [
 type NavIconName = (typeof nav)[number][2];
 
 type AppShellProps = {
- title?: string;
- actions?: ReactNode;
  children: ReactNode;
 };
 
@@ -97,9 +95,30 @@ export function AppShell({ children }: AppShellProps) {
  }, []);
 
  useEffect(() => {
+ let cancelled = false;
+ const prefetchRoutes = () => {
+ if (cancelled) return;
  nav.forEach(([href]) => {
  if (href !== path) router.prefetch(href);
  });
+ };
+
+ const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
+ const cancelIdle = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+
+ if (requestIdle && cancelIdle) {
+ const id = requestIdle(prefetchRoutes, { timeout: 800 });
+ return () => {
+ cancelled = true;
+ cancelIdle(id);
+ };
+ }
+
+ const id = window.setTimeout(prefetchRoutes, 80);
+ return () => {
+ cancelled = true;
+ window.clearTimeout(id);
+ };
  }, [path, router]);
 
  return (

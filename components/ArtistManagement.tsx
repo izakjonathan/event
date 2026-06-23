@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { dkk } from '@/lib/calculations';
 import { id } from '@/lib/defaults';
@@ -58,7 +57,7 @@ export default function ArtistManagement() {
  }
 
  return (
- <AppShell title="Artists" actions={<Link href="/artist-booking"><Button kind="soft">Form</Button></Link>}>
+ <AppShell>
  <div className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Artist submissions</p>
@@ -99,7 +98,7 @@ export default function ArtistManagement() {
  <Card className="eos-panel">
  <div className="flex gap-3">
  {draft.image_url ? (
- <img src={draft.image_url} alt="" className="h-20 w-20 rounded-[24px] object-cover" />
+ <img src={draft.image_url} alt="" loading="lazy" decoding="async" className="h-20 w-20 rounded-[24px] object-cover" />
  ) : (
  <div className="grid h-20 w-20 place-items-center rounded-[24px] border eos-border eos-panel eos-muted">No img</div>
  )}

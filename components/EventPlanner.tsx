@@ -76,7 +76,7 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  );
 
  return (
- <AppShell title="Event Planner" actions={<Button kind="soft" onClick={save}>Save</Button>}>
+ <AppShell>
  <div className="space-y-5">
  <Card>
  <div className="flex items-start justify-between gap-3">
@@ -437,9 +437,11 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  onClick={() => {
  const csv = `name,date,location,profit,revenue,costs\n${draft.meta.name},${draft.meta.date},${draft.meta.location},${totals.profit},${totals.totalIncome},${totals.totalCosts}`;
  const anchor = document.createElement('a');
- anchor.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+ const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+ anchor.href = url;
  anchor.download = `${draft.meta.name || 'event'}-summary.csv`;
  anchor.click();
+ URL.revokeObjectURL(url);
  }}
  >
  CSV

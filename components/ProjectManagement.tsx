@@ -206,7 +206,7 @@ export default function ProjectManagement() {
  }
 
  return (
- <AppShell title="Projects" actions={<Button kind="soft" onClick={() => saveTask(blankTask())}>Task</Button>}>
+ <AppShell>
  <div className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Operational projects and tasks</p>

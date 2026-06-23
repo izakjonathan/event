@@ -141,6 +141,11 @@ summary::-webkit-details-marker {
   color: var(--eos-text);
 }
 
+.eos-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
+}
+
 .eos-panel,
 .eos-surface,
 .eos-stat {

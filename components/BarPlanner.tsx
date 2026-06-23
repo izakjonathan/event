@@ -68,7 +68,7 @@ export default function BarPlanner() {
  .join('\n\n');
 
  return (
- <AppShell title="Bar Planner" actions={<Button kind="soft" onClick={save}>Save</Button>}>
+ <AppShell>
  <div className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Attached to event</p>

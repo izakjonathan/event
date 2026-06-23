@@ -146,7 +146,21 @@ function readLocalPresets(): NamedTheme[] {
 
 function writeLocalPresets(presets: NamedTheme[]) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(LOCAL_PRESETS_KEY, JSON.stringify(presets));
+  scheduleStorageWrite(LOCAL_PRESETS_KEY, JSON.stringify(presets));
+}
+
+function scheduleStorageWrite(key: string, value: string) {
+  if (typeof window === 'undefined') return;
+
+  const save = () => localStorage.setItem(key, value);
+  const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
+
+  if (requestIdle) {
+    requestIdle(save, { timeout: 500 });
+    return;
+  }
+
+  window.setTimeout(save, 80);
 }
 
 function numberValue(value: string, unit: 'px' | 'em') {
@@ -219,7 +233,7 @@ export default function UIStudio() {
     const next = normalizeTheme(nextTheme);
     setTheme(next);
     applyTheme(next);
-    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(next));
+    scheduleStorageWrite(THEME_STORAGE_KEY, JSON.stringify(next));
     flashSaved();
   };
 
@@ -288,7 +302,7 @@ export default function UIStudio() {
   };
 
   return (
-    <AppShell title="UI Studio">
+    <AppShell>
       <div className="space-y-5">
         <Card className="overflow-hidden">
           <div className="flex items-start justify-between gap-4">

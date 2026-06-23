@@ -11,7 +11,7 @@ export default function EventCalendar() {
  const sorted = [...events].sort((a, b) => dateSort(a.meta.date, b.meta.date));
 
  return (
- <AppShell title="Calendar" actions={<Link href="/event-planner"><Button kind="soft">Planner</Button></Link>}>
+ <AppShell>
  <div className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Readiness layer</p>

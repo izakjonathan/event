@@ -39,7 +39,7 @@ export default function SupplierList() {
   );
 
   return (
-    <AppShell title="Suppliers">
+    <AppShell>
       <div className="space-y-5">
         <Card>
           <p className="eos-caption eos-muted">Supplier list</p>

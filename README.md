@@ -1,43 +1,29 @@
-# EventOS v41 — final cleanup and speed pass
+# EventOS v42 — Final hardening, cleanup and speed pass
 
-This build is based on v40 and focuses on final consolidation, faster first-load behavior, and a smaller global style system.
+This build is based on v41 and applies the final release-hardening pass requested before calling the app complete.
 
-## Main cleanup
+## What changed
 
-- Rebuilt `app/globals.css` around one small global token system.
-- Removed unused typography line-height variables from UI Studio/theme presets.
-- Removed the unused shadow color token and card/dock shadow dependency.
-- Removed unused CSS classes and duplicate global typography rules.
-- Kept rounded UI shape language intact.
+- Removed unused `AppShell` header props/actions after the header had already been removed.
+- Removed unused status/alert state from the global event store so optional Supabase sync no longer causes global UI re-renders.
+- Stabilized store action functions with `useCallback` to reduce unnecessary context churn.
+- Deferred the initial Supabase refresh with idle scheduling so first paint and dock navigation are less likely to be blocked after load.
+- Deferred UI Studio theme/preset `localStorage` writes so typography/color slider edits do not block interaction as much.
+- Added idle dock route prefetching after first paint.
+- Added lightweight lazy/async image decoding on artist preview images.
+- Revoked generated CSV object URLs after export.
 - Kept the no-animation baseline intact.
-- Kept supplier list, artist fixes, typography presets and UI Studio preset saving.
+- Kept rounded corners intact.
+- Kept the v41 consolidated global CSS/token system intact.
+- Re-audited CSS class usage: no unused CSS classes were found.
+- Verified all routes are still static in the production build.
 
-## Typography system
-
-Typography is now controlled by a smaller set of global CSS variables:
-
-- display font and UI font
-- size, weight, letter spacing and caps for display, heading, title, body, caption, button and metric text
-- separate logo weights for `Event` and `OS`
-
-Line-height is fixed in CSS so the app stays consistently tight without needing extra controls.
-
-## Speed optimizations
-
-- All routes build as static pages.
-- Font loading moved from CSS `@import` to layout `<link>` tags with preconnect.
-- Dock route prefetching is kept.
-- Local storage is no longer parsed on every store render.
-- Local storage writes are deferred with idle/timeout scheduling.
-- Initial Supabase refresh is deferred until after first paint.
-- Removed unused/deduplicated CSS so less style work is needed.
-
-## Verification
+## Validation
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
-- Static routes generated: `/`, `/artist-booking`, `/artists`, `/bar-planner`, `/calendar`, `/event-planner`, `/project-management`, `/suppliers`, `/ui-studio`.
+- Build output shows all app routes prerendered as static pages.
 
 ## Deploy
 
-Use Node 20.x and npm 10.x. The ZIP excludes `.next`, `node_modules`, `package-lock.json` and `tsconfig.tsbuildinfo`.
+Upload this folder to GitHub/Vercel as the project root. The ZIP excludes generated build/dependency folders.

@@ -23,7 +23,7 @@ export default function Dashboard() {
  const totals = upcoming ? eventTotals(upcoming) : null;
 
  return (
- <AppShell title="Operations">
+ <AppShell>
  <div className="space-y-5">
  <Card className="overflow-hidden">
  <div className="flex items-start justify-between gap-4">

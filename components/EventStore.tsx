@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { blankProject, blankSubmission, blankSupplier, blankTask, eventFromTemplate, hydrateEvent, now } from '@/lib/defaults';
-import { supabase, supabaseReady } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 import { ArtistSubmission, PlannerEvent, Project, Supplier, Task } from '@/lib/types';
 
 type Store = {
@@ -29,8 +29,6 @@ type Store = {
   saveSupplier: (supplier: Supplier) => Promise<void>;
   deleteSupplier: (id: string) => Promise<void>;
   refresh: () => Promise<void>;
-  alert: string;
-  usingLocal: boolean;
 };
 
 const StoreContext = createContext<Store | null>(null);
@@ -122,8 +120,6 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>(() => initialLocal.tasks || []);
   const [suppliers, setSuppliers] = useState<Supplier[]>(() => initialLocal.suppliers || []);
   const [currentId, setCurrentId] = useState(initialLocal.currentId || '');
-  const [alert, setAlert] = useState('');
-  const [usingLocal, setUsingLocal] = useState(!supabaseReady);
 
   useEffect(() => {
     return scheduleLocalWrite({ ownerKey, events, artists, projects, tasks, suppliers, currentId });
@@ -131,7 +127,6 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     if (!supabase) {
-      setUsingLocal(true);
       return;
     }
 
@@ -164,26 +159,39 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
         })),
       );
       setSuppliers(supplierResponse.data || []);
-      setUsingLocal(false);
-      setAlert('Synced with Supabase');
-    } catch (error: any) {
-      setUsingLocal(true);
-      setAlert(`Supabase unavailable. Local mode active. ${error?.message || ''}`);
+    } catch {
+      // Supabase is optional. Local data remains the source of truth if sync fails.
     }
   }, [ownerKey]);
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      refresh();
-    }, 0);
-    return () => window.clearTimeout(id);
+    let cancelled = false;
+    const run = () => {
+      if (!cancelled) void refresh();
+    };
+    const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
+    const cancelIdle = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+
+    if (requestIdle && cancelIdle) {
+      const id = requestIdle(run, { timeout: 1200 });
+      return () => {
+        cancelled = true;
+        cancelIdle(id);
+      };
+    }
+
+    const id = window.setTimeout(run, 160);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
   }, [refresh]);
 
-  const setOwnerKey = (value: string) => {
+  const setOwnerKey = useCallback((value: string) => {
     setOwnerKeyState(value || 'default-workspace');
-  };
+  }, []);
 
-  const saveEvent = async (event: PlannerEvent) => {
+  const saveEvent = useCallback(async (event: PlannerEvent) => {
     const next = { ...hydrateEvent(event), updatedAt: now() };
     setEvents((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
     setCurrentId(next.id);
@@ -200,22 +208,19 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
         });
 
         if (error) throw error;
-        setUsingLocal(false);
-        setAlert('Event saved');
-      } catch (error: any) {
-        setUsingLocal(true);
-        setAlert(`Saved locally. Supabase save failed: ${error?.message || ''}`);
+      } catch {
+        // Local optimistic save already completed.
       }
     }
-  };
+  }, [ownerKey]);
 
-  const createEvent = async (template: string) => {
+  const createEvent = useCallback(async (template: string) => {
     const event = eventFromTemplate(template);
     await saveEvent(event);
     return event;
-  };
+  }, [saveEvent]);
 
-  const duplicateEvent = async (id: string) => {
+  const duplicateEvent = useCallback(async (id: string) => {
     const event = events.find((current) => current.id === id);
     if (!event) return;
 
@@ -227,15 +232,15 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
         updatedAt: now(),
       }),
     );
-  };
+  }, [events, saveEvent]);
 
-  const deleteEvent = async (id: string) => {
+  const deleteEvent = useCallback(async (id: string) => {
     setEvents((previous) => previous.filter((event) => event.id !== id));
     if (currentId === id) setCurrentId('');
     if (supabase) await supabase.from('event_plans').delete().eq('id', id);
-  };
+  }, [currentId]);
 
-  const saveArtist = async (artist: ArtistSubmission) => {
+  const saveArtist = useCallback(async (artist: ArtistSubmission) => {
     const next = { ...blankSubmission(), ...artist, updated_at: now() };
     setArtists((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
 
@@ -243,48 +248,46 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       try {
         const { error } = await supabase.from('artist_submissions').upsert(next);
         if (error) throw error;
-        setAlert('Artist saved');
-      } catch (error: any) {
-        setUsingLocal(true);
-        setAlert(`Artist saved locally: ${error?.message || ''}`);
+      } catch {
+        // Local optimistic save already completed.
       }
     }
-  };
+  }, []);
 
   const createArtist = saveArtist;
 
-  const saveProject = async (project: Project) => {
+  const saveProject = useCallback(async (project: Project) => {
     const next = { ...blankProject(), ...project, updated_at: now() };
     setProjects((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
     if (supabase) await supabase.from('project_management_projects').upsert(next);
-  };
+  }, []);
 
-  const deleteProject = async (id: string) => {
+  const deleteProject = useCallback(async (id: string) => {
     setProjects((previous) => previous.filter((project) => project.id !== id));
     if (supabase) await supabase.from('project_management_projects').delete().eq('id', id);
-  };
+  }, []);
 
-  const saveTask = async (task: Task) => {
+  const saveTask = useCallback(async (task: Task) => {
     const next = { ...blankTask(), ...task, updated_at: now() };
     setTasks((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
     if (supabase) await supabase.from('project_management_tasks').upsert(next);
-  };
+  }, []);
 
-  const deleteTask = async (id: string) => {
+  const deleteTask = useCallback(async (id: string) => {
     setTasks((previous) => previous.filter((task) => task.id !== id));
     if (supabase) await supabase.from('project_management_tasks').delete().eq('id', id);
-  };
+  }, []);
 
-  const saveSupplier = async (supplier: Supplier) => {
+  const saveSupplier = useCallback(async (supplier: Supplier) => {
     const next = { ...blankSupplier(), ...supplier, owner_key: ownerKey, updated_at: now() };
     setSuppliers((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
     if (supabase) await supabase.from('suppliers').upsert(next);
-  };
+  }, [ownerKey]);
 
-  const deleteSupplier = async (id: string) => {
+  const deleteSupplier = useCallback(async (id: string) => {
     setSuppliers((previous) => previous.filter((supplier) => supplier.id !== id));
     if (supabase) await supabase.from('suppliers').delete().eq('id', id);
-  };
+  }, []);
 
   const current = events.find((event) => event.id === currentId) || events[0];
 
@@ -313,10 +316,30 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       saveSupplier,
       deleteSupplier,
       refresh,
-      alert,
-      usingLocal,
     }),
-    [ownerKey, current, events, artists, projects, tasks, suppliers, refresh, alert, usingLocal],
+    [
+      ownerKey,
+      current,
+      events,
+      artists,
+      projects,
+      tasks,
+      suppliers,
+      setOwnerKey,
+      saveEvent,
+      createEvent,
+      duplicateEvent,
+      deleteEvent,
+      saveArtist,
+      createArtist,
+      saveProject,
+      deleteProject,
+      saveTask,
+      deleteTask,
+      saveSupplier,
+      deleteSupplier,
+      refresh,
+    ],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
