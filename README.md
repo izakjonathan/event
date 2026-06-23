@@ -1,33 +1,25 @@
-# EventOS
+# EventOS v40 — UI Studio typography reaction fix
 
-Mobile-first Next.js + Tailwind event operations workspace.
+This build fixes why typography changes in UI Studio did not appear to affect the full site clearly.
 
-## v39
-- Fixed the Dashboard logo weight split: `Event` is now light via `eos-logo-event`, while `OS` is bold via `eos-logo-os`.
-- Renamed Event Planner section `Linked artists / lineup` to `Artists`.
-- Build verified with `npm run typecheck` and `npm run build`.
+## What was wrong
 
-## Main routes
-- `/` — Dashboard
-- `/event-planner` — Event planner
-- `/artists` — Artist management
-- `/artist-booking` — Public artist submission form
-- `/calendar` — Calendar view
-- `/ui-studio` — UI Studio
-- `/project-management` — Project board
-- `/bar-planner` — Bar planner
-- `/suppliers` — Supplier list
+1. The dashboard logo used separate CSS variables for `Event` and `OS` weights, but those variables were not part of the saved theme object or UI Studio controls.
+2. Display size used a `clamp(...)` rule with a hard minimum, so lowering display size in UI Studio could appear to do nothing.
+3. Font stack changes could look unchanged on devices that did not have the selected fonts installed locally.
 
-## Deploy on Vercel
-1. Upload/extract this ZIP into a GitHub repo so `package.json` is at the repo root.
-2. Import the repo in Vercel.
-3. Vercel will use:
-   - Install Command: `npm install --no-audit --no-fund --progress=false`
-   - Build Command: `npm run build`
-   - Node: `20.x`
-4. Add environment variables if using Supabase:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-5. Run `SUPABASE_SCHEMA.sql` in the Supabase SQL editor.
+## Fixes
 
-The app has a local fallback mode if Supabase is not configured.
+- Added `type-logo-event-weight` and `type-logo-os-weight` to the global theme object.
+- Added UI Studio controls for Event logo weight and OS logo weight.
+- Logo weights now save and restore in presets, including Supabase presets.
+- Display size now uses the actual UI Studio value directly.
+- Added Google font import for Inter and Space Grotesk so font stack changes are visible after deploy.
+- Typecheck and production build both pass.
+
+## Verification
+
+```bash
+npm run typecheck
+npm run build
+```

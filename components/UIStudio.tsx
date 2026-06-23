@@ -38,10 +38,11 @@ const DEFAULT_THEME = NIGHT_THEME;
 const LOCAL_PRESETS_KEY = 'eos-ui-custom-presets';
 const THEME_STORAGE_KEY = 'eos-ui-theme';
 const FONT_STACK_OPTIONS = [
-  'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-  'Space Grotesk, General Sans, DM Sans, Inter, ui-sans-serif, system-ui, sans-serif',
-  'Arial, Helvetica, sans-serif',
-  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+  "'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  "'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif",
+  "Arial, Helvetica, sans-serif",
+  "Georgia, 'Times New Roman', serif",
+  "'Courier New', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
 ];
 const WEIGHT_OPTIONS = ['300', '400', '500', '560', '620', '680', '700', '800', '900'];
 const TRANSFORM_OPTIONS = [
@@ -348,6 +349,19 @@ export default function UIStudio() {
             <Field label="UI / body font stack">
               <select value={theme['type-ui-font']} onChange={(event) => updateTypography('type-ui-font', event.target.value)}>
                 {FONT_STACK_OPTIONS.map((font) => <option key={font} value={font}>{font}</option>)}
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <Field label="Event logo weight">
+              <select value={theme['type-logo-event-weight']} onChange={(event) => updateTypography('type-logo-event-weight', event.target.value)}>
+                {WEIGHT_OPTIONS.map((weight) => <option key={weight} value={weight}>{weight}</option>)}
+              </select>
+            </Field>
+            <Field label="OS logo weight">
+              <select value={theme['type-logo-os-weight']} onChange={(event) => updateTypography('type-logo-os-weight', event.target.value)}>
+                {WEIGHT_OPTIONS.map((weight) => <option key={weight} value={weight}>{weight}</option>)}
               </select>
             </Field>
           </div>

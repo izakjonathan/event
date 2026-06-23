@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..900&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -159,7 +160,7 @@ select {
 }
 
 .eos-display {
-  font-size: clamp(54px, 16vw, var(--type-display-size));
+  font-size: var(--type-display-size);
   font-weight: var(--type-display-weight);
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-track);
