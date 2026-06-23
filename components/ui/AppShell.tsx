@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { applyTheme, readSavedTheme } from '@/lib/theme';
 import { cx } from '@/lib/utils';
 
