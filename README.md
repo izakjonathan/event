@@ -2,16 +2,19 @@
 
 Mobile-first Next.js + Tailwind event operations workspace.
 
-## Current baseline
+## v37 Typography controls in UI Studio
 
-v36 focuses on faster dock/module navigation while keeping the no-animation and rounded-corner baseline.
+This build adds global typography controls to UI Studio and saves those values inside presets.
 
-Changes in this build:
-- removed unnecessary `force-dynamic` from all route pages
-- added explicit dock route prefetching after load
-- kept direct, no-animation module switching
-- kept the cleaned global typography system from v35
-- kept rounded corners intact
+Typography controls now include:
+- font stack for display text
+- font stack for UI/body text
+- size
+- weight
+- letter spacing
+- caps on/off
+
+Presets now include both color tokens and typography tokens, so loading a preset restores the complete visual system.
 
 ## Main routes
 

@@ -25,6 +25,7 @@
   --type-title-size: 29px;
   --type-body-size: 15px;
   --type-caption-size: 11px;
+  --type-button-size: 15px;
   --type-metric-size: 31px;
 
   --type-display-weight: 680;
@@ -50,6 +51,14 @@
   --type-caption-track: 0.06em;
   --type-button-track: -0.015em;
   --type-metric-track: -0.065em;
+
+  --type-display-transform: none;
+  --type-heading-transform: none;
+  --type-title-transform: none;
+  --type-body-transform: none;
+  --type-caption-transform: uppercase;
+  --type-button-transform: none;
+  --type-metric-transform: none;
 }
 
 html[data-eos-mode='day'] {
@@ -137,6 +146,7 @@ select {
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line);
   letter-spacing: var(--type-body-track);
+  text-transform: var(--type-body-transform);
 }
 
 .eos-display,
@@ -151,6 +161,7 @@ select {
   font-weight: var(--type-display-weight);
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-track);
+  text-transform: var(--type-display-transform);
 }
 
 .eos-heading {
@@ -158,6 +169,7 @@ select {
   font-weight: var(--type-heading-weight);
   line-height: var(--type-heading-line);
   letter-spacing: var(--type-heading-track);
+  text-transform: var(--type-heading-transform);
 }
 
 .eos-title {
@@ -165,6 +177,7 @@ select {
   font-weight: var(--type-title-weight);
   line-height: var(--type-title-line);
   letter-spacing: var(--type-title-track);
+  text-transform: var(--type-title-transform);
 }
 
 label,
@@ -175,7 +188,7 @@ label,
   font-weight: var(--type-caption-weight);
   line-height: var(--type-caption-line);
   letter-spacing: var(--type-caption-track);
-  text-transform: uppercase;
+  text-transform: var(--type-caption-transform);
 }
 
 label {
@@ -186,10 +199,11 @@ label {
 .eos-button,
 button {
   font-family: var(--type-ui-font);
-  font-size: var(--type-body-size);
+  font-size: var(--type-button-size);
   font-weight: var(--type-button-weight);
   line-height: var(--type-button-line);
   letter-spacing: var(--type-button-track);
+  text-transform: var(--type-button-transform);
 }
 
 .eos-nav-label {
@@ -206,6 +220,7 @@ button {
   font-weight: var(--type-metric-weight);
   line-height: var(--type-metric-line);
   letter-spacing: var(--type-metric-track);
+  text-transform: var(--type-metric-transform);
 }
 
 .eos-arrow {
