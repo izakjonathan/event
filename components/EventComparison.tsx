@@ -157,8 +157,8 @@ export default function EventComparison() {
           <div className="mt-5 grid grid-cols-2 gap-2">
             <Stat label="Events" value={filtered.length} />
             <Stat label="Completed" value={completed.length} />
-            <Stat label="Total profit" value={dkk(filtered.reduce((sum, item) => sum + item.totals.profit, 0))} />
-            <Stat label="Revenue" value={dkk(filtered.reduce((sum, item) => sum + item.totals.revenue, 0))} />
+            <Stat className="eos-stat-compact" label="Total profit" value={dkk(filtered.reduce((sum, item) => sum + item.totals.profit, 0))} />
+            <Stat className="eos-stat-compact" label="Revenue" value={dkk(filtered.reduce((sum, item) => sum + item.totals.revenue, 0))} />
           </div>
         </Card>
 
@@ -217,7 +217,7 @@ export default function EventComparison() {
           </div>
           <div className="mt-4 grid grid-cols-2 gap-2">
             {highlights.map((item) => (
-              <Stat key={item.label} label={item.label} value={typeof item.value === 'number' ? dkk(item.value) : item.value} sub={item.name} />
+              <Stat className="eos-stat-compact" key={item.label} label={item.label} value={typeof item.value === 'number' ? dkk(item.value) : item.value} sub={item.name} />
             ))}
           </div>
         </Card>
@@ -238,10 +238,10 @@ export default function EventComparison() {
                     </div>
                     <Badge tone={totals.profit >= 0 ? 'ok' : 'bad'}>{dkk(totals.profit)}</Badge>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Stat label="Revenue" value={dkk(totals.revenue)} />
-                    <Stat label="Cost" value={dkk(totals.cost)} />
-                    <Stat label="/ guest" value={dkk(totals.profitPerGuest)} />
+                  <div className="grid grid-cols-2 gap-2">
+                    <Stat className="eos-stat-compact" label="Revenue" value={dkk(totals.revenue)} />
+                    <Stat className="eos-stat-compact" label="Cost" value={dkk(totals.cost)} />
+                    <Stat className="eos-stat-compact col-span-2" label="/ guest" value={dkk(totals.profitPerGuest)} />
                   </div>
                 </SubCard>
               ))}
@@ -278,10 +278,10 @@ export default function EventComparison() {
                 <div className="grid grid-cols-2 gap-2">
                   <Stat label="Date" value={event.meta.date || '—'} sub={event.meta.location || 'No venue'} />
                   <Stat label="Guests" value={totals.actualGuests || '—'} sub={`${totals.plannedGuests || 0} planned`} />
-                  <Stat label="Revenue" value={dkk(totals.revenue)} />
-                  <Stat label="Cost" value={dkk(totals.cost)} />
+                  <Stat className="eos-stat-compact" label="Revenue" value={dkk(totals.revenue)} />
+                  <Stat className="eos-stat-compact" label="Cost" value={dkk(totals.cost)} />
                   <Stat label="Margin" value={pct(totals.margin)} />
-                  <Stat label="Profit / guest" value={dkk(totals.profitPerGuest)} />
+                  <Stat className="eos-stat-compact" label="Profit / guest" value={dkk(totals.profitPerGuest)} />
                   <Stat label="Staff %" value={pct(totals.staffCostPercent)} />
                   <Stat label="Staff hours" value={totals.totalStaffHours || '—'} />
                 </div>
@@ -289,14 +289,14 @@ export default function EventComparison() {
                 <SubCard>
                   <h3 className="eos-title">Breakdown</h3>
                   <div className="grid grid-cols-2 gap-2">
-                    <Stat label="Ticket revenue" value={dkk(totals.ticketRevenue)} />
-                    <Stat label="Bar revenue" value={dkk(totals.barRevenue)} />
-                    <Stat label="Other revenue" value={dkk(totals.otherRevenue)} />
-                    <Stat label="Staff cost" value={dkk(totals.staffCost)} />
-                    <Stat label="Artist cost" value={dkk(totals.artistCost)} />
-                    <Stat label="Supplier cost" value={dkk(totals.supplierCost)} />
-                    <Stat label="Equipment cost" value={dkk(totals.equipmentCost)} />
-                    <Stat label="Other cost" value={dkk(totals.otherCost)} />
+                    <Stat className="eos-stat-compact" label="Ticket revenue" value={dkk(totals.ticketRevenue)} />
+                    <Stat className="eos-stat-compact" label="Bar revenue" value={dkk(totals.barRevenue)} />
+                    <Stat className="eos-stat-compact" label="Other revenue" value={dkk(totals.otherRevenue)} />
+                    <Stat className="eos-stat-compact" label="Staff cost" value={dkk(totals.staffCost)} />
+                    <Stat className="eos-stat-compact" label="Artist cost" value={dkk(totals.artistCost)} />
+                    <Stat className="eos-stat-compact" label="Supplier cost" value={dkk(totals.supplierCost)} />
+                    <Stat className="eos-stat-compact" label="Equipment cost" value={dkk(totals.equipmentCost)} />
+                    <Stat className="eos-stat-compact" label="Other cost" value={dkk(totals.otherCost)} />
                   </div>
                 </SubCard>
 

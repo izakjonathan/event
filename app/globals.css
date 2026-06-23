@@ -325,6 +325,38 @@ button {
   opacity: 0.82;
 }
 
+/* Compact stat variants for dense mobile comparison layouts. */
+.eos-stat-compact {
+  padding: 12px;
+}
+
+.eos-stat-compact .eos-caption {
+  font-size: max(10px, calc(var(--type-caption-size) - 1px));
+  letter-spacing: 0.04em;
+}
+
+.eos-stat-compact .eos-stat-value {
+  font-size: clamp(23px, 7.2vw, 34px);
+  letter-spacing: -0.055em;
+}
+
+.eos-stat-compact .eos-metric-unit {
+  font-size: 0.45em;
+}
+
+.eos-stat-micro {
+  padding: 10px;
+}
+
+.eos-stat-micro .eos-stat-value {
+  font-size: clamp(20px, 6.5vw, 29px);
+  letter-spacing: -0.05em;
+}
+
+.eos-stat-micro .eos-metric-unit {
+  font-size: 0.42em;
+}
+
 input:not([type='checkbox']):not([type='radio']):not([type='file']),
 textarea,
 select {
