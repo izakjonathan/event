@@ -5,6 +5,16 @@ import { EventStoreProvider } from '@/components/EventStore';
 export const metadata: Metadata = {
  title: 'EventOS',
  description: 'EventOS mobile planning workspace for events, artists, bar planning and tasks',
+ icons: {
+  icon: '/icon.png',
+  apple: '/apple-icon.png',
+  shortcut: '/icon.png',
+ },
+ appleWebApp: {
+  capable: true,
+  title: 'EventOS',
+  statusBarStyle: 'default',
+ },
 };
 
 export const viewport: Viewport = {
