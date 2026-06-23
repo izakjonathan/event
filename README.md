@@ -2,6 +2,13 @@
 
 Mobile-first Next.js + Tailwind event operations workspace.
 
+## v33
+- Reverted the app back to the original EventOS typography direction.
+- Kept rounded corners and the no-animation baseline.
+- Added varied weights with tight line-height: body, labels, buttons, headings, display and metrics now have distinct weights.
+- Removed the brutalist single-weight font overrides.
+- Production build and typecheck confirmed.
+
 ## Current baseline
 
 This cleanup build focuses on making the codebase easier to maintain and easier to do a dedicated typography pass on next.
@@ -59,10 +66,3 @@ npm run dev
 npm run typecheck
 npm run build
 ```
-
-## v32
-- Restored rounded corners and original component shape language after v31.
-- Kept the brutalist typography pass only: TWK Everett-style global typography and mono data styling.
-- Added explicit font utility overrides so `font-mono`, `font-sans`, headings, labels, buttons, badges and metrics all use the new typography system/fallbacks consistently.
-- Verified no `rounded-none` or global radius-killer override remains.
-- Typecheck and production build confirmed.
