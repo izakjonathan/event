@@ -101,7 +101,7 @@ export function AppShell({ children }: AppShellProps) {
     {children}
    </section>
 
-   <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+8px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-none border p-1">
+   <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+8px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[26px] border p-1">
     <div className="grid grid-cols-5 gap-1">
      {nav.map(([href, label, icon]) => {
       const active = path === href;
@@ -111,9 +111,9 @@ export function AppShell({ children }: AppShellProps) {
         key={href}
         href={href}
         aria-current={active ? 'page' : undefined}
-        className={cx('eos-nav-item rounded-none px-1 py-1 text-center text-[10px] leading-tight', active ? 'eos-dock-active' : 'eos-muted')}
+        className={cx('eos-nav-item rounded-[20px] px-1 py-1 text-center text-[10px] leading-tight', active ? 'eos-dock-active' : 'eos-muted')}
        >
-        <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-none border p-[5px]', active && 'eos-dock-active')}>
+        <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]', active && 'eos-dock-active')}>
          <NavIcon name={icon} />
         </div>
         {label}
@@ -147,7 +147,7 @@ export function Button({
    disabled={disabled}
    onClick={onClick}
    className={cx(
-    'focus-ring eos-button-label rounded-none border px-4 py-3 disabled:opacity-40',
+    'focus-ring eos-button-label rounded-[22px] border px-4 py-3 disabled:opacity-40',
     kind === 'primary' && 'eos-primary',
     kind === 'ghost' && 'eos-surface',
     kind === 'danger' && 'eos-danger',
@@ -161,7 +161,7 @@ export function Button({
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
- return <div className={cx('eos-card rounded-none border p-4 sm:p-5', className)}>{children}</div>;
+ return <div className={cx('eos-card rounded-[28px] border p-4 sm:p-5', className)}>{children}</div>;
 }
 
 export function SubCard({ children, className = '' }: { children: ReactNode; className?: string }) {
@@ -206,7 +206,7 @@ export function Stat({
  className?: string;
 }) {
  return (
-  <div className={cx('eos-stat min-w-0 overflow-hidden rounded-none border p-3.5', className)}>
+  <div className={cx('eos-stat min-w-0 overflow-hidden rounded-[22px] border p-3.5', className)}>
    <div className="eos-kicker truncate">{label}</div>
    <div className="mt-3 truncate text-[31px] leading-none">
     <MetricValue value={value} />
@@ -228,7 +228,7 @@ export function Badge({
  return (
   <span
    className={cx(
-    'eos-kicker inline-flex shrink-0 items-center gap-1 whitespace-nowrap border px-3 py-1.5',
+    'pill eos-kicker inline-flex shrink-0 items-center gap-1 whitespace-nowrap border px-3 py-1.5',
     tone === 'neutral' && 'eos-surface',
     tone === 'ok' && 'eos-ok',
     tone === 'warn' && 'eos-warn',
@@ -255,12 +255,12 @@ export function Section({
  const [open, setOpen] = useState(openDefault);
 
  return (
-  <div className="eos-section eos-card rounded-none border p-1.5">
+  <div className="eos-section eos-card rounded-[30px] border p-1.5">
    <button
     type="button"
     onClick={() => setOpen((value) => !value)}
     aria-expanded={open}
-    className="eos-accordion-trigger flex w-full cursor-pointer list-none items-center justify-between gap-3 rounded-none px-4 py-3.5 text-left"
+    className="eos-accordion-trigger flex w-full cursor-pointer list-none items-center justify-between gap-3 rounded-[24px] px-4 py-3.5 text-left"
    >
     <span className="eos-section-title">{title}</span>
     <span className="eos-muted flex items-center gap-2 text-xs">

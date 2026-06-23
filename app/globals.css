@@ -5,15 +5,15 @@
   --eos-background: #000000;
   --eos-content: #000000;
   --eos-text: #ffffff;
-  --eos-muted: #808080;
+  --eos-muted: #8e8e93;
   --eos-accent: #ffffff;
-  --eos-border: #191919;
-  --eos-border-strong: #808080;
-  --eos-surface: #191919;
-  --eos-dock-active: #191919;
-  --eos-success: #ffffff;
-  --eos-warning: #808080;
-  --eos-danger: #ffffff;
+  --eos-border: #2e2e2e;
+  --eos-border-strong: #4a4a4a;
+  --eos-surface: #111111;
+  --eos-dock-active: #2c2c2e;
+  --eos-success: #23c483;
+  --eos-warning: #c78b00;
+  --eos-danger: #ff6b6b;
   --eos-shadow: #000000;
 
   /* NCDA brutalist typography reference */
@@ -41,15 +41,15 @@ html[data-eos-mode='day'] {
   --eos-background: #ffffff;
   --eos-content: #ffffff;
   --eos-text: #000000;
-  --eos-muted: #808080;
+  --eos-muted: #6e6e73;
   --eos-accent: #000000;
-  --eos-border: #808080;
-  --eos-border-strong: #191919;
-  --eos-surface: #ffffff;
-  --eos-dock-active: #ffffff;
-  --eos-success: #191919;
-  --eos-warning: #808080;
-  --eos-danger: #000000;
+  --eos-border: #d9d9d9;
+  --eos-border-strong: #b8b8b8;
+  --eos-surface: #f2f2f2;
+  --eos-dock-active: #dedede;
+  --eos-success: #008c5a;
+  --eos-warning: #a86c00;
+  --eos-danger: #d92d20;
   --eos-shadow: #000000;
 }
 
@@ -104,7 +104,7 @@ summary::-webkit-details-marker {
 }
 
 .pill {
-  border-radius: 0;
+  border-radius: 999px;
 }
 
 .text-balance {
@@ -121,7 +121,7 @@ select {
   appearance: none;
   -webkit-appearance: none;
   border: 1px solid var(--eos-border);
-  border-radius: 0;
+  border-radius: 20px;
   background: var(--eos-content);
   color: var(--eos-text);
   padding: 14px 16px;
@@ -149,7 +149,7 @@ input[type='radio'] {
   padding: 0;
   margin: 0;
   border: 1px solid var(--eos-border-strong);
-  border-radius: 0;
+  border-radius: 6px;
   background: var(--eos-content);
   accent-color: var(--eos-accent);
   appearance: auto;
@@ -254,6 +254,16 @@ button {
   letter-spacing: var(--tracking-caption);
 }
 
+
+.font-mono {
+  font-family: var(--font-twk-everett-mono) !important;
+}
+
+.font-sans,
+.font-serif {
+  font-family: var(--font-twk-everett) !important;
+}
+
 .font-medium,
 .font-semibold,
 .font-bold,
@@ -351,7 +361,7 @@ select:focus {
   background: var(--eos-content);
   border-color: var(--eos-border);
   color: var(--eos-text);
-  box-shadow: none;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--eos-shadow) 12%, transparent);
 }
 
 .eos-stat {
@@ -430,7 +440,7 @@ select:focus {
 }
 
 .eos-subcard {
-  border-radius: 0;
+  border-radius: 24px;
   border: 1px solid var(--eos-border);
   background: var(--eos-content);
   color: var(--eos-text);
@@ -463,7 +473,7 @@ select:focus {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 0;
+  border-radius: 22px;
   border: 1px solid var(--eos-border);
   background: var(--eos-content);
   color: var(--eos-text);
@@ -491,26 +501,4 @@ select:focus {
 
 .eos-nav-item.eos-dock-active .eos-nav-icon {
   border-color: var(--eos-border-strong);
-}
-
-
-
-/* Brutalist shape pass from NCDA reference */
-.rounded-full,
-.rounded-2xl,
-.rounded-3xl,
-.rounded-\[20px\],
-.rounded-\[22px\],
-.rounded-\[24px\],
-.rounded-\[26px\],
-.rounded-\[28px\],
-.rounded-\[30px\] {
-  border-radius: 0 !important;
-}
-
-.shadow,
-.shadow-lg,
-.shadow-xl,
-.shadow-2xl {
-  box-shadow: none !important;
 }
