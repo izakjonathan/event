@@ -17,10 +17,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
  return (
-  <html lang="en">
-   <body>
-    <EventStoreProvider>{children}</EventStoreProvider>
-   </body>
-  </html>
+ <html lang="en">
+ <body>
+ <EventStoreProvider>{children}</EventStoreProvider>
+ </body>
+ </html>
  );
 }

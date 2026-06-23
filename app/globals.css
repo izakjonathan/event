@@ -16,35 +16,42 @@
   --eos-danger: #ff6b6b;
   --eos-shadow: #000000;
 
-  /* Original EventOS typography: rounded UI + tight editorial headings */
-  --font-display: 'Space Grotesk', 'General Sans', 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --weight-body: 400;
-  --weight-label: 560;
-  --weight-button: 620;
-  --weight-section: 620;
-  --weight-heading: 640;
-  --weight-display: 680;
-  --weight-metric: 700;
-  --text-caption: 11px;
-  --leading-caption: 1.12;
-  --tracking-caption: 0.06em;
-  --text-body: 15px;
-  --leading-body: 1.22;
-  --tracking-body: -0.01em;
-  --text-body-lg: 18px;
-  --leading-body-lg: 1.12;
-  --text-subheading: 29px;
-  --leading-subheading: 0.96;
-  --tracking-subheading: -0.055em;
-  --text-heading: 40px;
-  --leading-heading: 0.91;
-  --tracking-heading: -0.07em;
-  --text-display: 66px;
-  --leading-display: 0.82;
-  --tracking-display: -0.085em;
+  /* Typography controls — change these few values to restyle the whole app. */
+  --type-display-font: 'Space Grotesk', 'General Sans', 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --type-ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --type-display-size: 66px;
+  --type-heading-size: 40px;
+  --type-title-size: 29px;
+  --type-body-size: 15px;
+  --type-caption-size: 11px;
+  --type-metric-size: 31px;
+
+  --type-display-weight: 680;
+  --type-heading-weight: 640;
+  --type-title-weight: 620;
+  --type-body-weight: 400;
+  --type-caption-weight: 560;
+  --type-button-weight: 620;
+  --type-metric-weight: 700;
+
+  --type-display-line: 0.82;
+  --type-heading-line: 0.91;
+  --type-title-line: 0.96;
+  --type-body-line: 1.22;
+  --type-caption-line: 1.12;
+  --type-button-line: 1.08;
+  --type-metric-line: 0.9;
+
+  --type-display-track: -0.085em;
+  --type-heading-track: -0.07em;
+  --type-title-track: -0.055em;
+  --type-body-track: -0.01em;
+  --type-caption-track: 0.06em;
+  --type-button-track: -0.015em;
+  --type-metric-track: -0.065em;
 }
+
 html[data-eos-mode='day'] {
   color-scheme: light;
   --eos-background: #ffffff;
@@ -73,7 +80,7 @@ body {
   min-height: 100%;
   background: var(--eos-background);
   color: var(--eos-text);
-  font-family: var(--font-body);
+  font-family: var(--type-ui-font);
 }
 
 body {
@@ -118,6 +125,94 @@ summary::-webkit-details-marker {
 
 .text-balance {
   text-wrap: balance;
+}
+
+body,
+.eos-body,
+input,
+textarea,
+select {
+  font-family: var(--type-ui-font);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
+}
+
+.eos-display,
+.eos-heading,
+.eos-title {
+  font-family: var(--type-display-font);
+  color: var(--eos-text);
+}
+
+.eos-display {
+  font-size: clamp(54px, 16vw, var(--type-display-size));
+  font-weight: var(--type-display-weight);
+  line-height: var(--type-display-line);
+  letter-spacing: var(--type-display-track);
+}
+
+.eos-heading {
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  line-height: var(--type-heading-line);
+  letter-spacing: var(--type-heading-track);
+}
+
+.eos-title {
+  font-size: var(--type-title-size);
+  font-weight: var(--type-title-weight);
+  line-height: var(--type-title-line);
+  letter-spacing: var(--type-title-track);
+}
+
+label,
+.eos-caption {
+  color: var(--eos-muted);
+  font-family: var(--type-ui-font);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  line-height: var(--type-caption-line);
+  letter-spacing: var(--type-caption-track);
+  text-transform: uppercase;
+}
+
+label {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.eos-button,
+button {
+  font-family: var(--type-ui-font);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-button-weight);
+  line-height: var(--type-button-line);
+  letter-spacing: var(--type-button-track);
+}
+
+.eos-nav-label {
+  font-family: var(--type-ui-font);
+  font-size: 10px;
+  font-weight: var(--type-caption-weight);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.eos-stat-value {
+  font-family: var(--type-display-font);
+  font-size: var(--type-metric-size);
+  font-weight: var(--type-metric-weight);
+  line-height: var(--type-metric-line);
+  letter-spacing: var(--type-metric-track);
+}
+
+.eos-arrow {
+  font-family: var(--type-display-font);
+  font-size: 18px;
+  font-weight: var(--type-title-weight);
+  line-height: 1;
 }
 
 input:not([type='checkbox']):not([type='radio']):not([type='file']),
@@ -186,150 +281,6 @@ select {
   padding-right: 34px;
 }
 
-label,
-.eos-kicker {
-  color: var(--eos-muted);
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-label);
-  line-height: var(--leading-caption);
-  letter-spacing: var(--tracking-caption);
-  text-transform: uppercase;
-}
-
-label {
-  display: block;
-  margin: 0 0 8px;
-}
-
-body,
-.eos-body,
-input,
-textarea,
-select {
-  font-family: var(--font-body);
-  font-weight: var(--weight-body);
-  font-size: var(--text-body);
-  line-height: var(--leading-body);
-  letter-spacing: var(--tracking-body);
-}
-
-.eos-body-lg {
-  font-family: var(--font-body);
-  font-size: var(--text-body-lg);
-  font-weight: var(--weight-body);
-  line-height: var(--leading-body-lg);
-  letter-spacing: var(--tracking-body);
-}
-
-.eos-copy-sm {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-body);
-  line-height: var(--leading-caption);
-  letter-spacing: 0;
-}
-
-.eos-display-title,
-.eos-heading,
-.eos-subheading,
-.eos-section-title,
-.eos-card-heading,
-.eos-module-heading {
-  font-family: var(--font-display);
-  color: var(--eos-text);
-}
-
-.eos-display-title {
-  font-size: clamp(54px, 16vw, var(--text-display));
-  font-weight: var(--weight-display);
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-}
-
-.eos-heading {
-  font-size: var(--text-heading);
-  font-weight: var(--weight-heading);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
-}
-
-.eos-subheading,
-.eos-card-heading,
-.eos-module-heading {
-  font-size: var(--text-subheading);
-  font-weight: var(--weight-heading);
-  line-height: var(--leading-subheading);
-  letter-spacing: var(--tracking-subheading);
-}
-
-.eos-section-title {
-  font-size: var(--text-subheading);
-  font-weight: var(--weight-section);
-  line-height: var(--leading-subheading);
-  letter-spacing: var(--tracking-subheading);
-}
-
-.eos-button-label,
-button {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  font-weight: var(--weight-button);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
-}
-
-.font-sans,
-.font-serif {
-  font-family: var(--font-body) !important;
-}
-
-.font-mono {
-  font-family: var(--font-mono) !important;
-}
-
-.text-4xl,
-.text-3xl,
-.text-2xl,
-.text-xl,
-.text-lg,
-.text-\[54px\],
-.text-\[38px\],
-.text-\[30px\],
-.text-\[28px\] {
-  font-family: var(--font-display) !important;
-}
-
-.text-\[54px\] {
-  font-size: clamp(54px, 16vw, var(--text-display)) !important;
-  line-height: var(--leading-display) !important;
-  letter-spacing: var(--tracking-display) !important;
-}
-
-.text-4xl,
-.text-3xl,
-.text-\[38px\] {
-  font-size: var(--text-heading) !important;
-  line-height: var(--leading-heading) !important;
-  letter-spacing: var(--tracking-heading) !important;
-}
-
-.text-2xl,
-.text-xl,
-.text-lg,
-.text-\[30px\],
-.text-\[28px\] {
-  font-size: var(--text-subheading) !important;
-  line-height: var(--leading-subheading) !important;
-  letter-spacing: var(--tracking-subheading) !important;
-}
-
-.text-sm,
-.text-xs {
-  font-family: var(--font-body) !important;
-  line-height: var(--leading-body) !important;
-}
-
 .focus-ring:focus-visible,
 input:focus,
 textarea:focus,
@@ -385,15 +336,14 @@ select:focus {
 }
 
 .eos-metric-number {
-  font-family: var(--font-display);
-  font-weight: var(--weight-metric);
-  letter-spacing: var(--tracking-heading);
+  font: inherit;
+  letter-spacing: inherit;
 }
 
 .eos-metric-unit {
-  font-family: var(--font-body);
+  font-family: var(--type-ui-font);
   font-size: 0.52em;
-  font-weight: var(--weight-body);
+  font-weight: var(--type-body-weight);
   letter-spacing: 0;
   opacity: 0.82;
 }
@@ -487,8 +437,8 @@ select:focus {
 
 .eos-checkbox-row span {
   color: var(--eos-text);
-  font-size: 14px;
-  line-height: 1.25;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
 }
 
 .eos-nav-item:not(.eos-dock-active) {

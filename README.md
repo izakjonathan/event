@@ -66,3 +66,10 @@ npm run dev
 npm run typecheck
 npm run build
 ```
+
+## v34 typography cleanup
+- Centralized typography into one small control block at the top of `app/globals.css`.
+- Removed unused typography aliases and Tailwind typography override rules.
+- Replaced scattered font/size utility usage with semantic classes: `eos-display`, `eos-heading`, `eos-title`, `eos-body`, `eos-caption`, `eos-button`, `eos-stat-value`, `eos-nav-label`.
+- Kept rounded corners and the no-animation baseline intact.
+- TypeScript and production build verified.
