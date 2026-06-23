@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 import { applyTheme, readSavedTheme } from '@/lib/theme';
 import { cx } from '@/lib/utils';
@@ -90,10 +90,17 @@ function NavIcon({ name }: { name: NavIconName }) {
 
 export function AppShell({ children }: AppShellProps) {
  const path = usePathname();
+ const router = useRouter();
 
  useEffect(() => {
  applyTheme(readSavedTheme());
  }, []);
+
+ useEffect(() => {
+ nav.forEach(([href]) => {
+ if (href !== path) router.prefetch(href);
+ });
+ }, [path, router]);
 
  return (
  <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
@@ -110,6 +117,7 @@ export function AppShell({ children }: AppShellProps) {
  <Link
  key={href}
  href={href}
+ prefetch
  aria-current={active ? 'page' : undefined}
  className={cx('eos-nav-item eos-nav-label rounded-[20px] px-1 py-1 text-center', active ? 'eos-dock-active' : 'eos-muted')}
  >
