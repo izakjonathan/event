@@ -207,6 +207,21 @@ export type Task = {
   updated_at: string;
 };
 
+export type Supplier = {
+  id: string;
+  owner_key: string;
+  name: string;
+  contact_person: string;
+  phone: string;
+  email: string;
+  webpage: string;
+  type: string;
+  label: string;
+  note: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Alert = {
   type: 'ok' | 'warn' | 'bad';
   text: string;

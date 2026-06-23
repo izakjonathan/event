@@ -2,19 +2,16 @@
 
 Mobile-first Next.js + Tailwind event operations workspace.
 
-## v37 Typography controls in UI Studio
+## Current baseline
 
-This build adds global typography controls to UI Studio and saves those values inside presets.
+v36 focuses on faster dock/module navigation while keeping the no-animation and rounded-corner baseline.
 
-Typography controls now include:
-- font stack for display text
-- font stack for UI/body text
-- size
-- weight
-- letter spacing
-- caps on/off
-
-Presets now include both color tokens and typography tokens, so loading a preset restores the complete visual system.
+Changes in this build:
+- removed unnecessary `force-dynamic` from all route pages
+- added explicit dock route prefetching after load
+- kept direct, no-animation module switching
+- kept the cleaned global typography system from v35
+- kept rounded corners intact
 
 ## Main routes
 
@@ -55,3 +52,13 @@ npm run dev
 npm run typecheck
 npm run build
 ```
+
+## v38
+- Main dashboard typography fix: Modules label now shares the same caption class as Workspace.
+- EventOS wordmark now keeps Event at the current display weight and makes OS bold.
+- Dashboard stat label changed from Open tasks to Tasks.
+- Added Supplier List module at `/suppliers`.
+- Suppliers include name, contact person, phone, mail, webpage, type, label and note.
+- Saved suppliers display as collapsible cards.
+- Added Supabase `suppliers` table and prototype policies to `SUPABASE_SCHEMA.sql`.
+- Typecheck and production build confirmed.

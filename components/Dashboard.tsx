@@ -12,9 +12,10 @@ const modules = [
  ['/calendar', 'Calendar / Schedule', 'Review upcoming events, timings and warnings.', 'Active'],
  ['/bar-planner', 'Bar Planner', 'Plan products, staff, menu and bar profit.', 'Active'],
  ['/project-management', 'Project Management', 'Manage projects, tasks, owners and due dates.', 'Active'],
+ ['/suppliers', 'Supplier List', 'Save supplier contacts, categories, labels and notes.', 'Active'],
 ] as const;
 
-const future = ['Staff planner', 'Contracts', 'Supplier list', 'Budget reports'];
+const future = ['Staff planner', 'Contracts', 'Budget reports'];
 
 export default function Dashboard() {
  const { events, artists, tasks } = useEventStore();
@@ -29,7 +30,7 @@ export default function Dashboard() {
  <div className="max-w-[75%]">
  <p className="eos-caption eos-muted">Connected workspace</p>
  <h1 className="eos-display mt-4 text-balance">
- EventOS
+ <span>Event</span><span className="font-bold">OS</span>
  </h1>
  </div>
  </div>
@@ -37,7 +38,7 @@ export default function Dashboard() {
  <div className="mt-6 grid grid-cols-3 gap-2">
  <Stat label="Events" value={events.length} />
  <Stat label="Artists" value={artists.length} />
- <Stat label="Open tasks" value={tasks.filter((t) => !['done', 'archived'].includes(t.status)).length} />
+ <Stat label="Tasks" value={tasks.filter((t) => !['done', 'archived'].includes(t.status)).length} />
  </div>
 
 
@@ -83,7 +84,7 @@ export default function Dashboard() {
 
  <div className="space-y-3">
  <div className="flex items-end justify-between gap-3">
- <h2 className="eos-heading">Modules</h2>
+ <h2 className="eos-caption eos-muted">Modules</h2>
  <p className="eos-caption eos-muted">Workspace</p>
  </div>
 

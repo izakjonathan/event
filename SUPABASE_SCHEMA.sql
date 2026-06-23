@@ -72,17 +72,34 @@ create table if not exists public.ui_studio_presets (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.suppliers (
+  id uuid primary key default gen_random_uuid(),
+  owner_key text not null default 'default-workspace',
+  name text not null default '',
+  contact_person text not null default '',
+  phone text not null default '',
+  email text not null default '',
+  webpage text not null default '',
+  type text not null default '',
+  label text not null default '',
+  note text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create index if not exists idx_event_plans_owner_date on public.event_plans(owner_key, event_date);
 create index if not exists idx_artist_submissions_status on public.artist_submissions(status);
 create index if not exists idx_projects_event on public.project_management_projects(linked_event_id);
 create index if not exists idx_tasks_event_status on public.project_management_tasks(linked_event_id, status);
 create index if not exists idx_ui_studio_presets_owner_updated on public.ui_studio_presets(owner_key, updated_at desc);
+create index if not exists idx_suppliers_owner_updated on public.suppliers(owner_key, updated_at desc);
 
 alter table public.event_plans enable row level security;
 alter table public.artist_submissions enable row level security;
 alter table public.project_management_projects enable row level security;
 alter table public.project_management_tasks enable row level security;
 alter table public.ui_studio_presets enable row level security;
+alter table public.suppliers enable row level security;
 
 -- Prototype policies: anonymous shared-link access. Harden before production.
 drop policy if exists "prototype select event plans" on public.event_plans;
@@ -129,6 +146,16 @@ drop policy if exists "prototype update ui presets" on public.ui_studio_presets;
 create policy "prototype update ui presets" on public.ui_studio_presets for update to anon using (true) with check (true);
 drop policy if exists "prototype delete ui presets" on public.ui_studio_presets;
 create policy "prototype delete ui presets" on public.ui_studio_presets for delete to anon using (true);
+
+drop policy if exists "prototype select suppliers" on public.suppliers;
+create policy "prototype select suppliers" on public.suppliers for select to anon using (true);
+drop policy if exists "prototype insert suppliers" on public.suppliers;
+create policy "prototype insert suppliers" on public.suppliers for insert to anon with check (true);
+drop policy if exists "prototype update suppliers" on public.suppliers;
+create policy "prototype update suppliers" on public.suppliers for update to anon using (true) with check (true);
+drop policy if exists "prototype delete suppliers" on public.suppliers;
+create policy "prototype delete suppliers" on public.suppliers for delete to anon using (true);
+
 
 insert into storage.buckets (id, name, public)
 values ('artist-images', 'artist-images', true)

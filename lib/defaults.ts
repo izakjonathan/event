@@ -9,6 +9,7 @@ import {
   Scenario,
   StaffLine,
   Task,
+  Supplier,
   TermsPlan,
   TicketTier,
 } from './types';
@@ -271,6 +272,22 @@ export const blankTask = (): Task => ({
   notes: '',
   checklist: [],
   image_urls: [],
+  created_at: now(),
+  updated_at: now(),
+});
+
+
+export const blankSupplier = (): Supplier => ({
+  id: id(),
+  owner_key: 'default-workspace',
+  name: '',
+  contact_person: '',
+  phone: '',
+  email: '',
+  webpage: '',
+  type: '',
+  label: '',
+  note: '',
   created_at: now(),
   updated_at: now(),
 });
