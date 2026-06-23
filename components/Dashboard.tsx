@@ -16,7 +16,6 @@ const modules = [
  ['/suppliers', 'Supplier List', 'Save supplier contacts, categories, labels and notes.', 'Active'],
 ] as const;
 
-const future = ['Staff planner', 'Contracts', 'Budget reports'];
 
 export default function Dashboard() {
  const { events, artists, tasks } = useEventStore();
@@ -108,18 +107,6 @@ export default function Dashboard() {
  </Link>
  ))}
  </div>
-
- <Card>
- <div className="flex items-end justify-between gap-3">
- <h3 className="eos-title">Future modules</h3>
- <p className="eos-caption eos-muted">Roadmap</p>
- </div>
- <div className="mt-4 flex flex-wrap gap-2">
- {future.map((x) => (
- <Badge key={x}>{x}</Badge>
- ))}
- </div>
- </Card>
  </div>
  </AppShell>
  );

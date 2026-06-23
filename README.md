@@ -1,21 +1,17 @@
-# EventOS v46 — Comparison Layout Fix
+# EventOS v48 — final CSS/layout pass
 
-This build keeps the v45 iOS home screen icon fix and tightens the Event Comparison mobile layout.
+Final bug-only CSS/layout audit from v47.
 
-## Fixes
+## Changes
+- Removed unused `.eos-stat-micro` CSS rules.
+- Re-checked global CSS against the app/component code.
+- Kept the consolidated typography/color token system unchanged.
+- Kept rounded corners, no-animation baseline, iOS icon setup, and Event Comparison module intact.
+- No feature changes.
 
-- Fixed Event Comparison metric cards clipping large DKK values on narrow iPhone screens.
-- Added compact stat variants for dense comparison layouts.
-- Changed selected event comparison metrics from three cramped columns to a safer two-column layout.
-- Applied compact stats to Best / worst, selected comparison, financial event metrics, and breakdown cards.
-- Kept rounded corners, no-animation baseline, current typography controls, PWA/icon setup, and speed optimizations intact.
+## Validation
+- `npm run typecheck`
+- `npm run build`
 
-## Verification
-
-- `npm run typecheck` passes.
-- `npm run build` passes.
-- All routes build as static pages.
-
-## Deploy
-
-Upload the ZIP contents to GitHub/Vercel as the project root. Do not include `.next`, `node_modules`, `package-lock.json`, or `tsconfig.tsbuildinfo`.
+## Deployment
+Upload the full ZIP contents to the repository root and deploy on Vercel.

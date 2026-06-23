@@ -344,18 +344,6 @@ button {
   font-size: 0.45em;
 }
 
-.eos-stat-micro {
-  padding: 10px;
-}
-
-.eos-stat-micro .eos-stat-value {
-  font-size: clamp(20px, 6.5vw, 29px);
-  letter-spacing: -0.05em;
-}
-
-.eos-stat-micro .eos-metric-unit {
-  font-size: 0.42em;
-}
 
 input:not([type='checkbox']):not([type='radio']):not([type='file']),
 textarea,
