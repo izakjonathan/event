@@ -3,17 +3,16 @@ export type ThemeMode = 'day' | 'night';
 export const COLOR_KEYS = [
   'background',
   'content',
+  'surface',
   'text',
   'muted',
   'accent',
   'border',
   'border-strong',
-  'surface',
   'dock-active',
   'success',
   'warning',
   'danger',
-  'shadow',
 ] as const;
 
 export const TYPOGRAPHY_KEYS = [
@@ -35,13 +34,6 @@ export const TYPOGRAPHY_KEYS = [
   'type-caption-weight',
   'type-button-weight',
   'type-metric-weight',
-  'type-display-line',
-  'type-heading-line',
-  'type-title-line',
-  'type-body-line',
-  'type-caption-line',
-  'type-button-line',
-  'type-metric-line',
   'type-display-track',
   'type-heading-track',
   'type-title-track',
@@ -87,13 +79,6 @@ const TYPOGRAPHY_DEFAULTS: Record<TypographyKey, string> = {
   'type-caption-weight': '560',
   'type-button-weight': '620',
   'type-metric-weight': '700',
-  'type-display-line': '0.82',
-  'type-heading-line': '0.91',
-  'type-title-line': '0.96',
-  'type-body-line': '1.22',
-  'type-caption-line': '1.12',
-  'type-button-line': '1.08',
-  'type-metric-line': '0.9',
   'type-display-track': '-0.085em',
   'type-heading-track': '-0.07em',
   'type-title-track': '-0.055em',
@@ -114,17 +99,16 @@ export const NIGHT_THEME: Theme = {
   mode: 'night',
   background: '#000000',
   content: '#000000',
+  surface: '#191919',
   text: '#ffffff',
   muted: '#808080',
   accent: '#ffffff',
   border: '#191919',
   'border-strong': '#808080',
-  surface: '#191919',
   'dock-active': '#191919',
   success: '#ffffff',
   warning: '#808080',
   danger: '#ffffff',
-  shadow: '#000000',
   ...TYPOGRAPHY_DEFAULTS,
 };
 
@@ -132,23 +116,21 @@ export const DAY_THEME: Theme = {
   mode: 'day',
   background: '#ffffff',
   content: '#ffffff',
+  surface: '#ffffff',
   text: '#000000',
   muted: '#808080',
   accent: '#000000',
   border: '#808080',
   'border-strong': '#191919',
-  surface: '#ffffff',
   'dock-active': '#ffffff',
   success: '#191919',
   warning: '#808080',
   danger: '#000000',
-  shadow: '#000000',
   ...TYPOGRAPHY_DEFAULTS,
 };
 
 const HEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 const CSS_LENGTH = /^-?\d+(?:\.\d+)?(?:px|rem|em|%)$/;
-const CSS_NUMBER = /^-?\d+(?:\.\d+)?$/;
 const CSS_WEIGHT = /^(?:[1-9]00|[1-9][0-9]{2}|normal|bold|lighter|bolder)$/;
 const CSS_TRANSFORM = /^(none|uppercase|lowercase|capitalize)$/;
 
@@ -157,7 +139,6 @@ function validTypographyValue(key: TypographyKey, value: string) {
   if (!trimmed) return null;
   if (key.endsWith('-font')) return trimmed;
   if (key.endsWith('-size') || key.endsWith('-track')) return CSS_LENGTH.test(trimmed) ? trimmed : null;
-  if (key.endsWith('-line')) return CSS_NUMBER.test(trimmed) ? trimmed : null;
   if (key.endsWith('-weight')) return CSS_WEIGHT.test(trimmed) ? trimmed : null;
   if (key.endsWith('-transform')) return CSS_TRANSFORM.test(trimmed) ? trimmed : null;
   return null;
@@ -170,9 +151,7 @@ export function normalizeTheme(raw: Partial<Theme> | null | undefined): Theme {
 
   for (const key of COLOR_KEYS) {
     const value = raw?.[key];
-    if (typeof value === 'string' && HEX.test(value.trim())) {
-      next[key] = value.trim();
-    }
+    if (typeof value === 'string' && HEX.test(value.trim())) next[key] = value.trim();
   }
 
   for (const key of TYPOGRAPHY_KEYS) {
@@ -192,13 +171,8 @@ export function applyTheme(raw: Partial<Theme> | null | undefined) {
   document.documentElement.dataset.eosMode = theme.mode;
   document.documentElement.style.colorScheme = theme.mode === 'day' ? 'light' : 'dark';
 
-  for (const key of COLOR_KEYS) {
-    document.documentElement.style.setProperty(`--eos-${key}`, theme[key]);
-  }
-
-  for (const key of TYPOGRAPHY_KEYS) {
-    document.documentElement.style.setProperty(`--${key}`, theme[key]);
-  }
+  for (const key of COLOR_KEYS) document.documentElement.style.setProperty(`--eos-${key}`, theme[key]);
+  for (const key of TYPOGRAPHY_KEYS) document.documentElement.style.setProperty(`--${key}`, theme[key]);
 }
 
 export function readSavedTheme(): Theme {

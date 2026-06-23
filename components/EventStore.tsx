@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { blankProject, blankSubmission, blankSupplier, blankTask, eventFromTemplate, hydrateEvent, now } from '@/lib/defaults';
 import { supabase, supabaseReady } from '@/lib/supabaseClient';
 import { ArtistSubmission, PlannerEvent, Project, Supplier, Task } from '@/lib/types';
@@ -35,12 +35,14 @@ type Store = {
 
 const StoreContext = createContext<Store | null>(null);
 const LOCAL_STORAGE_KEY = 'eos-v1';
+type LocalData = Partial<Pick<Store, 'ownerKey' | 'events' | 'artists' | 'projects' | 'tasks' | 'suppliers' | 'currentId'>>;
 
-function readLocal() {
-  if (typeof window === 'undefined') return null;
+function readLocal(): LocalData {
+  if (typeof window === 'undefined') return {};
 
   try {
-    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
+    const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
+    return data && typeof data === 'object' ? data : {};
   } catch {
     return {};
   }
@@ -73,6 +75,32 @@ function writeLocal(data: any) {
   }
 }
 
+function scheduleLocalWrite(data: any) {
+  if (typeof window === 'undefined') return () => {};
+
+  let cancelled = false;
+  const save = () => {
+    if (!cancelled) writeLocal(data);
+  };
+
+  const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
+  const cancelIdle = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+
+  if (requestIdle && cancelIdle) {
+    const id = requestIdle(save, { timeout: 600 });
+    return () => {
+      cancelled = true;
+      cancelIdle(id);
+    };
+  }
+
+  const id = window.setTimeout(save, 120);
+  return () => {
+    cancelled = true;
+    window.clearTimeout(id);
+  };
+}
+
 function dbToEvent(row: any) {
   return hydrateEvent({ id: row.id, ...(row.payload || {}), updatedAt: row.updated_at });
 }
@@ -85,23 +113,23 @@ function eventToPayload(event: PlannerEvent) {
 }
 
 export function EventStoreProvider({ children }: { children: ReactNode }) {
-  const local = readLocal() || {};
+  const [initialLocal] = useState(readLocal);
 
-  const [ownerKey, setOwnerKeyState] = useState(local.ownerKey || 'default-workspace');
-  const [events, setEvents] = useState<PlannerEvent[]>((local.events || []).map(hydrateEvent));
-  const [artists, setArtists] = useState<ArtistSubmission[]>(local.artists || []);
-  const [projects, setProjects] = useState<Project[]>(local.projects || []);
-  const [tasks, setTasks] = useState<Task[]>(local.tasks || []);
-  const [suppliers, setSuppliers] = useState<Supplier[]>(local.suppliers || []);
-  const [currentId, setCurrentId] = useState(local.currentId || '');
+  const [ownerKey, setOwnerKeyState] = useState(initialLocal.ownerKey || 'default-workspace');
+  const [events, setEvents] = useState<PlannerEvent[]>(() => (initialLocal.events || []).map(hydrateEvent));
+  const [artists, setArtists] = useState<ArtistSubmission[]>(() => initialLocal.artists || []);
+  const [projects, setProjects] = useState<Project[]>(() => initialLocal.projects || []);
+  const [tasks, setTasks] = useState<Task[]>(() => initialLocal.tasks || []);
+  const [suppliers, setSuppliers] = useState<Supplier[]>(() => initialLocal.suppliers || []);
+  const [currentId, setCurrentId] = useState(initialLocal.currentId || '');
   const [alert, setAlert] = useState('');
   const [usingLocal, setUsingLocal] = useState(!supabaseReady);
 
   useEffect(() => {
-    writeLocal({ ownerKey, events, artists, projects, tasks, suppliers, currentId });
+    return scheduleLocalWrite({ ownerKey, events, artists, projects, tasks, suppliers, currentId });
   }, [ownerKey, events, artists, projects, tasks, suppliers, currentId]);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     if (!supabase) {
       setUsingLocal(true);
       return;
@@ -142,11 +170,14 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       setUsingLocal(true);
       setAlert(`Supabase unavailable. Local mode active. ${error?.message || ''}`);
     }
-  };
+  }, [ownerKey]);
 
   useEffect(() => {
-    refresh();
-  }, [ownerKey]);
+    const id = window.setTimeout(() => {
+      refresh();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [refresh]);
 
   const setOwnerKey = (value: string) => {
     setOwnerKeyState(value || 'default-workspace');
@@ -285,7 +316,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       alert,
       usingLocal,
     }),
-    [ownerKey, current, events, artists, projects, tasks, suppliers, alert, usingLocal],
+    [ownerKey, current, events, artists, projects, tasks, suppliers, refresh, alert, usingLocal],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

@@ -94,7 +94,6 @@ const COLOR_TOKENS = [
   ['success', 'Success color', 'Ready and positive status badges.'],
   ['warning', 'Warning color', 'Warnings and missing information.'],
   ['danger', 'Danger color', 'Delete, archive and overdue states.'],
-  ['shadow', 'Shadow color', 'Subtle elevation behind cards and dock.'],
 ] as const satisfies readonly (readonly [ColorKey, string, string])[];
 
 const TYPOGRAPHY_GROUPS: TypographyGroup[] = [

@@ -103,8 +103,8 @@ export function AppShell({ children }: AppShellProps) {
  }, [path, router]);
 
  return (
- <main className="safe eos-root mx-auto min-h-screen max-w-[430px]">
- <section className="eos-page-content relative z-10 px-4 pb-64 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+ <main className="eos-root mx-auto min-h-screen max-w-[430px]">
+ <section className="eos-page-content relative z-10 px-4 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
  {children}
  </section>
 
