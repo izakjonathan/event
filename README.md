@@ -59,3 +59,13 @@ npm run dev
 npm run typecheck
 npm run build
 ```
+
+## v31 brutalist typography run
+- Updated the typography system to match the NCDA `DESIGN(2).md` reference more closely.
+- Replaced the previous soft editorial typography tokens with TWK Everett-style neo-grotesque tokens and safe substitutes.
+- Enforced a single 400-weight type voice across display, headings, labels, buttons and metrics.
+- Added caption/body/subheading/heading/display scale from the reference: 11 / 15 / 21 / 32 / 62px.
+- Added tighter display tracking and positive caption tracking.
+- Shifted the visual language toward a more brutalist monograph feel with square typography surfaces, no shadows and sharper system components.
+- Updated default UI Studio presets to monochrome catalogue presets.
+- Typecheck and production build confirmed.
