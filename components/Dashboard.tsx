@@ -30,7 +30,7 @@ export default function Dashboard() {
  <div className="max-w-[75%]">
  <p className="eos-caption eos-muted">Connected workspace</p>
  <h1 className="eos-display mt-4 text-balance">
- <span>Event</span><span className="font-bold">OS</span>
+ <span className="eos-logo-event">Event</span><span className="eos-logo-os">OS</span>
  </h1>
  </div>
  </div>

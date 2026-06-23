@@ -345,7 +345,7 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  </Section>
 
- <Section title="Linked artists / lineup" right={`${draft.artists.length} artist${draft.artists.length === 1 ? '' : 's'}`}>
+ <Section title="Artists" right={`${draft.artists.length} artist${draft.artists.length === 1 ? '' : 's'}`}>
  {draft.artists.length === 0 && <p className="eos-body eos-muted">No artists linked yet. Add submissions from Artist Management.</p>}
 
  <div className="space-y-3">

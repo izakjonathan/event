@@ -29,6 +29,8 @@
   --type-metric-size: 31px;
 
   --type-display-weight: 680;
+  --type-logo-event-weight: 300;
+  --type-logo-os-weight: 800;
   --type-heading-weight: 640;
   --type-title-weight: 620;
   --type-body-weight: 400;
@@ -162,6 +164,14 @@ select {
   line-height: var(--type-display-line);
   letter-spacing: var(--type-display-track);
   text-transform: var(--type-display-transform);
+}
+
+.eos-logo-event {
+  font-weight: var(--type-logo-event-weight, 300);
+}
+
+.eos-logo-os {
+  font-weight: var(--type-logo-os-weight, 800);
 }
 
 .eos-heading {
