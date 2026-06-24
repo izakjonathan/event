@@ -19,3 +19,10 @@ For persistent full-resolution images across devices, use Supabase storage. Very
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
+
+
+## v52 fixed background image viewport
+- Background images now render on a dedicated fixed viewport layer instead of on the scrolling document.
+- `cover` and `contain` now calculate against the visible screen, not the full page height.
+- The image stays fixed when scrolling.
+- UI Studio labels were updated to make the fixed-screen behavior clear.

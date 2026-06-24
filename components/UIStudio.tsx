@@ -435,9 +435,9 @@ export default function UIStudio() {
             </Field>
             <Field label="Image fill mode">
               <select value={theme['background-image-fit']} onChange={(event) => updateBackground('background-image-fit', event.target.value)}>
-                <option value="cover">Cover / fill screen</option>
-                <option value="contain">Contain / show whole image</option>
-                <option value="auto">Original size</option>
+                <option value="cover">Cover fixed screen</option>
+                <option value="contain">Contain fixed screen</option>
+                <option value="auto">Original size, fixed</option>
               </select>
             </Field>
           </div>
