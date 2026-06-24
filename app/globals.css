@@ -110,13 +110,13 @@ body {
 body::before {
   content: '';
   position: fixed;
-  top: calc(env(safe-area-inset-top) * -1);
+  top: calc((env(safe-area-inset-top) + 24px) * -1);
   right: 0;
-  bottom: 0;
+  bottom: calc((env(safe-area-inset-bottom) + 120px) * -1);
   left: 0;
   z-index: -1;
   width: 100vw;
-  height: calc(100dvh + env(safe-area-inset-top));
+  min-height: calc(100lvh + env(safe-area-inset-top) + env(safe-area-inset-bottom) + 144px);
   pointer-events: none;
   background-color: var(--eos-background-paint);
   background-image: var(--eos-background-image);

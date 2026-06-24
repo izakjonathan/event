@@ -1,22 +1,18 @@
-# EventOS v53 — fixed viewport background + solid dock color
+# EventOS v54 — background bottom safe-area fix
 
-This build fixes the iPhone background-image and dock-color issues from v52.
+This build fixes the fixed background image layer so uploaded backgrounds extend beyond both the top and bottom iPhone safe areas / browser chrome overlay.
 
 ## Changes
 
-- Background image layer now extends upward into the iPhone safe-area/top rounded/notch area.
-- PWA status bar style changed to `black-translucent` so the app background can show behind the top iPhone area.
-- Background image remains a fixed viewport layer and does not scroll with page content.
-- `Cover fixed screen`, `Contain fixed screen`, and `Original size, fixed` continue to fit the visible screen instead of the full page height.
-- Added a separate global `dock` color token.
-- UI Studio now has a **Dock color** control.
-- The floating dock always uses the solid `dock` color and is no longer affected by transparent content/card fill settings.
-- Existing transparent background/surface/content layer toggles remain unchanged.
-- Full-resolution background image uploads remain unchanged.
-- iPhone homescreen icon setup remains unchanged.
+- Keeps the background image fixed behind the app.
+- Extends the fixed background layer above the iPhone rounded/top safe area.
+- Extends the fixed background layer below the visible viewport so the image continues behind the bottom Safari/PWA area.
+- Removes the old fixed height behavior that could stop the image too early at the bottom.
+- Keeps cover/contain/original background modes.
+- Keeps the dock as a full solid UI Studio controlled color.
+- Keeps all previous v53 functionality.
 
 ## Verification
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
-- All app routes build as static pages.
