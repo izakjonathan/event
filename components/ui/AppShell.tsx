@@ -140,7 +140,7 @@ export function AppShell({ children }: AppShellProps) {
  {children}
  </section>
 
- <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+8px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[26px] border p-1">
+ <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+6px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[24px] border p-1">
  <div className="grid grid-cols-6 gap-1">
  {nav.map(([href, label, icon]) => {
  const active = path === href;
@@ -151,9 +151,9 @@ export function AppShell({ children }: AppShellProps) {
  href={href}
  prefetch
  aria-current={active ? 'page' : undefined}
- className={cx('eos-nav-item eos-nav-label rounded-[20px] px-0.5 py-1 text-center', active ? 'eos-dock-active' : 'eos-muted')}
+ className={cx('eos-nav-item eos-nav-label rounded-[18px] px-0.5 py-0.5 text-center', active ? 'eos-dock-active' : 'eos-muted')}
  >
- <div className={cx('eos-nav-icon eos-panel mx-auto mb-1 grid h-6 w-6 place-items-center rounded-full border p-[5px]', active && 'eos-dock-active')}>
+ <div className={cx('eos-nav-icon eos-panel mx-auto mb-0.5 grid h-5 w-5 place-items-center rounded-full border p-[4px]', active && 'eos-dock-active')}>
  <NavIcon name={icon} />
  </div>
  {label}

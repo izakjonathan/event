@@ -88,6 +88,7 @@ body {
 
 body {
   overscroll-behavior-y: none;
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 160px);
 }
 
 img {
@@ -110,7 +111,7 @@ summary::-webkit-details-marker {
 }
 
 .eos-page-content {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 220px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 280px);
 }
 
 .scrollbar-none {
@@ -230,7 +231,7 @@ summary::-webkit-details-marker {
 .eos-heading {
   font-size: var(--type-heading-size);
   font-weight: var(--type-heading-weight);
-  line-height: 0.91;
+  line-height: 0.94;
   letter-spacing: var(--type-heading-track);
   text-transform: var(--type-heading-transform);
 }
@@ -238,7 +239,7 @@ summary::-webkit-details-marker {
 .eos-title {
   font-size: var(--type-title-size);
   font-weight: var(--type-title-weight);
-  line-height: 0.96;
+  line-height: 1;
   letter-spacing: var(--type-title-track);
   text-transform: var(--type-title-transform);
 }

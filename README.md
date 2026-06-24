@@ -15,3 +15,12 @@ Final bug-only CSS/layout audit from v47.
 
 ## Deployment
 Upload the full ZIP contents to the repository root and deploy on Vercel.
+
+
+## v49 UI Studio dock/layout polish
+
+- Reduced floating dock height slightly to cover less content on iPhone.
+- Increased page bottom padding so final controls can scroll fully above the dock.
+- Added scroll padding to help focused fields avoid the floating dock.
+- Loosened only title/heading line-height enough to avoid clipped descenders while keeping tight typography.
+- Kept colors, typography controls, rounded corners, no-animation baseline, icon setup and comparison module intact.
