@@ -1,26 +1,21 @@
-# EventOS v50 — UI Studio background image controls
+# EventOS v51 — Full Resolution Background Images
 
-This build adds background image support to UI Studio while keeping the v49 layout/icon baseline.
+This build fixes the UI Studio background image quality issue.
 
-## Added
-- UI Studio background image upload.
-- Use background image on/off toggle.
-- Background image fit mode: cover, contain, original size.
-- Layer fill toggles for background, surface, and content/card fills.
-- One-tap transparent layer mode and fill restore.
-- Background image settings are saved in the active theme.
-- Background image settings are included in saved presets.
-- Supabase storage support for cross-device background images via `ui-background-images` bucket.
-- Local fallback stores a compressed data URL on the current device when Supabase is not configured.
+## Changes
 
-## Kept
-- Rounded corners.
-- No-animation baseline.
-- UI Studio typography and color controls.
-- iOS home screen icon setup.
-- Static route build optimization.
+- Removed the background image downscaling/compression step.
+- UI Studio now keeps uploaded background images at their original resolution.
+- Supabase uploads now use the original image file instead of a compressed JPEG copy.
+- Local fallback applies the original image data URL.
+- Local storage writes now fail safely if a very large local-only background image exceeds browser storage.
+- Updated UI Studio background status messages to make full-resolution handling clear.
+
+## Notes
+
+For persistent full-resolution images across devices, use Supabase storage. Very large local-only images may apply for the current session but not persist if browser localStorage quota is exceeded.
 
 ## Verification
+
 - `npm run typecheck` passes.
 - `npm run build` passes.
-- ZIP excludes `.next`, `node_modules`, `package-lock.json`, and `tsconfig.tsbuildinfo`.

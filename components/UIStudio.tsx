@@ -154,7 +154,14 @@ function writeLocalPresets(presets: NamedTheme[]) {
 function scheduleStorageWrite(key: string, value: string) {
   if (typeof window === 'undefined') return;
 
-  const save = () => localStorage.setItem(key, value);
+  const save = () => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      // Large local-only background images can exceed browser storage.
+      // The active theme still applies for the current session; use Supabase for persistent full-resolution images.
+    }
+  };
   const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
 
   if (requestIdle) {
@@ -178,38 +185,12 @@ function readFileAsDataUrl(file: File) {
   });
 }
 
-function loadImage(dataUrl: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error('Could not load image'));
-    image.src = dataUrl;
-  });
-}
-
 async function prepareBackgroundImage(file: File) {
+  // Keep the uploaded file at full original resolution.
+  // Earlier builds compressed/downscaled background images before saving,
+  // which made full-screen backgrounds look soft on iPhone/PWA installs.
   const dataUrl = await readFileAsDataUrl(file);
-
-  try {
-    const image = await loadImage(dataUrl);
-    const maxEdge = 1800;
-    const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
-    const width = Math.max(1, Math.round(image.width * scale));
-    const height = Math.max(1, Math.round(image.height * scale));
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const context = canvas.getContext('2d');
-    if (!context) throw new Error('Canvas unavailable');
-    context.drawImage(image, 0, 0, width, height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.86));
-    if (!blob) throw new Error('Compression failed');
-    const compressedFile = new File([blob], `${file.name.replace(/\.[^.]+$/, '') || 'background'}.jpg`, { type: 'image/jpeg' });
-    const compressedDataUrl = await readFileAsDataUrl(compressedFile);
-    return { dataUrl: compressedDataUrl, file: compressedFile };
-  } catch {
-    return { dataUrl, file };
-  }
+  return { dataUrl, file };
 }
 
 function safeImageName(name: string) {
@@ -301,7 +282,7 @@ export default function UIStudio() {
 
   const uploadBackgroundImage = async (file: File | null) => {
     if (!file) return;
-    setBackgroundStatus('Preparing background image…');
+    setBackgroundStatus('Preparing full-resolution background image…');
 
     try {
       const prepared = await prepareBackgroundImage(file);
@@ -312,9 +293,9 @@ export default function UIStudio() {
         const { error } = await supabase.storage.from(BACKGROUND_IMAGE_BUCKET).upload(path, prepared.file, { upsert: true });
         if (error) throw error;
         finalUrl = supabase.storage.from(BACKGROUND_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
-        setBackgroundStatus('Background image uploaded to Supabase and saved in this theme.');
+        setBackgroundStatus('Full-resolution background image uploaded to Supabase and saved in this theme.');
       } else {
-        setBackgroundStatus('Background image saved locally. Use Supabase for cross-device background images.');
+        setBackgroundStatus('Full-resolution background image applied locally. Use Supabase for persistent cross-device background images.');
       }
 
       commit({ ...theme, 'background-image-url': finalUrl, 'background-image-enabled': 'true' });
