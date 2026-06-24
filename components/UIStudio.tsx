@@ -61,6 +61,7 @@ const BUILT_IN_PRESETS: NamedTheme[] = [
     background: '#191919',
     content: '#191919',
     surface: '#000000',
+    dock: '#191919',
     text: '#ffffff',
     muted: '#808080',
     accent: '#ffffff',
@@ -74,6 +75,7 @@ const BUILT_IN_PRESETS: NamedTheme[] = [
     background: '#ffffff',
     content: '#ffffff',
     surface: '#ffffff',
+    dock: '#ffffff',
     text: '#000000',
     muted: '#808080',
     accent: '#000000',
@@ -85,8 +87,9 @@ const BUILT_IN_PRESETS: NamedTheme[] = [
 
 const COLOR_TOKENS = [
   ['background', 'Background color', 'Full app canvas behind every module.'],
-  ['content', 'Content color', 'Main cards, panels, dock and inputs.'],
+  ['content', 'Content color', 'Main cards, panels and inputs.'],
   ['surface', 'Surface color', 'Stat blocks, inactive dock icons and nested panels.'],
+  ['dock', 'Dock color', 'Always-solid floating dock background.'],
   ['text', 'Text color', 'Main titles, body text and field text.'],
   ['muted', 'Muted color', 'Labels, helper text and inactive navigation.'],
   ['accent', 'Accent color', 'Primary buttons and highlighted actions.'],
@@ -587,7 +590,7 @@ export default function UIStudio() {
                     </span>
                   </span>
                   <span className="flex shrink-0 gap-1.5">
-                    {(['background', 'content', 'surface', 'border', 'accent'] as ColorKey[]).map((key) => (
+                    {(['background', 'content', 'surface', 'dock', 'border', 'accent'] as ColorKey[]).map((key) => (
                       <span key={key} className="h-7 w-7 rounded-full border eos-border" style={{ background: preset[key] }} />
                     ))}
                   </span>

@@ -7,6 +7,7 @@
   --eos-background: #000000;
   --eos-content: #000000;
   --eos-surface: #191919;
+  --eos-dock: #000000;
   --eos-text: #ffffff;
   --eos-muted: #808080;
   --eos-accent: #ffffff;
@@ -68,6 +69,7 @@ html[data-eos-mode='day'] {
   --eos-background: #ffffff;
   --eos-content: #ffffff;
   --eos-surface: #ffffff;
+  --eos-dock: #ffffff;
   --eos-text: #000000;
   --eos-muted: #808080;
   --eos-accent: #000000;
@@ -108,10 +110,13 @@ body {
 body::before {
   content: '';
   position: fixed;
-  inset: 0;
+  top: calc(env(safe-area-inset-top) * -1);
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: -1;
   width: 100vw;
-  height: 100dvh;
+  height: calc(100dvh + env(safe-area-inset-top));
   pointer-events: none;
   background-color: var(--eos-background-paint);
   background-image: var(--eos-background-image);
@@ -166,9 +171,16 @@ summary::-webkit-details-marker {
 
 .eos-card,
 .eos-dock {
-  background: var(--eos-content-paint);
   border-color: var(--eos-border);
   color: var(--eos-text);
+}
+
+.eos-card {
+  background: var(--eos-content-paint);
+}
+
+.eos-dock {
+  background: var(--eos-dock);
 }
 
 .eos-card {

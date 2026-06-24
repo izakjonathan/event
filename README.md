@@ -1,28 +1,22 @@
-# EventOS v51 — Full Resolution Background Images
+# EventOS v53 — fixed viewport background + solid dock color
 
-This build fixes the UI Studio background image quality issue.
+This build fixes the iPhone background-image and dock-color issues from v52.
 
 ## Changes
 
-- Removed the background image downscaling/compression step.
-- UI Studio now keeps uploaded background images at their original resolution.
-- Supabase uploads now use the original image file instead of a compressed JPEG copy.
-- Local fallback applies the original image data URL.
-- Local storage writes now fail safely if a very large local-only background image exceeds browser storage.
-- Updated UI Studio background status messages to make full-resolution handling clear.
-
-## Notes
-
-For persistent full-resolution images across devices, use Supabase storage. Very large local-only images may apply for the current session but not persist if browser localStorage quota is exceeded.
+- Background image layer now extends upward into the iPhone safe-area/top rounded/notch area.
+- PWA status bar style changed to `black-translucent` so the app background can show behind the top iPhone area.
+- Background image remains a fixed viewport layer and does not scroll with page content.
+- `Cover fixed screen`, `Contain fixed screen`, and `Original size, fixed` continue to fit the visible screen instead of the full page height.
+- Added a separate global `dock` color token.
+- UI Studio now has a **Dock color** control.
+- The floating dock always uses the solid `dock` color and is no longer affected by transparent content/card fill settings.
+- Existing transparent background/surface/content layer toggles remain unchanged.
+- Full-resolution background image uploads remain unchanged.
+- iPhone homescreen icon setup remains unchanged.
 
 ## Verification
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
-
-
-## v52 fixed background image viewport
-- Background images now render on a dedicated fixed viewport layer instead of on the scrolling document.
-- `cover` and `contain` now calculate against the visible screen, not the full page height.
-- The image stays fixed when scrolling.
-- UI Studio labels were updated to make the fixed-screen behavior clear.
+- All app routes build as static pages.
