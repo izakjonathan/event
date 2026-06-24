@@ -169,3 +169,17 @@ drop policy if exists "prototype artist image update" on storage.objects;
 create policy "prototype artist image update" on storage.objects for update to anon using (bucket_id = 'artist-images') with check (bucket_id = 'artist-images');
 drop policy if exists "prototype artist image delete" on storage.objects;
 create policy "prototype artist image delete" on storage.objects for delete to anon using (bucket_id = 'artist-images');
+
+-- UI Studio background images used by saved theme presets.
+insert into storage.buckets (id, name, public)
+values ('ui-background-images', 'ui-background-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "prototype ui background image read" on storage.objects;
+create policy "prototype ui background image read" on storage.objects for select to anon using (bucket_id = 'ui-background-images');
+drop policy if exists "prototype ui background image upload" on storage.objects;
+create policy "prototype ui background image upload" on storage.objects for insert to anon with check (bucket_id = 'ui-background-images');
+drop policy if exists "prototype ui background image update" on storage.objects;
+create policy "prototype ui background image update" on storage.objects for update to anon using (bucket_id = 'ui-background-images') with check (bucket_id = 'ui-background-images');
+drop policy if exists "prototype ui background image delete" on storage.objects;
+create policy "prototype ui background image delete" on storage.objects for delete to anon using (bucket_id = 'ui-background-images');

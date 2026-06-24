@@ -50,10 +50,20 @@ export const TYPOGRAPHY_KEYS = [
   'type-metric-transform',
 ] as const;
 
-export const THEME_KEYS = [...COLOR_KEYS, ...TYPOGRAPHY_KEYS] as const;
+export const BACKGROUND_KEYS = [
+  'background-image-enabled',
+  'background-image-url',
+  'background-image-fit',
+  'background-fill-enabled',
+  'content-fill-enabled',
+  'surface-fill-enabled',
+] as const;
+
+export const THEME_KEYS = [...COLOR_KEYS, ...TYPOGRAPHY_KEYS, ...BACKGROUND_KEYS] as const;
 
 export type ColorKey = (typeof COLOR_KEYS)[number];
 export type TypographyKey = (typeof TYPOGRAPHY_KEYS)[number];
+export type BackgroundKey = (typeof BACKGROUND_KEYS)[number];
 export type ThemeKey = (typeof THEME_KEYS)[number];
 export type Theme = Record<ThemeKey, string> & { mode: ThemeMode };
 
@@ -95,6 +105,15 @@ const TYPOGRAPHY_DEFAULTS: Record<TypographyKey, string> = {
   'type-metric-transform': 'none',
 };
 
+const BACKGROUND_DEFAULTS: Record<BackgroundKey, string> = {
+  'background-image-enabled': 'false',
+  'background-image-url': '',
+  'background-image-fit': 'cover',
+  'background-fill-enabled': 'true',
+  'content-fill-enabled': 'true',
+  'surface-fill-enabled': 'true',
+};
+
 export const NIGHT_THEME: Theme = {
   mode: 'night',
   background: '#000000',
@@ -110,6 +129,7 @@ export const NIGHT_THEME: Theme = {
   warning: '#808080',
   danger: '#ffffff',
   ...TYPOGRAPHY_DEFAULTS,
+  ...BACKGROUND_DEFAULTS,
 };
 
 export const DAY_THEME: Theme = {
@@ -127,12 +147,15 @@ export const DAY_THEME: Theme = {
   warning: '#808080',
   danger: '#000000',
   ...TYPOGRAPHY_DEFAULTS,
+  ...BACKGROUND_DEFAULTS,
 };
 
 const HEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 const CSS_LENGTH = /^-?\d+(?:\.\d+)?(?:px|rem|em|%)$/;
 const CSS_WEIGHT = /^(?:[1-9]00|[1-9][0-9]{2}|normal|bold|lighter|bolder)$/;
 const CSS_TRANSFORM = /^(none|uppercase|lowercase|capitalize)$/;
+const CSS_BACKGROUND_FIT = /^(cover|contain|auto)$/;
+const CSS_BOOLEAN = /^(true|false)$/;
 
 function validTypographyValue(key: TypographyKey, value: string) {
   const trimmed = value.trim();
@@ -142,6 +165,17 @@ function validTypographyValue(key: TypographyKey, value: string) {
   if (key.endsWith('-weight')) return CSS_WEIGHT.test(trimmed) ? trimmed : null;
   if (key.endsWith('-transform')) return CSS_TRANSFORM.test(trimmed) ? trimmed : null;
   return null;
+}
+
+function validBackgroundValue(key: BackgroundKey, value: string) {
+  const trimmed = value.trim();
+  if (key === 'background-image-url') return trimmed;
+  if (key === 'background-image-fit') return CSS_BACKGROUND_FIT.test(trimmed) ? trimmed : null;
+  return CSS_BOOLEAN.test(trimmed) ? trimmed : null;
+}
+
+function cssUrl(value: string) {
+  return `url(${JSON.stringify(value)})`;
 }
 
 export function normalizeTheme(raw: Partial<Theme> | null | undefined): Theme {
@@ -162,6 +196,14 @@ export function normalizeTheme(raw: Partial<Theme> | null | undefined): Theme {
     }
   }
 
+  for (const key of BACKGROUND_KEYS) {
+    const value = raw?.[key];
+    if (typeof value === 'string') {
+      const valid = validBackgroundValue(key, value);
+      if (valid !== null) next[key] = valid;
+    }
+  }
+
   return next;
 }
 
@@ -173,6 +215,14 @@ export function applyTheme(raw: Partial<Theme> | null | undefined) {
 
   for (const key of COLOR_KEYS) document.documentElement.style.setProperty(`--eos-${key}`, theme[key]);
   for (const key of TYPOGRAPHY_KEYS) document.documentElement.style.setProperty(`--${key}`, theme[key]);
+
+  const useImage = theme['background-image-enabled'] === 'true' && Boolean(theme['background-image-url']);
+  document.documentElement.dataset.eosBackgroundImage = useImage ? 'on' : 'off';
+  document.documentElement.style.setProperty('--eos-background-image', useImage ? cssUrl(theme['background-image-url']) : 'none');
+  document.documentElement.style.setProperty('--eos-background-size', theme['background-image-fit']);
+  document.documentElement.style.setProperty('--eos-background-paint', theme['background-fill-enabled'] === 'true' ? theme.background : 'transparent');
+  document.documentElement.style.setProperty('--eos-content-paint', theme['content-fill-enabled'] === 'true' ? theme.content : 'transparent');
+  document.documentElement.style.setProperty('--eos-surface-paint', theme['surface-fill-enabled'] === 'true' ? theme.surface : 'transparent');
 }
 
 export function readSavedTheme(): Theme {

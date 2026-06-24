@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { AppShell, Badge, Button, Card, Field, Stat } from './ui/AppShell';
+import { AppShell, Badge, Button, Card, CheckboxRow, Field, Stat } from './ui/AppShell';
 import { useEventStore } from './EventStore';
 import { supabase, supabaseReady } from '@/lib/supabaseClient';
 import {
@@ -15,6 +15,7 @@ import {
   ThemeMode,
   TypographyKey,
   TYPOGRAPHY_KEYS,
+  BACKGROUND_KEYS,
 } from '@/lib/theme';
 
 type NamedTheme = Theme & {
@@ -37,6 +38,7 @@ type TypographyGroup = {
 const DEFAULT_THEME = NIGHT_THEME;
 const LOCAL_PRESETS_KEY = 'eos-ui-custom-presets';
 const THEME_STORAGE_KEY = 'eos-ui-theme';
+const BACKGROUND_IMAGE_BUCKET = 'ui-background-images';
 const FONT_STACK_OPTIONS = [
   "'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   "'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif",
@@ -167,6 +169,53 @@ function numberValue(value: string, unit: 'px' | 'em') {
   return String(value).replace(unit, '');
 }
 
+function readFileAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(reader.error || new Error('Could not read image'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImage(dataUrl: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('Could not load image'));
+    image.src = dataUrl;
+  });
+}
+
+async function prepareBackgroundImage(file: File) {
+  const dataUrl = await readFileAsDataUrl(file);
+
+  try {
+    const image = await loadImage(dataUrl);
+    const maxEdge = 1800;
+    const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
+    const width = Math.max(1, Math.round(image.width * scale));
+    const height = Math.max(1, Math.round(image.height * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas unavailable');
+    context.drawImage(image, 0, 0, width, height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.86));
+    if (!blob) throw new Error('Compression failed');
+    const compressedFile = new File([blob], `${file.name.replace(/\.[^.]+$/, '') || 'background'}.jpg`, { type: 'image/jpeg' });
+    const compressedDataUrl = await readFileAsDataUrl(compressedFile);
+    return { dataUrl: compressedDataUrl, file: compressedFile };
+  } catch {
+    return { dataUrl, file };
+  }
+}
+
+function safeImageName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-+|-+$/g, '') || 'background.jpg';
+}
+
 export default function UIStudio() {
   const { ownerKey } = useEventStore();
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
@@ -174,6 +223,7 @@ export default function UIStudio() {
   const [customPresets, setCustomPresets] = useState<NamedTheme[]>([]);
   const [presetName, setPresetName] = useState('');
   const [presetStatus, setPresetStatus] = useState(supabaseReady ? 'Loading shared presets…' : 'Supabase not configured. Presets are local on this device.');
+  const [backgroundStatus, setBackgroundStatus] = useState(supabaseReady ? 'Background images upload to Supabase.' : 'Background images are saved locally on this device.');
 
   useEffect(() => {
     const stored = readSavedTheme();
@@ -245,10 +295,46 @@ export default function UIStudio() {
     commit({ ...theme, [key]: value });
   };
 
+  const updateBackground = (key: (typeof BACKGROUND_KEYS)[number], value: string) => {
+    commit({ ...theme, [key]: value });
+  };
+
+  const uploadBackgroundImage = async (file: File | null) => {
+    if (!file) return;
+    setBackgroundStatus('Preparing background image…');
+
+    try {
+      const prepared = await prepareBackgroundImage(file);
+      let finalUrl = prepared.dataUrl;
+
+      if (supabase) {
+        const path = `${ownerKey}/${Date.now()}-${safeImageName(prepared.file.name)}`;
+        const { error } = await supabase.storage.from(BACKGROUND_IMAGE_BUCKET).upload(path, prepared.file, { upsert: true });
+        if (error) throw error;
+        finalUrl = supabase.storage.from(BACKGROUND_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+        setBackgroundStatus('Background image uploaded to Supabase and saved in this theme.');
+      } else {
+        setBackgroundStatus('Background image saved locally. Use Supabase for cross-device background images.');
+      }
+
+      commit({ ...theme, 'background-image-url': finalUrl, 'background-image-enabled': 'true' });
+    } catch (error: any) {
+      setBackgroundStatus(`Image upload failed. ${error?.message || ''}`.trim());
+    }
+  };
+
+  const clearBackgroundImage = () => {
+    commit({ ...theme, 'background-image-enabled': 'false', 'background-image-url': '' });
+    setBackgroundStatus(supabaseReady ? 'Background image removed from the active theme.' : 'Local background image removed from the active theme.');
+  };
+
   const setMode = (mode: ThemeMode) => {
     const base = normalizeTheme(mode === 'day' ? DAY_THEME : NIGHT_THEME);
     const next = { ...base, mode };
     for (const key of TYPOGRAPHY_KEYS) {
+      next[key] = theme[key];
+    }
+    for (const key of BACKGROUND_KEYS) {
       next[key] = theme[key];
     }
     commit(next);
@@ -310,7 +396,7 @@ export default function UIStudio() {
               <p className="eos-caption eos-muted">Design system</p>
               <h1 className="eos-display mt-4">UI Studio</h1>
               <p className="mt-4 max-w-[28ch] eos-body eos-muted">
-                Change shared color and typography tokens. Presets save both color and typography settings.
+                Change shared color, typography and background image tokens. Presets save all visual settings.
               </p>
             </div>
             <Badge tone={saved ? 'ok' : 'neutral'}>{saved ? 'Saved' : 'Live'}</Badge>
@@ -346,6 +432,48 @@ export default function UIStudio() {
               </button>
             ))}
           </div>
+        </Card>
+
+        <Card>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="eos-caption eos-muted">Background image</p>
+              <h2 className="eos-title mt-2">Image backdrop</h2>
+            </div>
+            <Badge tone={theme['background-image-enabled'] === 'true' && theme['background-image-url'] ? 'ok' : 'neutral'}>
+              {theme['background-image-enabled'] === 'true' && theme['background-image-url'] ? 'On' : 'Off'}
+            </Badge>
+          </div>
+          <p className="mt-3 eos-body eos-muted">Upload an image behind the app and choose which UI layers keep their fill.</p>
+
+          <div className="mt-5 eos-bg-preview" />
+
+          <div className="mt-5 grid gap-3">
+            <Field label="Upload image">
+              <input type="file" accept="image/*" onChange={(event) => uploadBackgroundImage(event.target.files?.[0] || null)} />
+            </Field>
+            <Field label="Image fill mode">
+              <select value={theme['background-image-fit']} onChange={(event) => updateBackground('background-image-fit', event.target.value)}>
+                <option value="cover">Cover / fill screen</option>
+                <option value="contain">Contain / show whole image</option>
+                <option value="auto">Original size</option>
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-4 grid gap-2">
+            <CheckboxRow label="Use background image" checked={theme['background-image-enabled'] === 'true'} onChange={(checked) => updateBackground('background-image-enabled', checked ? 'true' : 'false')} />
+            <CheckboxRow label="Background color fill" checked={theme['background-fill-enabled'] === 'true'} onChange={(checked) => updateBackground('background-fill-enabled', checked ? 'true' : 'false')} />
+            <CheckboxRow label="Surface fill" checked={theme['surface-fill-enabled'] === 'true'} onChange={(checked) => updateBackground('surface-fill-enabled', checked ? 'true' : 'false')} />
+            <CheckboxRow label="Content / card fill" checked={theme['content-fill-enabled'] === 'true'} onChange={(checked) => updateBackground('content-fill-enabled', checked ? 'true' : 'false')} />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button kind="soft" onClick={() => commit({ ...theme, 'background-fill-enabled': 'false', 'surface-fill-enabled': 'false', 'content-fill-enabled': 'false' })}>Make layers transparent</Button>
+            <Button kind="ghost" onClick={() => commit({ ...theme, 'background-fill-enabled': 'true', 'surface-fill-enabled': 'true', 'content-fill-enabled': 'true' })}>Restore fills</Button>
+            <Button kind="danger" onClick={clearBackgroundImage}>Remove image</Button>
+          </div>
+          <p className="mt-3 eos-body eos-muted">{backgroundStatus}</p>
         </Card>
 
         <Card>
@@ -464,7 +592,7 @@ export default function UIStudio() {
             <Field label="Preset name">
               <input value={presetName} placeholder={`Preset ${customPresets.length + 1}`} onChange={(event) => setPresetName(event.target.value)} />
             </Field>
-            <Button className="mt-3 w-full" kind="primary" onClick={saveCurrentPreset}>Save current theme to Supabase</Button>
+            <Button className="mt-3 w-full" kind="primary" onClick={saveCurrentPreset}>Save current theme</Button>
           </div>
 
           <div className="mt-4 space-y-2">
@@ -474,7 +602,7 @@ export default function UIStudio() {
                   <span>
                     <span className="eos-body block eos-text">{preset.name}</span>
                     <span className="mt-1 block eos-caption eos-muted">
-                      {preset.custom ? (preset.synced ? 'supabase' : 'local fallback') : 'built in'} · {preset.mode} · {preset['type-body-size']} · {preset['type-body-weight']}
+                      {preset.custom ? (preset.synced ? 'supabase' : 'local fallback') : 'built in'} · {preset.mode} · {preset['type-body-size']} · {preset['type-body-weight']} · bg {preset['background-image-enabled'] === 'true' ? 'on' : 'off'}
                     </span>
                   </span>
                   <span className="flex shrink-0 gap-1.5">

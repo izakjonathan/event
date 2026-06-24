@@ -17,6 +17,13 @@
   --eos-warning: #808080;
   --eos-danger: #ffffff;
 
+  /* Background image controls used by UI Studio. */
+  --eos-background-image: none;
+  --eos-background-size: cover;
+  --eos-background-paint: var(--eos-background);
+  --eos-content-paint: var(--eos-content);
+  --eos-surface-paint: var(--eos-surface);
+
   /* Typography tokens used by UI Studio. Line heights stay fixed and tight. */
   --type-display-font: 'Space Grotesk', 'General Sans', 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --type-ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -81,7 +88,12 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  background: var(--eos-background);
+  background-color: var(--eos-background-paint);
+  background-image: var(--eos-background-image);
+  background-size: var(--eos-background-size);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--eos-text);
   font-family: var(--type-ui-font);
 }
@@ -131,13 +143,13 @@ summary::-webkit-details-marker {
 }
 
 .eos-root {
-  background: var(--eos-background);
+  background: var(--eos-background-paint);
   color: var(--eos-text);
 }
 
 .eos-card,
 .eos-dock {
-  background: var(--eos-content);
+  background: var(--eos-content-paint);
   border-color: var(--eos-border);
   color: var(--eos-text);
 }
@@ -150,7 +162,7 @@ summary::-webkit-details-marker {
 .eos-panel,
 .eos-surface,
 .eos-stat {
-  background: var(--eos-surface);
+  background: var(--eos-surface-paint);
   border-color: var(--eos-border);
   color: var(--eos-text);
 }
@@ -346,6 +358,18 @@ button {
 }
 
 
+
+.eos-bg-preview {
+  min-height: 132px;
+  border: 1px solid var(--eos-border);
+  border-radius: 24px;
+  background-color: var(--eos-background-paint);
+  background-image: var(--eos-background-image);
+  background-size: var(--eos-background-size);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 input:not([type='checkbox']):not([type='radio']):not([type='file']),
 textarea,
 select {
@@ -357,7 +381,7 @@ select {
   -webkit-appearance: none;
   border: 1px solid var(--eos-border);
   border-radius: 20px;
-  background: var(--eos-content);
+  background: var(--eos-content-paint);
   color: var(--eos-text);
   padding: 14px 16px;
   outline: none;
@@ -385,7 +409,7 @@ input[type='radio'] {
   margin: 0;
   border: 1px solid var(--eos-border-strong);
   border-radius: 6px;
-  background: var(--eos-content);
+  background: var(--eos-content-paint);
   accent-color: var(--eos-accent);
   appearance: auto;
   -webkit-appearance: checkbox;
@@ -437,7 +461,7 @@ select:focus {
 .eos-subcard {
   border-radius: 24px;
   border: 1px solid var(--eos-border);
-  background: var(--eos-content);
+  background: var(--eos-content-paint);
   color: var(--eos-text);
   padding: 16px;
 }
@@ -466,7 +490,7 @@ select:focus {
   padding: 14px 16px;
   border-radius: 22px;
   border: 1px solid var(--eos-border);
-  background: var(--eos-content);
+  background: var(--eos-content-paint);
   color: var(--eos-text);
 }
 

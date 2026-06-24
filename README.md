@@ -1,26 +1,26 @@
-# EventOS v48 — final CSS/layout pass
+# EventOS v50 — UI Studio background image controls
 
-Final bug-only CSS/layout audit from v47.
+This build adds background image support to UI Studio while keeping the v49 layout/icon baseline.
 
-## Changes
-- Removed unused `.eos-stat-micro` CSS rules.
-- Re-checked global CSS against the app/component code.
-- Kept the consolidated typography/color token system unchanged.
-- Kept rounded corners, no-animation baseline, iOS icon setup, and Event Comparison module intact.
-- No feature changes.
+## Added
+- UI Studio background image upload.
+- Use background image on/off toggle.
+- Background image fit mode: cover, contain, original size.
+- Layer fill toggles for background, surface, and content/card fills.
+- One-tap transparent layer mode and fill restore.
+- Background image settings are saved in the active theme.
+- Background image settings are included in saved presets.
+- Supabase storage support for cross-device background images via `ui-background-images` bucket.
+- Local fallback stores a compressed data URL on the current device when Supabase is not configured.
 
-## Validation
-- `npm run typecheck`
-- `npm run build`
+## Kept
+- Rounded corners.
+- No-animation baseline.
+- UI Studio typography and color controls.
+- iOS home screen icon setup.
+- Static route build optimization.
 
-## Deployment
-Upload the full ZIP contents to the repository root and deploy on Vercel.
-
-
-## v49 UI Studio dock/layout polish
-
-- Reduced floating dock height slightly to cover less content on iPhone.
-- Increased page bottom padding so final controls can scroll fully above the dock.
-- Added scroll padding to help focused fields avoid the floating dock.
-- Loosened only title/heading line-height enough to avoid clipped descenders while keeping tight typography.
-- Kept colors, typography controls, rounded corners, no-animation baseline, icon setup and comparison module intact.
+## Verification
+- `npm run typecheck` passes.
+- `npm run build` passes.
+- ZIP excludes `.next`, `node_modules`, `package-lock.json`, and `tsconfig.tsbuildinfo`.
