@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { blankProject, blankTask } from '@/lib/defaults';
-import { Priority, Project, ProjectStatus, Task, TaskStatus } from '@/lib/types';
+import { Priority, PlannerEvent, Project, ProjectStatus, Task, TaskStatus } from '@/lib/types';
 import { useEventStore } from './EventStore';
 import { AppShell, Badge, Button, Card, Field, Row, Section, Stat } from './ui/AppShell';
 
@@ -12,17 +12,14 @@ const PRIORITIES: Priority[] = ['low', 'medium', 'high', 'urgent'];
 
 const isOverdue = (task: Task) => task.due_date && new Date(task.due_date) < new Date() && !['done', 'archived'].includes(task.status);
 
-export default function ProjectManagement() {
- const { events, projects, tasks, saveProject, deleteProject, saveTask, deleteTask } = useEventStore();
- const [taskDraft, setTaskDraft] = useState<Task | null>(null);
+type EventSelectProps = {
+ events: PlannerEvent[];
+ value: string | null;
+ onChange: (value: string | null) => void;
+};
 
- const counts = {
- pending: tasks.filter((task) => task.status === 'pending').length,
- doing: tasks.filter((task) => task.status === 'doing').length,
- overdue: tasks.filter(isOverdue).length,
- };
-
- const eventSelect = (value: string | null, onChange: (value: string | null) => void) => (
+function EventSelect({ events, value, onChange }: EventSelectProps) {
+ return (
  <Field label="Linked event">
  <select value={value || ''} onChange={(event) => onChange(event.target.value || null)}>
  <option value="">No event</option>
@@ -34,32 +31,44 @@ export default function ProjectManagement() {
  </select>
  </Field>
  );
+}
 
- function ProjectEditor({ project }: { project: Project }) {
+type ProjectEditorProps = {
+ events: PlannerEvent[];
+ project: Project;
+ saveProject: (project: Project) => Promise<void>;
+ deleteProject: (id: string) => Promise<void>;
+};
+
+function ProjectEditor({ events, project, saveProject, deleteProject }: ProjectEditorProps) {
+ const updateProject = (patch: Partial<Project>) => {
+ void saveProject({ ...project, ...patch });
+ };
+
  return (
  <Section
- title={project.title}
+ title={project.title || 'Untitled project'}
  right={<Badge tone={project.priority === 'urgent' ? 'bad' : project.priority === 'high' ? 'warn' : 'neutral'}>{project.status}</Badge>}
  >
  <Row>
  <Field label="Title">
- <input value={project.title} onChange={(event) => saveProject({ ...project, title: event.target.value })} />
+ <input value={project.title} onChange={(event) => updateProject({ title: event.target.value })} />
  </Field>
  <Field label="Owner">
- <input value={project.owner} onChange={(event) => saveProject({ ...project, owner: event.target.value })} />
+ <input value={project.owner} onChange={(event) => updateProject({ owner: event.target.value })} />
  </Field>
  </Row>
 
  <Row>
  <Field label="Status">
- <select value={project.status} onChange={(event) => saveProject({ ...project, status: event.target.value as ProjectStatus })}>
+ <select value={project.status} onChange={(event) => updateProject({ status: event.target.value as ProjectStatus })}>
  {PROJECT_STATUSES.map((status) => (
  <option key={status}>{status}</option>
  ))}
  </select>
  </Field>
  <Field label="Priority">
- <select value={project.priority} onChange={(event) => saveProject({ ...project, priority: event.target.value as Priority })}>
+ <select value={project.priority} onChange={(event) => updateProject({ priority: event.target.value as Priority })}>
  {PRIORITIES.map((priority) => (
  <option key={priority}>{priority}</option>
  ))}
@@ -69,25 +78,34 @@ export default function ProjectManagement() {
 
  <Row>
  <Field label="Due date">
- <input type="date" value={project.due_date || ''} onChange={(event) => saveProject({ ...project, due_date: event.target.value || null })} />
+ <input type="date" value={project.due_date || ''} onChange={(event) => updateProject({ due_date: event.target.value || null })} />
  </Field>
- {eventSelect(project.linked_event_id, (linkedEventId) => saveProject({ ...project, linked_event_id: linkedEventId }))}
+ <EventSelect events={events} value={project.linked_event_id} onChange={(linkedEventId) => updateProject({ linked_event_id: linkedEventId })} />
  </Row>
 
  <Field label="Description">
- <textarea value={project.description} onChange={(event) => saveProject({ ...project, description: event.target.value })} />
+ <textarea value={project.description} onChange={(event) => updateProject({ description: event.target.value })} />
  </Field>
  <Field label="Notes">
- <textarea value={project.notes} onChange={(event) => saveProject({ ...project, notes: event.target.value })} />
+ <textarea value={project.notes} onChange={(event) => updateProject({ notes: event.target.value })} />
  </Field>
- <Button kind="danger" onClick={() => deleteProject(project.id)}>
+ <Button kind="danger" onClick={() => void deleteProject(project.id)}>
  Delete project
  </Button>
  </Section>
  );
- }
+}
 
- function TaskModal() {
+type TaskModalProps = {
+ events: PlannerEvent[];
+ projects: Project[];
+ taskDraft: Task | null;
+ setTaskDraft: (task: Task | null) => void;
+ saveTask: (task: Task) => Promise<void>;
+ deleteTask: (id: string) => Promise<void>;
+};
+
+function TaskModal({ events, projects, taskDraft, setTaskDraft, saveTask, deleteTask }: TaskModalProps) {
  if (!taskDraft) return null;
 
  const task = taskDraft;
@@ -145,7 +163,7 @@ export default function ProjectManagement() {
  ))}
  </select>
  </Field>
- {eventSelect(task.linked_event_id, (linkedEventId) => setDraft({ linked_event_id: linkedEventId }))}
+ <EventSelect events={events} value={task.linked_event_id} onChange={(linkedEventId) => setDraft({ linked_event_id: linkedEventId })} />
  </Row>
 
  <Field label="Notes">
@@ -183,7 +201,7 @@ export default function ProjectManagement() {
  <div className="grid grid-cols-2 gap-2">
  <Button
  onClick={() => {
- saveTask(task);
+ void saveTask(task);
  setTaskDraft(null);
  }}
  >
@@ -192,7 +210,7 @@ export default function ProjectManagement() {
  <Button
  kind="danger"
  onClick={() => {
- deleteTask(task.id);
+ void deleteTask(task.id);
  setTaskDraft(null);
  }}
  >
@@ -203,7 +221,17 @@ export default function ProjectManagement() {
  </Card>
  </div>
  );
- }
+}
+
+export default function ProjectManagement() {
+ const { events, projects, tasks, saveProject, deleteProject, saveTask, deleteTask } = useEventStore();
+ const [taskDraft, setTaskDraft] = useState<Task | null>(null);
+
+ const counts = {
+ pending: tasks.filter((task) => task.status === 'pending').length,
+ doing: tasks.filter((task) => task.status === 'doing').length,
+ overdue: tasks.filter(isOverdue).length,
+ };
 
  return (
  <AppShell>
@@ -218,7 +246,7 @@ export default function ProjectManagement() {
  <Stat label="Overdue" value={counts.overdue} />
  </div>
  <div className="mt-4 grid grid-cols-2 gap-2">
- <Button onClick={() => saveProject(blankProject())}>New project</Button>
+ <Button onClick={() => void saveProject(blankProject())}>New project</Button>
  <Button kind="ghost" onClick={() => setTaskDraft(blankTask())}>
  New task
  </Button>
@@ -228,7 +256,7 @@ export default function ProjectManagement() {
  <Section title="Projects" openDefault>
  {projects.length === 0 && <p className="eos-body eos-muted">No projects yet.</p>}
  {projects.map((project) => (
- <ProjectEditor key={project.id} project={project} />
+ <ProjectEditor key={project.id} events={events} project={project} saveProject={saveProject} deleteProject={deleteProject} />
  ))}
  </Section>
 
@@ -257,13 +285,13 @@ export default function ProjectManagement() {
  <Button kind="ghost" onClick={() => setTaskDraft(task)}>
  Settings
  </Button>
- <Button kind="ghost" onClick={() => saveTask({ ...task, status: task.status === 'done' ? 'pending' : 'done' })}>
+ <Button kind="ghost" onClick={() => void saveTask({ ...task, status: task.status === 'done' ? 'pending' : 'done' })}>
  {task.status === 'done' ? 'Uncomplete' : 'Complete'}
  </Button>
- <Button kind="ghost" onClick={() => saveTask({ ...task, status: task.status === 'doing' ? 'pending' : 'doing' })}>
+ <Button kind="ghost" onClick={() => void saveTask({ ...task, status: task.status === 'doing' ? 'pending' : 'doing' })}>
  Doing
  </Button>
- <Button kind="danger" onClick={() => saveTask({ ...task, status: 'archived' })}>
+ <Button kind="danger" onClick={() => void saveTask({ ...task, status: 'archived' })}>
  Archive
  </Button>
  </div>
@@ -272,7 +300,7 @@ export default function ProjectManagement() {
  </Section>
  ))}
 
- <TaskModal />
+ <TaskModal events={events} projects={projects} taskDraft={taskDraft} setTaskDraft={setTaskDraft} saveTask={saveTask} deleteTask={deleteTask} />
  </div>
  </AppShell>
  );

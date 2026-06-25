@@ -1,18 +1,20 @@
-# EventOS v54 — background bottom safe-area fix
+# EventOS v56 — Project Management Text Input Fix
 
-This build fixes the fixed background image layer so uploaded backgrounds extend beyond both the top and bottom iPhone safe areas / browser chrome overlay.
+This build fixes Project Management text inputs where the Description and Notes textareas could only accept one character before losing focus.
 
-## Changes
+## What changed
 
-- Keeps the background image fixed behind the app.
-- Extends the fixed background layer above the iPhone rounded/top safe area.
-- Extends the fixed background layer below the visible viewport so the image continues behind the bottom Safari/PWA area.
-- Removes the old fixed height behavior that could stop the image too early at the bottom.
-- Keeps cover/contain/original background modes.
-- Keeps the dock as a full solid UI Studio controlled color.
-- Keeps all previous v53 functionality.
+- Moved Project Management editor components out of the main component render body.
+- Stabilized the Project editor component identity so React no longer remounts it on every keystroke.
+- Description and Notes fields now keep focus while typing normally.
+- Applied the same stability cleanup to the task settings modal.
+- Kept all v55 layout/background/dock behavior intact.
 
 ## Verification
 
-- `npm run typecheck` passes.
-- `npm run build` passes.
+- `npm run typecheck` passed.
+- `npm run build` completed successfully. The command timed out after Next.js had already completed the successful build output in this environment.
+
+## Deployment
+
+Upload the ZIP contents as a flat repository root to GitHub/Vercel. The ZIP excludes `node_modules`, `.next`, `package-lock.json`, and `tsconfig.tsbuildinfo`.

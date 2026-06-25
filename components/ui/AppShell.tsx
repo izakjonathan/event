@@ -140,7 +140,7 @@ export function AppShell({ children }: AppShellProps) {
  {children}
  </section>
 
- <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+6px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[24px] border p-1">
+ <nav className="eos-dock fixed bottom-[calc(env(safe-area-inset-bottom)+2px)] left-1/2 z-40 w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 rounded-[24px] border p-1">
  <div className="grid grid-cols-6 gap-1">
  {nav.map(([href, label, icon]) => {
  const active = path === href;
