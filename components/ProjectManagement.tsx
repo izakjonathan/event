@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { blankProject, blankTask } from '@/lib/defaults';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { blankProject, blankTask, now } from '@/lib/defaults';
 import { Priority, PlannerEvent, Project, ProjectStatus, Task, TaskStatus } from '@/lib/types';
 import { useEventStore } from './EventStore';
 import { AppShell, Badge, Button, Card, Field, Row, Section, Stat } from './ui/AppShell';
 
 const PROJECT_STATUSES: ProjectStatus[] = ['idea', 'planning', 'in-progress', 'waiting', 'done', 'cancelled'];
 const TASK_STATUSES: TaskStatus[] = ['pending', 'doing', 'done', 'archived'];
-const ACTIVE_TASK_STATUSES: TaskStatus[] = ['pending', 'doing', 'done'];
 const PRIORITIES: Priority[] = ['low', 'medium', 'high', 'urgent'];
 
 const isOverdue = (task: Task) => Boolean(task.due_date && new Date(task.due_date) < new Date() && !['done', 'archived'].includes(task.status));
@@ -37,6 +36,101 @@ function EventSelect({ events, value, onChange }: EventSelectProps) {
  ))}
  </select>
  </Field>
+ );
+}
+
+
+type CsvImportResult = {
+ importedProjects: number;
+ importedTasks: number;
+ skippedRows: number;
+ message: string;
+};
+
+const normalizeHeader = (value: string) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+const normalizeValue = (value: string | undefined) => (value || '').trim();
+const csvKey = (row: Record<string, string>, keys: string[]) => {
+ for (const key of keys) {
+ const value = row[key];
+ if (value !== undefined && value.trim()) return value.trim();
+ }
+ return '';
+};
+const parseStatus = <T extends string>(value: string, allowed: readonly T[], fallback: T): T => {
+ const normalized = normalizeHeader(value) as T;
+ return allowed.includes(normalized) ? normalized : fallback;
+};
+
+function parseCsvRows(csv: string) {
+ const rows: string[][] = [];
+ let current = '';
+ let row: string[] = [];
+ let quoted = false;
+
+ for (let index = 0; index < csv.length; index += 1) {
+ const char = csv[index];
+ const next = csv[index + 1];
+
+ if (char === '"' && quoted && next === '"') {
+ current += '"';
+ index += 1;
+ continue;
+ }
+
+ if (char === '"') {
+ quoted = !quoted;
+ continue;
+ }
+
+ if (char === ',' && !quoted) {
+ row.push(current);
+ current = '';
+ continue;
+ }
+
+ if ((char === '\n' || char === '\r') && !quoted) {
+ if (char === '\r' && next === '\n') index += 1;
+ row.push(current);
+ if (row.some((cell) => cell.trim())) rows.push(row);
+ row = [];
+ current = '';
+ continue;
+ }
+
+ current += char;
+ }
+
+ row.push(current);
+ if (row.some((cell) => cell.trim())) rows.push(row);
+ return rows;
+}
+
+function parseCsv(csv: string) {
+ const rows = parseCsvRows(csv);
+ if (rows.length < 2) return [];
+ const headers = rows[0].map(normalizeHeader);
+ return rows.slice(1).map((cells) => {
+ const row: Record<string, string> = {};
+ headers.forEach((header, index) => {
+ if (header) row[header] = normalizeValue(cells[index]);
+ });
+ return row;
+ });
+}
+
+function PlainCollapsible({ title, count, children, openDefault = true }: { title: string; count: number; children: React.ReactNode; openDefault?: boolean }) {
+ const [open, setOpen] = useState(openDefault);
+ return (
+ <div className="border-t border-[var(--eos-border)] first:border-t-0 py-2">
+ <button type="button" onClick={() => setOpen((value) => !value)} className="flex w-full items-center justify-between gap-3 py-2 text-left">
+ <span className="eos-caption eos-text">{title}</span>
+ <span className="eos-muted flex items-center gap-2 eos-caption">
+ <Badge>{count}</Badge>
+ <span className="text-base">{open ? '⌃' : '⌄'}</span>
+ </span>
+ </button>
+ {open && <div className="divide-y divide-[var(--eos-border)]">{children}</div>}
+ </div>
  );
 }
 
@@ -272,43 +366,157 @@ type TaskCardProps = {
  onSave: (task: Task) => Promise<void>;
 };
 
-function TaskCard({ task, onEdit, onSave }: TaskCardProps) {
+function TaskListRow({ task, onEdit, onSave }: TaskCardProps) {
  const completedSubtasks = task.checklist.filter((item) => item.trim().startsWith('✓')).length;
 
  return (
- <Card className="eos-panel">
+ <div className="py-3 first:pt-1 last:pb-1">
  <div className="flex items-start justify-between gap-3">
- <div>
- <h3 className="eos-title">{task.title || 'Untitled task'}</h3>
- <p className="eos-body eos-muted">{task.owner || 'No owner'} · {task.due_date || 'No deadline'}</p>
- </div>
+ <div className="min-w-0 flex-1">
+ <div className="flex flex-wrap items-center gap-2">
+ <h3 className="eos-title truncate">{task.title || 'Untitled task'}</h3>
  <Badge tone={isOverdue(task) ? 'bad' : task.priority === 'urgent' ? 'bad' : task.priority === 'high' ? 'warn' : 'neutral'}>
  {isOverdue(task) ? 'overdue' : task.priority}
  </Badge>
  </div>
-
- {task.notes && <p className="eos-body mt-3">{task.notes}</p>}
+ <p className="eos-body eos-muted mt-1">{task.owner || 'No owner'} · {task.due_date || 'No deadline'}</p>
+ {task.notes && <p className="eos-body mt-2 whitespace-pre-wrap">{task.notes}</p>}
  {task.checklist.length > 0 && (
- <p className="eos-caption eos-muted mt-3">
+ <p className="eos-caption eos-muted mt-2">
  {completedSubtasks}/{task.checklist.length} subtasks marked with ✓
  </p>
  )}
+ </div>
+ </div>
 
- <div className="mt-3 flex flex-wrap gap-2">
+ <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
+ <Field label="Status">
+ <select value={task.status} onChange={(event) => void onSave({ ...task, status: event.target.value as TaskStatus })}>
+ {TASK_STATUSES.map((status) => (
+ <option key={status}>{status}</option>
+ ))}
+ </select>
+ </Field>
+ <div className="pt-[19px]">
  <Button kind="ghost" onClick={() => onEdit(task)}>
  Settings
  </Button>
- <Button kind="ghost" onClick={() => void onSave({ ...task, status: task.status === 'done' ? 'pending' : 'done' })}>
- {task.status === 'done' ? 'Uncomplete' : 'Complete'}
- </Button>
- <Button kind="ghost" onClick={() => void onSave({ ...task, status: task.status === 'doing' ? 'pending' : 'doing' })}>
- Doing
- </Button>
- <Button kind="danger" onClick={() => void onSave({ ...task, status: 'archived' })}>
- Archive
- </Button>
  </div>
- </Card>
+ </div>
+ </div>
+ );
+}
+
+
+type CsvImportProps = {
+ projects: Project[];
+ events: PlannerEvent[];
+ saveProject: (project: Project) => Promise<void>;
+ saveTask: (task: Task) => Promise<void>;
+ onSelectProject: (id: string) => void;
+};
+
+function CsvImport({ projects, events, saveProject, saveTask, onSelectProject }: CsvImportProps) {
+ const [result, setResult] = useState<CsvImportResult | null>(null);
+ const [busy, setBusy] = useState(false);
+
+ const importCsv = async (event: ChangeEvent<HTMLInputElement>) => {
+ const file = event.target.files?.[0];
+ event.target.value = '';
+ if (!file) return;
+
+ setBusy(true);
+ setResult(null);
+
+ try {
+ const rows = parseCsv(await file.text());
+ const projectMap = new Map(projects.map((project) => [project.title.trim().toLowerCase(), project]));
+ let firstImportedProjectId = '';
+ let importedProjects = 0;
+ let importedTasks = 0;
+ let skippedRows = 0;
+
+ for (const row of rows) {
+ const projectTitle = csvKey(row, ['project', 'project_name', 'project_title', 'projectname']);
+ const taskTitle = csvKey(row, ['task', 'task_name', 'task_title', 'taskname']);
+ if (!projectTitle && !taskTitle) {
+ skippedRows += 1;
+ continue;
+ }
+
+ const projectKey = (projectTitle || 'Imported project').toLowerCase();
+ let project = projectMap.get(projectKey);
+ if (!project) {
+ const linkedEventName = csvKey(row, ['event', 'linked_event', 'event_name']);
+ const linkedEvent = events.find((current) => current.meta.name.trim().toLowerCase() === linkedEventName.trim().toLowerCase());
+ project = {
+ ...blankProject(),
+ title: projectTitle || 'Imported project',
+ owner: csvKey(row, ['project_owner', 'owner']),
+ status: parseStatus(csvKey(row, ['project_status', 'status']), PROJECT_STATUSES, 'planning'),
+ priority: parseStatus(csvKey(row, ['project_priority', 'priority']), PRIORITIES, 'medium'),
+ due_date: csvKey(row, ['project_due_date', 'due_date', 'deadline']) || null,
+ linked_event_id: linkedEvent?.id || null,
+ description: csvKey(row, ['project_description', 'description']),
+ notes: csvKey(row, ['project_notes']),
+ created_at: now(),
+ updated_at: now(),
+ };
+ await saveProject(project);
+ projectMap.set(projectKey, project);
+ firstImportedProjectId ||= project.id;
+ importedProjects += 1;
+ }
+
+ if (taskTitle) {
+ const task = {
+ ...blankTask(),
+ project_id: project.id,
+ title: taskTitle,
+ status: parseStatus(csvKey(row, ['task_status', 'status']), TASK_STATUSES, 'pending'),
+ priority: parseStatus(csvKey(row, ['task_priority', 'priority']), PRIORITIES, 'medium'),
+ owner: csvKey(row, ['task_owner', 'assignee', 'owner']),
+ due_date: csvKey(row, ['task_due_date', 'task_deadline', 'deadline']) || null,
+ notes: csvKey(row, ['task_notes', 'notes']),
+ checklist: csvKey(row, ['checklist', 'subtasks'])
+ .split('|')
+ .map((item) => item.trim())
+ .filter(Boolean),
+ image_urls: csvKey(row, ['image_urls', 'images'])
+ .split('|')
+ .map((item) => item.trim())
+ .filter(Boolean),
+ };
+ await saveTask(task);
+ importedTasks += 1;
+ }
+ }
+
+ if (firstImportedProjectId) onSelectProject(firstImportedProjectId);
+ setResult({ importedProjects, importedTasks, skippedRows, message: `Imported ${importedProjects} project${importedProjects === 1 ? '' : 's'} and ${importedTasks} task${importedTasks === 1 ? '' : 's'}.` });
+ } catch {
+ setResult({ importedProjects: 0, importedTasks: 0, skippedRows: 0, message: 'CSV import failed. Check the file format and headers.' });
+ } finally {
+ setBusy(false);
+ }
+ };
+
+ return (
+ <Section title="CSV import" right={<Badge>Projects + tasks</Badge>}>
+ <p className="eos-body eos-muted">
+ Upload a CSV to create projects and tasks. Each task row must include a project name so it can be tied to the correct project.
+ </p>
+ <div className="eos-subcard eos-stack">
+ <p className="eos-caption eos-muted">Supported headers</p>
+ <p className="eos-body">
+ project, task, notes, status, priority, owner, deadline, project_status, project_priority, project_description, project_notes, task_status, task_priority, task_owner, task_due_date, task_notes, checklist
+ </p>
+ </div>
+ <Field label="CSV file">
+ <input type="file" accept=".csv,text/csv" onChange={importCsv} disabled={busy} />
+ </Field>
+ {result && <p className="eos-body">{result.message}{result.skippedRows ? ` Skipped ${result.skippedRows} empty row${result.skippedRows === 1 ? '' : 's'}.` : ''}</p>}
+ </Section>
  );
 }
 
@@ -330,7 +538,6 @@ export default function ProjectManagement() {
  const selectedProject = projects.find((project) => project.id === selectedProjectId) || projects[0];
  const projectTasks = useMemo(() => (selectedProject ? tasks.filter((task) => task.project_id === selectedProject.id) : []), [selectedProject, tasks]);
  const visibleProjectTasks = projectTasks.filter((task) => task.status !== 'archived');
- const archivedProjectTasks = projectTasks.filter((task) => task.status === 'archived');
 
  const stats = {
  allProjects: projects.length,
@@ -362,6 +569,8 @@ export default function ProjectManagement() {
  <div className="space-y-5">
  <ProjectSelector projects={projects} selectedProjectId={selectedProject?.id || ''} onSelect={setSelectedProjectId} onCreate={createProject} />
 
+ <CsvImport projects={projects} events={events} saveProject={saveProject} saveTask={saveTask} onSelectProject={setSelectedProjectId} />
+
  {selectedProject ? (
  <>
  <Card>
@@ -391,26 +600,19 @@ export default function ProjectManagement() {
 
  <ProjectEditor events={events} project={selectedProject} saveProject={saveProject} deleteProject={deleteSelectedProject} />
 
- <Section title="Project tasks" openDefault right={<Badge>{visibleProjectTasks.length}</Badge>}>
- {visibleProjectTasks.length === 0 && <p className="eos-body eos-muted">No tasks in this project yet.</p>}
- {ACTIVE_TASK_STATUSES.map((status) => {
- const statusTasks = visibleProjectTasks.filter((task) => task.status === status);
+ <Section title="Project tasks" openDefault right={<Badge>{projectTasks.length}</Badge>}>
+ {projectTasks.length === 0 && <p className="eos-body eos-muted">No tasks in this project yet.</p>}
+ {TASK_STATUSES.map((status) => {
+ const statusTasks = projectTasks.filter((task) => task.status === status);
  return (
- <Section key={status} title={status[0].toUpperCase() + status.slice(1)} openDefault={status !== 'done'} right={<Badge>{statusTasks.length}</Badge>}>
- {statusTasks.length === 0 && <p className="eos-body eos-muted">No {status} tasks.</p>}
+ <PlainCollapsible key={status} title={status[0].toUpperCase() + status.slice(1)} count={statusTasks.length} openDefault={status !== 'archived'}>
+ {statusTasks.length === 0 && <p className="eos-body eos-muted py-3">No {status} tasks.</p>}
  {statusTasks.map((task) => (
- <TaskCard key={task.id} task={task} onEdit={setTaskDraft} onSave={saveTask} />
+ <TaskListRow key={task.id} task={task} onEdit={setTaskDraft} onSave={saveTask} />
  ))}
- </Section>
+ </PlainCollapsible>
  );
  })}
- </Section>
-
- <Section title="Archived tasks" right={<Badge>{archivedProjectTasks.length}</Badge>}>
- {archivedProjectTasks.length === 0 && <p className="eos-body eos-muted">No archived tasks for this project.</p>}
- {archivedProjectTasks.map((task) => (
- <TaskCard key={task.id} task={task} onEdit={setTaskDraft} onSave={saveTask} />
- ))}
  </Section>
  </>
  ) : (
