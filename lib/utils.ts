@@ -1,16 +1,21 @@
 export function cx(...values: Array<string | false | undefined | null>) {
-  return values.filter(Boolean).join(' ');
+  return values.filter(Boolean).join(" ");
 }
 
 export function cleanUrl(value: string) {
-  const trimmed = (value || '').trim();
-  if (!trimmed) return '';
+  const trimmed = (value || "").trim();
+  if (!trimmed) return "";
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
 
 export function publicArtistFormLink() {
-  if (typeof window === 'undefined') return '/artist-booking';
+  if (typeof window === "undefined") return "/artist-booking";
   return `${window.location.origin}/artist-booking`;
+}
+
+export function publicVolunteerFormLink() {
+  if (typeof window === "undefined") return "/volunteer-signup";
+  return `${window.location.origin}/volunteer-signup`;
 }
 
 export function fileToDataUrl(file: File): Promise<string> {
@@ -23,5 +28,5 @@ export function fileToDataUrl(file: File): Promise<string> {
 }
 
 export function dateSort(a?: string, b?: string) {
-  return (a || '9999').localeCompare(b || '9999');
+  return (a || "9999").localeCompare(b || "9999");
 }

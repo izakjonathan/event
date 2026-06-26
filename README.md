@@ -1,35 +1,39 @@
-# EventOS v60 — Project Tasks + CSV Import
+# EventOS v64 — Staff / Volunteers module
 
-Project Management update focused on the selected-project task workflow.
+Built from v63.
 
-## Changes
+## Added
 
-- Project tasks remain inside one collapsible `Project tasks` card.
-- Pending, Doing, Done and Archived groups are collapsible but are not wrapped as nested cards.
-- Tasks inside each group render as a clean list with horizontal divider lines.
-- Task status is changed with a dropdown: pending, doing, done, archived.
-- Task notes now show directly under the task name.
-- Each task still has a Settings button for full editing.
-- Added CSV import for projects and tasks.
-- CSV import can create new projects and tasks tied to each project.
-- Manual project/task creation remains unchanged.
+- New `Staff / Volunteers` module on Main.
+- New `/staff` internal staff management route.
+- New `/volunteer-signup` public volunteer form route.
+- Public volunteer form has no dock/navigation and asks volunteers for:
+  - name
+  - phone
+  - email
+- Staff records can be manually added or submitted through the public link.
+- Staff can be assigned to multiple events and multiple projects, or no assignments.
+- Staff records include:
+  - name
+  - phone
+  - email
+  - position
+  - description
+  - availability
+  - status
+  - linked events
+  - linked projects
+  - internal notes
+- Staff data saves locally and through Supabase when configured.
+- Supabase schema now includes `staff_members` table and prototype policies.
 
-## CSV headers supported
+## Kept
 
-`project`, `task`, `notes`, `status`, `priority`, `owner`, `deadline`, `project_status`, `project_priority`, `project_description`, `project_notes`, `task_status`, `task_priority`, `task_owner`, `task_due_date`, `task_notes`, `checklist`, `event`, `image_urls`
+- Public artist form has no dock.
+- Existing Artist Management multi-event linking.
+- Existing Project Management, Event Planner, UI Studio background image, dock and iPhone icon fixes.
 
-Checklist and image URLs can use `|` as a separator.
-
-## Verification
+## Verify
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
-- All routes build as static pages.
-
-## v61 project task layout polish
-- Project task groups remain collapsible but are no longer visually nested as cards.
-- Pending, Doing, Done and Archived groups have clearer section separation.
-- Tasks are shown as list rows with horizontal dividers instead of cards.
-- Task notes remain visible under the task name.
-- Status dropdown and Settings button now share the same height.
-- CSV import and manual project/task creation remain unchanged.

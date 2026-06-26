@@ -1,12 +1,46 @@
-export type EventStatus = 'idea' | 'quoted' | 'confirmed' | 'cancelled' | 'completed';
-export type LineKind = 'income' | 'expense';
-export type LineMode = 'fixed' | 'perTicketHolder' | 'percentageOfTickets';
-export type ArtistSubmissionStatus = 'new' | 'interested' | 'contacted' | 'booked' | 'rejected' | 'archived';
-export type EventArtistStatus = 'proposed' | 'contacted' | 'confirmed' | 'cancelled';
-export type ProductCategory = 'Beer' | 'Wine' | 'Cocktail' | 'Shot' | 'Soft drink' | 'Coffee' | 'Other';
-export type ProjectStatus = 'idea' | 'planning' | 'in-progress' | 'waiting' | 'done' | 'cancelled';
-export type TaskStatus = 'pending' | 'doing' | 'done' | 'archived';
-export type Priority = 'low' | 'medium' | 'high' | 'urgent';
+export type EventStatus =
+  | "idea"
+  | "quoted"
+  | "confirmed"
+  | "cancelled"
+  | "completed";
+export type LineKind = "income" | "expense";
+export type LineMode = "fixed" | "perTicketHolder" | "percentageOfTickets";
+export type ArtistSubmissionStatus =
+  | "new"
+  | "interested"
+  | "contacted"
+  | "booked"
+  | "rejected"
+  | "archived";
+export type StaffStatus =
+  | "new"
+  | "available"
+  | "assigned"
+  | "inactive"
+  | "archived";
+export type EventArtistStatus =
+  | "proposed"
+  | "contacted"
+  | "confirmed"
+  | "cancelled";
+export type ProductCategory =
+  | "Beer"
+  | "Wine"
+  | "Cocktail"
+  | "Shot"
+  | "Soft drink"
+  | "Coffee"
+  | "Other";
+export type ProjectStatus =
+  | "idea"
+  | "planning"
+  | "in-progress"
+  | "waiting"
+  | "done"
+  | "cancelled";
+export type TaskStatus = "pending" | "doing" | "done" | "archived";
+export type Priority = "low" | "medium" | "high" | "urgent";
 
 export type EventMeta = {
   name: string;
@@ -19,7 +53,6 @@ export type EventMeta = {
   notes: string;
   status: EventStatus;
 };
-
 
 export type EventReviewMetrics = {
   eventType: string;
@@ -226,6 +259,23 @@ export type Task = {
   updated_at: string;
 };
 
+export type StaffMember = {
+  id: string;
+  owner_key: string;
+  name: string;
+  phone: string;
+  email: string;
+  position: string;
+  description: string;
+  availability: string;
+  status: StaffStatus;
+  linked_event_ids: string[];
+  linked_project_ids: string[];
+  notes: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Supplier = {
   id: string;
   owner_key: string;
@@ -242,6 +292,6 @@ export type Supplier = {
 };
 
 export type Alert = {
-  type: 'ok' | 'warn' | 'bad';
+  type: "ok" | "warn" | "bad";
   text: string;
 };

@@ -118,7 +118,7 @@ function parseCsv(csv: string) {
  });
 }
 
-function PlainCollapsible({ title, count, children, openDefault = true }: { title: string; count: number; children: React.ReactNode; openDefault?: boolean }) {
+function PlainCollapsible({ title, count, children, openDefault = false }: { title: string; count: number; children: React.ReactNode; openDefault?: boolean }) {
  const [open, setOpen] = useState(openDefault);
  return (
  <div className="eos-task-group">
@@ -189,7 +189,7 @@ function ProjectEditor({ events, project, saveProject, deleteProject }: ProjectE
  return (
  <Section
  title="Project details"
- openDefault
+
  right={<Badge tone={project.priority === 'urgent' ? 'bad' : project.priority === 'high' ? 'warn' : 'neutral'}>{project.status}</Badge>}
  >
  <Row>
@@ -308,7 +308,7 @@ function TaskModal({ projects, taskDraft, selectedProjectId, setTaskDraft, saveT
  <textarea value={task.notes} onChange={(event) => setDraft({ notes: event.target.value })} />
  </Field>
 
- <Section title="Checklist" openDefault>
+ <Section title="Checklist">
  {task.checklist.length === 0 && <p className="eos-body eos-muted">No subtasks yet.</p>}
  {task.checklist.map((item, index) => (
  <div key={index} className="flex gap-2">
@@ -600,12 +600,12 @@ export default function ProjectManagement() {
 
  <ProjectEditor events={events} project={selectedProject} saveProject={saveProject} deleteProject={deleteSelectedProject} />
 
- <Section title="Project tasks" openDefault right={<Badge>{projectTasks.length}</Badge>}>
+ <Section title="Project tasks" right={<Badge>{projectTasks.length}</Badge>}>
  {projectTasks.length === 0 && <p className="eos-body eos-muted">No tasks in this project yet.</p>}
  {TASK_STATUSES.map((status) => {
  const statusTasks = projectTasks.filter((task) => task.status === status);
  return (
- <PlainCollapsible key={status} title={status[0].toUpperCase() + status.slice(1)} count={statusTasks.length} openDefault={status !== 'archived'}>
+ <PlainCollapsible key={status} title={status[0].toUpperCase() + status.slice(1)} count={statusTasks.length}>
  {statusTasks.length === 0 && <p className="eos-body eos-muted py-3">No {status} tasks.</p>}
  {statusTasks.map((task) => (
  <TaskListRow key={task.id} task={task} onEdit={setTaskDraft} onSave={saveTask} />

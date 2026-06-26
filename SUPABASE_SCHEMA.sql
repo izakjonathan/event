@@ -72,6 +72,24 @@ create table if not exists public.ui_studio_presets (
   updated_at timestamptz not null default now()
 );
 
+
+create table if not exists public.staff_members (
+  id uuid primary key default gen_random_uuid(),
+  owner_key text not null default 'default-workspace',
+  name text not null default '',
+  phone text not null default '',
+  email text not null default '',
+  position text not null default '',
+  description text not null default '',
+  availability text not null default '',
+  status text not null default 'new' check (status in ('new', 'available', 'assigned', 'inactive', 'archived')),
+  linked_event_ids jsonb not null default '[]'::jsonb,
+  linked_project_ids jsonb not null default '[]'::jsonb,
+  notes text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.suppliers (
   id uuid primary key default gen_random_uuid(),
   owner_key text not null default 'default-workspace',
@@ -93,6 +111,7 @@ create index if not exists idx_projects_event on public.project_management_proje
 create index if not exists idx_tasks_event_status on public.project_management_tasks(linked_event_id, status);
 create index if not exists idx_ui_studio_presets_owner_updated on public.ui_studio_presets(owner_key, updated_at desc);
 create index if not exists idx_suppliers_owner_updated on public.suppliers(owner_key, updated_at desc);
+create index if not exists idx_staff_members_owner_updated on public.staff_members(owner_key, updated_at desc);
 
 alter table public.event_plans enable row level security;
 alter table public.artist_submissions enable row level security;
@@ -100,6 +119,7 @@ alter table public.project_management_projects enable row level security;
 alter table public.project_management_tasks enable row level security;
 alter table public.ui_studio_presets enable row level security;
 alter table public.suppliers enable row level security;
+alter table public.staff_members enable row level security;
 
 -- Prototype policies: anonymous shared-link access. Harden before production.
 drop policy if exists "prototype select event plans" on public.event_plans;
@@ -146,6 +166,16 @@ drop policy if exists "prototype update ui presets" on public.ui_studio_presets;
 create policy "prototype update ui presets" on public.ui_studio_presets for update to anon using (true) with check (true);
 drop policy if exists "prototype delete ui presets" on public.ui_studio_presets;
 create policy "prototype delete ui presets" on public.ui_studio_presets for delete to anon using (true);
+
+
+drop policy if exists "prototype select staff members" on public.staff_members;
+create policy "prototype select staff members" on public.staff_members for select to anon using (true);
+drop policy if exists "prototype insert staff members" on public.staff_members;
+create policy "prototype insert staff members" on public.staff_members for insert to anon with check (true);
+drop policy if exists "prototype update staff members" on public.staff_members;
+create policy "prototype update staff members" on public.staff_members for update to anon using (true) with check (true);
+drop policy if exists "prototype delete staff members" on public.staff_members;
+create policy "prototype delete staff members" on public.staff_members for delete to anon using (true);
 
 drop policy if exists "prototype select suppliers" on public.suppliers;
 create policy "prototype select suppliers" on public.suppliers for select to anon using (true);

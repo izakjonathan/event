@@ -166,6 +166,20 @@ export function AppShell({ children }: AppShellProps) {
  );
 }
 
+export function PublicShell({ children }: AppShellProps) {
+ useEffect(() => {
+  applyTheme(readSavedTheme());
+ }, []);
+
+ return (
+  <main className="eos-root mx-auto min-h-screen max-w-[430px]">
+   <section className="relative z-10 px-4 pb-[calc(env(safe-area-inset-bottom)+32px)] pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
+    {children}
+   </section>
+  </main>
+ );
+}
+
 export function Button({
  children,
  onClick,

@@ -11,29 +11,32 @@ import {
   StaffLine,
   Task,
   Supplier,
+  StaffMember,
   TermsPlan,
   TicketTier,
-} from './types';
+} from "./types";
 
-export const id = () => (crypto?.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+export const id = () =>
+  crypto?.randomUUID
+    ? crypto.randomUUID()
+    : Math.random().toString(36).slice(2);
 export const now = () => new Date().toISOString();
 
 export const defaultMeta = (): EventMeta => ({
-  name: 'Untitled event',
-  date: '',
-  endDate: '',
-  location: '',
-  time: '',
-  endTime: '',
-  terms: '',
-  notes: '',
-  status: 'idea',
+  name: "Untitled event",
+  date: "",
+  endDate: "",
+  location: "",
+  time: "",
+  endTime: "",
+  terms: "",
+  notes: "",
+  status: "idea",
 });
 
-
 export const defaultReview = (): EventReviewMetrics => ({
-  eventType: '',
-  label: '',
+  eventType: "",
+  label: "",
   expectedGuests: 0,
   actualGuests: 0,
   plannedStaff: 0,
@@ -45,7 +48,7 @@ export const defaultReview = (): EventReviewMetrics => ({
   barRevenue: 0,
   ticketRevenue: 0,
   otherRevenue: 0,
-  reviewNotes: '',
+  reviewNotes: "",
 });
 
 export const defaultBar = (): BarPlan => ({
@@ -54,7 +57,7 @@ export const defaultBar = (): BarPlan => ({
   customGuests: 0,
   spendPerGuest: 80,
   costPercent: 28,
-  notes: '',
+  notes: "",
 });
 
 export const defaultTerms = (): TermsPlan => ({
@@ -63,99 +66,106 @@ export const defaultTerms = (): TermsPlan => ({
   organizerBarProfitShare: 100,
   flatVenueHire: 0,
   minimumVenueGuarantee: 0,
-  notes: '',
+  notes: "",
 });
 
 export const defaultScenarios = (): Scenario[] =>
-  ['Low', 'Expected', 'Best case'].map((name, index) => ({
+  ["Low", "Expected", "Best case"].map((name, index) => ({
     id: id(),
     name,
     ticketsSold: [30, 75, 120][index],
     averageTicketPrice: 90,
     barSpendPerGuest: [55, 80, 110][index],
     extraExpenses: 0,
-    notes: '',
+    notes: "",
   }));
 
-export const ticket = (name = 'Tickets', price = 90, capacity = 100): TicketTier => ({
+export const ticket = (
+  name = "Tickets",
+  price = 90,
+  capacity = 100,
+): TicketTier => ({
   id: id(),
   name,
   price,
   sold: 0,
   capacity,
-  notes: '',
+  notes: "",
 });
 
-export const line = (kind: 'income' | 'expense', name = kind === 'income' ? 'Extra income' : 'Expense'): MoneyLine => ({
+export const line = (
+  kind: "income" | "expense",
+  name = kind === "income" ? "Extra income" : "Expense",
+): MoneyLine => ({
   id: id(),
   kind,
   name,
   amount: 0,
   quantity: 1,
-  mode: 'fixed',
-  notes: '',
+  mode: "fixed",
+  notes: "",
 });
 
 export const staff = (): StaffLine => ({
   id: id(),
-  role: 'Bartender',
+  role: "Bartender",
   people: 1,
   hours: 5,
   hourlyWage: 160,
   extraPercent: 12.5,
-  notes: '',
+  notes: "",
 });
 
 export const defaultBarPlanner = (): BarPlannerPayload => ({
-  notes: '',
+  notes: "",
   products: [
     {
       id: id(),
-      name: 'House beer',
-      category: 'Beer',
-      supplier: '',
-      unitType: 'keg',
-      unitSize: '20L',
+      name: "House beer",
+      category: "Beer",
+      supplier: "",
+      unitType: "keg",
+      unitSize: "20L",
       buyPrice: 650,
       sellPrice: 55,
       expectedQty: 60,
       menuVisible: true,
-      menuDescription: 'House draft beer',
+      menuDescription: "House draft beer",
     },
     {
       id: id(),
-      name: 'House wine',
-      category: 'Wine',
-      supplier: '',
-      unitType: 'bottle',
-      unitSize: '75cl',
+      name: "House wine",
+      category: "Wine",
+      supplier: "",
+      unitType: "bottle",
+      unitSize: "75cl",
       buyPrice: 55,
       sellPrice: 65,
       expectedQty: 18,
       menuVisible: true,
-      menuDescription: 'House wine by the glass',
+      menuDescription: "House wine by the glass",
     },
     {
       id: id(),
-      name: 'Shot',
-      category: 'Shot',
-      supplier: '',
-      unitType: 'bottle',
-      unitSize: '70cl',
+      name: "Shot",
+      category: "Shot",
+      supplier: "",
+      unitType: "bottle",
+      unitSize: "70cl",
       buyPrice: 110,
       sellPrice: 35,
       expectedQty: 30,
       menuVisible: true,
-      menuDescription: 'House shot',
+      menuDescription: "House shot",
     },
   ],
   staff: [
     {
       id: id(),
-      role: 'Bartender',
+      role: "Bartender",
       staffCount: 2,
-      startTime: '18:00',
-      endTime: '01:00',
+      startTime: "18:00",
+      endTime: "01:00",
       hourlyWage: 160,
     },
   ],
@@ -178,37 +188,40 @@ const baseEvent = (): PlannerEvent => ({
 
 export function eventFromTemplate(template: string): PlannerEvent {
   const event = baseEvent();
-  event.meta.name = template === 'Blank' ? 'Untitled event' : template;
+  event.meta.name = template === "Blank" ? "Untitled event" : template;
 
-  if (template === 'Concert') {
-    event.tickets = [ticket('Presale', 90, 80), ticket('Door', 110, 40)];
-    event.lines = [line('expense', 'Sound technician'), line('expense', 'Marketing')];
+  if (template === "Concert") {
+    event.tickets = [ticket("Presale", 90, 80), ticket("Door", 110, 40)];
+    event.lines = [
+      line("expense", "Sound technician"),
+      line("expense", "Marketing"),
+    ];
     event.staff = [staff()];
     event.bar.enabled = true;
-  } else if (template === 'Quiz night') {
-    event.tickets = [ticket('Team ticket', 50, 80)];
-    event.lines = [line('expense', 'Quiz host')];
+  } else if (template === "Quiz night") {
+    event.tickets = [ticket("Team ticket", 50, 80)];
+    event.lines = [line("expense", "Quiz host")];
     event.staff = [staff()];
     event.bar.enabled = true;
     event.bar.spendPerGuest = 65;
-  } else if (template === 'Private party') {
+  } else if (template === "Private party") {
     event.tickets = [];
-    event.lines = [{ ...line('income', 'Room hire'), amount: 3500 }];
+    event.lines = [{ ...line("income", "Room hire"), amount: 3500 }];
     event.staff = [staff()];
     event.bar.enabled = true;
-  } else if (template === 'DJ night') {
-    event.tickets = [ticket('Entry', 80, 120)];
-    event.lines = [line('expense', 'DJ fee')];
+  } else if (template === "DJ night") {
+    event.tickets = [ticket("Entry", 80, 120)];
+    event.lines = [line("expense", "DJ fee")];
     event.staff = [staff()];
     event.bar.enabled = true;
     event.bar.spendPerGuest = 100;
-  } else if (template === 'Football screening') {
-    event.tickets = [ticket('Table reservation', 0, 80)];
+  } else if (template === "Football screening") {
+    event.tickets = [ticket("Table reservation", 0, 80)];
     event.staff = [staff()];
     event.bar.enabled = true;
-  } else if (template === 'Corporate event') {
-    event.lines = [{ ...line('income', 'Event package'), amount: 12000 }];
-    event.staff = [staff(), { ...staff(), id: id(), role: 'Host' }];
+  } else if (template === "Corporate event") {
+    event.lines = [{ ...line("income", "Event package"), amount: 12000 }];
+    event.staff = [staff(), { ...staff(), id: id(), role: "Host" }];
     event.bar.enabled = true;
   } else {
     event.tickets = [ticket()];
@@ -228,7 +241,10 @@ export function hydrateEvent(raw: any): PlannerEvent {
   next.staff = Array.isArray(raw?.staff) ? raw.staff : [];
   next.bar = { ...base.bar, ...(raw?.bar || {}) };
   next.review = { ...base.review, ...(raw?.review || {}) };
-  next.scenarios = Array.isArray(raw?.scenarios) && raw.scenarios.length ? raw.scenarios : base.scenarios;
+  next.scenarios =
+    Array.isArray(raw?.scenarios) && raw.scenarios.length
+      ? raw.scenarios
+      : base.scenarios;
   next.termsPlan = { ...base.termsPlan, ...(raw?.termsPlan || {}) };
   next.files = Array.isArray(raw?.files) ? raw.files : [];
   next.artists = Array.isArray(raw?.artists) ? raw.artists : [];
@@ -237,7 +253,9 @@ export function hydrateEvent(raw: any): PlannerEvent {
     next.barPlanner = {
       ...defaultBarPlanner(),
       ...raw.barPlanner,
-      products: Array.isArray(raw.barPlanner.products) ? raw.barPlanner.products : [],
+      products: Array.isArray(raw.barPlanner.products)
+        ? raw.barPlanner.products
+        : [],
       staff: Array.isArray(raw.barPlanner.staff) ? raw.barPlanner.staff : [],
     };
   }
@@ -247,36 +265,36 @@ export function hydrateEvent(raw: any): PlannerEvent {
 
 export const blankSubmission = (): ArtistSubmission => ({
   id: id(),
-  artist_name: '',
-  contact_name: '',
-  email: '',
-  phone: '',
-  genre: '',
-  description: '',
-  image_url: '',
-  availability: '',
-  availability_start_time: '',
-  availability_end_time: '',
+  artist_name: "",
+  contact_name: "",
+  email: "",
+  phone: "",
+  genre: "",
+  description: "",
+  image_url: "",
+  availability: "",
+  availability_start_time: "",
+  availability_end_time: "",
   preferred_fee: 0,
-  technical_needs: '',
-  hospitality_needs: '',
-  notes: '',
+  technical_needs: "",
+  hospitality_needs: "",
+  notes: "",
   links: {},
-  status: 'new',
+  status: "new",
   created_at: now(),
   updated_at: now(),
 });
 
 export const blankProject = (): Project => ({
   id: id(),
-  title: 'New project',
-  status: 'idea',
-  priority: 'medium',
-  owner: '',
+  title: "New project",
+  status: "idea",
+  priority: "medium",
+  owner: "",
   due_date: null,
   linked_event_id: null,
-  description: '',
-  notes: '',
+  description: "",
+  notes: "",
   created_at: now(),
   updated_at: now(),
 });
@@ -284,31 +302,47 @@ export const blankProject = (): Project => ({
 export const blankTask = (): Task => ({
   id: id(),
   project_id: null,
-  title: 'New task',
-  status: 'pending',
-  priority: 'medium',
-  owner: '',
+  title: "New task",
+  status: "pending",
+  priority: "medium",
+  owner: "",
   due_date: null,
   linked_event_id: null,
-  notes: '',
+  notes: "",
   checklist: [],
   image_urls: [],
   created_at: now(),
   updated_at: now(),
 });
 
-
 export const blankSupplier = (): Supplier => ({
   id: id(),
-  owner_key: 'default-workspace',
-  name: '',
-  contact_person: '',
-  phone: '',
-  email: '',
-  webpage: '',
-  type: '',
-  label: '',
-  note: '',
+  owner_key: "default-workspace",
+  name: "",
+  contact_person: "",
+  phone: "",
+  email: "",
+  webpage: "",
+  type: "",
+  label: "",
+  note: "",
+  created_at: now(),
+  updated_at: now(),
+});
+
+export const blankStaffMember = (): StaffMember => ({
+  id: id(),
+  owner_key: "default-workspace",
+  name: "",
+  phone: "",
+  email: "",
+  position: "",
+  description: "",
+  availability: "",
+  status: "new",
+  linked_event_ids: [],
+  linked_project_ids: [],
+  notes: "",
   created_at: now(),
   updated_at: now(),
 });

@@ -47,7 +47,7 @@ export default function SupplierList() {
           <p className="eos-body eos-muted mt-3">Save supplier contacts, categories, labels and notes for the workspace.</p>
         </Card>
 
-        <Section title="Add new supplier" openDefault>
+        <Section title="Add new supplier">
           {input('Name', draft.name, (value) => updateDraft('name', value))}
           <Row>
             {input('Contact person', draft.contact_person, (value) => updateDraft('contact_person', value))}
@@ -76,7 +76,7 @@ export default function SupplierList() {
           </Button>
         </Section>
 
-        <Section title="Saved suppliers" openDefault right={<Badge>{sortedSuppliers.length}</Badge>}>
+        <Section title="Saved suppliers" right={<Badge>{sortedSuppliers.length}</Badge>}>
           {sortedSuppliers.length === 0 && <p className="eos-body eos-muted">No suppliers saved yet.</p>}
 
           {sortedSuppliers.map((supplier) => (

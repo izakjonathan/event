@@ -19,6 +19,7 @@ function num(value: string) {
 export default function EventPlanner() {
  const store = useEventStore();
  const [draft, setDraft] = useState<PlannerEvent>(store.current ? hydrateEvent(store.current) : eventFromTemplate('Blank'));
+ const [selectedTemplate, setSelectedTemplate] = useState('Blank');
 
  useEffect(() => {
  if (store.current) {
@@ -101,45 +102,67 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Card>
 
  <Card>
+ <div className="grid grid-cols-1 gap-3">
  <Field label="Workspace key">
  <input value={store.ownerKey} onChange={(event) => store.setOwnerKey(event.target.value)} />
  </Field>
 
- <div className="mt-3 grid grid-cols-1 gap-3">
  <Field label="Load event">
- <select value={draft.id} onChange={(event) => load(event.target.value)}>
+ <select value={store.currentId || ''} onChange={(event) => load(event.target.value)}>
+ <option value="" disabled>
+ Choose saved event…
+ </option>
  {store.events.map((item) => (
  <option key={item.id} value={item.id}>
- {item.meta.name}
+ {item.meta.name || 'Untitled event'}
  </option>
  ))}
  </select>
  </Field>
+ </div>
+ </Card>
 
+ <Card>
+ <div className="flex items-start justify-between gap-3">
+ <div>
+ <p className="eos-caption eos-muted">Create event</p>
+ <h2 className="eos-title mt-1">New event</h2>
+ <p className="eos-body eos-muted">Choose a blank plan or a template, then add it as a saved event.</p>
+ </div>
+ </div>
+
+ <div className="mt-4 grid grid-cols-1 gap-3">
  <Field label="Template">
- <select onChange={(event) => setDraft(eventFromTemplate(event.target.value))} defaultValue="">
- <option value="" disabled>
- Create from…
- </option>
+ <select value={selectedTemplate} onChange={(event) => setSelectedTemplate(event.target.value)}>
  {templates.map((template) => (
  <option key={template}>{template}</option>
  ))}
  </select>
  </Field>
+ <Button
+ onClick={async () => {
+ const event = await store.createEvent(selectedTemplate);
+ setDraft(hydrateEvent(event));
+ }}
+ >
+ Add event
+ </Button>
  </div>
+ </Card>
 
- <div className="mt-3 grid grid-cols-3 gap-2">
- <Button kind="ghost" onClick={() => store.duplicateEvent(draft.id)}>
+ <Card>
+ <div className="grid grid-cols-3 gap-2">
+ <Button kind="ghost" onClick={() => store.duplicateEvent(draft.id)} disabled={!store.currentId}>
  Duplicate
  </Button>
- <Button kind="danger" onClick={() => store.deleteEvent(draft.id)}>
+ <Button kind="danger" onClick={() => store.deleteEvent(draft.id)} disabled={!store.currentId}>
  Delete
  </Button>
  <Button onClick={save}>Save</Button>
  </div>
  </Card>
 
- <Section title="Basic details" openDefault>
+ <Section title="Basic details">
  <input value={draft.meta.name} onChange={(event) => set({ meta: { ...draft.meta, name: event.target.value } })} />
  <Row>
  {input('Date', draft.meta.date, (value) => set({ meta: { ...draft.meta, date: String(value) } }), 'date')}
@@ -165,7 +188,7 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  </Section>
 
- <Section title="Event metrics / review" openDefault>
+ <Section title="Event metrics / review">
  <Row>
  {input('Event type', draft.review.eventType, (value) => set({ review: { ...draft.review, eventType: String(value) } }))}
  {input('Label', draft.review.label, (value) => set({ review: { ...draft.review, label: String(value) } }))}
@@ -326,7 +349,7 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  </Section>
 
- <Section title="Scenario planning" openDefault>
+ <Section title="Scenario planning">
  <div className="space-y-3">
  {draft.scenarios.map((scenario) => {
  const output = scenarioTotal(scenario, fixed);

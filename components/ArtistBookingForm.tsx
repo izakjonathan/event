@@ -5,7 +5,7 @@ import { blankSubmission, id } from '@/lib/defaults';
 import { supabase } from '@/lib/supabaseClient';
 import { cleanUrl, fileToDataUrl } from '@/lib/utils';
 import { useEventStore } from './EventStore';
-import { AppShell, Button, Card, Field, Row } from './ui/AppShell';
+import { Button, Card, Field, PublicShell, Row } from './ui/AppShell';
 
 const LINK_FIELDS = ['instagram', 'spotify', 'soundcloud', 'youtube', 'website'] as const;
 
@@ -69,7 +69,7 @@ export default function ArtistBookingForm() {
  );
 
  return (
- <AppShell>
+ <PublicShell>
  <form onSubmit={submit} className="space-y-5">
  <Card>
  <p className="eos-body eos-muted">Public submission form</p>
@@ -131,6 +131,6 @@ export default function ArtistBookingForm() {
  </Button>
  </Card>
  </form>
- </AppShell>
+ </PublicShell>
  );
 }

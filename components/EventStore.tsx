@@ -1,9 +1,33 @@
-'use client';
+"use client";
 
-import { createContext, ReactNode, useContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { blankProject, blankSubmission, blankSupplier, blankTask, eventFromTemplate, hydrateEvent, now } from '@/lib/defaults';
-import { supabase } from '@/lib/supabaseClient';
-import { ArtistSubmission, PlannerEvent, Project, Supplier, Task } from '@/lib/types';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  blankProject,
+  blankStaffMember,
+  blankSubmission,
+  blankSupplier,
+  blankTask,
+  eventFromTemplate,
+  hydrateEvent,
+  now,
+} from "@/lib/defaults";
+import { supabase } from "@/lib/supabaseClient";
+import {
+  ArtistSubmission,
+  PlannerEvent,
+  Project,
+  StaffMember,
+  Supplier,
+  Task,
+} from "@/lib/types";
 
 type Store = {
   ownerKey: string;
@@ -28,19 +52,35 @@ type Store = {
   suppliers: Supplier[];
   saveSupplier: (supplier: Supplier) => Promise<void>;
   deleteSupplier: (id: string) => Promise<void>;
+  staffMembers: StaffMember[];
+  saveStaffMember: (staffMember: StaffMember) => Promise<void>;
+  createStaffMember: (staffMember: StaffMember) => Promise<void>;
+  deleteStaffMember: (id: string) => Promise<void>;
   refresh: () => Promise<void>;
 };
 
 const StoreContext = createContext<Store | null>(null);
-const LOCAL_STORAGE_KEY = 'eos-v1';
-type LocalData = Partial<Pick<Store, 'ownerKey' | 'events' | 'artists' | 'projects' | 'tasks' | 'suppliers' | 'currentId'>>;
+const LOCAL_STORAGE_KEY = "eos-v1";
+type LocalData = Partial<
+  Pick<
+    Store,
+    | "ownerKey"
+    | "events"
+    | "artists"
+    | "projects"
+    | "tasks"
+    | "suppliers"
+    | "staffMembers"
+    | "currentId"
+  >
+>;
 
 function readLocal(): LocalData {
-  if (typeof window === 'undefined') return {};
+  if (typeof window === "undefined") return {};
 
   try {
-    const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
-    return data && typeof data === 'object' ? data : {};
+    const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "{}");
+    return data && typeof data === "object" ? data : {};
   } catch {
     return {};
   }
@@ -51,7 +91,7 @@ function stripStoredFiles(event: PlannerEvent): PlannerEvent {
     ...event,
     files: (event.files || []).map((file) => ({
       ...file,
-      dataUrl: file.dataUrl?.startsWith('data:') ? '' : file.dataUrl,
+      dataUrl: file.dataUrl?.startsWith("data:") ? "" : file.dataUrl,
     })),
   };
 }
@@ -64,25 +104,35 @@ function safeLocalData(data: any) {
 }
 
 function writeLocal(data: any) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(safeLocalData(data)));
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify(safeLocalData(data)),
+    );
   } catch {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(safeLocalData({ ...data, events: [] })));
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify(safeLocalData({ ...data, events: [] })),
+    );
   }
 }
 
 function scheduleLocalWrite(data: any) {
-  if (typeof window === 'undefined') return () => {};
+  if (typeof window === "undefined") return () => {};
 
   let cancelled = false;
   const save = () => {
     if (!cancelled) writeLocal(data);
   };
 
-  const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
-  const cancelIdle = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+  const requestIdle = (window as any).requestIdleCallback as
+    | undefined
+    | ((callback: () => void, options?: { timeout: number }) => number);
+  const cancelIdle = (window as any).cancelIdleCallback as
+    | undefined
+    | ((id: number) => void);
 
   if (requestIdle && cancelIdle) {
     const id = requestIdle(save, { timeout: 600 });
@@ -100,7 +150,11 @@ function scheduleLocalWrite(data: any) {
 }
 
 function dbToEvent(row: any) {
-  return hydrateEvent({ id: row.id, ...(row.payload || {}), updatedAt: row.updated_at });
+  return hydrateEvent({
+    id: row.id,
+    ...(row.payload || {}),
+    updatedAt: row.updated_at,
+  });
 }
 
 function eventToPayload(event: PlannerEvent) {
@@ -113,17 +167,48 @@ function eventToPayload(event: PlannerEvent) {
 export function EventStoreProvider({ children }: { children: ReactNode }) {
   const [initialLocal] = useState(readLocal);
 
-  const [ownerKey, setOwnerKeyState] = useState(initialLocal.ownerKey || 'default-workspace');
-  const [events, setEvents] = useState<PlannerEvent[]>(() => (initialLocal.events || []).map(hydrateEvent));
-  const [artists, setArtists] = useState<ArtistSubmission[]>(() => initialLocal.artists || []);
-  const [projects, setProjects] = useState<Project[]>(() => initialLocal.projects || []);
+  const [ownerKey, setOwnerKeyState] = useState(
+    initialLocal.ownerKey || "default-workspace",
+  );
+  const [events, setEvents] = useState<PlannerEvent[]>(() =>
+    (initialLocal.events || []).map(hydrateEvent),
+  );
+  const [artists, setArtists] = useState<ArtistSubmission[]>(
+    () => initialLocal.artists || [],
+  );
+  const [projects, setProjects] = useState<Project[]>(
+    () => initialLocal.projects || [],
+  );
   const [tasks, setTasks] = useState<Task[]>(() => initialLocal.tasks || []);
-  const [suppliers, setSuppliers] = useState<Supplier[]>(() => initialLocal.suppliers || []);
-  const [currentId, setCurrentId] = useState(initialLocal.currentId || '');
+  const [suppliers, setSuppliers] = useState<Supplier[]>(
+    () => initialLocal.suppliers || [],
+  );
+  const [staffMembers, setStaffMembers] = useState<StaffMember[]>(
+    () => initialLocal.staffMembers || [],
+  );
+  const [currentId, setCurrentId] = useState(initialLocal.currentId || "");
 
   useEffect(() => {
-    return scheduleLocalWrite({ ownerKey, events, artists, projects, tasks, suppliers, currentId });
-  }, [ownerKey, events, artists, projects, tasks, suppliers, currentId]);
+    return scheduleLocalWrite({
+      ownerKey,
+      events,
+      artists,
+      projects,
+      tasks,
+      suppliers,
+      staffMembers,
+      currentId,
+    });
+  }, [
+    ownerKey,
+    events,
+    artists,
+    projects,
+    tasks,
+    suppliers,
+    staffMembers,
+    currentId,
+  ]);
 
   const refresh = useCallback(async () => {
     if (!supabase) {
@@ -131,23 +216,69 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const [eventResponse, artistResponse, projectResponse, taskResponse, supplierResponse] = await Promise.all([
-        supabase.from('event_plans').select('*').eq('owner_key', ownerKey).order('event_date'),
-        supabase.from('artist_submissions').select('*').order('created_at', { ascending: false }),
-        supabase.from('project_management_projects').select('*').order('updated_at', { ascending: false }),
-        supabase.from('project_management_tasks').select('*').order('updated_at', { ascending: false }),
-        supabase.from('suppliers').select('*').eq('owner_key', ownerKey).order('updated_at', { ascending: false }),
+      const [
+        eventResponse,
+        artistResponse,
+        projectResponse,
+        taskResponse,
+        supplierResponse,
+        staffResponse,
+      ] = await Promise.all([
+        supabase
+          .from("event_plans")
+          .select("*")
+          .eq("owner_key", ownerKey)
+          .order("event_date"),
+        supabase
+          .from("artist_submissions")
+          .select("*")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("project_management_projects")
+          .select("*")
+          .order("updated_at", { ascending: false }),
+        supabase
+          .from("project_management_tasks")
+          .select("*")
+          .order("updated_at", { ascending: false }),
+        supabase
+          .from("suppliers")
+          .select("*")
+          .eq("owner_key", ownerKey)
+          .order("updated_at", { ascending: false }),
+        supabase
+          .from("staff_members")
+          .select("*")
+          .eq("owner_key", ownerKey)
+          .order("updated_at", { ascending: false }),
       ]);
 
-      if (eventResponse.error || artistResponse.error || projectResponse.error || taskResponse.error || supplierResponse.error) {
-        throw eventResponse.error || artistResponse.error || projectResponse.error || taskResponse.error || supplierResponse.error;
+      if (
+        eventResponse.error ||
+        artistResponse.error ||
+        projectResponse.error ||
+        taskResponse.error ||
+        supplierResponse.error ||
+        staffResponse.error
+      ) {
+        throw (
+          eventResponse.error ||
+          artistResponse.error ||
+          projectResponse.error ||
+          taskResponse.error ||
+          supplierResponse.error ||
+          staffResponse.error
+        );
       }
 
       setEvents((eventResponse.data || []).map(dbToEvent));
       setArtists(
         (artistResponse.data || []).map((artist: any) => ({
           ...artist,
-          links: typeof artist.links === 'string' ? JSON.parse(artist.links || '{}') : artist.links || {},
+          links:
+            typeof artist.links === "string"
+              ? JSON.parse(artist.links || "{}")
+              : artist.links || {},
         })),
       );
       setProjects(projectResponse.data || []);
@@ -159,6 +290,13 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
         })),
       );
       setSuppliers(supplierResponse.data || []);
+      setStaffMembers(
+        (staffResponse.data || []).map((staff: any) => ({
+          ...staff,
+          linked_event_ids: staff.linked_event_ids || [],
+          linked_project_ids: staff.linked_project_ids || [],
+        })),
+      );
     } catch {
       // Supabase is optional. Local data remains the source of truth if sync fails.
     }
@@ -169,8 +307,12 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
     const run = () => {
       if (!cancelled) void refresh();
     };
-    const requestIdle = (window as any).requestIdleCallback as undefined | ((callback: () => void, options?: { timeout: number }) => number);
-    const cancelIdle = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+    const requestIdle = (window as any).requestIdleCallback as
+      | undefined
+      | ((callback: () => void, options?: { timeout: number }) => number);
+    const cancelIdle = (window as any).cancelIdleCallback as
+      | undefined
+      | ((id: number) => void);
 
     if (requestIdle && cancelIdle) {
       const id = requestIdle(run, { timeout: 1200 });
@@ -188,65 +330,85 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const setOwnerKey = useCallback((value: string) => {
-    setOwnerKeyState(value || 'default-workspace');
+    setOwnerKeyState(value || "default-workspace");
   }, []);
 
-  const saveEvent = useCallback(async (event: PlannerEvent) => {
-    const next = { ...hydrateEvent(event), updatedAt: now() };
-    setEvents((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
-    setCurrentId(next.id);
+  const saveEvent = useCallback(
+    async (event: PlannerEvent) => {
+      const next = { ...hydrateEvent(event), updatedAt: now() };
+      setEvents((previous) => [
+        next,
+        ...previous.filter((current) => current.id !== next.id),
+      ]);
+      setCurrentId(next.id);
 
-    if (supabase) {
-      try {
-        const { error } = await supabase.from('event_plans').upsert({
-          id: next.id,
-          owner_key: ownerKey,
-          name: next.meta.name,
-          event_date: next.meta.date || null,
-          payload: eventToPayload(next),
-          updated_at: next.updatedAt,
-        });
+      if (supabase) {
+        try {
+          const { error } = await supabase.from("event_plans").upsert({
+            id: next.id,
+            owner_key: ownerKey,
+            name: next.meta.name,
+            event_date: next.meta.date || null,
+            payload: eventToPayload(next),
+            updated_at: next.updatedAt,
+          });
 
-        if (error) throw error;
-      } catch {
-        // Local optimistic save already completed.
+          if (error) throw error;
+        } catch {
+          // Local optimistic save already completed.
+        }
       }
-    }
-  }, [ownerKey]);
+    },
+    [ownerKey],
+  );
 
-  const createEvent = useCallback(async (template: string) => {
-    const event = eventFromTemplate(template);
-    await saveEvent(event);
-    return event;
-  }, [saveEvent]);
+  const createEvent = useCallback(
+    async (template: string) => {
+      const event = eventFromTemplate(template);
+      await saveEvent(event);
+      return event;
+    },
+    [saveEvent],
+  );
 
-  const duplicateEvent = useCallback(async (id: string) => {
-    const event = events.find((current) => current.id === id);
-    if (!event) return;
+  const duplicateEvent = useCallback(
+    async (id: string) => {
+      const event = events.find((current) => current.id === id);
+      if (!event) return;
 
-    await saveEvent(
-      hydrateEvent({
-        ...event,
-        id: crypto.randomUUID(),
-        meta: { ...event.meta, name: `${event.meta.name} copy` },
-        updatedAt: now(),
-      }),
-    );
-  }, [events, saveEvent]);
+      await saveEvent(
+        hydrateEvent({
+          ...event,
+          id: crypto.randomUUID(),
+          meta: { ...event.meta, name: `${event.meta.name} copy` },
+          updatedAt: now(),
+        }),
+      );
+    },
+    [events, saveEvent],
+  );
 
-  const deleteEvent = useCallback(async (id: string) => {
-    setEvents((previous) => previous.filter((event) => event.id !== id));
-    if (currentId === id) setCurrentId('');
-    if (supabase) await supabase.from('event_plans').delete().eq('id', id);
-  }, [currentId]);
+  const deleteEvent = useCallback(
+    async (id: string) => {
+      setEvents((previous) => previous.filter((event) => event.id !== id));
+      if (currentId === id) setCurrentId("");
+      if (supabase) await supabase.from("event_plans").delete().eq("id", id);
+    },
+    [currentId],
+  );
 
   const saveArtist = useCallback(async (artist: ArtistSubmission) => {
     const next = { ...blankSubmission(), ...artist, updated_at: now() };
-    setArtists((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
+    setArtists((previous) => [
+      next,
+      ...previous.filter((current) => current.id !== next.id),
+    ]);
 
     if (supabase) {
       try {
-        const { error } = await supabase.from('artist_submissions').upsert(next);
+        const { error } = await supabase
+          .from("artist_submissions")
+          .upsert(next);
         if (error) throw error;
       } catch {
         // Local optimistic save already completed.
@@ -258,39 +420,91 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
 
   const saveProject = useCallback(async (project: Project) => {
     const next = { ...blankProject(), ...project, updated_at: now() };
-    setProjects((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
-    if (supabase) await supabase.from('project_management_projects').upsert(next);
+    setProjects((previous) => [
+      next,
+      ...previous.filter((current) => current.id !== next.id),
+    ]);
+    if (supabase)
+      await supabase.from("project_management_projects").upsert(next);
   }, []);
 
   const deleteProject = useCallback(async (id: string) => {
     setProjects((previous) => previous.filter((project) => project.id !== id));
     setTasks((previous) => previous.filter((task) => task.project_id !== id));
     if (supabase) {
-      await supabase.from('project_management_tasks').delete().eq('project_id', id);
-      await supabase.from('project_management_projects').delete().eq('id', id);
+      await supabase
+        .from("project_management_tasks")
+        .delete()
+        .eq("project_id", id);
+      await supabase.from("project_management_projects").delete().eq("id", id);
     }
   }, []);
 
   const saveTask = useCallback(async (task: Task) => {
     const next = { ...blankTask(), ...task, updated_at: now() };
-    setTasks((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
-    if (supabase) await supabase.from('project_management_tasks').upsert(next);
+    setTasks((previous) => [
+      next,
+      ...previous.filter((current) => current.id !== next.id),
+    ]);
+    if (supabase) await supabase.from("project_management_tasks").upsert(next);
   }, []);
 
   const deleteTask = useCallback(async (id: string) => {
     setTasks((previous) => previous.filter((task) => task.id !== id));
-    if (supabase) await supabase.from('project_management_tasks').delete().eq('id', id);
+    if (supabase)
+      await supabase.from("project_management_tasks").delete().eq("id", id);
   }, []);
 
-  const saveSupplier = useCallback(async (supplier: Supplier) => {
-    const next = { ...blankSupplier(), ...supplier, owner_key: ownerKey, updated_at: now() };
-    setSuppliers((previous) => [next, ...previous.filter((current) => current.id !== next.id)]);
-    if (supabase) await supabase.from('suppliers').upsert(next);
-  }, [ownerKey]);
+  const saveSupplier = useCallback(
+    async (supplier: Supplier) => {
+      const next = {
+        ...blankSupplier(),
+        ...supplier,
+        owner_key: ownerKey,
+        updated_at: now(),
+      };
+      setSuppliers((previous) => [
+        next,
+        ...previous.filter((current) => current.id !== next.id),
+      ]);
+      if (supabase) await supabase.from("suppliers").upsert(next);
+    },
+    [ownerKey],
+  );
 
   const deleteSupplier = useCallback(async (id: string) => {
-    setSuppliers((previous) => previous.filter((supplier) => supplier.id !== id));
-    if (supabase) await supabase.from('suppliers').delete().eq('id', id);
+    setSuppliers((previous) =>
+      previous.filter((supplier) => supplier.id !== id),
+    );
+    if (supabase) await supabase.from("suppliers").delete().eq("id", id);
+  }, []);
+
+  const saveStaffMember = useCallback(
+    async (staffMember: StaffMember) => {
+      const next = {
+        ...blankStaffMember(),
+        ...staffMember,
+        owner_key: ownerKey,
+        linked_event_ids: staffMember.linked_event_ids || [],
+        linked_project_ids: staffMember.linked_project_ids || [],
+        updated_at: now(),
+      };
+      setStaffMembers((previous) => [
+        next,
+        ...previous.filter((current) => current.id !== next.id),
+      ]);
+      if (supabase) await supabase.from("staff_members").upsert(next);
+    },
+    [ownerKey],
+  );
+
+  const createStaffMember = saveStaffMember;
+
+  const deleteStaffMember = useCallback(async (id: string) => {
+    setStaffMembers((previous) =>
+      previous.filter((staffMember) => staffMember.id !== id),
+    );
+    if (supabase) await supabase.from("staff_members").delete().eq("id", id);
   }, []);
 
   const current = events.find((event) => event.id === currentId) || events[0];
@@ -300,7 +514,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       ownerKey,
       setOwnerKey,
       events,
-      currentId: current?.id || '',
+      currentId: current?.id || "",
       current,
       setCurrentId,
       saveEvent,
@@ -319,6 +533,10 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       suppliers,
       saveSupplier,
       deleteSupplier,
+      staffMembers,
+      saveStaffMember,
+      createStaffMember,
+      deleteStaffMember,
       refresh,
     }),
     [
@@ -329,6 +547,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       projects,
       tasks,
       suppliers,
+      staffMembers,
       setOwnerKey,
       saveEvent,
       createEvent,
@@ -342,15 +561,20 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       deleteTask,
       saveSupplier,
       deleteSupplier,
+      saveStaffMember,
+      createStaffMember,
+      deleteStaffMember,
       refresh,
     ],
   );
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+  return (
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  );
 }
 
 export function useEventStore() {
   const value = useContext(StoreContext);
-  if (!value) throw new Error('Store missing');
+  if (!value) throw new Error("Store missing");
   return value;
 }

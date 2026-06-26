@@ -106,7 +106,7 @@ export default function BarPlanner() {
  </Card>
  )}
 
- <Section title="Products" openDefault>
+ <Section title="Products">
  <div className="space-y-3">
  {plan.products.map((product) => {
  const totalsForProduct = barProductTotal(product);
