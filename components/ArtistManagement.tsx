@@ -1,201 +1,456 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { dkk } from '@/lib/calculations';
-import { id } from '@/lib/defaults';
-import { ArtistSubmission } from '@/lib/types';
-import { publicArtistFormLink } from '@/lib/utils';
-import { useEventStore } from './EventStore';
-import { AppShell, Badge, Button, Card, Field, Row, Section } from './ui/AppShell';
+import { useState } from "react";
+import { dkk } from "@/lib/calculations";
+import { id } from "@/lib/defaults";
+import { ArtistSubmission } from "@/lib/types";
+import { publicArtistFormLink } from "@/lib/utils";
+import { useEventStore } from "./EventStore";
+import {
+  AppShell,
+  Badge,
+  Button,
+  Card,
+  Field,
+  Row,
+  Section,
+} from "./ui/AppShell";
 
-const STATUSES = ['all', 'new', 'interested', 'contacted', 'booked', 'rejected', 'archived'] as const;
+const STATUSES = [
+  "all",
+  "new",
+  "interested",
+  "contacted",
+  "booked",
+  "rejected",
+  "archived",
+] as const;
 
 export default function ArtistManagement() {
- const { artists, events, saveArtist, saveEvent } = useEventStore();
- const [filter, setFilter] = useState<(typeof STATUSES)[number]>('all');
- const [drafts, setDrafts] = useState<Record<string, ArtistSubmission>>({});
+  const { artists, events, saveArtist, saveEvent } = useEventStore();
+  const [filter, setFilter] = useState<(typeof STATUSES)[number]>("all");
+  const [drafts, setDrafts] = useState<Record<string, ArtistSubmission>>({});
 
- const list = artists.filter((artist) => filter === 'all' || artist.status === filter);
- const getDraft = (artist: ArtistSubmission) => drafts[artist.id] || artist;
- const updateDraft = (artist: ArtistSubmission, key: string, value: any) => {
- setDrafts((current) => ({
- ...current,
- [artist.id]: {
- ...getDraft(artist),
- [key]: value,
- },
- }));
- };
+  const list = artists.filter(
+    (artist) => filter === "all" || artist.status === filter,
+  );
+  const getDraft = (artist: ArtistSubmission) => drafts[artist.id] || artist;
+  const updateDraft = (artist: ArtistSubmission, key: string, value: any) => {
+    setDrafts((current) => ({
+      ...current,
+      [artist.id]: {
+        ...getDraft(artist),
+        [key]: value,
+      },
+    }));
+  };
 
- async function linkArtist(artist: ArtistSubmission) {
- const event = events[0];
- if (!event) return;
+  const linkedEventIdsFor = (artistId: string) =>
+    events
+      .filter((event) =>
+        event.artists.some(
+          (eventArtist) => eventArtist.sourceSubmissionId === artistId,
+        ),
+      )
+      .map((event) => event.id);
 
- await saveEvent({
- ...event,
- artists: [
- ...event.artists,
- {
- id: id(),
- sourceSubmissionId: artist.id,
- artistName: artist.artist_name,
- contactName: artist.contact_name,
- email: artist.email,
- phone: artist.phone,
- genre: artist.genre,
- imageUrl: artist.image_url,
- fee: Number(artist.preferred_fee || 0),
- startTime: artist.availability_start_time || '',
- endTime: artist.availability_end_time || '',
- status: 'proposed',
- notes: artist.notes || '',
- },
- ],
- });
+  const eventLabel = (eventId: string) => {
+    const event = events.find((item) => item.id === eventId);
+    if (!event) return "Unknown event";
+    return [
+      event.meta.name || "Untitled event",
+      event.meta.date || "No date",
+      event.meta.location || "No venue",
+    ].join(" · ");
+  };
 
- await saveArtist({ ...artist, status: 'booked' });
- }
+  const artistForEvent = (artist: ArtistSubmission, existingId?: string) => ({
+    id: existingId || id(),
+    sourceSubmissionId: artist.id,
+    artistName: artist.artist_name,
+    contactName: artist.contact_name,
+    email: artist.email,
+    phone: artist.phone,
+    genre: artist.genre,
+    imageUrl: artist.image_url,
+    fee: Number(artist.preferred_fee || 0),
+    startTime: artist.availability_start_time || "",
+    endTime: artist.availability_end_time || "",
+    status: "proposed" as const,
+    notes: artist.notes || "",
+  });
 
- return (
- <AppShell>
- <div className="space-y-5">
- <Card>
- <p className="eos-body eos-muted">Artist submissions</p>
- <h2 className="eos-heading mt-2">Review and book</h2>
+  async function linkArtistToEvent(artist: ArtistSubmission, eventId: string) {
+    const event = events.find((item) => item.id === eventId);
+    if (!event) return;
 
- <div className="mt-4 flex gap-2 overflow-x-auto scrollbar-none">
- {STATUSES.map((status) => (
- <button
- key={status}
- onClick={() => setFilter(status)}
- className={`pill whitespace-nowrap border px-3 py-2 eos-body ${filter === status ? 'eos-primary' : 'eos-border eos-panel eos-muted'}`}
- >
- {status}
- </button>
- ))}
- </div>
+    const existing = event.artists.find(
+      (item) => item.sourceSubmissionId === artist.id,
+    );
+    const nextArtists = existing
+      ? event.artists.map((item) =>
+          item.sourceSubmissionId === artist.id
+            ? { ...artistForEvent(artist, item.id), status: item.status }
+            : item,
+        )
+      : [...event.artists, artistForEvent(artist)];
 
- <Button kind="ghost" className="mt-4 w-full" onClick={() => navigator.clipboard.writeText(publicArtistFormLink())}>
- Copy public artist form link
- </Button>
- </Card>
+    await saveEvent({ ...event, artists: nextArtists });
+    await saveArtist({ ...artist, status: "booked" });
+  }
 
- {list.length === 0 && (
- <Card>
- <p className="eos-muted">No artist submissions in this view.</p>
- </Card>
- )}
+  async function unlinkArtistFromEvent(
+    artist: ArtistSubmission,
+    eventId: string,
+  ) {
+    const event = events.find((item) => item.id === eventId);
+    if (!event) return;
+    await saveEvent({
+      ...event,
+      artists: event.artists.filter(
+        (item) => item.sourceSubmissionId !== artist.id,
+      ),
+    });
+  }
 
- {list.map((artist) => {
- const draft = getDraft(artist);
+  async function saveArtistAndLinkedEvents(artist: ArtistSubmission) {
+    await saveArtist(artist);
 
- return (
- <Section
- key={artist.id}
- title={draft.artist_name || 'Unnamed artist'}
- right={<Badge tone={draft.status === 'booked' ? 'ok' : draft.status === 'rejected' ? 'bad' : 'neutral'}>{draft.status}</Badge>}
- >
- <Card className="eos-panel">
- <div className="flex gap-3">
- {draft.image_url ? (
- <img src={draft.image_url} alt="" loading="lazy" decoding="async" className="h-20 w-20 rounded-[24px] object-cover" />
- ) : (
- <div className="grid h-20 w-20 place-items-center rounded-[24px] border eos-border eos-panel eos-muted">No img</div>
- )}
+    const linkedEvents = events.filter((event) =>
+      event.artists.some(
+        (eventArtist) => eventArtist.sourceSubmissionId === artist.id,
+      ),
+    );
+    await Promise.all(
+      linkedEvents.map((event) =>
+        saveEvent({
+          ...event,
+          artists: event.artists.map((eventArtist) =>
+            eventArtist.sourceSubmissionId === artist.id
+              ? {
+                  ...eventArtist,
+                  ...artistForEvent(artist, eventArtist.id),
+                  status: eventArtist.status,
+                }
+              : eventArtist,
+          ),
+        }),
+      ),
+    );
+  }
 
- <div className="min-w-0 flex-1">
- <h3 className="eos-title truncate">{draft.artist_name}</h3>
- <p className="eos-body eos-muted">{draft.genre || 'No genre'} · {dkk(draft.preferred_fee)}</p>
- <p className="mt-1 eos-caption eos-muted">{draft.email} {draft.phone}</p>
- </div>
- </div>
- </Card>
+  return (
+    <AppShell>
+      <div className="space-y-5">
+        <Card>
+          <p className="eos-body eos-muted">Artist submissions</p>
+          <h2 className="eos-heading mt-2">Review and book</h2>
 
- <Row>
- <Field label="Artist">
- <input value={draft.artist_name} onChange={(event) => updateDraft(artist, 'artist_name', event.target.value)} />
- </Field>
- <Field label="Contact">
- <input value={draft.contact_name} onChange={(event) => updateDraft(artist, 'contact_name', event.target.value)} />
- </Field>
- </Row>
+          <div className="mt-4 flex gap-2 overflow-x-auto scrollbar-none">
+            {STATUSES.map((status) => (
+              <button
+                key={status}
+                onClick={() => setFilter(status)}
+                className={`pill whitespace-nowrap border px-3 py-2 eos-body ${filter === status ? "eos-primary" : "eos-border eos-panel eos-muted"}`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
 
- <Row>
- <Field label="Email">
- <input value={draft.email} onChange={(event) => updateDraft(artist, 'email', event.target.value)} />
- </Field>
- <Field label="Phone">
- <input value={draft.phone} onChange={(event) => updateDraft(artist, 'phone', event.target.value)} />
- </Field>
- </Row>
+          <Button
+            kind="ghost"
+            className="mt-4 w-full"
+            onClick={() =>
+              navigator.clipboard.writeText(publicArtistFormLink())
+            }
+          >
+            Copy public artist form link
+          </Button>
+        </Card>
 
- <Row>
- <Field label="Genre">
- <input value={draft.genre} onChange={(event) => updateDraft(artist, 'genre', event.target.value)} />
- </Field>
- <Field label="Preferred fee">
- <input
- type="number"
- value={draft.preferred_fee}
- onChange={(event) => updateDraft(artist, 'preferred_fee', Number(event.target.value))}
- />
- </Field>
- </Row>
+        {list.length === 0 && (
+          <Card>
+            <p className="eos-muted">No artist submissions in this view.</p>
+          </Card>
+        )}
 
- <Row>
- <Field label="Availability">
- <input value={draft.availability} onChange={(event) => updateDraft(artist, 'availability', event.target.value)} />
- </Field>
- <Field label="Status">
- <select value={draft.status} onChange={(event) => updateDraft(artist, 'status', event.target.value)}>
- {STATUSES.filter((status) => status !== 'all').map((status) => (
- <option key={status}>{status}</option>
- ))}
- </select>
- </Field>
- </Row>
+        {list.map((artist) => {
+          const draft = getDraft(artist);
 
- <Row>
- <Field label="Start">
- <input type="time" value={draft.availability_start_time} onChange={(event) => updateDraft(artist, 'availability_start_time', event.target.value)} />
- </Field>
- <Field label="End">
- <input type="time" value={draft.availability_end_time} onChange={(event) => updateDraft(artist, 'availability_end_time', event.target.value)} />
- </Field>
- </Row>
+          return (
+            <Section
+              key={artist.id}
+              title={draft.artist_name || "Unnamed artist"}
+              right={
+                <Badge
+                  tone={
+                    draft.status === "booked"
+                      ? "ok"
+                      : draft.status === "rejected"
+                        ? "bad"
+                        : "neutral"
+                  }
+                >
+                  {draft.status}
+                </Badge>
+              }
+            >
+              <Card className="eos-panel">
+                <div className="flex gap-3">
+                  {draft.image_url ? (
+                    <img
+                      src={draft.image_url}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-20 w-20 rounded-[24px] object-cover"
+                    />
+                  ) : (
+                    <div className="grid h-20 w-20 place-items-center rounded-[24px] border eos-border eos-panel eos-muted">
+                      No img
+                    </div>
+                  )}
 
- {['description', 'technical_needs', 'hospitality_needs', 'notes'].map((key) => (
- <Field key={key} label={key.replace('_', ' ')}>
- <textarea value={(draft as any)[key] || ''} onChange={(event) => updateDraft(artist, key, event.target.value)} />
- </Field>
- ))}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="eos-title truncate">{draft.artist_name}</h3>
+                    <p className="eos-body eos-muted">
+                      {draft.genre || "No genre"} · {dkk(draft.preferred_fee)}
+                    </p>
+                    <p className="mt-1 eos-caption eos-muted">
+                      {draft.email} {draft.phone}
+                    </p>
+                  </div>
+                </div>
+              </Card>
 
- <div className="flex flex-wrap gap-2">
- {Object.entries(draft.links || {})
- .filter(([, value]) => value)
- .map(([key, value]) => (
- <a key={key} href={String(value)} target="_blank" className="pill border eos-border eos-panel px-3 py-2 eos-body eos-muted">
- {key}
- </a>
- ))}
- </div>
+              <Card className="eos-panel">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="eos-caption eos-muted">Linked events</p>
+                    <p className="mt-1 eos-body">
+                      {linkedEventIdsFor(artist.id).length
+                        ? `${linkedEventIdsFor(artist.id).length} linked`
+                        : "No events linked"}
+                    </p>
+                  </div>
+                  <Badge
+                    tone={
+                      linkedEventIdsFor(artist.id).length ? "ok" : "neutral"
+                    }
+                  >
+                    {linkedEventIdsFor(artist.id).length || "none"}
+                  </Badge>
+                </div>
 
- <div className="grid grid-cols-2 gap-2">
- <Button onClick={() => saveArtist(draft)}>Save edits</Button>
- <Button kind="ghost" onClick={() => linkArtist(draft)}>
- Add to event
- </Button>
- <Button kind="danger" onClick={() => saveArtist({ ...draft, status: 'rejected' })}>
- Reject
- </Button>
- <Button kind="danger" onClick={() => saveArtist({ ...draft, status: 'archived' })}>
- Archive
- </Button>
- </div>
- </Section>
- );
- })}
- </div>
- </AppShell>
- );
+                <Field label="Add event link">
+                  <select
+                    defaultValue=""
+                    onChange={async (event) => {
+                      const eventId = event.target.value;
+                      event.currentTarget.value = "";
+                      if (eventId) await linkArtistToEvent(draft, eventId);
+                    }}
+                  >
+                    <option value="">Choose event</option>
+                    {events
+                      .filter(
+                        (event) =>
+                          !linkedEventIdsFor(artist.id).includes(event.id),
+                      )
+                      .map((event) => (
+                        <option key={event.id} value={event.id}>
+                          {[
+                            event.meta.name || "Untitled event",
+                            event.meta.date || "No date",
+                          ].join(" · ")}
+                        </option>
+                      ))}
+                  </select>
+                </Field>
+
+                <div className="flex flex-wrap gap-2">
+                  {linkedEventIdsFor(artist.id).map((eventId) => (
+                    <button
+                      key={eventId}
+                      type="button"
+                      className="pill border eos-border eos-surface px-3 py-2 text-left eos-body"
+                      onClick={() => unlinkArtistFromEvent(draft, eventId)}
+                    >
+                      {eventLabel(eventId)} ×
+                    </button>
+                  ))}
+                </div>
+              </Card>
+
+              <Row>
+                <Field label="Artist">
+                  <input
+                    value={draft.artist_name}
+                    onChange={(event) =>
+                      updateDraft(artist, "artist_name", event.target.value)
+                    }
+                  />
+                </Field>
+                <Field label="Contact">
+                  <input
+                    value={draft.contact_name}
+                    onChange={(event) =>
+                      updateDraft(artist, "contact_name", event.target.value)
+                    }
+                  />
+                </Field>
+              </Row>
+
+              <Row>
+                <Field label="Email">
+                  <input
+                    value={draft.email}
+                    onChange={(event) =>
+                      updateDraft(artist, "email", event.target.value)
+                    }
+                  />
+                </Field>
+                <Field label="Phone">
+                  <input
+                    value={draft.phone}
+                    onChange={(event) =>
+                      updateDraft(artist, "phone", event.target.value)
+                    }
+                  />
+                </Field>
+              </Row>
+
+              <Row>
+                <Field label="Genre">
+                  <input
+                    value={draft.genre}
+                    onChange={(event) =>
+                      updateDraft(artist, "genre", event.target.value)
+                    }
+                  />
+                </Field>
+                <Field label="Preferred fee">
+                  <input
+                    type="number"
+                    value={draft.preferred_fee}
+                    onChange={(event) =>
+                      updateDraft(
+                        artist,
+                        "preferred_fee",
+                        Number(event.target.value),
+                      )
+                    }
+                  />
+                </Field>
+              </Row>
+
+              <Row>
+                <Field label="Availability">
+                  <input
+                    value={draft.availability}
+                    onChange={(event) =>
+                      updateDraft(artist, "availability", event.target.value)
+                    }
+                  />
+                </Field>
+                <Field label="Status">
+                  <select
+                    value={draft.status}
+                    onChange={(event) =>
+                      updateDraft(artist, "status", event.target.value)
+                    }
+                  >
+                    {STATUSES.filter((status) => status !== "all").map(
+                      (status) => (
+                        <option key={status}>{status}</option>
+                      ),
+                    )}
+                  </select>
+                </Field>
+              </Row>
+
+              <Row>
+                <Field label="Start">
+                  <input
+                    type="time"
+                    value={draft.availability_start_time}
+                    onChange={(event) =>
+                      updateDraft(
+                        artist,
+                        "availability_start_time",
+                        event.target.value,
+                      )
+                    }
+                  />
+                </Field>
+                <Field label="End">
+                  <input
+                    type="time"
+                    value={draft.availability_end_time}
+                    onChange={(event) =>
+                      updateDraft(
+                        artist,
+                        "availability_end_time",
+                        event.target.value,
+                      )
+                    }
+                  />
+                </Field>
+              </Row>
+
+              {[
+                "description",
+                "technical_needs",
+                "hospitality_needs",
+                "notes",
+              ].map((key) => (
+                <Field key={key} label={key.replace("_", " ")}>
+                  <textarea
+                    value={(draft as any)[key] || ""}
+                    onChange={(event) =>
+                      updateDraft(artist, key, event.target.value)
+                    }
+                  />
+                </Field>
+              ))}
+
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(draft.links || {})
+                  .filter(([, value]) => value)
+                  .map(([key, value]) => (
+                    <a
+                      key={key}
+                      href={String(value)}
+                      target="_blank"
+                      className="pill border eos-border eos-panel px-3 py-2 eos-body eos-muted"
+                    >
+                      {key}
+                    </a>
+                  ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Button onClick={() => saveArtistAndLinkedEvents(draft)}>
+                  Save edits
+                </Button>
+                <Button
+                  kind="danger"
+                  onClick={() => saveArtist({ ...draft, status: "rejected" })}
+                >
+                  Reject
+                </Button>
+                <Button
+                  kind="danger"
+                  onClick={() => saveArtist({ ...draft, status: "archived" })}
+                >
+                  Archive
+                </Button>
+              </div>
+            </Section>
+          );
+        })}
+      </div>
+    </AppShell>
+  );
 }

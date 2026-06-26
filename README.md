@@ -1,20 +1,18 @@
-# EventOS v56 — Project Management Text Input Fix
+# EventOS v57 — Artist multi-event linking
 
-This build fixes Project Management text inputs where the Description and Notes textareas could only accept one character before losing focus.
+This build updates Artist Management so each artist can be linked to zero, one, or multiple events.
 
-## What changed
+## Changes
 
-- Moved Project Management editor components out of the main component render body.
-- Stabilized the Project editor component identity so React no longer remounts it on every keystroke.
-- Description and Notes fields now keep focus while typing normally.
-- Applied the same stability cleanup to the task settings modal.
-- Kept all v55 layout/background/dock behavior intact.
+- Artist Management now has a Linked events panel inside each artist card.
+- Artists can be linked to events through an event dropdown.
+- Artists can be linked to multiple events by choosing multiple events one at a time.
+- Artists can be linked to no events by removing all linked event pills.
+- Removing a linked event only removes that artist from that event.
+- Saving artist edits also updates linked artist details inside linked events.
+- The old automatic "add to first event" behavior has been removed.
 
 ## Verification
 
-- `npm run typecheck` passed.
-- `npm run build` completed successfully. The command timed out after Next.js had already completed the successful build output in this environment.
-
-## Deployment
-
-Upload the ZIP contents as a flat repository root to GitHub/Vercel. The ZIP excludes `node_modules`, `.next`, `package-lock.json`, and `tsconfig.tsbuildinfo`.
+- `npm run typecheck` passes.
+- `npm run build` passes.
