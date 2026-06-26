@@ -1,18 +1,18 @@
-# EventOS v57 — Artist multi-event linking
+# EventOS v59 — Project Management Upgrade
 
-This build updates Artist Management so each artist can be linked to zero, one, or multiple events.
+Project Management is now project-first:
 
-## Changes
+- Create/select a project before creating tasks.
+- Every new task is tied to a selected project.
+- Selected project shows only its own tasks.
+- Project overview shows project stats, progress, active tasks, doing/done/overdue counts.
+- Tasks are grouped inside the selected project by Pending, Doing, Done, and Archived.
+- Task settings keeps a project dropdown so tasks can be moved between projects, but no task can be created without a project.
+- Deleting a project also deletes its linked tasks locally and in Supabase.
+- Kept v58 artist layout fixes, v55 dock position, v54 background safe-area behavior, and UI Studio background image controls.
 
-- Artist Management now has a Linked events panel inside each artist card.
-- Artists can be linked to events through an event dropdown.
-- Artists can be linked to multiple events by choosing multiple events one at a time.
-- Artists can be linked to no events by removing all linked event pills.
-- Removing a linked event only removes that artist from that event.
-- Saving artist edits also updates linked artist details inside linked events.
-- The old automatic "add to first event" behavior has been removed.
-
-## Verification
+Verified:
 
 - `npm run typecheck` passes.
 - `npm run build` passes.
+- All routes build as static pages.

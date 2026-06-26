@@ -264,7 +264,11 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
 
   const deleteProject = useCallback(async (id: string) => {
     setProjects((previous) => previous.filter((project) => project.id !== id));
-    if (supabase) await supabase.from('project_management_projects').delete().eq('id', id);
+    setTasks((previous) => previous.filter((task) => task.project_id !== id));
+    if (supabase) {
+      await supabase.from('project_management_tasks').delete().eq('project_id', id);
+      await supabase.from('project_management_projects').delete().eq('id', id);
+    }
   }, []);
 
   const saveTask = useCallback(async (task: Task) => {

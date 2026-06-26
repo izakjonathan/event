@@ -224,7 +224,7 @@ export default function ArtistManagement() {
                 </div>
               </Card>
 
-              <Card className="eos-panel">
+              <Card className="eos-panel artist-linked-events-card">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="eos-caption eos-muted">Linked events</p>
@@ -274,7 +274,7 @@ export default function ArtistManagement() {
                     <button
                       key={eventId}
                       type="button"
-                      className="pill border eos-border eos-surface px-3 py-2 text-left eos-body"
+                      className="artist-linked-event-chip pill border eos-border eos-surface px-3 py-2 text-left eos-body"
                       onClick={() => unlinkArtistFromEvent(draft, eventId)}
                     >
                       {eventLabel(eventId)} ×

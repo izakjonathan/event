@@ -104,7 +104,7 @@ body {
   min-height: 100dvh;
   background: transparent;
   overscroll-behavior-y: none;
-  scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 160px);
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 220px);
 }
 
 body::before {
@@ -145,7 +145,13 @@ summary::-webkit-details-marker {
 }
 
 .eos-page-content {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 280px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 360px);
+}
+
+input,
+textarea,
+select {
+  scroll-margin-bottom: calc(env(safe-area-inset-bottom) + 180px);
 }
 
 .scrollbar-none {
@@ -545,4 +551,19 @@ select:focus {
 
 .eos-nav-item.eos-dock-active .eos-nav-icon {
   border-color: var(--eos-border-strong);
+}
+
+
+.artist-linked-events-card {
+  padding: 14px;
+}
+
+.artist-linked-events-card select {
+  min-height: 54px;
+}
+
+.artist-linked-event-chip {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.15;
 }
