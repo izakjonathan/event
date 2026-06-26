@@ -25,3 +25,11 @@ Checklist and image URLs can use `|` as a separator.
 - `npm run typecheck` passes.
 - `npm run build` passes.
 - All routes build as static pages.
+
+## v61 project task layout polish
+- Project task groups remain collapsible but are no longer visually nested as cards.
+- Pending, Doing, Done and Archived groups have clearer section separation.
+- Tasks are shown as list rows with horizontal dividers instead of cards.
+- Task notes remain visible under the task name.
+- Status dropdown and Settings button now share the same height.
+- CSV import and manual project/task creation remain unchanged.

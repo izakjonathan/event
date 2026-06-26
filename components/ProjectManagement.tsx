@@ -121,15 +121,18 @@ function parseCsv(csv: string) {
 function PlainCollapsible({ title, count, children, openDefault = true }: { title: string; count: number; children: React.ReactNode; openDefault?: boolean }) {
  const [open, setOpen] = useState(openDefault);
  return (
- <div className="border-t border-[var(--eos-border)] first:border-t-0 py-2">
- <button type="button" onClick={() => setOpen((value) => !value)} className="flex w-full items-center justify-between gap-3 py-2 text-left">
+ <div className="eos-task-group">
+ <button type="button" onClick={() => setOpen((value) => !value)} className="eos-task-group-header">
+ <span>
  <span className="eos-caption eos-text">{title}</span>
+ <span className="eos-body eos-muted mt-1 block">{count} task{count === 1 ? '' : 's'}</span>
+ </span>
  <span className="eos-muted flex items-center gap-2 eos-caption">
  <Badge>{count}</Badge>
  <span className="text-base">{open ? '⌃' : '⌄'}</span>
  </span>
  </button>
- {open && <div className="divide-y divide-[var(--eos-border)]">{children}</div>}
+ {open && <div className="eos-task-list">{children}</div>}
  </div>
  );
 }
@@ -370,38 +373,35 @@ function TaskListRow({ task, onEdit, onSave }: TaskCardProps) {
  const completedSubtasks = task.checklist.filter((item) => item.trim().startsWith('✓')).length;
 
  return (
- <div className="py-3 first:pt-1 last:pb-1">
- <div className="flex items-start justify-between gap-3">
- <div className="min-w-0 flex-1">
+ <div className="eos-task-row">
+ <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <h3 className="eos-title truncate">{task.title || 'Untitled task'}</h3>
+ <h3 className="eos-title min-w-0 break-words">{task.title || 'Untitled task'}</h3>
  <Badge tone={isOverdue(task) ? 'bad' : task.priority === 'urgent' ? 'bad' : task.priority === 'high' ? 'warn' : 'neutral'}>
  {isOverdue(task) ? 'overdue' : task.priority}
  </Badge>
  </div>
  <p className="eos-body eos-muted mt-1">{task.owner || 'No owner'} · {task.due_date || 'No deadline'}</p>
- {task.notes && <p className="eos-body mt-2 whitespace-pre-wrap">{task.notes}</p>}
+ {task.notes ? <p className="eos-task-notes eos-body whitespace-pre-wrap">{task.notes}</p> : <p className="eos-body eos-muted mt-2">No notes.</p>}
  {task.checklist.length > 0 && (
  <p className="eos-caption eos-muted mt-2">
  {completedSubtasks}/{task.checklist.length} subtasks marked with ✓
  </p>
  )}
  </div>
- </div>
 
- <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
- <Field label="Status">
- <select value={task.status} onChange={(event) => void onSave({ ...task, status: event.target.value as TaskStatus })}>
+ <div className="eos-task-actions">
+ <label className="eos-task-status-label">
+ <span>Status</span>
+ <select className="eos-task-status-select" value={task.status} onChange={(event) => void onSave({ ...task, status: event.target.value as TaskStatus })}>
  {TASK_STATUSES.map((status) => (
  <option key={status}>{status}</option>
  ))}
  </select>
- </Field>
- <div className="pt-[19px]">
- <Button kind="ghost" onClick={() => onEdit(task)}>
+ </label>
+ <Button className="eos-task-settings-button" kind="ghost" onClick={() => onEdit(task)}>
  Settings
  </Button>
- </div>
  </div>
  </div>
  );

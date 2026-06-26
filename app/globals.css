@@ -554,6 +554,81 @@ select:focus {
 }
 
 
+
+.eos-task-group {
+  border-top: 1px solid var(--eos-border-strong);
+  padding: 18px 0 4px;
+}
+
+.eos-task-group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.eos-task-group-header {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 0 12px;
+  text-align: left;
+}
+
+.eos-task-list {
+  border-top: 1px solid var(--eos-border);
+}
+
+.eos-task-row {
+  display: grid;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--eos-border);
+}
+
+.eos-task-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 8px;
+}
+
+.eos-task-notes {
+  margin-top: 8px;
+  max-width: 34ch;
+}
+
+.eos-task-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.eos-task-status-label {
+  margin: 0;
+}
+
+.eos-task-status-label span {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.eos-task-status-select,
+.eos-task-settings-button {
+  min-height: 54px;
+}
+
+.eos-task-status-select {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.eos-task-settings-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
 .artist-linked-events-card {
   padding: 14px;
 }
