@@ -27,3 +27,8 @@ This build adds saved event templates to Event Planner.
 - `npm run typecheck` passes.
 - `npm run build` passes.
 - All routes build as static pages.
+
+## v67 Template builder collapse update
+- Event Planner Template builder is now a collapsible section.
+- Template builder is collapsed by default on fresh page load/open.
+- Template save/load/update behavior is unchanged.

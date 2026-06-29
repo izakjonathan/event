@@ -741,20 +741,16 @@ Warnings: ${warnings.join(", ") || "None"}`;
           </div>
         </Card>
 
-        <Card>
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="eos-caption eos-muted">Reusable templates</p>
-              <h2 className="eos-title mt-1">Template builder</h2>
-              <p className="eos-body eos-muted">
-                Choose exactly what should be reused. Save the current plan as a
-                template, then load it later as a new event draft.
-              </p>
-            </div>
-            <Badge>{store.eventTemplates.length}</Badge>
+        <Section title="Template builder" right={<Badge>{store.eventTemplates.length}</Badge>}>
+          <div className="mb-4">
+            <p className="eos-caption eos-muted">Reusable templates</p>
+            <p className="eos-body eos-muted mt-1">
+              Choose exactly what should be reused. Save the current plan as a
+              template, then load it later as a new event draft.
+            </p>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             <Field label="Saved template">
               <select
                 value={selectedSavedTemplateId}
@@ -852,7 +848,7 @@ Warnings: ${warnings.join(", ") || "None"}`;
           {templateResult && (
             <p className="mt-3 eos-body eos-muted">{templateResult}</p>
           )}
-        </Card>
+        </Section>
 
         <Card>
           <div className="grid grid-cols-3 gap-2">
