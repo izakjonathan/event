@@ -63,6 +63,17 @@ create table if not exists public.project_management_tasks (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.event_templates (
+  id uuid primary key default gen_random_uuid(),
+  owner_key text not null default 'default-workspace',
+  name text not null default 'Saved template',
+  description text not null default '',
+  options jsonb not null default '{}'::jsonb,
+  payload jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.ui_studio_presets (
   id uuid primary key default gen_random_uuid(),
   owner_key text not null default 'default-workspace',
@@ -109,6 +120,7 @@ create index if not exists idx_event_plans_owner_date on public.event_plans(owne
 create index if not exists idx_artist_submissions_status on public.artist_submissions(status);
 create index if not exists idx_projects_event on public.project_management_projects(linked_event_id);
 create index if not exists idx_tasks_event_status on public.project_management_tasks(linked_event_id, status);
+create index if not exists idx_event_templates_owner_updated on public.event_templates(owner_key, updated_at desc);
 create index if not exists idx_ui_studio_presets_owner_updated on public.ui_studio_presets(owner_key, updated_at desc);
 create index if not exists idx_suppliers_owner_updated on public.suppliers(owner_key, updated_at desc);
 create index if not exists idx_staff_members_owner_updated on public.staff_members(owner_key, updated_at desc);
@@ -117,6 +129,7 @@ alter table public.event_plans enable row level security;
 alter table public.artist_submissions enable row level security;
 alter table public.project_management_projects enable row level security;
 alter table public.project_management_tasks enable row level security;
+alter table public.event_templates enable row level security;
 alter table public.ui_studio_presets enable row level security;
 alter table public.suppliers enable row level security;
 alter table public.staff_members enable row level security;
@@ -157,6 +170,15 @@ drop policy if exists "prototype update tasks" on public.project_management_task
 create policy "prototype update tasks" on public.project_management_tasks for update to anon using (true) with check (true);
 drop policy if exists "prototype delete tasks" on public.project_management_tasks;
 create policy "prototype delete tasks" on public.project_management_tasks for delete to anon using (true);
+
+drop policy if exists "prototype select event templates" on public.event_templates;
+create policy "prototype select event templates" on public.event_templates for select to anon using (true);
+drop policy if exists "prototype insert event templates" on public.event_templates;
+create policy "prototype insert event templates" on public.event_templates for insert to anon with check (true);
+drop policy if exists "prototype update event templates" on public.event_templates;
+create policy "prototype update event templates" on public.event_templates for update to anon using (true) with check (true);
+drop policy if exists "prototype delete event templates" on public.event_templates;
+create policy "prototype delete event templates" on public.event_templates for delete to anon using (true);
 
 drop policy if exists "prototype select ui presets" on public.ui_studio_presets;
 create policy "prototype select ui presets" on public.ui_studio_presets for select to anon using (true);

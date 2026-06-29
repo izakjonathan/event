@@ -1,15 +1,29 @@
-# EventOS v65 — Event planner insights, CSV import and desktop layout
+# EventOS v66 — reusable event templates
+
+This build adds saved event templates to Event Planner.
 
 ## Changes
-- Added more insight numbers to the Event Planner current-plan panel.
-- Removed the Event metrics / review editor section for now.
-- Added Event Planner CSV import at the bottom of the page.
-- CSV import can set the event planner data that is normally entered manually: basic details, tickets, income/expense lines, staff, bar calculation, venue terms, scenarios, artists and review fields for future use.
-- Added CSV template download.
-- Polished Bar calculation spacing with compact result cards.
-- Added desktop layout support while keeping the current mobile layout unchanged.
+
+- Added a reusable **Template builder** inside Event Planner.
+- Templates let you choose exactly what information should be reused:
+  - event name/date/time/location/status/terms/notes
+  - tickets
+  - income and expenses
+  - staff costs
+  - bar calculation
+  - scenarios
+  - venue terms
+  - artists
+- You can save the current draft as a template.
+- You can update an existing template from the current draft.
+- You can apply a template to the current event draft.
+- You can load a template as a new unsaved event draft, fill in the missing details, then save it as a new event.
+- Added local persistence for event templates.
+- Added optional Supabase `event_templates` table and policies.
+- Kept v65 Event Planner CSV import, desktop layout, insights, v64 staff/volunteers, v63 public artist form, v61 project tasks, and previous dock/background/icon fixes.
 
 ## Verification
+
 - `npm run typecheck` passes.
 - `npm run build` passes.
 - All routes build as static pages.

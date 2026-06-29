@@ -1,44 +1,17 @@
 export type EventStatus =
-  | "idea"
-  | "quoted"
-  | "confirmed"
-  | "cancelled"
-  | "completed";
+  "idea" | "quoted" | "confirmed" | "cancelled" | "completed";
 export type LineKind = "income" | "expense";
 export type LineMode = "fixed" | "perTicketHolder" | "percentageOfTickets";
 export type ArtistSubmissionStatus =
-  | "new"
-  | "interested"
-  | "contacted"
-  | "booked"
-  | "rejected"
-  | "archived";
+  "new" | "interested" | "contacted" | "booked" | "rejected" | "archived";
 export type StaffStatus =
-  | "new"
-  | "available"
-  | "assigned"
-  | "inactive"
-  | "archived";
+  "new" | "available" | "assigned" | "inactive" | "archived";
 export type EventArtistStatus =
-  | "proposed"
-  | "contacted"
-  | "confirmed"
-  | "cancelled";
+  "proposed" | "contacted" | "confirmed" | "cancelled";
 export type ProductCategory =
-  | "Beer"
-  | "Wine"
-  | "Cocktail"
-  | "Shot"
-  | "Soft drink"
-  | "Coffee"
-  | "Other";
+  "Beer" | "Wine" | "Cocktail" | "Shot" | "Soft drink" | "Coffee" | "Other";
 export type ProjectStatus =
-  | "idea"
-  | "planning"
-  | "in-progress"
-  | "waiting"
-  | "done"
-  | "cancelled";
+  "idea" | "planning" | "in-progress" | "waiting" | "done" | "cancelled";
 export type TaskStatus = "pending" | "doing" | "done" | "archived";
 export type Priority = "low" | "medium" | "high" | "urgent";
 
@@ -197,6 +170,36 @@ export type PlannerEvent = {
   artists: EventArtist[];
   barPlanner?: BarPlannerPayload;
   updatedAt: string;
+};
+
+export type EventTemplateOptions = {
+  metaName: boolean;
+  metaDate: boolean;
+  metaEndDate: boolean;
+  metaTime: boolean;
+  metaEndTime: boolean;
+  metaLocation: boolean;
+  metaStatus: boolean;
+  metaTerms: boolean;
+  metaNotes: boolean;
+  tickets: boolean;
+  lines: boolean;
+  staff: boolean;
+  bar: boolean;
+  scenarios: boolean;
+  termsPlan: boolean;
+  artists: boolean;
+};
+
+export type EventTemplate = {
+  id: string;
+  owner_key: string;
+  name: string;
+  description: string;
+  options: EventTemplateOptions;
+  payload: Partial<PlannerEvent>;
+  created_at: string;
+  updated_at: string;
 };
 
 export type ArtistLinks = {

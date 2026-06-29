@@ -4,6 +4,8 @@ import {
   BarPlannerPayload,
   EventMeta,
   EventReviewMetrics,
+  EventTemplate,
+  EventTemplateOptions,
   MoneyLine,
   PlannerEvent,
   Project,
@@ -343,6 +345,36 @@ export const blankStaffMember = (): StaffMember => ({
   linked_event_ids: [],
   linked_project_ids: [],
   notes: "",
+  created_at: now(),
+  updated_at: now(),
+});
+
+export const defaultTemplateOptions = (): EventTemplateOptions => ({
+  metaName: false,
+  metaDate: false,
+  metaEndDate: false,
+  metaTime: false,
+  metaEndTime: false,
+  metaLocation: true,
+  metaStatus: false,
+  metaTerms: true,
+  metaNotes: true,
+  tickets: true,
+  lines: true,
+  staff: true,
+  bar: true,
+  scenarios: true,
+  termsPlan: true,
+  artists: false,
+});
+
+export const blankEventTemplate = (): EventTemplate => ({
+  id: id(),
+  owner_key: "default-workspace",
+  name: "New template",
+  description: "",
+  options: defaultTemplateOptions(),
+  payload: {},
   created_at: now(),
   updated_at: now(),
 });

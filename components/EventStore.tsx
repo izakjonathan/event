@@ -11,6 +11,7 @@ import {
 } from "react";
 import {
   blankProject,
+  blankEventTemplate,
   blankStaffMember,
   blankSubmission,
   blankSupplier,
@@ -22,6 +23,7 @@ import {
 import { supabase } from "@/lib/supabaseClient";
 import {
   ArtistSubmission,
+  EventTemplate,
   PlannerEvent,
   Project,
   StaffMember,
@@ -40,6 +42,9 @@ type Store = {
   createEvent: (template: string) => Promise<PlannerEvent>;
   duplicateEvent: (id: string) => Promise<void>;
   deleteEvent: (id: string) => Promise<void>;
+  eventTemplates: EventTemplate[];
+  saveEventTemplate: (template: EventTemplate) => Promise<void>;
+  deleteEventTemplate: (id: string) => Promise<void>;
   artists: ArtistSubmission[];
   saveArtist: (artist: ArtistSubmission) => Promise<void>;
   createArtist: (artist: ArtistSubmission) => Promise<void>;
@@ -66,6 +71,7 @@ type LocalData = Partial<
     Store,
     | "ownerKey"
     | "events"
+    | "eventTemplates"
     | "artists"
     | "projects"
     | "tasks"
@@ -131,8 +137,7 @@ function scheduleLocalWrite(data: any) {
     | undefined
     | ((callback: () => void, options?: { timeout: number }) => number);
   const cancelIdle = (window as any).cancelIdleCallback as
-    | undefined
-    | ((id: number) => void);
+    undefined | ((id: number) => void);
 
   if (requestIdle && cancelIdle) {
     const id = requestIdle(save, { timeout: 600 });
@@ -173,6 +178,14 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<PlannerEvent[]>(() =>
     (initialLocal.events || []).map(hydrateEvent),
   );
+  const [eventTemplates, setEventTemplates] = useState<EventTemplate[]>(() =>
+    (initialLocal.eventTemplates || []).map((template: any) => ({
+      ...blankEventTemplate(),
+      ...template,
+      options: { ...blankEventTemplate().options, ...(template.options || {}) },
+      payload: template.payload || {},
+    })),
+  );
   const [artists, setArtists] = useState<ArtistSubmission[]>(
     () => initialLocal.artists || [],
   );
@@ -192,6 +205,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
     return scheduleLocalWrite({
       ownerKey,
       events,
+      eventTemplates,
       artists,
       projects,
       tasks,
@@ -202,6 +216,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
   }, [
     ownerKey,
     events,
+    eventTemplates,
     artists,
     projects,
     tasks,
@@ -218,6 +233,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
     try {
       const [
         eventResponse,
+        templateResponse,
         artistResponse,
         projectResponse,
         taskResponse,
@@ -229,6 +245,11 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
           .select("*")
           .eq("owner_key", ownerKey)
           .order("event_date"),
+        supabase
+          .from("event_templates")
+          .select("*")
+          .eq("owner_key", ownerKey)
+          .order("updated_at", { ascending: false }),
         supabase
           .from("artist_submissions")
           .select("*")
@@ -255,6 +276,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
 
       if (
         eventResponse.error ||
+        templateResponse.error ||
         artistResponse.error ||
         projectResponse.error ||
         taskResponse.error ||
@@ -263,6 +285,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       ) {
         throw (
           eventResponse.error ||
+          templateResponse.error ||
           artistResponse.error ||
           projectResponse.error ||
           taskResponse.error ||
@@ -272,6 +295,17 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       }
 
       setEvents((eventResponse.data || []).map(dbToEvent));
+      setEventTemplates(
+        (templateResponse.data || []).map((template: any) => ({
+          ...blankEventTemplate(),
+          ...template,
+          options: {
+            ...blankEventTemplate().options,
+            ...(template.options || {}),
+          },
+          payload: template.payload || {},
+        })),
+      );
       setArtists(
         (artistResponse.data || []).map((artist: any) => ({
           ...artist,
@@ -311,8 +345,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       | undefined
       | ((callback: () => void, options?: { timeout: number }) => number);
     const cancelIdle = (window as any).cancelIdleCallback as
-      | undefined
-      | ((id: number) => void);
+      undefined | ((id: number) => void);
 
     if (requestIdle && cancelIdle) {
       const id = requestIdle(run, { timeout: 1200 });
@@ -396,6 +429,43 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
     },
     [currentId],
   );
+
+  const saveEventTemplate = useCallback(
+    async (template: EventTemplate) => {
+      const next = {
+        ...blankEventTemplate(),
+        ...template,
+        owner_key: ownerKey,
+        options: {
+          ...blankEventTemplate().options,
+          ...(template.options || {}),
+        },
+        payload: template.payload || {},
+        updated_at: now(),
+      };
+      setEventTemplates((previous) => [
+        next,
+        ...previous.filter((current) => current.id !== next.id),
+      ]);
+
+      if (supabase) {
+        try {
+          const { error } = await supabase.from("event_templates").upsert(next);
+          if (error) throw error;
+        } catch {
+          // Local optimistic save already completed.
+        }
+      }
+    },
+    [ownerKey],
+  );
+
+  const deleteEventTemplate = useCallback(async (id: string) => {
+    setEventTemplates((previous) =>
+      previous.filter((template) => template.id !== id),
+    );
+    if (supabase) await supabase.from("event_templates").delete().eq("id", id);
+  }, []);
 
   const saveArtist = useCallback(async (artist: ArtistSubmission) => {
     const next = { ...blankSubmission(), ...artist, updated_at: now() };
@@ -521,6 +591,9 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       createEvent,
       duplicateEvent,
       deleteEvent,
+      eventTemplates,
+      saveEventTemplate,
+      deleteEventTemplate,
       artists,
       saveArtist,
       createArtist,
@@ -543,6 +616,7 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       ownerKey,
       current,
       events,
+      eventTemplates,
       artists,
       projects,
       tasks,
@@ -553,6 +627,8 @@ export function EventStoreProvider({ children }: { children: ReactNode }) {
       createEvent,
       duplicateEvent,
       deleteEvent,
+      saveEventTemplate,
+      deleteEventTemplate,
       saveArtist,
       createArtist,
       saveProject,
