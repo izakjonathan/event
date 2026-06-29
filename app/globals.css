@@ -642,3 +642,40 @@ select:focus {
   overflow-wrap: anywhere;
   line-height: 1.15;
 }
+
+
+.eos-section-content {
+  display: grid;
+  gap: 16px;
+}
+
+.eos-bar-result-grid .eos-stat {
+  min-height: 104px;
+}
+
+@media (min-width: 900px) {
+  .eos-page-content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .eos-page-content > .space-y-5 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+
+  .eos-page-content > .space-y-5 > * {
+    grid-column: span 6;
+    margin-top: 0 !important;
+  }
+
+  .eos-page-content > .space-y-5 > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .eos-dock {
+    max-width: 760px;
+  }
+}

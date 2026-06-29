@@ -16,10 +16,75 @@ function num(value: string) {
  return Number.isFinite(Number(value)) ? Number(value) : 0;
 }
 
+function parseCsv(text: string) {
+ const rows: string[][] = [];
+ let row: string[] = [];
+ let cell = '';
+ let quoted = false;
+
+ for (let index = 0; index < text.length; index += 1) {
+  const char = text[index];
+  const next = text[index + 1];
+
+  if (char === '"' && quoted && next === '"') {
+   cell += '"';
+   index += 1;
+  } else if (char === '"') {
+   quoted = !quoted;
+  } else if (char === ',' && !quoted) {
+   row.push(cell.trim());
+   cell = '';
+  } else if ((char === '\n' || char === '\r') && !quoted) {
+   if (char === '\r' && next === '\n') index += 1;
+   row.push(cell.trim());
+   if (row.some(Boolean)) rows.push(row);
+   row = [];
+   cell = '';
+  } else {
+   cell += char;
+  }
+ }
+
+ row.push(cell.trim());
+ if (row.some(Boolean)) rows.push(row);
+ if (rows.length < 2) return [];
+
+ const headers = rows[0].map((header) => header.trim().toLowerCase());
+ return rows.slice(1).map((values) =>
+  Object.fromEntries(headers.map((header, index) => [header, values[index] || ''])),
+ );
+}
+
+function csvValue(row: Record<string, string>, keys: string[]) {
+ for (const key of keys) {
+  const value = row[key.toLowerCase()];
+  if (value !== undefined && value !== '') return value;
+ }
+ return '';
+}
+
+function csvBool(value: string, fallback = false) {
+ if (!value) return fallback;
+ return ['1', 'true', 'yes', 'y', 'on'].includes(value.toLowerCase());
+}
+
+function downloadTextFile(filename: string, text: string) {
+ const anchor = document.createElement('a');
+ const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+ anchor.href = url;
+ anchor.download = filename;
+ anchor.click();
+ URL.revokeObjectURL(url);
+}
+
+const eventCsvTemplate = `event_key,template,event_name,date,end_date,start_time,end_time,location,status,terms,notes,ticket_name,ticket_price,ticket_sold,ticket_capacity,ticket_notes,line_kind,line_name,line_amount,line_quantity,line_mode,line_notes,staff_role,staff_people,staff_hours,staff_hourly_wage,staff_extra_percent,staff_notes,bar_enabled,bar_use_ticket_guests,bar_custom_guests,bar_spend_per_guest,bar_cost_percent,bar_notes,terms_enabled,organizer_ticket_share,organizer_bar_share,flat_venue_hire,minimum_venue_guarantee,terms_notes,scenario_name,scenario_tickets_sold,scenario_average_ticket_price,scenario_bar_spend_per_guest,scenario_extra_expenses,scenario_notes,artist_name,artist_contact,artist_email,artist_phone,artist_genre,artist_fee,artist_start_time,artist_end_time,artist_status,artist_notes,review_event_type,review_label,review_expected_guests,review_actual_guests,review_planned_staff,review_actual_staff,review_total_staff_hours,review_supplier_cost,review_equipment_cost,review_other_cost,review_ticket_revenue,review_bar_revenue,review_other_revenue,review_notes
+sample-001,Blank,Example event,2026-08-19,,19:00,01:00,Temple Bar,idea,Terms here,Internal notes,Presale,100,50,100,Ticket note,expense,Marketing,500,1,fixed,Line note,Bartender,2,6,160,12.5,Staff note,true,true,0,80,28,Bar notes,true,100,100,0,0,Terms note,Expected,80,100,80,0,Scenario note,Artist name,Contact,email@example.com,12345678,Techno,2500,21:00,22:00,proposed,Artist note,Concert,Summer,100,90,2,2,12,0,0,0,5000,7200,0,Review note`;
+
 export default function EventPlanner() {
  const store = useEventStore();
  const [draft, setDraft] = useState<PlannerEvent>(store.current ? hydrateEvent(store.current) : eventFromTemplate('Blank'));
  const [selectedTemplate, setSelectedTemplate] = useState('Blank');
+ const [csvResult, setCsvResult] = useState('');
 
  useEffect(() => {
  if (store.current) {
@@ -29,6 +94,25 @@ export default function EventPlanner() {
 
  const totals = useMemo(() => eventTotals(draft), [draft]);
  const fixed = totals.expenses + totals.staffCost + totals.artistCost;
+ const guestsForInsight = totals.tickets.sold || totals.bar.guests || draft.bar.customGuests || 0;
+ const insightStats = [
+  { label: 'Profit', value: dkk(totals.profit) },
+  { label: 'Revenue', value: dkk(totals.totalIncome) },
+  { label: 'Costs', value: dkk(totals.totalCosts) },
+  { label: 'Margin', value: `${Math.round(totals.margin)}%` },
+  { label: 'Tickets', value: totals.tickets.sold, sub: `${totals.tickets.cap} capacity` },
+  { label: 'Fill', value: `${Math.round(totals.tickets.fill)}%` },
+  { label: 'Avg ticket', value: dkk(Math.round(totals.tickets.avg)) },
+  { label: 'Break-even', value: totals.breakEvenGuests, sub: 'guests' },
+  { label: 'Profit / guest', value: dkk(Math.round(guestsForInsight ? totals.profit / guestsForInsight : 0)) },
+  { label: 'Revenue / guest', value: dkk(Math.round(guestsForInsight ? totals.totalIncome / guestsForInsight : 0)) },
+  { label: 'Bar revenue', value: dkk(totals.bar.revenue) },
+  { label: 'Bar profit', value: dkk(totals.bar.profit) },
+  { label: 'Staff', value: dkk(totals.staffCost) },
+  { label: 'Artists', value: dkk(totals.artistCost) },
+  { label: 'Stock cost', value: dkk(totals.bar.stockCost) },
+  { label: 'Organizer', value: dkk(totals.organizer) },
+ ];
 
  const warnings = [
  !draft.meta.date && 'Missing date',
@@ -76,6 +160,158 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  );
 
+ const importEventsCsv = async (file: File) => {
+  const rows = parseCsv(await file.text());
+  const eventsByKey = new Map<string, PlannerEvent>();
+
+  rows.forEach((row, index) => {
+   const eventName = csvValue(row, ['event_name', 'name', 'title']);
+   const eventDate = csvValue(row, ['date', 'event_date']);
+   const key = csvValue(row, ['event_key', 'event_id']) || `${eventName || 'event'}-${eventDate || index}`;
+   if (!eventName && !eventDate && !csvValue(row, ['ticket_name', 'line_name', 'staff_role', 'scenario_name', 'artist_name'])) return;
+
+   if (!eventsByKey.has(key)) {
+    const event = eventFromTemplate(csvValue(row, ['template']) || 'Blank');
+    event.id = csvValue(row, ['event_id']) || id();
+    event.tickets = [];
+    event.lines = [];
+    event.staff = [];
+    event.scenarios = [];
+    event.artists = [];
+    eventsByKey.set(key, event);
+   }
+
+   const event = eventsByKey.get(key)!;
+   event.meta = {
+    ...event.meta,
+    name: eventName || event.meta.name,
+    date: eventDate || event.meta.date,
+    endDate: csvValue(row, ['end_date']) || event.meta.endDate,
+    time: csvValue(row, ['start_time', 'time']) || event.meta.time,
+    endTime: csvValue(row, ['end_time']) || event.meta.endTime,
+    location: csvValue(row, ['location', 'venue']) || event.meta.location,
+    terms: csvValue(row, ['terms']) || event.meta.terms,
+    notes: csvValue(row, ['notes', 'event_notes']) || event.meta.notes,
+    status: (csvValue(row, ['status']) || event.meta.status) as any,
+   };
+
+   event.bar = {
+    ...event.bar,
+    enabled: csvBool(csvValue(row, ['bar_enabled']), event.bar.enabled),
+    useTicketGuests: csvBool(csvValue(row, ['bar_use_ticket_guests']), event.bar.useTicketGuests),
+    customGuests: csvValue(row, ['bar_custom_guests']) ? num(csvValue(row, ['bar_custom_guests'])) : event.bar.customGuests,
+    spendPerGuest: csvValue(row, ['bar_spend_per_guest']) ? num(csvValue(row, ['bar_spend_per_guest'])) : event.bar.spendPerGuest,
+    costPercent: csvValue(row, ['bar_cost_percent']) ? num(csvValue(row, ['bar_cost_percent'])) : event.bar.costPercent,
+    notes: csvValue(row, ['bar_notes']) || event.bar.notes,
+   };
+
+   event.termsPlan = {
+    ...event.termsPlan,
+    enabled: csvBool(csvValue(row, ['terms_enabled']), event.termsPlan.enabled),
+    organizerTicketShare: csvValue(row, ['organizer_ticket_share']) ? num(csvValue(row, ['organizer_ticket_share'])) : event.termsPlan.organizerTicketShare,
+    organizerBarProfitShare: csvValue(row, ['organizer_bar_share', 'organizer_bar_profit_share']) ? num(csvValue(row, ['organizer_bar_share', 'organizer_bar_profit_share'])) : event.termsPlan.organizerBarProfitShare,
+    flatVenueHire: csvValue(row, ['flat_venue_hire']) ? num(csvValue(row, ['flat_venue_hire'])) : event.termsPlan.flatVenueHire,
+    minimumVenueGuarantee: csvValue(row, ['minimum_venue_guarantee']) ? num(csvValue(row, ['minimum_venue_guarantee'])) : event.termsPlan.minimumVenueGuarantee,
+    notes: csvValue(row, ['terms_notes']) || event.termsPlan.notes,
+   };
+
+   event.review = {
+    ...event.review,
+    eventType: csvValue(row, ['review_event_type', 'event_type']) || event.review.eventType,
+    label: csvValue(row, ['review_label', 'label']) || event.review.label,
+    expectedGuests: csvValue(row, ['review_expected_guests', 'expected_guests']) ? num(csvValue(row, ['review_expected_guests', 'expected_guests'])) : event.review.expectedGuests,
+    actualGuests: csvValue(row, ['review_actual_guests', 'actual_guests']) ? num(csvValue(row, ['review_actual_guests', 'actual_guests'])) : event.review.actualGuests,
+    plannedStaff: csvValue(row, ['review_planned_staff', 'planned_staff']) ? num(csvValue(row, ['review_planned_staff', 'planned_staff'])) : event.review.plannedStaff,
+    actualStaff: csvValue(row, ['review_actual_staff', 'actual_staff']) ? num(csvValue(row, ['review_actual_staff', 'actual_staff'])) : event.review.actualStaff,
+    totalStaffHours: csvValue(row, ['review_total_staff_hours', 'total_staff_hours']) ? num(csvValue(row, ['review_total_staff_hours', 'total_staff_hours'])) : event.review.totalStaffHours,
+    supplierCost: csvValue(row, ['review_supplier_cost', 'supplier_cost']) ? num(csvValue(row, ['review_supplier_cost', 'supplier_cost'])) : event.review.supplierCost,
+    equipmentCost: csvValue(row, ['review_equipment_cost', 'equipment_cost']) ? num(csvValue(row, ['review_equipment_cost', 'equipment_cost'])) : event.review.equipmentCost,
+    otherCost: csvValue(row, ['review_other_cost', 'other_cost']) ? num(csvValue(row, ['review_other_cost', 'other_cost'])) : event.review.otherCost,
+    ticketRevenue: csvValue(row, ['review_ticket_revenue', 'ticket_revenue']) ? num(csvValue(row, ['review_ticket_revenue', 'ticket_revenue'])) : event.review.ticketRevenue,
+    barRevenue: csvValue(row, ['review_bar_revenue', 'bar_revenue']) ? num(csvValue(row, ['review_bar_revenue', 'bar_revenue'])) : event.review.barRevenue,
+    otherRevenue: csvValue(row, ['review_other_revenue', 'other_revenue']) ? num(csvValue(row, ['review_other_revenue', 'other_revenue'])) : event.review.otherRevenue,
+    reviewNotes: csvValue(row, ['review_notes']) || event.review.reviewNotes,
+   };
+
+   const ticketName = csvValue(row, ['ticket_name']);
+   if (ticketName || csvValue(row, ['ticket_price', 'ticket_sold', 'ticket_capacity'])) {
+    event.tickets.push({
+     ...ticket(ticketName || 'Tickets'),
+     name: ticketName || 'Tickets',
+     price: num(csvValue(row, ['ticket_price'])),
+     sold: num(csvValue(row, ['ticket_sold'])),
+     capacity: num(csvValue(row, ['ticket_capacity'])),
+     notes: csvValue(row, ['ticket_notes']),
+    });
+   }
+
+   const lineName = csvValue(row, ['line_name']);
+   if (lineName || csvValue(row, ['line_amount'])) {
+    event.lines.push({
+     ...line((csvValue(row, ['line_kind']) || 'expense') as any, lineName || 'Line'),
+     kind: (csvValue(row, ['line_kind']) || 'expense') as any,
+     name: lineName || 'Line',
+     amount: num(csvValue(row, ['line_amount'])),
+     quantity: num(csvValue(row, ['line_quantity'])) || 1,
+     mode: (csvValue(row, ['line_mode']) || 'fixed') as any,
+     notes: csvValue(row, ['line_notes']),
+    });
+   }
+
+   const staffRole = csvValue(row, ['staff_role']);
+   if (staffRole || csvValue(row, ['staff_people', 'staff_hours', 'staff_hourly_wage'])) {
+    event.staff.push({
+     ...staff(),
+     id: id(),
+     role: staffRole || 'Staff',
+     people: num(csvValue(row, ['staff_people'])) || 1,
+     hours: num(csvValue(row, ['staff_hours'])),
+     hourlyWage: num(csvValue(row, ['staff_hourly_wage'])),
+     extraPercent: num(csvValue(row, ['staff_extra_percent'])),
+     notes: csvValue(row, ['staff_notes']),
+    });
+   }
+
+   const scenarioName = csvValue(row, ['scenario_name']);
+   if (scenarioName || csvValue(row, ['scenario_tickets_sold'])) {
+    event.scenarios.push({
+     id: id(),
+     name: scenarioName || 'Scenario',
+     ticketsSold: num(csvValue(row, ['scenario_tickets_sold'])),
+     averageTicketPrice: num(csvValue(row, ['scenario_average_ticket_price'])),
+     barSpendPerGuest: num(csvValue(row, ['scenario_bar_spend_per_guest'])),
+     extraExpenses: num(csvValue(row, ['scenario_extra_expenses'])),
+     notes: csvValue(row, ['scenario_notes']),
+    });
+   }
+
+   const artistName = csvValue(row, ['artist_name']);
+   if (artistName) {
+    event.artists.push({
+     id: id(),
+     artistName,
+     contactName: csvValue(row, ['artist_contact']),
+     email: csvValue(row, ['artist_email']),
+     phone: csvValue(row, ['artist_phone']),
+     genre: csvValue(row, ['artist_genre']),
+     imageUrl: '',
+     fee: num(csvValue(row, ['artist_fee'])),
+     startTime: csvValue(row, ['artist_start_time']),
+     endTime: csvValue(row, ['artist_end_time']),
+     status: (csvValue(row, ['artist_status']) || 'proposed') as any,
+     notes: csvValue(row, ['artist_notes']),
+    });
+   }
+  });
+
+  const imported = Array.from(eventsByKey.values()).map(hydrateEvent);
+  for (const event of imported) {
+   await store.saveEvent(event);
+  }
+  if (imported[0]) setDraft(imported[0]);
+  setCsvResult(imported.length ? `Imported ${imported.length} event${imported.length === 1 ? '' : 's'}.` : 'No events found in CSV.');
+ };
+
  return (
  <AppShell>
  <div className="space-y-5">
@@ -89,15 +325,10 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  <Badge tone={warnings.length ? 'warn' : 'ok'}>{warnings.length ? `${warnings.length} warnings` : 'Ready'}</Badge>
  </div>
 
- <div className="mt-4 grid grid-cols-2 gap-2">
- <Stat label="Profit" value={dkk(totals.profit)} />
- <Stat label="Revenue" value={dkk(totals.totalIncome)} />
- <Stat label="Costs" value={dkk(totals.totalCosts)} />
- <Stat label="Margin" value={`${Math.round(totals.margin)}%`} />
- <Stat label="Tickets" value={totals.tickets.sold} sub={`${totals.tickets.cap} capacity`} />
- <Stat label="Break-even" value={totals.breakEvenGuests} sub="guests" />
- <Stat label="Bar profit" value={dkk(totals.bar.profit)} />
- <Stat label="Staff" value={dkk(totals.staffCost)} />
+ <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
+ {insightStats.map((stat) => (
+ <Stat key={stat.label} label={stat.label} value={stat.value} sub={stat.sub} className="eos-stat-compact" />
+ ))}
  </div>
  </Card>
 
@@ -188,34 +419,6 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </Field>
  </Section>
 
- <Section title="Event metrics / review">
- <Row>
- {input('Event type', draft.review.eventType, (value) => set({ review: { ...draft.review, eventType: String(value) } }))}
- {input('Label', draft.review.label, (value) => set({ review: { ...draft.review, label: String(value) } }))}
- </Row>
- <Row>
- {input('Expected guests', draft.review.expectedGuests, (value) => set({ review: { ...draft.review, expectedGuests: num(String(value)) } }), 'number')}
- {input('Actual guests', draft.review.actualGuests, (value) => set({ review: { ...draft.review, actualGuests: num(String(value)) } }), 'number')}
- </Row>
- <Row>
- {input('Planned staff', draft.review.plannedStaff, (value) => set({ review: { ...draft.review, plannedStaff: num(String(value)) } }), 'number')}
- {input('Actual staff', draft.review.actualStaff, (value) => set({ review: { ...draft.review, actualStaff: num(String(value)) } }), 'number')}
- </Row>
- {input('Total staff hours', draft.review.totalStaffHours, (value) => set({ review: { ...draft.review, totalStaffHours: num(String(value)) } }), 'number')}
- <Row>
- {input('Supplier cost', draft.review.supplierCost, (value) => set({ review: { ...draft.review, supplierCost: num(String(value)) } }), 'number')}
- {input('Equipment cost', draft.review.equipmentCost, (value) => set({ review: { ...draft.review, equipmentCost: num(String(value)) } }), 'number')}
- </Row>
- {input('Other cost', draft.review.otherCost, (value) => set({ review: { ...draft.review, otherCost: num(String(value)) } }), 'number')}
- <Row>
- {input('Ticket revenue', draft.review.ticketRevenue, (value) => set({ review: { ...draft.review, ticketRevenue: num(String(value)) } }), 'number')}
- {input('Bar revenue', draft.review.barRevenue, (value) => set({ review: { ...draft.review, barRevenue: num(String(value)) } }), 'number')}
- </Row>
- {input('Other revenue', draft.review.otherRevenue, (value) => set({ review: { ...draft.review, otherRevenue: num(String(value)) } }), 'number')}
- <Field label="Review notes">
- <textarea value={draft.review.reviewNotes} onChange={(event) => set({ review: { ...draft.review, reviewNotes: event.target.value } })} />
- </Field>
- </Section>
 
  <Section title="Tickets" right={dkk(totals.tickets.rev)}>
  <div className="grid grid-cols-3 gap-2">
@@ -339,10 +542,10 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  {input('Spend per guest', draft.bar.spendPerGuest, (value) => set({ bar: { ...draft.bar, spendPerGuest: num(String(value)) } }), 'number')}
  </Row>
  {input('Stock/cost %', draft.bar.costPercent, (value) => set({ bar: { ...draft.bar, costPercent: num(String(value)) } }), 'number')}
- <div className="grid grid-cols-3 gap-2">
- <Stat label="Revenue" value={dkk(totals.bar.revenue)} />
- <Stat label="Cost" value={dkk(totals.bar.stockCost)} />
- <Stat label="Profit" value={dkk(totals.bar.profit)} />
+ <div className="eos-bar-result-grid grid grid-cols-3 gap-2">
+ <Stat label="Revenue" value={dkk(totals.bar.revenue)} className="eos-stat-compact" />
+ <Stat label="Cost" value={dkk(totals.bar.stockCost)} className="eos-stat-compact" />
+ <Stat label="Profit" value={dkk(totals.bar.profit)} className="eos-stat-compact" />
  </div>
  <Field label="Notes">
  <textarea value={draft.bar.notes} onChange={(event) => set({ bar: { ...draft.bar, notes: event.target.value } })} />
@@ -476,6 +679,30 @@ Warnings: ${warnings.join(', ') || 'None'}`;
  </SubCard>
  ))}
  </div>
+ </Section>
+
+
+ <Section title="CSV import" right={<Badge>Events</Badge>}>
+ <p className="eos-body eos-muted">Import one or more events from CSV. Use repeated rows with the same event_key to attach tickets, staff lines, money lines, scenarios and artists to the same event.</p>
+ <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+ <Button kind="ghost" onClick={() => downloadTextFile('eventos-event-import-template.csv', eventCsvTemplate)}>
+ Download CSV template
+ </Button>
+ <label className="eos-button eos-surface focus-ring flex cursor-pointer items-center justify-center rounded-[22px] border px-4 py-3 text-center">
+ Import CSV
+ <input
+ className="sr-only"
+ type="file"
+ accept=".csv,text/csv"
+ onChange={async (event) => {
+ const file = event.target.files?.[0];
+ if (file) await importEventsCsv(file);
+ event.currentTarget.value = '';
+ }}
+ />
+ </label>
+ </div>
+ {csvResult && <p className="eos-body eos-muted">{csvResult}</p>}
  </Section>
 
  <Section title="Summary / export">

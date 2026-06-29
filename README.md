@@ -1,39 +1,15 @@
-# EventOS v64 — Staff / Volunteers module
+# EventOS v65 — Event planner insights, CSV import and desktop layout
 
-Built from v63.
+## Changes
+- Added more insight numbers to the Event Planner current-plan panel.
+- Removed the Event metrics / review editor section for now.
+- Added Event Planner CSV import at the bottom of the page.
+- CSV import can set the event planner data that is normally entered manually: basic details, tickets, income/expense lines, staff, bar calculation, venue terms, scenarios, artists and review fields for future use.
+- Added CSV template download.
+- Polished Bar calculation spacing with compact result cards.
+- Added desktop layout support while keeping the current mobile layout unchanged.
 
-## Added
-
-- New `Staff / Volunteers` module on Main.
-- New `/staff` internal staff management route.
-- New `/volunteer-signup` public volunteer form route.
-- Public volunteer form has no dock/navigation and asks volunteers for:
-  - name
-  - phone
-  - email
-- Staff records can be manually added or submitted through the public link.
-- Staff can be assigned to multiple events and multiple projects, or no assignments.
-- Staff records include:
-  - name
-  - phone
-  - email
-  - position
-  - description
-  - availability
-  - status
-  - linked events
-  - linked projects
-  - internal notes
-- Staff data saves locally and through Supabase when configured.
-- Supabase schema now includes `staff_members` table and prototype policies.
-
-## Kept
-
-- Public artist form has no dock.
-- Existing Artist Management multi-event linking.
-- Existing Project Management, Event Planner, UI Studio background image, dock and iPhone icon fixes.
-
-## Verify
-
+## Verification
 - `npm run typecheck` passes.
 - `npm run build` passes.
+- All routes build as static pages.

@@ -135,7 +135,7 @@ export function AppShell({ children }: AppShellProps) {
  }, [path, router]);
 
  return (
- <main className="eos-root mx-auto min-h-screen max-w-[430px]">
+ <main className="eos-root mx-auto min-h-screen max-w-[430px] lg:max-w-[1180px]">
  <section className="eos-page-content relative z-10 px-4 pt-[calc(env(safe-area-inset-top)+18px)] sm:px-5">
  {children}
  </section>
@@ -322,7 +322,7 @@ export function Section({
  <span className="text-base">{open ? '⌃' : '⌄'}</span>
  </span>
  </button>
- {open && <div className="space-y-4 px-3 pb-3.5">{children}</div>}
+ {open && <div className="eos-section-content px-3 pb-3.5">{children}</div>}
  </div>
  );
 }
@@ -354,5 +354,5 @@ export function CheckboxRow({
 }
 
 export function Row({ children }: { children: ReactNode }) {
- return <div className="grid min-w-0 grid-cols-1 gap-3">{children}</div>;
+ return <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-2">{children}</div>;
 }
