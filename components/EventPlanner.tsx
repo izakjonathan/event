@@ -244,6 +244,7 @@ export default function EventPlanner() {
     defaultTemplateOptions,
   );
   const [templateResult, setTemplateResult] = useState("");
+  const [templateFieldsOpen, setTemplateFieldsOpen] = useState(false);
   const [csvResult, setCsvResult] = useState("");
 
   useEffect(() => {
@@ -745,8 +746,8 @@ Warnings: ${warnings.join(", ") || "None"}`;
           <div className="mb-4">
             <p className="eos-caption eos-muted">Reusable templates</p>
             <p className="eos-body eos-muted mt-1">
-              Choose exactly what should be reused. Save the current plan as a
-              template, then load it later as a new event draft.
+              All information is reused by default. Open Template fields only if you
+              want to untick details before saving the current plan as a template.
             </p>
           </div>
 
@@ -780,21 +781,41 @@ Warnings: ${warnings.join(", ") || "None"}`;
             />
           </Field>
 
-          <div className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {templateOptionLabels.map((option) => (
-              <CheckboxRow
-                key={option.key}
-                label={option.label}
-                checked={templateOptions[option.key]}
-                onChange={(checked) =>
-                  setTemplateOptions((current) => ({
-                    ...current,
-                    [option.key]: checked,
-                  }))
-                }
-              />
-            ))}
-          </div>
+          <SubCard className="mt-4">
+            <button
+              type="button"
+              onClick={() => setTemplateFieldsOpen((value) => !value)}
+              className="flex w-full items-center justify-between gap-3 text-left"
+              aria-expanded={templateFieldsOpen}
+            >
+              <div>
+                <p className="eos-caption eos-muted">Template fields</p>
+                <p className="eos-body mt-1">All event planner information is included by default.</p>
+              </div>
+              <span className="eos-muted flex items-center gap-2 eos-caption">
+                <Badge>{templateOptionLabels.filter((option) => templateOptions[option.key]).length}/{templateOptionLabels.length}</Badge>
+                <span className="text-base">{templateFieldsOpen ? "⌃" : "⌄"}</span>
+              </span>
+            </button>
+
+            {templateFieldsOpen && (
+              <div className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
+                {templateOptionLabels.map((option) => (
+                  <CheckboxRow
+                    key={option.key}
+                    label={option.label}
+                    checked={templateOptions[option.key]}
+                    onChange={(checked) =>
+                      setTemplateOptions((current) => ({
+                        ...current,
+                        [option.key]: checked,
+                      }))
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </SubCard>
 
           <div className="mt-4 grid grid-cols-1 gap-2 lg:grid-cols-4">
             <Button kind="ghost" onClick={saveCurrentAsTemplate}>

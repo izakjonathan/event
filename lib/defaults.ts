@@ -350,13 +350,13 @@ export const blankStaffMember = (): StaffMember => ({
 });
 
 export const defaultTemplateOptions = (): EventTemplateOptions => ({
-  metaName: false,
-  metaDate: false,
-  metaEndDate: false,
-  metaTime: false,
-  metaEndTime: false,
+  metaName: true,
+  metaDate: true,
+  metaEndDate: true,
+  metaTime: true,
+  metaEndTime: true,
   metaLocation: true,
-  metaStatus: false,
+  metaStatus: true,
   metaTerms: true,
   metaNotes: true,
   tickets: true,
@@ -365,7 +365,7 @@ export const defaultTemplateOptions = (): EventTemplateOptions => ({
   bar: true,
   scenarios: true,
   termsPlan: true,
-  artists: false,
+  artists: true,
 });
 
 export const blankEventTemplate = (): EventTemplate => ({
